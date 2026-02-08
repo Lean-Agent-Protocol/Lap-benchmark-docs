@@ -1,7 +1,10 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api Task Manager API
 @base https://api.taskmanager.io/v1
 @auth Bearer token
+@endpoints 5
+@toc List Tasks, Create Task, Get Task, Update Task, Delete Task
 
 @endpoint GET /tasks
 @desc List Tasks
@@ -29,3 +32,5 @@
 @desc Delete Task
 @required {taskId: str}
 @returns(204) Deleted
+
+@end

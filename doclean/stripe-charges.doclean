@@ -1,8 +1,11 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api Stripe Charges API
 @base https://api.stripe.com
 @version 2024-12-18
 @auth Bearer bearer
+@endpoints 5
+@toc Create a charge, List all charges, Retrieve a charge, Update a charge, Capture a charge
 
 @endpoint POST /v1/charges
 @desc Create a charge
@@ -36,3 +39,5 @@
 @optional {amount: int # The amount to capture, which must be less than or equal to the original amount., receipt_email: str # The email address to send the receipt to., statement_descriptor: str # For card charges, use statement_descriptor_suffix., application_fee_amount: int # An application fee amount to capture, must be less than or equal to the original amount., transfer_data: map # Transfer data for destination charges.}
 @returns(200) Returns the captured charge object.
 @errors {400: Charge has already been captured or is not capturable.}
+
+@end

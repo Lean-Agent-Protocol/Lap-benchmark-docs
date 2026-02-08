@@ -1,7 +1,10 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api Notification Service
 @version 1.5.0
 @auth amqp
+@endpoints 4
+@toc Send email notification, Send SMS notification, Send push notification, Receive delivery status updates
 
 @endpoint PUB notifications/email
 @desc Send email notification
@@ -26,3 +29,5 @@
 @required {notificationId: str, channel: str(email/sms/push), status: str(queued/sent/delivered/failed/bounced)}
 @optional {errorMessage: str, deliveredAt: str(date-time)}
 @returns(SUB) {notificationId: str, channel: str, status: str, errorMessage: str, deliveredAt: str(date-time)} # message payload
+
+@end

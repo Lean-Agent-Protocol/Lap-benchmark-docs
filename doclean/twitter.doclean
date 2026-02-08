@@ -1,8 +1,11 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api Twitter API v2
 @base https://api.twitter.com
 @version 2.61
 @auth Bearer bearer | OAuth2 | Bearer OAuth
+@endpoints 80
+@toc List Compliance Jobs, Create compliance job, Get Compliance Job, Create a new DM Conversation, Get DM Events for a DM Conversation, Send a new message to a user, Send a new message to a DM Conversation, Get DM Events for a DM Conversation, Get recent DM Events, Create List, Delete List, List lookup by List ID., Update List., Returns User objects that follow a List by the provided List ID, Returns User objects that are members of a List by the provided List ID., Add a List member, Remove a List member, List Tweets timeline by List ID., Returns the OpenAPI Specification document., Space lookup up Space IDs, Space lookup by their creators, Search for Spaces, Space lookup by Space ID, Retrieve the list of Users who purchased a ticket to the given space, Retrieve Tweets from a Space., Tweet lookup by Tweet IDs, Creation of a Tweet, Tweets Compliance stream, Full archive search counts, Recent search counts, Firehose stream, Tweets Label stream, Sample stream, Sample 10% stream, Full-archive search, Recent search, Filtered stream, Rules lookup, Add/Delete rules, Tweet delete by Tweet ID, Tweet lookup by Tweet ID, Returns User objects that have liked the provided Tweet ID, Retrieve Tweets that quote a Tweet., Returns User objects that have retweeted the provided Tweet ID, Hide replies, User lookup by IDs, User lookup by usernames, User lookup by username, Users Compliance stream, User lookup me, User lookup by ID, Returns User objects that are blocked by provided User ID, Block User by User ID, Bookmarks by User, Add Tweet to Bookmarks, Remove a bookmarked Tweet, Get User's Followed Lists, Follow a List, Unfollow a List, Followers by User ID, Following by User ID, Follow User, Returns Tweet objects liked by the provided User ID, Causes the User (in the path) to like the specified Tweet, Causes the User (in the path) to unlike the specified Tweet, Get a User's List Memberships, User mention timeline by User ID, Returns User objects that are muted by the provided User ID, Mute User by User ID., Get a User's Owned Lists., Get a User's Pinned Lists, Pin a List, Unpin a List, Causes the User (in the path) to retweet the specified Tweet., Causes the User (in the path) to unretweet the specified Tweet, User home timeline by User ID, User Tweets timeline by User ID, Unblock User by User ID, Unfollow User, Unmute User by User ID
 
 @endpoint GET /2/compliance/jobs
 @desc List Compliance Jobs
@@ -449,3 +452,5 @@
 @desc Unmute User by User ID
 @required {source_user_id: str # The ID of the authenticated source User that is requesting to unmute the target User., target_user_id: str # The ID of the User that the source User is requesting to unmute.}
 @returns(200) {data: map{muting: bool}, errors: [map]} # The request has succeeded.
+
+@end

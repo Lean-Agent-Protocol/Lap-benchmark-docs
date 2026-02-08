@@ -1,6 +1,9 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api NSO Sample API Requests
 @auth Basic username:password
+@endpoints 47
+@toc Root Level NSO JSON Returned, Root Level NSO XML returned, All Devices in Device List: Show Running-config Devices Device, Single Device Config - Show devices device DEVICENAME, Single Device HW / SW Platform Info, show interfaces, show interface Gig 4 config, List Device Groups, List Device Single Device Group Details, Get List of Service Instances for a Service, Get Service Info For Single Service Instance, View NSO Live Status Capabilities, Root Level NSO JSON Returned, Root Level NSO XML returned, All Devices in Device List: Show Running-config Devices Device, Single Device Config - Show devices device DEVICENAME, Single Device HW / SW Platform Info, show interfaces, show interface Gig 4 config, Commit Dry-run outformat native, Commit Dry-run outformat native Copy, Commit-Dry Run Remove IP address from interface, 1. Create a DNS Server Configuration Template, 2. Apply DNS Server Device Template, Configure Device Groups, List Device Groups, List Device Single Device Group Details, Configure DNS Server Compliance Report, Run Compliance Report, Get List of Service Instances for a Service, Create Service Instance for Single Device, Get Service Info For Single Service Instance, Update an Existing Service Instance, Remove Device from Service, View NSO Parsed Live Status, View Arp Data, Send any Command to Device: Show IP Interface Brief, 1. Create new Loopback, 2. Edit New Loopback IP Address, 3. Remove IP Address From Interface, 4. Delete new Loopback, 5. Add SNMP Community String, 6. Remove SNMP Community String from Device, Step 0. Create a Device in the CDB, (not needed on sandbox telent) Step 1. SSH Fetch-Host-Keys Device, Step 2. Sync-from Device, Delete a device from CDB Device List
 
 @endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data
 @desc Root Level NSO JSON Returned
@@ -173,3 +176,5 @@
 
 @endpoint DELETE /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}
 @desc Delete a device from CDB Device List
+
+@end

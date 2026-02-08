@@ -1,7 +1,10 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api Slack Web API
 @base https://slack.com/api
 @auth Bearer token
+@endpoints 5
+@toc Post Message, List Channels, Get User Info, Upload File, Add Reaction
 
 @endpoint POST /chat.postMessage
 @desc Post Message
@@ -27,3 +30,5 @@
 @desc Add Reaction
 @required {channel: str, timestamp: str, name: str}
 @returns(200) {ok: bool} # OK
+
+@end

@@ -1,12 +1,15 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api google.storage.v2
 @base grpc://google.storage.v2
 @version proto3
+@endpoints 24
+@toc UNARY /Storage/DeleteBucket, UNARY /Storage/GetBucket, UNARY /Storage/CreateBucket, UNARY /Storage/ListBuckets, UNARY /Storage/LockBucketRetentionPolicy, UNARY /Storage/GetIamPolicy, UNARY /Storage/SetIamPolicy, UNARY /Storage/TestIamPermissions, UNARY /Storage/UpdateBucket, UNARY /Storage/ComposeObject, UNARY /Storage/DeleteObject, UNARY /Storage/RestoreObject, UNARY /Storage/CancelResumableWrite, UNARY /Storage/GetObject, SERVER-STREAM /Storage/ReadObject, BIDI-STREAM /Storage/BidiReadObject, UNARY /Storage/UpdateObject, CLIENT-STREAM /Storage/WriteObject, BIDI-STREAM /Storage/BidiWriteObject, UNARY /Storage/ListObjects, UNARY /Storage/RewriteObject, UNARY /Storage/StartResumableWrite, UNARY /Storage/QueryWriteStatus, UNARY /Storage/MoveObject
 
-@type ChecksummedData {crc32c: int(u32)}
-@type Bucket {etag: str}
 @type WriteObjectSpec {if_generation_match: int(i64), if_generation_not_match: int(i64), if_metageneration_match: int(i64), if_metageneration_not_match: int(i64), object_size: int(i64), appendable: bool}
+@type ChecksummedData {crc32c: int(u32)}
 @type Object {event_based_hold: bool}
+@type Bucket {etag: str}
 @type FieldMask {paths: [str]}
 
 @endpoint UNARY /Storage/DeleteBucket
@@ -91,3 +94,5 @@
 
 @endpoint UNARY /Storage/MoveObject
 @returns(OK) → Object
+
+@end

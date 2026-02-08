@@ -1,8 +1,11 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api E-Commerce Event Stream
 @base kafka://kafka.example.com:9092
 @version 3.0.0
 @auth kafka
+@endpoints 6
+@toc New order placed [kafka(groupId=order-processors, clientId=ecommerce-service)], Order status changed, Payment processed [kafka(groupId=payment-consumers)], Publish inventory changes [kafka(key=productId)], Customer lifecycle events, Customer lifecycle events
 
 @endpoint SUB orders.created
 @desc New order placed [kafka(groupId=order-processors, clientId=ecommerce-service)]
@@ -39,3 +42,5 @@
 @required {customerId: str}
 @optional {changes: map}
 @returns(SUB) {customerId: str, changes: map} # message payload
+
+@end

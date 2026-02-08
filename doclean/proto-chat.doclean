@@ -1,14 +1,17 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api chat.v1
 @base grpc://chat.v1
 @version proto3
+@endpoints 5
+@toc UNARY /ChatService/SendMessage, SERVER-STREAM /ChatService/StreamMessages, BIDI-STREAM /ChatService/Chat, UNARY /ChatService/ListRooms, UNARY /ChatService/GetHistory
 
-@type ChatMessage {id: str, room_id: str, sender_id: str, type: enum(TEXT/IMAGE/FILE/SYSTEM), content: str, attachments: [Attachment], timestamp_ms: int(i64), reply_to_id: str, reactions: map<str,int>}
-@type PresenceUpdate {user_id: str, status: str, last_seen_ms: int(i64)}
 @type ReadReceipt {room_id: str, user_id: str, last_read_message_id: str}
-@type Attachment {url: str, filename: str, mime_type: str, size_bytes: int(i64)}
-@type TypingIndicator {room_id: str, user_id: str, is_typing: bool}
+@type ChatMessage {id: str, room_id: str, sender_id: str, type: enum(TEXT/IMAGE/FILE/SYSTEM), content: str, attachments: [Attachment], timestamp_ms: int(i64), reply_to_id: str, reactions: map<str,int>}
 @type ChatEvent {message: ChatMessage?, typing: TypingIndicator?, presence: PresenceUpdate?, read_receipt: ReadReceipt?}
+@type PresenceUpdate {user_id: str, status: str, last_seen_ms: int(i64)}
+@type TypingIndicator {room_id: str, user_id: str, is_typing: bool}
+@type Attachment {url: str, filename: str, mime_type: str, size_bytes: int(i64)}
 
 @endpoint UNARY /ChatService/SendMessage
 @optional {room_id: str, type: enum(TEXT/IMAGE/FILE/SYSTEM), content: str, attachments: [Attachment], reply_to_id: str}
@@ -29,3 +32,5 @@
 @endpoint UNARY /ChatService/GetHistory
 @optional {room_id: str, limit: int, before_message_id: str}
 @returns(OK) {messages: [ChatMessage], has_more: bool} # GetHistoryResponse
+
+@end

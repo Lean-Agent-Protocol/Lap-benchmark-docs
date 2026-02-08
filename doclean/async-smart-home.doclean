@@ -1,8 +1,11 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api Smart Home Automation
 @base mqtt://home-hub.local:1883
 @version 1.0.0
 @auth mqtt
+@endpoints 4
+@toc Temperature sensor reading [mqtt(qos=0)], Light control command, Security system events, Energy consumption data
 
 @endpoint PUB home/{roomId}/temperature
 @desc Temperature sensor reading [mqtt(qos=0)]
@@ -27,3 +30,5 @@
 @required {watts: num, timestamp: str(date-time)}
 @optional {kwhToday: num, solarGeneration: num, gridImport: num}
 @returns(PUB) {watts: num, kwhToday: num, solarGeneration: num, gridImport: num, timestamp: str(date-time)} # message payload
+
+@end

@@ -1,8 +1,11 @@
-@doclean v0.1
+@doclean v0.2
+# Machine-readable API spec. Each @endpoint block is one API call.
 @api GitHub REST API
 @base https://api.github.com
 @version 2022-11-28
 @auth Bearer bearer
+@endpoints 6
+@toc Get a repository, List repository issues, Create an issue, List pull requests, Create a pull request, Merge a pull request
 
 @endpoint GET /repos/{owner}/{repo}
 @desc Get a repository
@@ -44,3 +47,5 @@
 @optional {commit_title: str # Title for the automatic merge commit, commit_message: str # Extra detail for the automatic merge commit, merge_method: str(merge/squash/rebase) # The merge method to use, sha: str # SHA that pull request head must match to allow merge}
 @returns(200) Pull request merged successfully
 @errors {405: Pull request is not mergeable, 409: Head branch was modified}
+
+@end
