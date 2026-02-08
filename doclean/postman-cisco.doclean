@@ -1,0 +1,175 @@
+@doclean v0.1
+@api NSO Sample API Requests
+@auth Basic username:password
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data
+@desc Root Level NSO JSON Returned
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data
+@desc Root Level NSO XML returned
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device
+@desc All Devices in Device List: Show Running-config Devices Device
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}
+@desc Single Device Config - Show devices device DEVICENAME
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/platform
+@desc Single Device HW / SW Platform Info
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}/
+@desc show interfaces
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}/GigabitEthernet=4
+@desc show interface Gig 4 config
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device-group
+@desc List Device Groups
+@auth Basic username:password
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device-group=IOS-DEVICES
+@desc List Device Single Device Group Details
+@auth Basic username:password
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/svi_verify_example{svi_verify_example}
+@desc Get List of Service Instances for a Service
+@auth Basic username:password
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/svi_verify_example{svi_verify_example}=first-instance
+@desc Get Service Info For Single Service Instance
+@auth Basic username:password
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/live-status
+@desc View NSO Live Status Capabilities
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data
+@desc Root Level NSO JSON Returned
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data
+@desc Root Level NSO XML returned
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device
+@desc All Devices in Device List: Show Running-config Devices Device
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}
+@desc Single Device Config - Show devices device DEVICENAME
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/platform
+@desc Single Device HW / SW Platform Info
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}/
+@desc show interfaces
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}/GigabitEthernet=4
+@desc show interface Gig 4 config
+
+@endpoint POST /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}
+@desc Commit Dry-run outformat native
+@required {dry-run: str # uncheck to actually commit}
+
+@endpoint POST /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}
+@desc Commit Dry-run outformat native Copy
+@required {dry-run: str # uncheck to actually commit, dry-run-reverse: str}
+
+@endpoint DELETE /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}/GigabitEthernet=4/ip/address
+@desc Commit-Dry Run Remove IP address from interface
+@required {dry-run: str}
+
+@endpoint PATCH /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/
+@desc 1. Create a DNS Server Configuration Template
+@auth Basic username:password
+
+@endpoint POST /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/apply-template/
+@desc 2. Apply DNS Server Device Template
+@auth Basic username:password
+
+@endpoint PATCH /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}
+@desc Configure Device Groups
+@auth Basic username:password
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device-group
+@desc List Device Groups
+@auth Basic username:password
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device-group=IOS-DEVICES
+@desc List Device Single Device Group Details
+@auth Basic username:password
+
+@endpoint PATCH /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{compliance}
+@desc Configure DNS Server Compliance Report
+@auth Basic username:password
+
+@endpoint POST /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{compliance}/reports/report=DNS_COMPLIANCE_REPORT/run
+@desc Run Compliance Report
+@auth Basic username:password
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/svi_verify_example{svi_verify_example}
+@desc Get List of Service Instances for a Service
+@auth Basic username:password
+
+@endpoint PATCH /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/svi_verify_example{svi_verify_example}/
+@desc Create Service Instance for Single Device
+@auth Basic username:password
+@required {svi_verify_example:svi_verify_example: [map]}
+@optional {dry-run: str}
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/svi_verify_example{svi_verify_example}=first-instance
+@desc Get Service Info For Single Service Instance
+@auth Basic username:password
+
+@endpoint PATCH /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/svi_verify_example{svi_verify_example}=first-instance
+@desc Update an Existing Service Instance
+@auth Basic username:password
+@required {svi_verify_example:svi_verify_example: [map]}
+
+@endpoint DELETE /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/svi_verify_example{svi_verify_example}=first-instance
+@desc Remove Device from Service
+@auth Basic username:password
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/live-status
+@desc View NSO Parsed Live Status
+
+@endpoint GET /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/live-status/tailf-ned-cisco-ios-stats{arp}
+@desc View Arp Data
+
+@endpoint POST /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/live-status/tailf-ned-cisco-ios-stats{exec}/any
+@desc Send any Command to Device: Show IP Interface Brief
+@required {input: map}
+
+@endpoint POST /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}
+@desc 1. Create new Loopback
+@auth Basic username:password
+@returns(201) Success
+@errors {409: Failure: already exists, 415: Failure: bad content-type}
+
+@endpoint PATCH /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}/Loopback=1337/ip
+@desc 2. Edit New Loopback IP Address
+
+@endpoint DELETE /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}/Loopback=1337/ip/address
+@desc 3. Remove IP Address From Interface
+@optional {dry-run: str}
+
+@endpoint DELETE /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{interface}/Loopback=1337
+@desc 4. Delete new Loopback
+@auth Basic username:password
+@returns(201) Success
+@errors {409: Failure: already exists, 415: Failure: bad content-type}
+
+@endpoint PATCH /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/
+@desc 5. Add SNMP Community String
+@optional {dry-run: str}
+
+@endpoint DELETE /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/config/tailf-ned-cisco-ios{snmp}-server
+@desc 6. Remove SNMP Community String from Device
+
+@endpoint POST /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}
+@desc Step 0. Create a Device in the CDB
+
+@endpoint POST /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/ssh/fetch-host-keys
+@desc (not needed on sandbox telent) Step 1. SSH Fetch-Host-Keys Device
+
+@endpoint POST /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}/sync-from
+@desc Step 2. Sync-from Device
+
+@endpoint DELETE /{{PROTOCOL}}://127.0.0.1{8009}/restconf/data/tailf-ncs{devices}/device={{SAMPLE_IOS_DEVICE}}
+@desc Delete a device from CDB Device List

@@ -1,0 +1,24 @@
+@doclean v0.1
+@api payments.v1
+@base grpc://payments.v1
+@version proto3
+
+@type Payment {id: str, customer_id: str, amount: Money, status: enum(PENDING/PROCESSING/SUCCEEDED/FAILED/REFUNDED), payment_method: PaymentMethod, description: str, metadata: map<str,str>, created_at_unix: int(i64)}
+@type Money {amount_cents: int(i64), currency: enum(USD/EUR/GBP/JPY)}
+@type PaymentMethod {card: CardPayment?{card_number_last4: str, brand: str, exp_month: int, exp_year: int}, bank_transfer: BankTransfer?{routing_number: str, account_last4: str, bank_name: str}, wallet: WalletPayment?{wallet_type: str, wallet_id: str}}
+
+@endpoint UNARY /PaymentService/CreatePayment
+@optional {customer_id: str, amount: Money, payment_method: PaymentMethod, description: str, idempotency_key: str, metadata: map<str,str>}
+@returns(OK) → Payment
+
+@endpoint UNARY /PaymentService/GetPayment
+@optional {id: str}
+@returns(OK) → Payment
+
+@endpoint UNARY /PaymentService/RefundPayment
+@optional {payment_id: str, amount: Money, reason: str}
+@returns(OK) {id: str, payment_id: str, amount: Money, status: str, reason: str, created_at_unix: int(i64)} # Refund
+
+@endpoint UNARY /PaymentService/ListPayments
+@optional {customer_id: str, page_size: int, page_token: str, status_filter: enum(PENDING/PROCESSING/SUCCEEDED/FAILED/REFUNDED)}
+@returns(OK) {payments: [Payment], next_page_token: str} # ListPaymentsResponse

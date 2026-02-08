@@ -1,0 +1,31 @@
+@doclean v0.1
+@api chat.v1
+@base grpc://chat.v1
+@version proto3
+
+@type ChatMessage {id: str, room_id: str, sender_id: str, type: enum(TEXT/IMAGE/FILE/SYSTEM), content: str, attachments: [Attachment], timestamp_ms: int(i64), reply_to_id: str, reactions: map<str,int>}
+@type PresenceUpdate {user_id: str, status: str, last_seen_ms: int(i64)}
+@type ReadReceipt {room_id: str, user_id: str, last_read_message_id: str}
+@type Attachment {url: str, filename: str, mime_type: str, size_bytes: int(i64)}
+@type TypingIndicator {room_id: str, user_id: str, is_typing: bool}
+@type ChatEvent {message: ChatMessage?, typing: TypingIndicator?, presence: PresenceUpdate?, read_receipt: ReadReceipt?}
+
+@endpoint UNARY /ChatService/SendMessage
+@optional {room_id: str, type: enum(TEXT/IMAGE/FILE/SYSTEM), content: str, attachments: [Attachment], reply_to_id: str}
+@returns(OK) → ChatMessage
+
+@endpoint SERVER-STREAM /ChatService/StreamMessages
+@optional {room_id: str, since_timestamp_ms: int(i64)}
+@returns(OK) → ChatMessage
+
+@endpoint BIDI-STREAM /ChatService/Chat
+@body → ChatEvent
+@returns(OK) → ChatEvent
+
+@endpoint UNARY /ChatService/ListRooms
+@optional {page_size: int, page_token: str}
+@returns(OK) {rooms: [Room]{id: str, name: str, member_ids: [str], is_direct: bool, last_message: ChatMessage, unread_count: int}, next_page_token: str} # ListRoomsResponse
+
+@endpoint UNARY /ChatService/GetHistory
+@optional {room_id: str, limit: int, before_message_id: str}
+@returns(OK) {messages: [ChatMessage], has_more: bool} # GetHistoryResponse

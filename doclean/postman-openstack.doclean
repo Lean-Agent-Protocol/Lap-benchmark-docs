@@ -1,0 +1,693 @@
+@doclean v0.1
+@api Compute API
+@base http://{{IP}}:{{NOVA_V2_PORT}}
+
+@endpoint GET /
+@desc List All Major Versions
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/
+@desc Show Details of Specific API Version
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-assisted-volume-snapshots
+@desc Create Assisted Volume Snapshots
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/os-assisted-volume-snapshots/{{snapshot_id}}
+@desc Delete Assisted Volume Snapshot
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-availability-zone
+@desc Get Availability Zone Information
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-availability-zone/detail
+@desc Get Detailed Availability Zone Information
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-cells
+@desc List Cells
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-cells
+@desc Create Cell
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-cloudpipe
+@desc List Cloudpipes
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-cloudpipe
+@desc Create Cloudpipe
+@required {cloudpipe: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-cloudpipe/configure-project
+@desc Update Cloudpipe
+@required {configure_project: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-services
+@desc List Compute Services
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/os-services/disable
+@desc Disable Scheduling For A Compute Service
+@required {host: str, binary: str}
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/os-services/disable-log-reason
+@desc Log Disabled Compute Service Information
+@required {host: str, binary: str, disabled_reason: str}
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/os-services/enable
+@desc Enable Scheduling For A Compute Service
+@required {host: str, binary: str}
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/os-services/force-down
+@desc Update Forced Down
+@required {host: str, binary: str, forced_down: bool}
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/os-services/{{service_id}}
+@desc Delete Compute Service
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-server-external-events
+@desc Run Events
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/flavors
+@desc List Flavors
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/flavors
+@desc Create Flavor
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/flavors/detail
+@desc List Flavors With Details
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/flavors/detail/{{flavor_id}}
+@desc Show Flavor Details
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/flavors/detail/{{flavor_id}}
+@desc Delete Flavor
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/flavors/{{flavor_id}}/os-flavor-access
+@desc List Flavor Access Information For Given Flavor
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/flavors/{{flavor_id}}/action
+@desc Add Flavor Access To Tenant (addTenantAccess Action)
+@required {addTenantAccess: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/flavors/{{flavor_id}}/action
+@desc Remove Flavor Access From Tenant (removeTenantAccess Action)
+@required {removeTenantAccess: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/flavors/{{flavor_id}}/os-extra_specs
+@desc List Extra Specs For A Flavor
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/flavors/{{flavor_id}}/os-extra_specs
+@desc Create Extra Specs For A Flavor
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/flavors/{{flavor_id}}/os-extra_specs/{{flavor_extra_spec_key}}
+@desc Show An Extra Spec For A Flavor
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/flavors/{{flavor_id}}/os-extra_specs/{{flavor_extra_spec_key}}
+@desc Update An Extra Spec For A Flavor
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/flavors/{{flavor_id}}/os-extra_specs/{{flavor_extra_spec_key}}
+@desc Delete An Extra Spec For A Flavor
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-agents
+@desc List Agent Builds
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-agents
+@desc Create Agent Build
+@required {agent: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-agents/{{agent_build_id}}
+@desc Update Agent Build
+@required {para: map}
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/os-agents/{{agent_build_id}}
+@desc Delete Agent Build
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-aggregates
+@desc List Aggregates
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-aggregates
+@desc Create Aggregate
+@required {aggregate: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-aggregates/{{aggregate_id}}
+@desc Show Aggregate Details
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/os-aggregates/{{aggregate_id}}
+@desc Update Aggregate
+@required {aggregate: map}
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/os-aggregates/{{aggregate_id}}
+@desc Delete Aggregate
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-aggregates/{{aggregate_id}}/action
+@desc Add Host
+@required {add_host: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-aggregates/{{aggregate_id}}/action
+@desc Remove Host
+@required {remove_host: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-aggregates/{{aggregate_id}}/action
+@desc Create Or Update Aggregate Metadata
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hosts
+@desc List Hosts
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hosts/{{host_name}}
+@desc Show Host Details
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/os-hosts/{{host_name}}
+@desc Update Host status
+@required {status: str, maintenance_mode: str}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hosts/{{host_name}}/reboot
+@desc Reboot Host
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hosts/{{host_name}}/shutdown
+@desc Shut Down Host
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hosts/{{host_name}}/startup
+@desc Start Host
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hypervisors
+@desc List Hypervisors
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hypervisors/detail
+@desc List Hypervisors Details
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hypervisors/statistics
+@desc Show Hypervisor Statistics
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hypervisors/{{hypervisor_id}}
+@desc Show Hypervisor Details
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hypervisors/{{hypervisor_id}}/uptime
+@desc Show Hypervisor Uptime
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hypervisors/{{hypervisor_id}}/search
+@desc Search Hypervisor
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-hypervisors/{{hypervisor_id}}/servers
+@desc List Hypervisor Servers
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-keypairs
+@desc List Keypairs
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-keypairs
+@desc Create Or Import Keypair
+@required {keypair: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-keypairs/{{keypair_name}}
+@desc Show Keypair Details
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/os-keypairs/{{keypair_name}}
+@desc Delete Keypair
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/limits
+@desc Show Rate And Absolute Limits
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-migrations
+@desc List Migrations
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-server-password
+@desc List Port Interfaces
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-interface
+@desc Create Interface
+@required {interfaceAttachment: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-interface/{{port_id}}
+@desc Show Port Interface Details
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-interface/{{port_id}}
+@desc Detach Interface
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-quota-sets/{{tenant_id}}
+@desc Show A Quota
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/os-quota-sets/{{tenant_id}}
+@desc Update Quotas
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/os-quota-sets/{{tenant_id}}
+@desc Revert Quotas To Defaults
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-quota-sets/{{tenant_id}}/defaults
+@desc List Default Quotas For Tenant
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-quota-sets/{{tenant_id}}/detail
+@desc Show The Detail of Quota
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/consoles
+@desc Lists Consoles
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/consoles
+@desc Create Console
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/consoles/{{console_id}}
+@desc Show Console Details
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/servers/{{server_id}}/consoles/{{console_id}}
+@desc Delete Console
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-console-auth-token
+@desc Show Console Authentication Token
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-server-groups
+@desc List Server Groups
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/os-server-groups
+@desc reate Server Group
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-server-groups/{[server_group_id}}
+@desc Show Server Group Details
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/os-server-groups/{[server_group_id}}
+@desc Delete Server Group
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/metadata
+@desc List All Metadata
+@required {os-resetState: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/metadata
+@desc Update Metadata Items
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/servers/{{server_id}}/metadata
+@desc Create Or Replace Metadata Items
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/metadata/{{key}}
+@desc Show Metadata Item Details
+@required {os-resetState: map}
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/servers/{{server_id}}/metadata/{{key}}
+@desc Create Or Update Metadata Item
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/servers/{{server_id}}/metadata/{{key}}
+@desc Delete Metadata Item
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/tags
+@desc List Tags
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/servers/{{server_id}}/tags
+@desc Replace Tags
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/servers/{{server_id}}/tags
+@desc Delete All Tags
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/tags/{{tag}}
+@desc Check Tag Existence
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/servers/{{server_id}}/tags/{{tag}}
+@desc Add a Single Tag
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/servers/{{server_id}}/tags/{{tag}}
+@desc Delete a Single Tag
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-instance_usage_audit_log
+@desc List Server Usage Audits For An Tenant
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-instance_usage_audit_log/{{before_timestamp}}
+@desc List Usage Audits Before Specified Time
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers
+@desc List Servers
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers
+@desc Create Server*
+@required {server: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers
+@desc Create Multiple Servers*
+@required {server: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/detail
+@desc List Servers Detailed
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}
+@desc Show Server Details
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/servers/{{server_id}}
+@desc Update Server*
+@required {server: map}
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/servers/{{server_id}}
+@desc Delete Server
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Add (Associate) Floating Ip (addFloatingIp Action)
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Change Administrative Password (changePassword Action)
+@required {changePassword: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Confirm Resized Server (confirmResize Action)
+@required {confirmResize: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Create Image (createImage Action)
+@required {createImage: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Lock Server (lock Action)
+@required {lock: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Pause Server (pause Action)
+@required {pause: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Reboot Server (reboot Action)
+@required {reboot: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Rebuild Server (rebuild Action)
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Remove (Disassociate) Floating Ip (removeFloatingIp Action)
+@required {removeFloatingIp: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Remove Security Group From A Server (removeSecurityGroup Action)
+@required {removeSecurityGroup: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Rescue Server (rescue Action)
+@required {rescue: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Resize Server (resize Action)
+@required {resize: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Resume Suspended Server (resume Action)
+@required {resume: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Revert Resized Server (revertResize Action)
+@required {revertResize: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Start Server (os-start Action)
+@required {os-start: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Stop Server (os-stop Action)
+@required {os-stop: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Suspend Server (suspend Action)
+@required {suspend: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Unlock Server (unlock Action)
+@required {unlock: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Unpause Server (unpause Action)
+@required {unpause: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Unrescue Server (unrescue Action)
+@required {unrescue: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Add (Associate) Fixed Ip (Addfixedip Action)
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Remove (Disassociate) Fixed Ip (Removefixedip Action)
+@required {removeFixedIp: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Evacuate Server (evacuate Action)
+@required {evacuate: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Force-Delete Server (forceDelete Action)
+@required {forceDelete: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Restore Soft-Deleted Instance (restore Action)
+@required {restore: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Show Console Output (Os-Getconsoleoutput Action)
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Get Rdp Console (os-getRDPConsole Action)
+@required {os-getRDPConsole: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Get Serial Console (os-getSerialConsole Action)
+@required {os-getSerialConsole: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Get Spice Console (os-getSPICEConsole Action)
+@required {os-getSPICEConsole: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Get Vnc Console (os-getVNCConsole Action)
+@required {os-getVNCConsole: map}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Shelve Server (shelve Action)
+@required {shelve: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Shelf-Offload (Remove) Server (shelveOffload Action)
+@required {shelveOffload: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Unshelve (Restore) Shelved Server (unshelve Action)
+@required {shelveOffload: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Trigger Crash Dump In Server
+@required {trigger_crash_dump: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Create Server Back Up (createBackup Action)*
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Inject Network Information (injectNetworkInfo Action)
+@required {injectNetworkInfo: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Migrate Server (migrate Action)
+@required {migrate: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Live-Migrate Server (os-migrateLive Action)*
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Reset Networking On A Server (resetNetwork Action)
+@required {resetNetwork: any}
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/action
+@desc Reset Server State (os-resetState Action)
+@required {os-resetState: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/ips
+@desc List Ips
+@required {os-resetState: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/ips/{{network_label}}
+@desc Show Ip Details
+@required {os-resetState: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-security-groups
+@desc List Security Groups By Server
+@required {os-resetState: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-instance-actions
+@desc List Actions For Server
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-instance-actions/{{request_id}}
+@desc Show Server Action Details
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/diagnostics
+@desc Show Server Diagnostics
+@required {os-resetState: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-interface
+@desc Show Server Password
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-interface
+@desc Clear Admin Password
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-virtual-interfaces
+@desc List Virtual Interfaces
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-volume_attachments
+@desc List volume attachments for an instance
+@optional {X-Auth-Token: str}
+
+@endpoint POST /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-volume_attachments
+@desc Attach a volume to an instance
+@required {volumeAttachment: map}
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-volume_attachments/{{attachment_id}}
+@desc Show a detail of a volume attachment
+@optional {X-Auth-Token: str}
+
+@endpoint PUT /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-volume_attachments/{{attachment_id}}
+@desc Update a volume attachment
+@required {volumeAttachment: map}
+@optional {X-Auth-Token: str}
+
+@endpoint DELETE /{{NOVA_API_VERSION}}/servers/{{server_id}}/os-volume_attachments/{{attachment_id}}
+@desc Detach a volume from an instance
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-simple-tenant-usage
+@desc List Tenant Usage For All Tenants
+@optional {X-Auth-Token: str}
+
+@endpoint GET /{{NOVA_API_VERSION}}/os-simple-tenant-usage/{{tenant_id}}
+@desc Show Usage Details For Tenant
+@optional {X-Auth-Token: str}

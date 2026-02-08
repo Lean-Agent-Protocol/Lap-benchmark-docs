@@ -1,0 +1,93 @@
+@doclean v0.1
+@api google.storage.v2
+@base grpc://google.storage.v2
+@version proto3
+
+@type ChecksummedData {crc32c: int(u32)}
+@type Bucket {etag: str}
+@type WriteObjectSpec {if_generation_match: int(i64), if_generation_not_match: int(i64), if_metageneration_match: int(i64), if_metageneration_not_match: int(i64), object_size: int(i64), appendable: bool}
+@type Object {event_based_hold: bool}
+@type FieldMask {paths: [str]}
+
+@endpoint UNARY /Storage/DeleteBucket
+@optional {if_metageneration_match: int(i64), if_metageneration_not_match: int(i64)}
+@returns(OK) Empty response
+
+@endpoint UNARY /Storage/GetBucket
+@optional {if_metageneration_match: int(i64), if_metageneration_not_match: int(i64), read_mask: FieldMask}
+@returns(OK) → Bucket
+
+@endpoint UNARY /Storage/CreateBucket
+@returns(OK) → Bucket
+
+@endpoint UNARY /Storage/ListBuckets
+@optional {read_mask: FieldMask}
+@returns(OK) {buckets: [Bucket], next_page_token: str, unreachable: [str]} # ListBucketsResponse
+
+@endpoint UNARY /Storage/LockBucketRetentionPolicy
+@returns(OK) → Bucket
+
+@endpoint UNARY /Storage/GetIamPolicy
+
+@endpoint UNARY /Storage/SetIamPolicy
+
+@endpoint UNARY /Storage/TestIamPermissions
+
+@endpoint UNARY /Storage/UpdateBucket
+@optional {if_metageneration_match: int(i64), if_metageneration_not_match: int(i64)}
+@returns(OK) → Bucket
+
+@endpoint UNARY /Storage/ComposeObject
+@optional {if_generation_match: int(i64), if_metageneration_match: int(i64), delete_source_objects: bool}
+@returns(OK) → Object
+
+@endpoint UNARY /Storage/DeleteObject
+@optional {if_generation_match: int(i64), if_generation_not_match: int(i64), if_metageneration_match: int(i64), if_metageneration_not_match: int(i64)}
+@returns(OK) Empty response
+
+@endpoint UNARY /Storage/RestoreObject
+@optional {if_generation_match: int(i64), if_generation_not_match: int(i64), if_metageneration_match: int(i64), if_metageneration_not_match: int(i64), copy_source_acl: bool}
+@returns(OK) → Object
+
+@endpoint UNARY /Storage/CancelResumableWrite
+@returns(OK) CancelResumableWriteResponse
+
+@endpoint UNARY /Storage/GetObject
+@optional {soft_deleted: bool, if_generation_match: int(i64), if_generation_not_match: int(i64), if_metageneration_match: int(i64), if_metageneration_not_match: int(i64), read_mask: FieldMask}
+@returns(OK) → Object
+
+@endpoint SERVER-STREAM /Storage/ReadObject
+@optional {if_generation_match: int(i64), if_generation_not_match: int(i64), if_metageneration_match: int(i64), if_metageneration_not_match: int(i64), read_mask: FieldMask}
+@returns(OK) {checksummed_data: ChecksummedData, object_checksums: ObjectChecksums{crc32c: int(u32)}, content_range: ContentRange{start: int(i64), end: int(i64), complete_length: int(i64)}, metadata: Object} # ReadObjectResponse
+
+@endpoint BIDI-STREAM /Storage/BidiReadObject
+@returns(OK) {object_data_ranges: [ObjectRangeData]{checksummed_data: ChecksummedData, read_range: ReadRange, range_end: bool}, metadata: Object, read_handle: BidiReadHandle} # BidiReadObjectResponse
+
+@endpoint UNARY /Storage/UpdateObject
+@optional {if_generation_match: int(i64), if_generation_not_match: int(i64), if_metageneration_match: int(i64), if_metageneration_not_match: int(i64)}
+@returns(OK) → Object
+
+@endpoint CLIENT-STREAM /Storage/WriteObject
+@optional {upload_id: str, write_object_spec: WriteObjectSpec, checksummed_data: ChecksummedData}
+@returns(OK) {persisted_size: int(i64)?, resource: Object?} # WriteObjectResponse
+
+@endpoint BIDI-STREAM /Storage/BidiWriteObject
+@optional {upload_id: str, write_object_spec: WriteObjectSpec, append_object_spec: AppendObjectSpec, checksummed_data: ChecksummedData}
+@returns(OK) {persisted_size: int(i64)?, resource: Object?, write_handle: BidiWriteHandle} # BidiWriteObjectResponse
+
+@endpoint UNARY /Storage/ListObjects
+@optional {read_mask: FieldMask}
+@returns(OK) {objects: [Object], prefixes: [str], next_page_token: str} # ListObjectsResponse
+
+@endpoint UNARY /Storage/RewriteObject
+@optional {if_generation_match: int(i64), if_generation_not_match: int(i64), if_metageneration_match: int(i64), if_metageneration_not_match: int(i64), if_source_generation_match: int(i64), if_source_generation_not_match: int(i64), if_source_metageneration_match: int(i64), if_source_metageneration_not_match: int(i64)}
+@returns(OK) {total_bytes_rewritten: int(i64), object_size: int(i64), done: bool, rewrite_token: str, resource: Object} # RewriteResponse
+
+@endpoint UNARY /Storage/StartResumableWrite
+@returns(OK) {upload_id: str} # StartResumableWriteResponse
+
+@endpoint UNARY /Storage/QueryWriteStatus
+@returns(OK) {persisted_size: int(i64)?, resource: Object?} # QueryWriteStatusResponse
+
+@endpoint UNARY /Storage/MoveObject
+@returns(OK) → Object

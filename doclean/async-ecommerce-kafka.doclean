@@ -1,0 +1,41 @@
+@doclean v0.1
+@api E-Commerce Event Stream
+@base kafka://kafka.example.com:9092
+@version 3.0.0
+@auth kafka
+
+@endpoint SUB orders.created
+@desc New order placed [kafka(groupId=order-processors, clientId=ecommerce-service)]
+@required {orderId: str, customerId: str, items: [map], total: num(double)}
+@optional {currency: str=USD, shippingAddress: map, header:correlationId: str, header:partitionKey: str}
+@returns(SUB) {orderId: str, customerId: str, items: [map], total: num(double), currency: str, shippingAddress: map{street: str, city: str, country: str, zip: str}} # message payload
+
+@endpoint SUB orders.updated
+@desc Order status changed
+@required {orderId: str, status: str(pending/confirmed/shipped/delivered/cancelled)}
+@optional {updatedAt: str(date-time), trackingNumber: str}
+@returns(SUB) {orderId: str, status: str, updatedAt: str(date-time), trackingNumber: str} # message payload
+
+@endpoint SUB payments.processed
+@desc Payment processed [kafka(groupId=payment-consumers)]
+@required {paymentId: str, orderId: str, status: str(success/failed/refunded), amount: num(double)}
+@optional {method: str(credit_card/paypal/bank_transfer), transactionRef: str}
+@returns(SUB) {paymentId: str, orderId: str, status: str, amount: num(double), method: str, transactionRef: str} # message payload
+
+@endpoint PUB inventory.updated
+@desc Publish inventory changes [kafka(key=productId)]
+@required {productId: str, quantity: int}
+@optional {warehouse: str, reserved: int}
+@returns(PUB) {productId: str, quantity: int, warehouse: str, reserved: int} # message payload
+
+@endpoint SUB customers.events
+@desc Customer lifecycle events
+@required {customerId: str, email: str(email)}
+@optional {name: str}
+@returns(SUB) {customerId: str, email: str(email), name: str} # message payload
+
+@endpoint SUB customers.events
+@desc Customer lifecycle events
+@required {customerId: str}
+@optional {changes: map}
+@returns(SUB) {customerId: str, changes: map} # message payload

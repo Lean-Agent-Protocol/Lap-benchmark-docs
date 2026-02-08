@@ -1,0 +1,31 @@
+@doclean v0.1
+@api Task Manager API
+@base https://api.taskmanager.io/v1
+@auth Bearer token
+
+@endpoint GET /tasks
+@desc List Tasks
+@required {status: str # Filter by status, limit: str # Max results}
+@returns(200) {tasks: [map], total: int} # Success
+
+@endpoint POST /tasks
+@desc Create Task
+@required {title: str, description: str, priority: int}
+@returns(201) {id: int, title: str, done: bool} # Created
+@errors {422: Validation Error}
+
+@endpoint GET /tasks/{taskId}
+@desc Get Task
+@required {taskId: str # Task ID}
+@returns(200) {id: int, title: str, done: bool} # Success
+@errors {404: Not Found}
+
+@endpoint PUT /tasks/{taskId}
+@desc Update Task
+@required {taskId: str, title: str, done: bool}
+@returns(200) {id: int, title: str, done: bool} # Updated
+
+@endpoint DELETE /tasks/{taskId}
+@desc Delete Task
+@required {taskId: str}
+@returns(204) Deleted

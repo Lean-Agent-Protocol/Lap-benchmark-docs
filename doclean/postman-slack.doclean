@@ -1,0 +1,29 @@
+@doclean v0.1
+@api Slack Web API
+@base https://slack.com/api
+@auth Bearer token
+
+@endpoint POST /chat.postMessage
+@desc Post Message
+@required {channel: str, text: str, thread_ts: str}
+@returns(200) {ok: bool, ts: str, channel: str} # OK
+
+@endpoint GET /conversations.list
+@desc List Channels
+@required {limit: str, types: str}
+@returns(200) {ok: bool, channels: [map]} # OK
+
+@endpoint GET /users.info
+@desc Get User Info
+@required {user: str # User ID}
+@returns(200) {ok: bool, user: map{id: str, name: str, real_name: str}} # OK
+
+@endpoint POST /files.upload
+@desc Upload File
+@required {channels: str, content: str, filename: str}
+@returns(200) {ok: bool, file: map{id: str, name: str}} # OK
+
+@endpoint POST /reactions.add
+@desc Add Reaction
+@required {channel: str, timestamp: str, name: str}
+@returns(200) {ok: bool} # OK

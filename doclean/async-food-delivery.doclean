@@ -1,0 +1,23 @@
+@doclean v0.1
+@api Food Delivery Tracking
+@base wss://delivery.food.example.com
+@version 1.0.0
+@auth ws
+
+@endpoint SUB orders/{orderId}/status
+@desc Order status update
+@required {orderId: str, status: str(placed/confirmed/preparing/ready/picked_up/delivering/delivered), updatedAt: str(date-time), orderId: str}
+@optional {estimatedDelivery: str(date-time)}
+@returns(SUB) {orderId: str, status: str, estimatedDelivery: str(date-time), updatedAt: str(date-time)} # message payload
+
+@endpoint SUB orders/{orderId}/driver
+@desc Driver tracking
+@required {driverId: str, location: map, orderId: str}
+@optional {driverName: str, eta: int, distanceRemaining: num}
+@returns(SUB) {driverId: str, driverName: str, location: map{lat: num, lng: num}, eta: int, distanceRemaining: num} # message payload
+
+@endpoint SUB restaurants/{restaurantId}/orders
+@desc New order for restaurant
+@required {orderId: str, items: [map], restaurantId: str}
+@optional {customerName: str, prepTime: int}
+@returns(SUB) {orderId: str, items: [map], customerName: str, prepTime: int} # message payload

@@ -1,0 +1,29 @@
+@doclean v0.1
+@api Smart Home Automation
+@base mqtt://home-hub.local:1883
+@version 1.0.0
+@auth mqtt
+
+@endpoint PUB home/{roomId}/temperature
+@desc Temperature sensor reading [mqtt(qos=0)]
+@required {sensorId: str, temperature: num, unit: str(celsius/fahrenheit), roomId: str}
+@optional {humidity: num, timestamp: str(date-time)}
+@returns(PUB) {sensorId: str, temperature: num, humidity: num, unit: str, timestamp: str(date-time)} # message payload
+
+@endpoint SUB home/{roomId}/lights
+@desc Light control command
+@required {deviceId: str, action: str(True/False/dim/color), roomId: str}
+@optional {brightness: int, color: str}
+@returns(SUB) {deviceId: str, action: str, brightness: int, color: str} # message payload
+
+@endpoint PUB home/security
+@desc Security system events
+@required {type: str(motion/door_open/door_close/window_open/alarm_triggered/alarm_armed/alarm_disarmed), zone: str, timestamp: str(date-time)}
+@optional {sensorId: str}
+@returns(PUB) {type: str, zone: str, sensorId: str, timestamp: str(date-time)} # message payload
+
+@endpoint PUB home/energy
+@desc Energy consumption data
+@required {watts: num, timestamp: str(date-time)}
+@optional {kwhToday: num, solarGeneration: num, gridImport: num}
+@returns(PUB) {watts: num, kwhToday: num, solarGeneration: num, gridImport: num, timestamp: str(date-time)} # message payload

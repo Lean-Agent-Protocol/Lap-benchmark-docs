@@ -1,0 +1,28 @@
+@doclean v0.1
+@api Notification Service
+@version 1.5.0
+@auth amqp
+
+@endpoint PUB notifications/email
+@desc Send email notification
+@required {to: str(email), subject: str, body: str}
+@optional {html: bool=False, cc: [str], attachments: [map]}
+@returns(PUB) {to: str(email), subject: str, body: str, html: bool, cc: [str], attachments: [map]} # message payload
+
+@endpoint PUB notifications/sms
+@desc Send SMS notification
+@required {phoneNumber: str, message: str}
+@optional {sender: str, priority: str(low/normal/high/urgent)}
+@returns(PUB) {phoneNumber: str, message: str, sender: str, priority: str} # message payload
+
+@endpoint PUB notifications/push
+@desc Send push notification
+@required {userId: str, title: str, body: str}
+@optional {icon: str, deepLink: str, badge: int, data: map}
+@returns(PUB) {userId: str, title: str, body: str, icon: str, deepLink: str, badge: int, data: map} # message payload
+
+@endpoint SUB notifications/status
+@desc Receive delivery status updates
+@required {notificationId: str, channel: str(email/sms/push), status: str(queued/sent/delivered/failed/bounced)}
+@optional {errorMessage: str, deliveredAt: str(date-time)}
+@returns(SUB) {notificationId: str, channel: str, status: str, errorMessage: str, deliveredAt: str(date-time)} # message payload
