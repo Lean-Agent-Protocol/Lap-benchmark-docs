@@ -1,16 +1,18 @@
-@doclean v0.2
+@doclean v0.3
 # Machine-readable API spec. Each @endpoint block is one API call.
 @api Resend
 @base https://api.resend.com
 @version 1.1.0
 @auth Bearer bearer
 @endpoints 70
-@toc Send an email, Retrieve a list of emails, Retrieve a single email, Update a single email, Cancel the schedule of the e-mail., Trigger up to 100 batch emails at once., Retrieve a list of attachments for a sent email, Retrieve a single attachment for a sent email, Retrieve a list of received emails, Retrieve a single received email, Retrieve a list of attachments for a received email, Retrieve a single attachment for a received email, Create a new domain, Retrieve a list of domains, Retrieve a single domain, Update an existing domain, Remove an existing domain, Verify an existing domain, Create a new API key, Retrieve a list of API keys, Remove an existing API key, Create a template, Retrieve a list of templates, Retrieve a single template, Update an existing template, Remove an existing template, Publish a template, Duplicate a template, Create a list of contacts, Retrieve a list of audiences, Remove an existing audience, Retrieve a single audience, Create a new contact, Retrieve a list of contacts, Remove an existing contact by email, Retrieves a single contact by email, Update a single contact by email, Remove an existing contact by id, Update a single contact by id, Retrieve a single contact by id, Create a broadcast, Retrieve a list of broadcasts, Remove an existing broadcast that is in the draft status, Retrieve a single broadcast, Update an existing broadcast, Send or schedule a broadcast, Create a new webhook, Retrieve a list of webhooks, Retrieve a single webhook, Update an existing webhook, Remove an existing webhook, Create a new segment, Retrieve a list of segments, Retrieve a single segment, Remove an existing segment, Create a new topic, Retrieve a list of topics, Retrieve a single topic, Update an existing topic, Remove an existing topic, Create a new contact property, Retrieve a list of contact properties, Retrieve a single contact property, Update an existing contact property, Remove an existing contact property, Add a contact to a segment, Retrieve a list of segments for a contact, Remove a contact from a segment, Retrieve topics for a contact, Update topics for a contact
+@hint download_for_search
+@toc emails(12), domains(6), api-keys(3), templates(7), audiences(17), broadcasts(6), webhooks(5), segments(4), topics(5), contact-properties(5)
 
+@group emails
 @endpoint POST /emails
 @desc Send an email
 @required {from: str # Sender email address. To include a friendly name, use the format "Your Name <sender@domain.com>"., to: [str], subject: str # Email subject.}
-@optional {Idempotency-Key: str # A unique identifier for the request to ensure emails are only sent once. [Learn more](https://resend.com/docs/dashboard/emails/idempotency-keys), bcc: str # Bcc recipient email address. For multiple addresses, send as an array of strings., cc: str # Cc recipient email address. For multiple addresses, send as an array of strings., reply_to: str # Reply-to email address. For multiple addresses, send as an array of strings., html: str # The HTML version of the message., text: str # The plain text version of the message., template: map, headers: map # Custom headers to add to the email., scheduled_at: str # Schedule email to be sent later. The date should be in ISO 8601 format., attachments: [map], tags: [map]}
+@optional {Idempotency-Key: str # A unique identifier for the request to ensure emails are only sent once. [Learn more](https://resend.com/docs/dashboard/emails/idempotency-keys), bcc: str # Bcc recipient email address. For multiple addresses, send as an array of strings., cc: str # Cc recipient email address. For multiple addresses, send as an array of strings., reply_to: str # Reply-to email address. For multiple addresses, send as an array of strings., html: str # The HTML version of the message., text: str # The plain text version of the message., template: map{id!: str, variables: map}, headers: map # Custom headers to add to the email., scheduled_at: str # Schedule email to be sent later. The date should be in ISO 8601 format., attachments: [map{content: str(binary), filename: str, path: str, content_type: str}], tags: [map{name: str, value: str}]}
 @returns(200) {id: str} # OK
 
 @endpoint GET /emails
@@ -70,6 +72,9 @@
 @required {email_id: str(uuid) # The ID of the received email., attachment_id: str(uuid) # The ID of the attachment.}
 @returns(200) {object: str, id: str(uuid), filename: str, content_type: str, content_id: str, content_disposition: str, download_url: str, expires_at: str(date-time), size: int} # OK
 
+@endgroup
+
+@group domains
 @endpoint POST /domains
 @desc Create a new domain
 @required {name: str # The name of the domain you want to create.}
@@ -101,6 +106,9 @@
 @required {domain_id: str # The ID of the domain.}
 @returns(200) {object: str, id: str} # OK
 
+@endgroup
+
+@group api-keys
 @endpoint POST /api-keys
 @desc Create a new API key
 @required {name: str # The API key name.}
@@ -116,10 +124,13 @@
 @required {api_key_id: str # The API key ID.}
 @returns(200) OK
 
+@endgroup
+
+@group templates
 @endpoint POST /templates
 @desc Create a template
 @required {name: str # The name of the template., html: str # The HTML version of the template.}
-@optional {alias: str # The alias of the template., from: str # Sender email address. To include a friendly name, use the format "Your Name <sender@domain.com>"., subject: str # Email subject., reply_to: [str] # Reply-to email addresses., text: str # The plain text version of the template., variables: [map]}
+@optional {alias: str # The alias of the template., from: str # Sender email address. To include a friendly name, use the format "Your Name <sender@domain.com>"., subject: str # Email subject., reply_to: [str] # Reply-to email addresses., text: str # The plain text version of the template., variables: [map{key!: str, type!: str, fallback_value: any}]}
 @returns(201) {id: str, object: str} # OK
 
 @endpoint GET /templates
@@ -135,7 +146,7 @@
 @endpoint PATCH /templates/{id}
 @desc Update an existing template
 @required {id: str # The Template ID or alias.}
-@optional {name: str # The name of the template., alias: str # The alias of the template., from: str # Sender email address. To include a friendly name, use the format "Your Name <sender@domain.com>"., subject: str # Email subject., reply_to: [str] # Reply-to email addresses., html: str # The HTML version of the template., text: str # The plain text version of the template., variables: [map]}
+@optional {name: str # The name of the template., alias: str # The alias of the template., from: str # Sender email address. To include a friendly name, use the format "Your Name <sender@domain.com>"., subject: str # Email subject., reply_to: [str] # Reply-to email addresses., html: str # The HTML version of the template., text: str # The plain text version of the template., variables: [map{key!: str, type!: str, fallback_value: any}]}
 @returns(200) {id: str, object: str} # OK
 
 @endpoint DELETE /templates/{id}
@@ -153,6 +164,9 @@
 @required {id: str # The Template ID or alias.}
 @returns(200) {id: str, object: str} # OK
 
+@endgroup
+
+@group audiences
 @endpoint POST /audiences
 @desc Create a list of contacts
 @required {name: str # The name of the audience you want to create.}
@@ -214,6 +228,9 @@
 @required {id: str # The Contact ID., audience_id: str # The Audience ID.}
 @returns(200) {object: str, id: str, email: str, first_name: str, last_name: str, created_at: str(date-time), unsubscribed: bool} # OK
 
+@endgroup
+
+@group broadcasts
 @endpoint POST /broadcasts
 @desc Create a broadcast
 @required {segment_id: str # Unique identifier of the segment this broadcast will be sent to., from: str # The email address of the sender., subject: str # The subject line of the email.}
@@ -246,6 +263,9 @@
 @optional {scheduled_at: str # Schedule email to be sent later. The date should be in ISO 8601 format.}
 @returns(200) {id: str} # OK
 
+@endgroup
+
+@group webhooks
 @endpoint POST /webhooks
 @desc Create a new webhook
 @required {endpoint: str # The URL where webhook events will be sent., events: [str] # Array of event types to subscribe to.}
@@ -272,6 +292,9 @@
 @required {webhook_id: str(uuid) # The Webhook ID.}
 @returns(200) {object: str, id: str(uuid), deleted: bool} # OK
 
+@endgroup
+
+@group segments
 @endpoint POST /segments
 @desc Create a new segment
 @required {name: str # The name of the segment., audience_id: str # The ID of the audience this segment belongs to.}
@@ -293,6 +316,9 @@
 @required {id: str # The Segment ID.}
 @returns(200) {id: str, object: str, deleted: bool} # OK
 
+@endgroup
+
+@group topics
 @endpoint POST /topics
 @desc Create a new topic
 @required {name: str # The name of the topic., audience_id: str # The ID of the audience this topic belongs to.}
@@ -319,6 +345,9 @@
 @required {id: str # The Topic ID.}
 @returns(200) {id: str, object: str, deleted: bool} # OK
 
+@endgroup
+
+@group contact-properties
 @endpoint POST /contact-properties
 @desc Create a new contact property
 @required {name: str # The name of the contact property., type: str(string/number/boolean/date) # The type of the contact property.}
@@ -346,6 +375,9 @@
 @required {id: str # The Contact Property ID.}
 @returns(200) {id: str, object: str, deleted: bool} # OK
 
+@endgroup
+
+@group audiences
 @endpoint POST /audiences/{audience_id}/contacts/{id}/segments
 @desc Add a contact to a segment
 @required {audience_id: str # The Audience ID., id: str # The Contact ID., segment_id: str # The ID of the segment to add the contact to.}
@@ -370,7 +402,9 @@
 
 @endpoint PATCH /audiences/{audience_id}/contacts/{id}/topics
 @desc Update topics for a contact
-@required {audience_id: str # The Audience ID., id: str # The Contact ID., topics: [map]}
+@required {audience_id: str # The Audience ID., id: str # The Contact ID., topics: [map{id: str, subscribed: bool}]}
 @returns(200) {object: str, contact_id: str, topics: [map]} # OK
+
+@endgroup
 
 @end

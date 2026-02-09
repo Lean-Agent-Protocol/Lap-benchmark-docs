@@ -1,18 +1,22 @@
-@doclean v0.2
+@doclean v0.3
 # Machine-readable API spec. Each @endpoint block is one API call.
 @api Discord API
 @base https://discord.com/api/v10
 @version 10
 @auth Bearer bearer
 @endpoints 4
-@toc Create Message, Create Guild Channel, List Guild Members, Create Reaction
+@toc channels(2), guilds(2)
 
+@group channels
 @endpoint POST /channels/{channel_id}/messages
 @desc Create Message
 @required {channel_id: str # The channel to send the message in, content: str # Message content (up to 2000 chars)}
 @optional {tts: bool # Whether this is a TTS message, embeds: [map] # Array of embed objects (up to 10), message_reference: map # Reference for replies}
 @returns(200) {id: str, channel_id: str, content: str, author: map, timestamp: str(date-time)} # Message object
 
+@endgroup
+
+@group guilds
 @endpoint POST /guilds/{guild_id}/channels
 @desc Create Guild Channel
 @required {guild_id: str, name: str # Channel name (1-100 chars)}
@@ -25,9 +29,14 @@
 @optional {limit: int=1 # Max members to return (1-1000), after: str # Highest user ID in previous page}
 @returns(200) Array of guild member objects
 
+@endgroup
+
+@group channels
 @endpoint PUT /channels/{channel_id}/messages/{message_id}/reactions/{emoji}/@me
 @desc Create Reaction
 @required {channel_id: str, message_id: str, emoji: str # URL-encoded emoji (e.g. %F0%9F%94%A5 or name:id for custom)}
 @returns(204) Reaction added successfully
+
+@endgroup
 
 @end

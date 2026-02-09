@@ -1,15 +1,20 @@
-@doclean v0.2
+@doclean v0.3
 # Machine-readable API spec. Each @endpoint block is one API call.
 @api LaunchDarkly REST API
 @version 5.3.0
 @endpoints 105
-@toc You can issue a GET request to the root resource to find all of the resource categories supported by the API., Returns a list of relay proxy configurations in the account., Create a new relay proxy config., Delete a relay proxy configuration by ID., Get a single relay proxy configuration by ID., Modify a relay proxy configuration by ID., Reset a relay proxy configuration's secret key with an optional expiry time for the old key., Get a list of all audit log entries. The query parameters allow you to restrict the returned results by date ranges, resource specifiers, or a full-text search query., Use this endpoint to fetch a single audit log entry by its resouce ID., Returns a list of all data export destinations., Create a new data export destination, Get a single data export destination by ID, Get a single data export destination by ID, Perform a partial update to a data export destination., Get the status for a particular feature flag across environments, Get a list of statuses for all feature flags. The status includes the last time the feature flag was requested, as well as the state of the flag., Get the status for a particular feature flag., Get a list of all features in the given project., Creates a new feature flag., Get dependent flags for the flag in the environment specified in path parameters, Delete a feature flag in all environments. Be careful-- only delete feature flags that are no longer being used by your application., Get a single feature flag by key., Perform a partial update to a feature., Copies the feature flag configuration from one environment to the same feature flag in another environment., Get dependent flags across all environments for the flag specified in the path parameters, Get expiring user targets for feature flag, Update, add, or delete expiring user targets on feature flag, Get a list of all configured audit log event integrations associated with this account., Get a list of all configured integrations of a given kind., Create a new integration subscription of a given kind., Delete an integration subscription by ID., Get a single integration subscription by ID., Modify an integration subscription by ID., Returns a list of all members in the account., Invite new members., Get the current team member associated with the token, Delete a team member by ID., Get a single team member by ID., Modify a team member by ID., Returns a list of all projects in the account., Create a new project with the given key and name., Delete a project by key. Caution-- deleting a project will delete all associated environments and feature flags. You cannot delete the last project in an account., Fetch a single project by key., Modify a project by ID., Create a new environment in a specified project with a given name, key, and swatch color., Delete an environment in a specific project., Get an environment given a project and key., Modify an environment by ID. If you try to patch the environment by setting both required and requiredApprovalTags, it will result in an error. Users can specify either required approvals for all flags in an environment or those with specific tags, but not both. Only customers on an Enterprise plan can require approval for flag updates with either mechanism., Reset an environment's SDK key with an optional expiry time for the old key., Reset an environment's mobile key. The optional expiry for the old key is deprecated for this endpoint, so the old key will always expire immediately., Get all approval requests for a feature flag config, Delete an approval request for a feature flag config, Get a single approval request for a feature flag config, Create an approval request for a feature flag config, Apply approval request for a feature flag config, Review approval request for a feature flag config, Get all scheduled workflows for a feature flag by key., Creates a new scheduled change for a feature flag., Lists conflicts between the given instructions and any existing scheduled changes for the feature flag. The actual HTTP verb should be REPORT, not POST., Delete a scheduled change on a feature flag in an environment., Get a scheduled change on a feature flag by id., Updates an existing scheduled-change on a feature flag in an environment., Return a complete list of custom roles., Create a new custom role., Delete a custom role by key., Get one custom role by key., Modify a custom role by key., Get a list of all user segments in the given project., Creates a new user segment., Delete a user segment., Get a single user segment by key., Perform a partial update to a user segment., Update targets included or excluded in a big segment, Get expiring user targets for user segment, Update, add, or delete expiring user targets on user segment, Returns a list of tokens in the account., Create a new token., Delete an access token by ID., Get a single access token by ID., Modify an access token by ID., Reset an access token's secret key with an optional expiry time for the old key., Returns of the usage endpoints available., Get events usage by event id and the feature flag key., Get events usage endpoints., Get events usage by event type., Get monthly active user data., Get monthly active user data by category., Returns a list of all streams., Get a stream endpoint and return timeseries data., Get a stream timeseries data by source show sdk version metadata., Get a stream timeseries data by source and show all sdk version associated., Search users in LaunchDarkly based on their last active date, or a search query. It should not be used to enumerate all users in LaunchDarkly-- use the List users API resource., List all users in the environment. Includes the total count of users. In each page, there will be up to 'limit' users returned (default 20). This is useful for exporting all users in the system for further analysis. Paginated collections will include a next link containing a URL with the next set of elements in the collection., Delete a user by ID., Get a user by key., Fetch a single flag setting for a user by key., Fetch a single flag setting for a user by key., Specifically enable or disable a feature flag for a user based on their key., Get expiring dates on flags for user, Update, add, or delete expiring user targets for a single user on all flags, Fetch a list of all webhooks., Create a webhook., Delete a webhook by ID., Get a webhook by ID., Modify a webhook by ID.
+@hint download_for_search
+@toc root(1), account(6), auditlog(2), destinations(5), flag-status(1), flag-statuses(2), flags(10), integrations(6), members(6), projects(23), roles(5), segments(8), tokens(6), usage(10), user-search(1), users(8), webhooks(5)
 
+@group root
 @endpoint GET /
 @desc You can issue a GET request to the root resource to find all of the resource categories supported by the API.
 @returns(200) A list of links to available resources in the API.
 @errors {401: Invalid access token.}
 
+@endgroup
+
+@group account
 @endpoint GET /account/relay-auto-configs
 @desc Returns a list of relay proxy configurations in the account.
 @returns(200) Relay proxy configs response.
@@ -45,6 +50,9 @@
 @returns(200) Relay proxy config response.
 @errors {400: Invalid request body., 404: Invalid resource specifier.}
 
+@endgroup
+
+@group auditlog
 @endpoint GET /auditlog
 @desc Get a list of all audit log entries. The query parameters allow you to restrict the returned results by date ranges, resource specifiers, or a full-text search query.
 @optional {before: any # A timestamp filter, expressed as a Unix epoch time in milliseconds. All entries returned will have before this timestamp., after: any # A timestamp filter, expressed as a Unix epoch time in milliseconds. All entries returned will have occurred after this timestamp., q: any # Text to search for. You can search for the full or partial name of the resource involved or full or partial email address of the member who made the change., limit: any # A limit on the number of audit log entries to be returned, between 1 and 20., spec: any # A resource specifier, allowing you to filter audit log listings by resource.}
@@ -57,6 +65,9 @@
 @returns(200) Audit log entry response.
 @errors {401: Invalid access token., 404: Invalid resource specifier.}
 
+@endgroup
+
+@group destinations
 @endpoint GET /destinations
 @desc Returns a list of all data export destinations.
 @returns(200) Destinations response.
@@ -86,12 +97,18 @@
 @returns(200) Destination response.
 @errors {400: Invalid request body., 401: Invalid access token., 404: Invalid resource specifier., 409: Status conflict.}
 
+@endgroup
+
+@group flag-status
 @endpoint GET /flag-status/{projectKey}/{featureFlagKey}
 @desc Get the status for a particular feature flag across environments
 @required {projectKey: any # The project key, used to tie the flags together under one project so they can be managed together., featureFlagKey: any # The feature flag's key. The key identifies the flag in your code.}
 @returns(200) Status of the requested feature flag across environments
 @errors {401: Invalid access token., 403: This is a beta API, you must pass beta in the LD-API-Version header to use it.}
 
+@endgroup
+
+@group flag-statuses
 @endpoint GET /flag-statuses/{projectKey}/{environmentKey}
 @desc Get a list of statuses for all feature flags. The status includes the last time the feature flag was requested, as well as the state of the flag.
 @required {projectKey: any # The project key, used to tie the flags together under one project so they can be managed together., environmentKey: any # The environment key, used to tie together flag configuration and users under one environment so they can be managed together.}
@@ -104,6 +121,9 @@
 @returns(200) Status of the requested feature flag.
 @errors {401: Invalid access token.}
 
+@endgroup
+
+@group flags
 @endpoint GET /flags/{projectKey}
 @desc Get a list of all features in the given project.
 @required {projectKey: any # The project key, used to tie the flags together under one project so they can be managed together.}
@@ -167,6 +187,9 @@
 @returns(200) User targeting expirations on feature flag response.
 @errors {400: Invalid request body., 401: Invalid access token., 404: Invalid resource specifier., 409: Status conflict.}
 
+@endgroup
+
+@group integrations
 @endpoint GET /integrations
 @desc Get a list of all configured audit log event integrations associated with this account.
 @returns(200) Integrations response.
@@ -202,6 +225,9 @@
 @returns(200) Integrations response.
 @errors {400: Invalid request body., 401: Invalid access token., 404: Invalid resource specifier.}
 
+@endgroup
+
+@group members
 @endpoint GET /members
 @desc Returns a list of all members in the account.
 @optional {limit: any # The number of objects to return. Defaults to -1, which returns everything., offset: any # Where to start in the list. This is for use with pagination. For example, an offset of 10 would skip the first 10 items and then return the next limit items., filter: any # A comma-separated list of filters. Each filter is of the form field:value., sort: any # A comma-separated list of fields to sort by. A field prefixed by a - will be sorted in descending order.}
@@ -237,6 +263,9 @@
 @returns(200) Member response.
 @errors {400: Invalid request body., 401: Invalid access token., 404: Invalid resource specifier., 409: Status conflict.}
 
+@endgroup
+
+@group projects
 @endpoint GET /projects
 @desc Returns a list of all projects in the account.
 @returns(200) Projects response
@@ -378,6 +407,9 @@
 @returns(201) A Scheduled change for feature flag response.
 @errors {400: Invalid request body., 401: Invalid access token., 409: Status conflict.}
 
+@endgroup
+
+@group roles
 @endpoint GET /roles
 @desc Return a complete list of custom roles.
 @returns(200) Custom roles response.
@@ -407,6 +439,9 @@
 @returns(200) Custom role response.
 @errors {400: Invalid request body., 401: Invalid access token., 404: Invalid resource specifier., 409: Status conflict.}
 
+@endgroup
+
+@group segments
 @endpoint GET /segments/{projectKey}/{environmentKey}
 @desc Get a list of all user segments in the given project.
 @required {projectKey: any # The project key, used to tie the flags together under one project so they can be managed together., environmentKey: any # The environment key, used to tie together flag configuration and users under one environment so they can be managed together.}
@@ -456,6 +491,9 @@
 @returns(200) User targeting expirations on user segment response.
 @errors {400: Invalid request body., 401: Invalid access token., 404: Invalid resource specifier., 409: Status conflict.}
 
+@endgroup
+
+@group tokens
 @endpoint GET /tokens
 @desc Returns a list of tokens in the account.
 @optional {showAll: any # If set to true, and the authentication access token has the "Admin" role, personal access tokens for all members will be retrieved.}
@@ -493,6 +531,9 @@
 @returns(200) Token response.
 @errors {400: Invalid request body., 401: Invalid access token.}
 
+@endgroup
+
+@group usage
 @endpoint GET /usage
 @desc Returns of the usage endpoints available.
 @returns(200) Usage endpoints
@@ -548,6 +589,9 @@
 @returns(200) Returns timeseries data and all sdk versions.
 @errors {403: This is a beta API, you must pass beta in the LD-API-Version header to use it., 404: The stream source you requested could not be found}
 
+@endgroup
+
+@group user-search
 @endpoint GET /user-search/{projectKey}/{environmentKey}
 @desc Search users in LaunchDarkly based on their last active date, or a search query. It should not be used to enumerate all users in LaunchDarkly-- use the List users API resource.
 @required {projectKey: any # The project key, used to tie the flags together under one project so they can be managed together., environmentKey: any # The environment key, used to tie together flag configuration and users under one environment so they can be managed together.}
@@ -555,6 +599,9 @@
 @returns(200) Users response.
 @errors {401: Invalid access token.}
 
+@endgroup
+
+@group users
 @endpoint GET /users/{projectKey}/{environmentKey}
 @desc List all users in the environment. Includes the total count of users. In each page, there will be up to 'limit' users returned (default 20). This is useful for exporting all users in the system for further analysis. Paginated collections will include a next link containing a URL with the next set of elements in the collection.
 @required {projectKey: any # The project key, used to tie the flags together under one project so they can be managed together., environmentKey: any # The environment key, used to tie together flag configuration and users under one environment so they can be managed together.}
@@ -604,6 +651,9 @@
 @returns(200) User Targeting expiration for single user on all flags response.
 @errors {400: Invalid request body., 401: Invalid access token., 404: Invalid resource specifier., 409: Status conflict.}
 
+@endgroup
+
+@group webhooks
 @endpoint GET /webhooks
 @desc Fetch a list of all webhooks.
 @returns(200) Webhooks response.
@@ -632,5 +682,7 @@
 @required {resourceId: any # The resource ID., patchDelta: [map] # Requires a JSON Patch representation of the desired changes to the project. 'http://jsonpatch.com/'}
 @returns(200) Webhook response.
 @errors {400: Invalid request body., 401: Invalid access token., 404: Invalid resource specifier., 409: Status conflict.}
+
+@endgroup
 
 @end
