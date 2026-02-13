@@ -200,7 +200,10 @@ def execute_run(
             encoding="utf-8",
             errors="replace",
             timeout=timeout,
-            env={**os.environ, "CLAUDE_CODE_DISABLE_NONESSENTIAL": "1"},
+            env={
+                k: v for k, v in os.environ.items()
+                if k != "CLAUDECODE"
+            } | {"CLAUDE_CODE_DISABLE_NONESSENTIAL": "1"},
         )
         wall_time = time.time() - start_time
 

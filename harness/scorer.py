@@ -3,12 +3,22 @@
 Automated scoring for benchmark runs.
 
 Scoring components (0.0 - 1.0):
-  - Endpoint identification (60%): Did agent find each target endpoint?
+  - Endpoint identification (35%): Did agent find each target endpoint?
   - Parameter accuracy (30%): Fraction of expected params mentioned per endpoint
-  - Code quality (10%): Has runnable code block, uses correct library, no hallucinated endpoints
+  - Code quality (35%): Are the correct endpoints+params present in code blocks?
+
+Endpoint identification checks BOTH structured output (CALL blocks) AND code blocks.
+Code quality scoring is protocol-agnostic: checks path/channel segments in code,
+not library-specific patterns like requests.get() or KafkaConsumer().
 """
 
 import re
+
+# Normalize AsyncAPI method abbreviations to full form
+_ASYNC_METHOD_ALIASES = {
+    "SUB": "SUBSCRIBE",
+    "PUB": "PUBLISH",
+}
 
 
 def normalize_path(path: str) -> str:
@@ -47,7 +57,12 @@ def extract_endpoints_from_output(text: str) -> list[str]:
     paths = endpoint_pattern.findall(text)
 
     for m, p in zip(methods, paths):
-        endpoints.append(normalize_path(f"{m.upper()} {p}"))
+        # Normalize SUB->SUBSCRIBE, PUB->PUBLISH
+        m_upper = m.upper()
+        # Strip trailing parens/punctuation from method (e.g., "PUBLISH" from "PUBLISH)")
+        m_clean = re.sub(r"[^A-Z]", "", m_upper)
+        m_norm = _ASYNC_METHOD_ALIASES.get(m_clean, m_clean)
+        endpoints.append(normalize_path(f"{m_norm} {p}"))
 
     # Pattern 2: HTTP method + path in code blocks (e.g., POST /v1/charges)
     code_pattern = re.compile(
@@ -59,18 +74,104 @@ def extract_endpoints_from_output(text: str) -> list[str]:
         if ep not in endpoints:
             endpoints.append(ep)
 
-    # Pattern 3: RPC/GraphQL/AsyncAPI patterns
-    rpc_pattern = re.compile(r"\b(RPC|QUERY|MUTATION|SUBSCRIBE|PUBLISH)\s+(\w+)", re.IGNORECASE)
+    # Pattern 3: RPC/GraphQL patterns (single-word operation names)
+    rpc_pattern = re.compile(r"\b(RPC|QUERY|MUTATION)\s+(\w+)", re.IGNORECASE)
     for m, name in rpc_pattern.findall(text):
         ep = f"{m.upper()} {name}"
+        if ep not in endpoints:
+            endpoints.append(ep)
+
+    # Pattern 4: AsyncAPI SUBSCRIBE/PUBLISH/SUB/PUB with channel paths
+    async_pattern = re.compile(
+        r"\b(SUBSCRIBE|PUBLISH|SUB|PUB)\s+[/]?\s*([\w./{}\-]+)",
+        re.IGNORECASE,
+    )
+    for m, channel in async_pattern.findall(text):
+        method = _ASYNC_METHOD_ALIASES.get(m.upper(), m.upper())
+        ep = f"{method} {channel}"
+        if ep not in endpoints:
+            endpoints.append(ep)
+
+    # Pattern 5: Channel/Topic lines (agents often put channels on separate lines)
+    channel_pattern = re.compile(r"(?:Channel|Topic):\s*([\w./{}\-:]+)", re.IGNORECASE)
+    for channel in channel_pattern.findall(text):
+        if len(channel) > 5:  # skip trivial matches
+            ep = f"CHANNEL {channel}"
+            if ep not in endpoints:
+                endpoints.append(ep)
+
+    # Pattern 6: Operation lines (e.g., "Operation: receiveLightMeasurement")
+    op_pattern = re.compile(r"Operation:\s*(\w+)", re.IGNORECASE)
+    for op in op_pattern.findall(text):
+        ep = f"OPERATION {op}"
         if ep not in endpoints:
             endpoints.append(ep)
 
     return endpoints
 
 
-def score_endpoints(found: list[str], expected: list[str]) -> float:
+def _extract_channel_key(endpoint: str) -> str | None:
+    """Extract the meaningful operation/channel name from an AsyncAPI endpoint.
+
+    Examples:
+        'SUBSCRIBE smartylighting.streetlights.1.0.event.{id}.lighting.measured'
+            -> 'lighting.measured'
+        'PUBLISH / outgoingMessage' -> 'outgoingmessage'
+        'SUBSCRIBE / message' -> 'message'
+    """
+    parts = endpoint.split(None, 1)
+    if len(parts) != 2:
+        return None
+    method, path = parts
+    if method.upper() not in ("SUBSCRIBE", "PUBLISH", "SUB", "PUB"):
+        return None
+    path = path.strip().strip("/").strip()
+    # For long dotted paths, take last 2 segments as the key
+    segments = [s for s in path.split(".") if s and not s.startswith("{")]
+    if len(segments) >= 2:
+        return ".".join(segments[-2:]).lower()
+    return segments[-1].lower() if segments else None
+
+
+def _extract_path_key_segments(path: str) -> list[str]:
+    """Extract meaningful segments from a path (REST or dotted AsyncAPI).
+
+    Protocol-agnostic: works for /v1/activity_logs, dotted.channel.names,
+    gRPC service methods, etc.
+
+    Returns lowercased segments, filtered to skip short/version/numeric noise.
+    """
+    # Determine separator
+    if "/" in path:
+        raw_segments = path.split("/")
+    else:
+        raw_segments = path.split(".")
+
+    segments = []
+    for seg in raw_segments:
+        if not seg or seg.startswith("{"):
+            continue
+        seg_clean = re.sub(r"\.\w+$", "", seg).lower()
+        # Skip: short (<=2), version prefixes (v1, v2), pure numbers (1, 0)
+        if len(seg_clean) <= 2:
+            continue
+        if re.match(r"^v\d", seg_clean) or re.match(r"^\d+$", seg_clean):
+            continue
+        segments.append(seg_clean)
+
+    return segments
+
+
+def score_endpoints(found: list[str], expected: list[str], full_text: str = "") -> float:
     """Score endpoint identification. Binary per endpoint, averaged.
+
+    Checks BOTH structured output (CALL blocks) AND code blocks for endpoints.
+    Code-based matches get full credit since working code proves understanding.
+
+    Args:
+        found: Extracted endpoint strings from agent output.
+        expected: Expected endpoint strings from manifest.
+        full_text: Full agent output text (for code block and fallback checks).
 
     Returns 0.0 - 1.0.
     """
@@ -78,6 +179,13 @@ def score_endpoints(found: list[str], expected: list[str]) -> float:
         return 1.0
 
     norm_found = [normalize_path(e) for e in found]
+    found_text = " ".join(norm_found).lower()
+    structured = extract_structured_sections(full_text).lower() if full_text else ""
+    code = extract_code_blocks(full_text).lower() if full_text else ""
+    # Strip comments from code for reliable matching
+    code_no_comments = "\n".join(
+        ln for ln in code.split("\n") if not ln.lstrip().startswith("#")
+    )
     hits = 0
 
     for exp in expected:
@@ -86,17 +194,52 @@ def score_endpoints(found: list[str], expected: list[str]) -> float:
         if exp_norm in norm_found:
             hits += 1
             continue
-        # Try partial match (path only, ignoring method for flexible matching)
+
         exp_parts = exp_norm.split(None, 1)
-        if len(exp_parts) == 2:
-            exp_method, exp_path = exp_parts
-            for f in norm_found:
-                f_parts = f.split(None, 1)
-                if len(f_parts) == 2 and f_parts[0] == exp_method and f_parts[1] == exp_path:
-                    hits += 1
-                    break
-                # Path-only match (method might differ in notation)
-                if len(f_parts) == 2 and f_parts[1] == exp_path:
+        if len(exp_parts) != 2:
+            continue
+
+        exp_method, exp_path = exp_parts
+        matched = False
+
+        # Try method+path match (including SUB/PUB normalization)
+        for f in norm_found:
+            f_parts = f.split(None, 1)
+            if len(f_parts) != 2:
+                continue
+            f_method = _ASYNC_METHOD_ALIASES.get(f_parts[0], f_parts[0])
+            exp_method_norm = _ASYNC_METHOD_ALIASES.get(exp_method, exp_method)
+
+            if f_method == exp_method_norm and f_parts[1] == exp_path:
+                hits += 1
+                matched = True
+                break
+            # Path-only match from CALL blocks
+            if f_parts[1] == exp_path:
+                hits += 0.5
+                matched = True
+                break
+
+        if matched:
+            continue
+
+        # Code-based check: do the path's key segments appear in code?
+        # This is protocol-agnostic -- works for REST, Kafka, gRPC, etc.
+        path_segments = _extract_path_key_segments(exp_path)
+        if path_segments and code_no_comments:
+            if all(seg in code_no_comments for seg in path_segments):
+                hits += 1
+                continue
+
+        # AsyncAPI channel fuzzy matching: match on channel key segments
+        channel_key = _extract_channel_key(exp)
+        if channel_key:
+            search_corpus = found_text + " " + structured + " " + code_no_comments
+            if channel_key in search_corpus:
+                hits += 1
+                continue
+            for seg in channel_key.split("."):
+                if len(seg) > 4 and seg in search_corpus:
                     hits += 0.5
                     break
 
@@ -167,12 +310,57 @@ def extract_code_blocks(text: str) -> str:
     return "\n".join(blocks)
 
 
+def _extract_resource_name(path: str) -> str | None:
+    """Extract the primary resource name from an API path.
+
+    Examples:
+        /v1/customers -> customers
+        /v1/customers/{customer}/balance_transactions -> balance_transactions
+        /2010-04-01/Accounts/{AccountSid}/Messages.json -> messages
+        /v1/emails/{email_id} -> emails
+    """
+    # Strip path params and version prefixes
+    segments = [s for s in path.split("/") if s and not s.startswith("{")]
+    if not segments:
+        return None
+    # Take the last meaningful segment (the resource)
+    resource = segments[-1]
+    # Strip file extensions (.json, .xml)
+    resource = re.sub(r"\.\w+$", "", resource)
+    return resource.lower()
+
+
+def _check_path_segments_in_code(path: str, code: str) -> bool:
+    """Check if meaningful path segments appear in code.
+
+    Protocol-agnostic: handles both slash-separated REST paths and
+    dot-separated AsyncAPI/gRPC paths.
+
+    Handles REST: /2010-04-01/Accounts/{AccountSid}/Messages.json
+      -> checks: 'accounts', 'messages' (skipping version prefix and params)
+
+    Handles AsyncAPI: smartylighting.streetlights.1.0.action.{id}.turn.off
+      -> checks: 'smartylighting', 'streetlights', 'action', 'turn'
+    """
+    segments = _extract_path_key_segments(path)
+
+    if not segments:
+        return True  # No meaningful segments to check
+
+    # All meaningful segments must appear in code
+    return all(seg in code for seg in segments)
+
+
 def score_code_quality(
     text: str,
     target_endpoints: list[str] | None = None,
     expected_params: dict | None = None,
 ) -> dict:
     """Score code correctness by verifying endpoints and params IN code blocks.
+
+    Protocol-agnostic: checks path/channel segments in code rather than
+    looking for specific library patterns. Works for REST, Kafka, gRPC,
+    MQTT, GraphQL, or any future protocol.
 
     Returns dict with:
       - total: 0.0-1.0 overall code score
@@ -186,7 +374,7 @@ def score_code_quality(
 
     has_code = len(code.strip()) > 0
 
-    # 1. Endpoints in code (0.4) -- check method + path in code blocks
+    # 1. Endpoints in code (0.4) -- check path/channel segments in code blocks
     #    Strip comments to avoid false matches on explanatory text
     code_lines = [ln for ln in code.split("\n") if not ln.lstrip().startswith("#")]
     code_no_comments = "\n".join(code_lines).lower()
@@ -201,24 +389,60 @@ def score_code_quality(
                 continue
             method, path = parts
 
-            # Strip path params for matching: /emails/{email_id} -> /emails/
-            path_stem = re.sub(r"\{[^}]+\}", "", path).rstrip("/")
+            # Protocol-agnostic: check if path segments appear in code
+            path_in_code = _check_path_segments_in_code(path, code_no_comments)
 
-            # Check method call: requests.post(, requests.get(, etc.
+            # Also check method presence (protocol-agnostic patterns)
             method_lower = method.lower()
             method_in_code = (
+                # REST: requests.get(, httpx.post(, etc.
                 f"requests.{method_lower}(" in code_no_comments
                 or f"httpx.{method_lower}(" in code_no_comments
                 or f".{method_lower}(" in code_no_comments
+                # AsyncAPI: any mention of subscribe/publish/consumer/producer
+                or (method_lower in ("subscribe", "sub") and (
+                    "consumer" in code_no_comments
+                    or "subscribe" in code_no_comments
+                ))
+                or (method_lower in ("publish", "pub") and (
+                    "producer" in code_no_comments
+                    or "publish" in code_no_comments
+                    or ".send(" in code_no_comments
+                ))
+                # GraphQL
+                or (method_lower in ("query", "mutation") and
+                    method_lower in code_no_comments)
+                # RPC
+                or (method_lower == "rpc" and "grpc" in code_no_comments)
             )
 
-            # Check path appears in code (string literals, f-strings)
-            path_in_code = path_stem.lower() in code_no_comments if path_stem else True
+            # SDK detection: check for SDK-style calls referencing the resource
+            resource = _extract_resource_name(path)
+            sdk_in_code = False
+            if resource:
+                sdk_actions = [".create(", ".list(", ".retrieve(", ".fetch(", ".get(",
+                              ".update(", ".delete(", ".send("]
+                for action in sdk_actions:
+                    if re.search(
+                        rf'\.{re.escape(resource)}{re.escape(action)}',
+                        code_no_comments,
+                    ):
+                        sdk_in_code = True
+                        break
+                    singular = resource.rstrip("s")
+                    if singular != resource and re.search(
+                        rf'\.{re.escape(singular)}{re.escape(action)}',
+                        code_no_comments,
+                    ):
+                        sdk_in_code = True
+                        break
 
-            if method_in_code and path_in_code:
+            if path_in_code and (method_in_code or sdk_in_code):
                 ep_hits += 1
             elif path_in_code:
-                ep_hits += 0.5  # path found but method unclear
+                ep_hits += 0.75  # path found, method direction unclear
+            elif sdk_in_code:
+                ep_hits += 0.75  # SDK call found but path segments unclear
 
     ep_score = ep_hits / ep_total if ep_total > 0 else 1.0
 
@@ -285,10 +509,10 @@ def score_run(
         {total, endpoint, params, code} scores (0.0 - 1.0 each)
     """
     if weights is None:
-        weights = {"endpoint": 0.6, "param": 0.3, "code": 0.1}
+        weights = {"endpoint": 0.35, "param": 0.3, "code": 0.35}
 
     found_endpoints = extract_endpoints_from_output(agent_output)
-    ep_score = score_endpoints(found_endpoints, target_endpoints)
+    ep_score = score_endpoints(found_endpoints, target_endpoints, full_text=agent_output)
     param_score = score_params(agent_output, expected_params)
     code_detail = score_code_quality(agent_output, target_endpoints, expected_params)
     code_score = code_detail["total"]

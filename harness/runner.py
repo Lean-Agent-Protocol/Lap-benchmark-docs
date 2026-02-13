@@ -236,7 +236,7 @@ def load_checkpoint(batch_dir: Path) -> set:
             continue
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
-            if data.get("execution", {}).get("status") in ("completed", "error", "timeout"):
+            if data.get("execution", {}).get("status") == "completed":
                 completed.add(data.get("run_id"))
         except (json.JSONDecodeError, KeyError):
             pass
