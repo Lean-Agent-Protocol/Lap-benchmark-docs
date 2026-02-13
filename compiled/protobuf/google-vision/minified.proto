@@ -1,0 +1,326 @@
+syntax = "proto3";
+package google.cloud.vision.v1;
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/cloud/vision/v1/geometry.proto";
+import "google/cloud/vision/v1/product_search.proto";
+import "google/cloud/vision/v1/text_annotation.proto";
+import "google/cloud/vision/v1/web_detection.proto";
+import "google/longrunning/operations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/rpc/status.proto";
+import "google/type/color.proto";
+import "google/type/latlng.proto";
+option cc_enable_arenas = true;
+option go_package = "cloud.google.com/go/vision/v2/apiv1/visionpb;visionpb";
+option java_multiple_files = true;
+option java_outer_classname = "ImageAnnotatorProto";
+option java_package = "com.google.cloud.vision.v1";
+option objc_class_prefix = "GCVN";
+service ImageAnnotator {
+option (google.api.default_host) = "vision.googleapis.com";
+option (google.api.oauth_scopes) =
+"https://www.googleapis.com/auth/cloud-platform,"
+"https://www.googleapis.com/auth/cloud-vision";
+rpc BatchAnnotateImages(BatchAnnotateImagesRequest)
+returns (BatchAnnotateImagesResponse) {
+option (google.api.http) = {
+post: "/v1/images:annotate"
+body: "*"
+additional_bindings {
+post: "/v1/{parent=projectslocationslocationslocations/*}/files:asyncBatchAnnotate"
+body: "*"
+}
+additional_bindings {
+post: "/v1/{parent=projects/*}/files:asyncBatchAnnotate"
+body: "*"
+}
+};
+option (google.api.method_signature) = "requests";
+option (google.longrunning.operation_info) = {
+response_type: "AsyncBatchAnnotateFilesResponse"
+metadata_type: "OperationMetadata"
+};
+}
+}
+enum Likelihood {
+UNKNOWN = 0;
+VERY_UNLIKELY = 1;
+UNLIKELY = 2;
+POSSIBLE = 3;
+LIKELY = 4;
+VERY_LIKELY = 5;
+}
+message Feature {
+enum Type {
+TYPE_UNSPECIFIED = 0;
+FACE_DETECTION = 1;
+LANDMARK_DETECTION = 2;
+LOGO_DETECTION = 3;
+LABEL_DETECTION = 4;
+TEXT_DETECTION = 5;
+DOCUMENT_TEXT_DETECTION = 11;
+SAFE_SEARCH_DETECTION = 6;
+IMAGE_PROPERTIES = 7;
+CROP_HINTS = 9;
+WEB_DETECTION = 10;
+PRODUCT_SEARCH = 12;
+OBJECT_LOCALIZATION = 19;
+}
+Type type = 1;
+int32 max_results = 2;
+string model = 3;
+}
+message ImageSource {
+string gcs_image_uri = 1;
+string image_uri = 2;
+}
+message Image {
+bytes content = 1;
+ImageSource source = 2;
+}
+message FaceAnnotation {
+message Landmark {
+enum Type {
+UNKNOWN_LANDMARK = 0;
+LEFT_EYE = 1;
+RIGHT_EYE = 2;
+LEFT_OF_LEFT_EYEBROW = 3;
+RIGHT_OF_LEFT_EYEBROW = 4;
+LEFT_OF_RIGHT_EYEBROW = 5;
+RIGHT_OF_RIGHT_EYEBROW = 6;
+MIDPOINT_BETWEEN_EYES = 7;
+NOSE_TIP = 8;
+UPPER_LIP = 9;
+LOWER_LIP = 10;
+MOUTH_LEFT = 11;
+MOUTH_RIGHT = 12;
+MOUTH_CENTER = 13;
+NOSE_BOTTOM_RIGHT = 14;
+NOSE_BOTTOM_LEFT = 15;
+NOSE_BOTTOM_CENTER = 16;
+LEFT_EYE_TOP_BOUNDARY = 17;
+LEFT_EYE_RIGHT_CORNER = 18;
+LEFT_EYE_BOTTOM_BOUNDARY = 19;
+LEFT_EYE_LEFT_CORNER = 20;
+RIGHT_EYE_TOP_BOUNDARY = 21;
+RIGHT_EYE_RIGHT_CORNER = 22;
+RIGHT_EYE_BOTTOM_BOUNDARY = 23;
+RIGHT_EYE_LEFT_CORNER = 24;
+LEFT_EYEBROW_UPPER_MIDPOINT = 25;
+RIGHT_EYEBROW_UPPER_MIDPOINT = 26;
+LEFT_EAR_TRAGION = 27;
+RIGHT_EAR_TRAGION = 28;
+LEFT_EYE_PUPIL = 29;
+RIGHT_EYE_PUPIL = 30;
+FOREHEAD_GLABELLA = 31;
+CHIN_GNATHION = 32;
+CHIN_LEFT_GONION = 33;
+CHIN_RIGHT_GONION = 34;
+LEFT_CHEEK_CENTER = 35;
+RIGHT_CHEEK_CENTER = 36;
+}
+Type type = 3;
+Position position = 4;
+}
+BoundingPoly bounding_poly = 1;
+BoundingPoly fd_bounding_poly = 2;
+repeated Landmark landmarks = 3;
+float roll_angle = 4;
+float pan_angle = 5;
+float tilt_angle = 6;
+float detection_confidence = 7;
+float landmarking_confidence = 8;
+Likelihood joy_likelihood = 9;
+Likelihood sorrow_likelihood = 10;
+Likelihood anger_likelihood = 11;
+Likelihood surprise_likelihood = 12;
+Likelihood under_exposed_likelihood = 13;
+Likelihood blurred_likelihood = 14;
+Likelihood headwear_likelihood = 15;
+}
+message LocationInfo {
+google.type.LatLng lat_lng = 1;
+}
+message Property {
+string name = 1;
+string value = 2;
+uint64 uint64_value = 3;
+}
+message EntityAnnotation {
+string mid = 1;
+string locale = 2;
+string description = 3;
+float score = 4;
+float confidence = 5 [deprecated = true];
+float topicality = 6;
+BoundingPoly bounding_poly = 7;
+repeated LocationInfo locations = 8;
+repeated Property properties = 9;
+}
+message LocalizedObjectAnnotation {
+string mid = 1;
+string language_code = 2;
+string name = 3;
+float score = 4;
+BoundingPoly bounding_poly = 5;
+}
+message SafeSearchAnnotation {
+Likelihood adult = 1;
+Likelihood spoof = 2;
+Likelihood medical = 3;
+Likelihood violence = 4;
+Likelihood racy = 9;
+}
+message LatLongRect {
+google.type.LatLng min_lat_lng = 1;
+google.type.LatLng max_lat_lng = 2;
+}
+message ColorInfo {
+google.type.Color color = 1;
+float score = 2;
+float pixel_fraction = 3;
+}
+message DominantColorsAnnotation {
+repeated ColorInfo colors = 1;
+}
+message ImageProperties {
+DominantColorsAnnotation dominant_colors = 1;
+}
+message CropHint {
+BoundingPoly bounding_poly = 1;
+float confidence = 2;
+float importance_fraction = 3;
+}
+message CropHintsAnnotation {
+repeated CropHint crop_hints = 1;
+}
+message CropHintsParams {
+repeated float aspect_ratios = 1;
+}
+message WebDetectionParams {
+bool include_geo_results = 2 [deprecated = true];
+}
+message TextDetectionParams {
+bool enable_text_detection_confidence_score = 9;
+repeated string advanced_ocr_options = 11;
+}
+message ImageContext {
+LatLongRect lat_long_rect = 1;
+repeated string language_hints = 2;
+CropHintsParams crop_hints_params = 4;
+ProductSearchParams product_search_params = 5;
+WebDetectionParams web_detection_params = 6;
+TextDetectionParams text_detection_params = 12;
+}
+message AnnotateImageRequest {
+Image image = 1;
+repeated Feature features = 2;
+ImageContext image_context = 3;
+}
+message ImageAnnotationContext {
+string uri = 1;
+int32 page_number = 2;
+}
+message AnnotateImageResponse {
+repeated FaceAnnotation face_annotations = 1;
+repeated EntityAnnotation landmark_annotations = 2;
+repeated EntityAnnotation logo_annotations = 3;
+repeated EntityAnnotation label_annotations = 4;
+repeated LocalizedObjectAnnotation localized_object_annotations = 22;
+repeated EntityAnnotation text_annotations = 5;
+TextAnnotation full_text_annotation = 12;
+SafeSearchAnnotation safe_search_annotation = 6;
+ImageProperties image_properties_annotation = 8;
+CropHintsAnnotation crop_hints_annotation = 11;
+WebDetection web_detection = 13;
+ProductSearchResults product_search_results = 14;
+google.rpc.Status error = 9;
+ImageAnnotationContext context = 21;
+}
+message BatchAnnotateImagesRequest {
+repeated AnnotateImageRequest requests = 1
+[(google.api.field_behavior) = REQUIRED];
+string parent = 4;
+map<string, string> labels = 5 [(google.api.field_behavior) = OPTIONAL];
+}
+message BatchAnnotateImagesResponse {
+repeated AnnotateImageResponse responses = 1;
+}
+message AnnotateFileRequest {
+InputConfig input_config = 1;
+repeated Feature features = 2;
+ImageContext image_context = 3;
+repeated int32 pages = 4;
+}
+message AnnotateFileResponse {
+InputConfig input_config = 1;
+repeated AnnotateImageResponse responses = 2;
+int32 total_pages = 3;
+google.rpc.Status error = 4;
+}
+message BatchAnnotateFilesRequest {
+repeated AnnotateFileRequest requests = 1
+[(google.api.field_behavior) = REQUIRED];
+string parent = 3;
+map<string, string> labels = 5 [(google.api.field_behavior) = OPTIONAL];
+}
+message BatchAnnotateFilesResponse {
+repeated AnnotateFileResponse responses = 1;
+}
+message AsyncAnnotateFileRequest {
+InputConfig input_config = 1;
+repeated Feature features = 2;
+ImageContext image_context = 3;
+OutputConfig output_config = 4;
+}
+message AsyncAnnotateFileResponse {
+OutputConfig output_config = 1;
+}
+message AsyncBatchAnnotateImagesRequest {
+repeated AnnotateImageRequest requests = 1
+[(google.api.field_behavior) = REQUIRED];
+OutputConfig output_config = 2 [(google.api.field_behavior) = REQUIRED];
+string parent = 4;
+map<string, string> labels = 5 [(google.api.field_behavior) = OPTIONAL];
+}
+message AsyncBatchAnnotateImagesResponse {
+OutputConfig output_config = 1;
+}
+message AsyncBatchAnnotateFilesRequest {
+repeated AsyncAnnotateFileRequest requests = 1
+[(google.api.field_behavior) = REQUIRED];
+string parent = 4;
+map<string, string> labels = 5 [(google.api.field_behavior) = OPTIONAL];
+}
+message AsyncBatchAnnotateFilesResponse {
+repeated AsyncAnnotateFileResponse responses = 1;
+}
+message InputConfig {
+GcsSource gcs_source = 1;
+bytes content = 3;
+string mime_type = 2;
+}
+message OutputConfig {
+GcsDestination gcs_destination = 1;
+int32 batch_size = 2;
+}
+message GcsSource {
+string uri = 1;
+}
+message GcsDestination {
+string uri = 1;
+}
+message OperationMetadata {
+enum State {
+STATE_UNSPECIFIED = 0;
+CREATED = 1;
+RUNNING = 2;
+DONE = 3;
+CANCELLED = 4;
+}
+State state = 1;
+google.protobuf.Timestamp create_time = 5;
+google.protobuf.Timestamp update_time = 6;
+}

@@ -1,0 +1,198 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Slack Real Time Messaging API
+@version 1.0.0
+@auth https
+@endpoints 47
+@hint download_for_search
+@toc root(47)
+
+@endpoint SUB /
+@optional {id: num, type: str, channel: str, text: str}
+@returns(SUB) {id: num, type: str, channel: str, text: str}
+
+@endpoint PUB /
+@optional {type: str}
+@returns(PUB) {type: str}
+
+@endpoint PUB /
+@optional {type: str, error: map}
+@returns(PUB) {type: str, error: map{code: num, msg: str}}
+
+@endpoint PUB /
+@optional {type: str}
+@returns(PUB) {type: str}
+
+@endpoint PUB /
+@optional {type: str, bot: map}
+@returns(PUB) {type: str, bot: map{id: str, app_id: str, name: str, icons: map}}
+
+@endpoint PUB /
+@optional {type: str, bot: map}
+@returns(PUB) {type: str, bot: map{id: str, app_id: str, name: str, icons: map}}
+
+@endpoint PUB /
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str}
+
+@endpoint PUB /
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num, creator: str}}
+
+@endpoint PUB /
+@optional {type: str, channel: str}
+@returns(PUB) {type: str, channel: str}
+
+@endpoint PUB /
+@optional {type: str, latest: str, ts: str, event_ts: str}
+@returns(PUB) {type: str, latest: str, ts: str, event_ts: str}
+
+@endpoint PUB /
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num, creator: str}}
+
+@endpoint PUB /
+@optional {type: str, channel: str}
+@returns(PUB) {type: str, channel: str}
+
+@endpoint PUB /
+@optional {type: str, channel: str, ts: str}
+@returns(PUB) {type: str, channel: str, ts: str}
+
+@endpoint PUB /
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num}}
+
+@endpoint PUB /
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str}
+
+@endpoint PUB /
+@optional {type: str, event_ts: str}
+@returns(PUB) {type: str, event_ts: str}
+
+@endpoint PUB /
+@optional {type: str, user: str, dnd_status: map}
+@returns(PUB) {type: str, user: str, dnd_status: map{dnd_enabled: bool, next_dnd_start_ts: num, next_dnd_end_ts: num, snooze_enabled: bool, snooze_endtime: num}}
+
+@endpoint PUB /
+@optional {type: str, user: str, dnd_status: map}
+@returns(PUB) {type: str, user: str, dnd_status: map{dnd_enabled: bool, next_dnd_start_ts: num, next_dnd_end_ts: num}}
+
+@endpoint PUB /
+@optional {type: str, email_domain: str, event_ts: str}
+@returns(PUB) {type: str, email_domain: str, event_ts: str}
+
+@endpoint PUB /
+@optional {type: str, subtype: str, names: [str], event_ts: str}
+@returns(PUB) {type: str, subtype: str, names: [str], event_ts: str}
+
+@endpoint PUB /
+@optional {type: str, subtype: str, name: str, value: str(uri), event_ts: str}
+@returns(PUB) {type: str, subtype: str, name: str, value: str(uri), event_ts: str}
+
+@endpoint PUB /
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}}
+
+@endpoint PUB /
+@optional {type: str, comment: any, file_id: str, file: map}
+@returns(PUB) {type: str, comment: any, file_id: str, file: map{id: str}}
+
+@endpoint PUB /
+@optional {type: str, comment: str, file_id: str, file: map}
+@returns(PUB) {type: str, comment: str, file_id: str, file: map{id: str}}
+
+@endpoint PUB /
+@optional {type: str, comment: any, file_id: str, file: map}
+@returns(PUB) {type: str, comment: any, file_id: str, file: map{id: str}}
+
+@endpoint PUB /
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}}
+
+@endpoint PUB /
+@optional {type: str, file_id: str, event_ts: str}
+@returns(PUB) {type: str, file_id: str, event_ts: str}
+
+@endpoint PUB /
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}}
+
+@endpoint PUB /
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}}
+
+@endpoint PUB /
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}}
+
+@endpoint PUB /
+@optional {type: str}
+@returns(PUB) {type: str}
+
+@endpoint PUB /
+@optional {type: str, channel: str}
+@returns(PUB) {type: str, channel: str}
+
+@endpoint PUB /
+@optional {type: str, user: str, channel: str}
+@returns(PUB) {type: str, user: str, channel: str}
+
+@endpoint PUB /
+@optional {type: str, latest: str, ts: str, event_ts: str}
+@returns(PUB) {type: str, latest: str, ts: str, event_ts: str}
+
+@endpoint PUB /
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num, creator: str}}
+
+@endpoint PUB /
+@optional {type: str, channel: str}
+@returns(PUB) {type: str, channel: str}
+
+@endpoint PUB /
+@optional {type: str, channel: str, ts: str}
+@returns(PUB) {type: str, channel: str, ts: str}
+
+@endpoint PUB /
+@optional {type: str, user: str, channel: str}
+@returns(PUB) {type: str, user: str, channel: str}
+
+@endpoint PUB /
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num}}
+
+@endpoint PUB /
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str}
+
+@endpoint PUB /
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str}
+
+@endpoint PUB /
+@optional {type: str, channel: map, user: str}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num, creator: str}, user: str}
+
+@endpoint PUB /
+@optional {type: str, channel: str, ts: str}
+@returns(PUB) {type: str, channel: str, ts: str}
+
+@endpoint PUB /
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str}
+
+@endpoint PUB /
+@optional {type: str, presence: str}
+@returns(PUB) {type: str, presence: str}
+
+@endpoint PUB /
+@optional {type: str, user: str, channel: str, channel_type: str(C/G), team: str, inviter: str}
+@returns(PUB) {type: str, user: str, channel: str, channel_type: str, team: str, inviter: str}
+
+@endpoint PUB /
+@optional {type: str, user: str, channel: str, text: str, ts: str, attachments: [map], edited: map}
+@returns(PUB) {type: str, user: str, channel: str, text: str, ts: str, attachments: [map], edited: map{user: str, ts: str}}
+
+@end

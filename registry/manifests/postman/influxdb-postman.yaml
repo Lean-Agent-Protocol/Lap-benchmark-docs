@@ -1,0 +1,30 @@
+spec_id: influxdb-postman
+tasks:
+  - id: t1
+    description: "Ingest sensor or metric measurements into a time series storage container with a specified precision, then run an analytical query against the stored data to validate correctness and inspect the query plan"
+    target_endpoints:
+      - POST /api/v2/write
+      - POST /api/v2/query/analyze
+    expected_params:
+      POST /api/v2/write:
+        - bucket
+        - precision
+        - org
+      POST /api/v2/query/analyze:
+        - orgID
+        - query
+  - id: t2
+    description: "Bootstrap a fresh time series database instance by provisioning the first administrator account, organization, storage container, and access credentials, then enumerate all available storage containers to confirm the setup"
+    target_endpoints:
+      - POST /api/v2/setup
+      - GET /api/v2/buckets
+    expected_params:
+      POST /api/v2/setup:
+        - bucket
+        - org
+        - password
+        - retentionPeriodHrs
+        - retentionPeriodSeconds
+        - token
+        - username
+      GET /api/v2/buckets: []

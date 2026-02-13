@@ -1,6 +1,6 @@
-openapi: 3.0.0
+openapi: 4.0.0
 servers:
-  - description: Production
+  - description: Production READY
     url: https://production.plaid.com
   - description: Development
     url: https://development.plaid.com
@@ -13,13 +13,13 @@ info:
   description: The Plaid REST API. Please see https://plaid.com/docs/api for more details.
   termsOfService: https://plaid.com/legal/
   title: The Plaid API
-  version: 2020-09-14_1.334.0
+  version: 2020-09-15
   x-apisguru-categories:
     - financial
   x-origin:
     - format: openapi
       url: https://raw.githubusercontent.com/plaid/plaid-openapi/master/2020-09-14.yml
-      version: "3.0"
+      version: "4.0"
   x-providerName: plaid.com
   x-logo:
     url: https://api.apis.guru/v2/cache/logo/https_apis.guru_assets_images_no-logo.svg
@@ -120,132 +120,7 @@ paths:
       summary: Retrieve real-time balance data
       tags:
         - plaid
-  /accounts/get:
-    post:
-      description: |-
-        The `/accounts/get` endpoint can be used to retrieve a list of accounts associated with any linked Item. Plaid will only return active bank accounts — that is, accounts that are not closed and are capable of carrying a balance.
-        For items that went through the updated account selection pane, this endpoint only returns accounts that were permissioned by the user when they initially created the Item. If a user creates a new account after the initial link, you can capture this event through the [`NEW_ACCOUNTS_AVAILABLE`](https://plaid.com/docs/api/items/#new_accounts_available) webhook and then use Link's [update mode](https://plaid.com/docs/link/update-mode/) to request that the user share this new account with you.
-
-        This endpoint retrieves cached information, rather than extracting fresh information from the institution. As a result, balances returned may not be up-to-date; for realtime balance information, use `/accounts/balance/get` instead. Note that some information is nullable.
-      externalDocs:
-        url: /api/accounts/#accountsget
-      operationId: accountsGet
-      requestBody:
-        content:
-          application/json:
-            examples:
-              example-1:
-                value:
-                  access_token: string
-                  client_id: string
-                  options:
-                    account_ids:
-                      - string
-                  secret: string
-            schema:
-              $ref: "#/components/schemas/AccountsGetRequest"
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                example-1:
-                  value:
-                    accounts:
-                      - account_id: blgvvBlXw3cq5GMPwqB6s6q4dLKB9WcVqGDGo
-                        balances:
-                          available: 100
-                          current: 110
-                          iso_currency_code: USD
-                          limit: null
-                          unofficial_currency_code: null
-                        mask: "0000"
-                        name: Plaid Checking
-                        official_name: Plaid Gold Standard 0% Interest Checking
-                        persistent_account_id: 8cfb8beb89b774ee43b090625f0d61d0814322b43bff984eaf60386e
-                        subtype: checking
-                        type: depository
-                      - account_id: 6PdjjRP6LmugpBy5NgQvUqpRXMWxzktg3rwrk
-                        balances:
-                          available: null
-                          current: 23631.9805
-                          iso_currency_code: USD
-                          limit: null
-                          unofficial_currency_code: null
-                        mask: "6666"
-                        name: Plaid 401k
-                        official_name: null
-                        subtype: 401k
-                        type: investment
-                      - account_id: XMBvvyMGQ1UoLbKByoMqH3nXMj84ALSdE5B58
-                        balances:
-                          available: null
-                          current: 65262
-                          iso_currency_code: USD
-                          limit: null
-                          unofficial_currency_code: null
-                        mask: "7777"
-                        name: Plaid Student Loan
-                        official_name: null
-                        subtype: student
-                        type: loan
-                    item:
-                      available_products:
-                        - balance
-                        - identity
-                        - payment_initiation
-                        - transactions
-                      billed_products:
-                        - assets
-                        - auth
-                      consent_expiration_time: null
-                      error: null
-                      institution_id: ins_117650
-                      item_id: DWVAAPWq4RHGlEaNyGKRTAnPLaEmo8Cvq7na6
-                      update_type: background
-                      webhook: https://www.genericwebhookurl.com/webhook
-                    request_id: bkVE1BHWMAZ9Rnr
-              schema:
-                $ref: "#/components/schemas/AccountsGetResponse"
-          description: success
-        default:
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PlaidError"
-          description: Error response.
-      summary: Retrieve accounts
-      tags:
-        - plaid
-  /application/get:
-    post:
-      description: Allows financial institutions to retrieve information about Plaid clients for the purpose of building control-tower experiences
-      operationId: applicationGet
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ApplicationGetRequest"
-        description: ""
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApplicationGetResponse"
-          description: success
-        default:
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PlaidError"
-          description: Error response.
-      summary: Retrieve information about a Plaid application
-      tags:
-        - plaid
-  /asset_report/audit_copy/create:
+    /asset_report/audit_copy/create:
     post:
       description: |-
         Plaid can provide an Audit Copy of any Asset Report directly to a participating third party on your behalf. For example, Plaid can supply an Audit Copy directly to Fannie Mae on your behalf if you participate in the Day 1 Certainty™ program. An Audit Copy contains the same underlying data as the Asset Report.

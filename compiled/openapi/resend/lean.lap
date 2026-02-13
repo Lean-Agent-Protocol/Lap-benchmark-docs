@@ -1,0 +1,340 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Resend
+@base https://api.resend.com
+@version 1.1.0
+@auth Bearer bearer
+@endpoints 70
+@hint download_for_search
+@toc emails(12), domains(6), api-keys(3), templates(7), audiences(17), broadcasts(6), webhooks(5), segments(4), topics(5), contact-properties(5)
+
+@group emails
+@endpoint POST /emails
+@required {from: str, to: [str], subject: str}
+@optional {Idempotency-Key: str, bcc: str, cc: str, reply_to: str, html: str, text: str, template: map{id!: str, variables: map}, headers: map, scheduled_at: str, attachments: [map{content: str(binary), filename: str, path: str, content_type: str}], tags: [map{name: str, value: str}]}
+@returns(200) {id: str}
+
+@endpoint GET /emails
+@optional {limit: int, after: str, before: str}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint GET /emails/{email_id}
+@required {email_id: str}
+@returns(200) {object: str, id: str, to: [str], from: str, created_at: str(date-time), subject: str, html: str, text: str, bcc: [str], cc: [str], reply_to: [str], last_event: str}
+
+@endpoint PATCH /emails/{email_id}
+@required {email_id: str}
+@returns(200) {scheduled_at: str}
+
+@endpoint POST /emails/{email_id}/cancel
+@required {email_id: str}
+@returns(200) {object: str, id: str, to: [str], from: str, created_at: str(date-time), subject: str, html: str, text: str, bcc: [str], cc: [str], reply_to: [str], last_event: str}
+
+@endpoint POST /emails/batch
+@optional {Idempotency-Key: str}
+@returns(200) {data: [map]}
+
+@endpoint GET /emails/{email_id}/attachments
+@required {email_id: str(uuid)}
+@optional {limit: int, after: str(uuid), before: str(uuid)}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint GET /emails/{email_id}/attachments/{attachment_id}
+@required {email_id: str(uuid), attachment_id: str(uuid)}
+@returns(200) {object: str, id: str(uuid), filename: str, content_type: str, content_id: str, content_disposition: str, download_url: str, expires_at: str(date-time), size: int}
+
+@endpoint GET /emails/receiving
+@optional {limit: int, after: str(uuid), before: str(uuid)}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint GET /emails/receiving/{email_id}
+@required {email_id: str(uuid)}
+@returns(200) {object: str, id: str(uuid), to: [str], from: str, subject: str, message_id: str, bcc: [str]?, cc: [str]?, reply_to: [str]?, html: str?, text: str?, headers: map?, created_at: str(date-time), attachments: [map]}
+
+@endpoint GET /emails/receiving/{email_id}/attachments
+@required {email_id: str(uuid)}
+@optional {limit: int, after: str(uuid), before: str(uuid)}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint GET /emails/receiving/{email_id}/attachments/{attachment_id}
+@required {email_id: str(uuid), attachment_id: str(uuid)}
+@returns(200) {object: str, id: str(uuid), filename: str, content_type: str, content_id: str, content_disposition: str, download_url: str, expires_at: str(date-time), size: int}
+
+@endgroup
+
+@group domains
+@endpoint POST /domains
+@required {name: str}
+@optional {region: str(us-east-1/eu-west-1/sa-east-1/ap-northeast-1)=us-east-1}
+@returns(201) {id: str, name: str, created_at: str(date-time), status: str, records: [map], region: str}
+
+@endpoint GET /domains
+@returns(200) {data: [map]}
+
+@endpoint GET /domains/{domain_id}
+@required {domain_id: str}
+@returns(200) {object: str, id: str, name: str, status: str, created_at: str(date-time), region: str, records: [map]}
+
+@endpoint PATCH /domains/{domain_id}
+@required {domain_id: str}
+@optional {open_tracking: bool, click_tracking: bool, tls: str=opportunistic}
+@returns(200) {id: str, object: str}
+
+@endpoint DELETE /domains/{domain_id}
+@required {domain_id: str}
+@returns(200) {object: str, id: str, deleted: bool}
+
+@endpoint POST /domains/{domain_id}/verify
+@required {domain_id: str}
+@returns(200) {object: str, id: str}
+
+@endgroup
+
+@group api-keys
+@endpoint POST /api-keys
+@required {name: str}
+@optional {permission: str(full_access/sending_access), domain_id: str}
+@returns(201) {id: str, token: str}
+
+@endpoint GET /api-keys
+@returns(200) {data: [map]}
+
+@endpoint DELETE /api-keys/{api_key_id}
+@required {api_key_id: str}
+@returns(200)
+
+@endgroup
+
+@group templates
+@endpoint POST /templates
+@required {name: str, html: str}
+@optional {alias: str, from: str, subject: str, reply_to: [str], text: str, variables: [map{key!: str, type!: str, fallback_value: any}]}
+@returns(201) {id: str, object: str}
+
+@endpoint GET /templates
+@optional {limit: int, after: str, before: str}
+@returns(200) {object: str, data: [map], has_more: bool}
+
+@endpoint GET /templates/{id}
+@required {id: str}
+@returns(200) {object: str, id: str, current_version_id: str, name: str, alias: str, from: str, subject: str, reply_to: [str]?, html: str, text: str, variables: [map], created_at: str(date-time), updated_at: str(date-time), status: str, published_at: str(date-time)?, has_unpublished_versions: bool}
+
+@endpoint PATCH /templates/{id}
+@required {id: str}
+@optional {name: str, alias: str, from: str, subject: str, reply_to: [str], html: str, text: str, variables: [map{key!: str, type!: str, fallback_value: any}]}
+@returns(200) {id: str, object: str}
+
+@endpoint DELETE /templates/{id}
+@required {id: str}
+@returns(200) {object: str, id: str, deleted: bool}
+
+@endpoint POST /templates/{id}/publish
+@required {id: str}
+@returns(200) {id: str, object: str}
+
+@endpoint POST /templates/{id}/duplicate
+@required {id: str}
+@returns(200) {id: str, object: str}
+
+@endgroup
+
+@group audiences
+@endpoint POST /audiences
+@required {name: str}
+@returns(201) {id: str, object: str, name: str}
+
+@endpoint GET /audiences
+@returns(200) {object: str, data: [map]}
+
+@endpoint DELETE /audiences/{id}
+@required {id: str}
+@returns(200) {id: str, object: str, deleted: bool}
+
+@endpoint GET /audiences/{id}
+@required {id: str}
+@returns(200) {id: str, object: str, name: str, created_at: str}
+
+@endpoint POST /audiences/{audience_id}/contacts
+@required {audience_id: str, email: str}
+@optional {first_name: str, last_name: str, unsubscribed: bool, audience_id: str}
+@returns(201) {object: str, id: str}
+
+@endpoint GET /audiences/{audience_id}/contacts
+@required {audience_id: str}
+@returns(200) {object: str, data: [map]}
+
+@endpoint DELETE /audiences/{audience_id}/contacts/{email}
+@required {email: str, audience_id: str}
+@returns(200) {object: str, id: str, deleted: bool}
+
+@endpoint GET /audiences/{audience_id}/contacts/{email}
+@required {email: str, audience_id: str}
+@returns(200) {object: str, id: str, email: str, first_name: str, last_name: str, created_at: str(date-time), unsubscribed: bool}
+
+@endpoint PATCH /audiences/{audience_id}/contacts/{email}
+@required {email: str, audience_id: str}
+@returns(200) {object: str, id: str}
+
+@endpoint DELETE /audiences/{audience_id}/contacts/{id}
+@required {id: str, audience_id: str}
+@returns(200) {object: str, id: str, deleted: bool}
+
+@endpoint PATCH /audiences/{audience_id}/contacts/{id}
+@required {id: str, audience_id: str}
+@optional {email: str, first_name: str, last_name: str, unsubscribed: bool}
+@returns(200) {object: str, id: str}
+
+@endpoint GET /audiences/{audience_id}/contacts/{id}
+@required {id: str, audience_id: str}
+@returns(200) {object: str, id: str, email: str, first_name: str, last_name: str, created_at: str(date-time), unsubscribed: bool}
+
+@endgroup
+
+@group broadcasts
+@endpoint POST /broadcasts
+@required {segment_id: str, from: str, subject: str}
+@optional {name: str, audience_id: str, reply_to: [str], preview_text: str, html: str, text: str, send: bool, scheduled_at: str}
+@returns(201) {id: str, object: str}
+
+@endpoint GET /broadcasts
+@returns(200) {object: str, data: [map]}
+
+@endpoint DELETE /broadcasts/{id}
+@required {id: str}
+@returns(200) {id: str, object: str, deleted: bool}
+
+@endpoint GET /broadcasts/{id}
+@required {id: str}
+@returns(200) {id: str, name: str, audience_id: str?, segment_id: str?, from: str, subject: str, reply_to: [str], preview_text: str, status: str, created_at: str(date-time), scheduled_at: str(date-time), sent_at: str(date-time), text: str?, html: str?}
+
+@endpoint PATCH /broadcasts/{id}
+@required {id: str}
+@optional {name: str, audience_id: str, segment_id: str, from: str, subject: str, reply_to: [str], preview_text: str, html: str, text: str}
+@returns(200) {id: str, object: str}
+
+@endpoint POST /broadcasts/{id}/send
+@required {id: str}
+@optional {scheduled_at: str}
+@returns(200) {id: str}
+
+@endgroup
+
+@group webhooks
+@endpoint POST /webhooks
+@required {endpoint: str, events: [str]}
+@returns(201) {object: str, id: str(uuid), signing_secret: str}
+
+@endpoint GET /webhooks
+@optional {limit: int, after: str(uuid), before: str(uuid)}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint GET /webhooks/{webhook_id}
+@required {webhook_id: str(uuid)}
+@returns(200) {object: str, id: str(uuid), endpoint: str, events: [str]?, status: str, created_at: str(date-time), signing_secret: str}
+
+@endpoint PATCH /webhooks/{webhook_id}
+@required {webhook_id: str(uuid)}
+@optional {endpoint: str, events: [str], status: str(enabled/disabled)}
+@returns(200) {object: str, id: str(uuid)}
+
+@endpoint DELETE /webhooks/{webhook_id}
+@required {webhook_id: str(uuid)}
+@returns(200) {object: str, id: str(uuid), deleted: bool}
+
+@endgroup
+
+@group segments
+@endpoint POST /segments
+@required {name: str, audience_id: str}
+@optional {filter: map}
+@returns(201) {id: str, object: str}
+
+@endpoint GET /segments
+@optional {limit: int, after: str, before: str}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint GET /segments/{id}
+@required {id: str}
+@returns(200) {id: str, object: str, name: str, audience_id: str, filter: map, created_at: str(date-time)}
+
+@endpoint DELETE /segments/{id}
+@required {id: str}
+@returns(200) {id: str, object: str, deleted: bool}
+
+@endgroup
+
+@group topics
+@endpoint POST /topics
+@required {name: str, audience_id: str}
+@returns(201) {id: str, object: str}
+
+@endpoint GET /topics
+@optional {limit: int, after: str, before: str}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint GET /topics/{id}
+@required {id: str}
+@returns(200) {id: str, object: str, name: str, audience_id: str, created_at: str(date-time)}
+
+@endpoint PATCH /topics/{id}
+@required {id: str}
+@optional {name: str}
+@returns(200) {id: str, object: str}
+
+@endpoint DELETE /topics/{id}
+@required {id: str}
+@returns(200) {id: str, object: str, deleted: bool}
+
+@endgroup
+
+@group contact-properties
+@endpoint POST /contact-properties
+@required {name: str, type: str(string/number/boolean/date)}
+@optional {description: str}
+@returns(201) {id: str, object: str}
+
+@endpoint GET /contact-properties
+@optional {limit: int, after: str, before: str}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint GET /contact-properties/{id}
+@required {id: str}
+@returns(200) {id: str, object: str, name: str, type: str, description: str, created_at: str(date-time)}
+
+@endpoint PATCH /contact-properties/{id}
+@required {id: str}
+@optional {name: str, description: str}
+@returns(200) {id: str, object: str}
+
+@endpoint DELETE /contact-properties/{id}
+@required {id: str}
+@returns(200) {id: str, object: str, deleted: bool}
+
+@endgroup
+
+@group audiences
+@endpoint POST /audiences/{audience_id}/contacts/{id}/segments
+@required {audience_id: str, id: str, segment_id: str}
+@returns(200) {object: str, contact_id: str, segment_id: str}
+
+@endpoint GET /audiences/{audience_id}/contacts/{id}/segments
+@required {audience_id: str, id: str}
+@optional {limit: int, after: str, before: str}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint DELETE /audiences/{audience_id}/contacts/{id}/segments/{segment_id}
+@required {audience_id: str, id: str, segment_id: str}
+@returns(200) {object: str, contact_id: str, segment_id: str, deleted: bool}
+
+@endpoint GET /audiences/{audience_id}/contacts/{id}/topics
+@required {audience_id: str, id: str}
+@optional {limit: int, after: str, before: str}
+@returns(200) {object: str, has_more: bool, data: [map]}
+
+@endpoint PATCH /audiences/{audience_id}/contacts/{id}/topics
+@required {audience_id: str, id: str, topics: [map{id: str, subscribed: bool}]}
+@returns(200) {object: str, contact_id: str, topics: [map]}
+
+@endgroup
+
+@end

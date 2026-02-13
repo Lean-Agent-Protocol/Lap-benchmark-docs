@@ -1,0 +1,31 @@
+spec_id: digitalocean
+tasks:
+  - id: t1
+    description: "Provision a new cloud virtual machine in a specific region with a chosen size and OS image, including SSH access keys and tags, then check the current status and specs of that running instance"
+    target_endpoints:
+      - POST /v2/droplets
+      - GET /v2/droplets/{droplet_id}
+    expected_params:
+      POST /v2/droplets:
+        - name
+        - region
+        - size
+        - image
+        - ssh_keys
+        - tags
+      GET /v2/droplets/{droplet_id}:
+        - droplet_id
+  - id: t2
+    description: "Register a new DNS entry for a hosted zone with a specific record type, hostname, value, and TTL, then enumerate all existing DNS entries configured under that zone"
+    target_endpoints:
+      - POST /v2/domains/{domain_name}/records
+      - GET /v2/domains/{domain_name}/records
+    expected_params:
+      POST /v2/domains/{domain_name}/records:
+        - domain_name
+        - type
+        - name
+        - data
+        - ttl
+      GET /v2/domains/{domain_name}/records:
+        - domain_name

@@ -1,0 +1,15 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Gitter Streaming API
+@version 1.0.0
+@auth https
+@endpoints 2
+@toc rooms(2)
+
+@endpoint PUB /rooms/{roomId}/{resource}
+@desc A message represents an individual chat message sent to a room. They are a sub-resource of a room. [http(method=POST)]
+
+@endpoint PUB /rooms/{roomId}/{resource}
+@desc Its purpose is to keep the connection alive. [http(method=POST)]
+
+@end

@@ -1,0 +1,34 @@
+spec_id: slack-rtm
+tasks:
+  - id: t1
+    description: "Post a text message to a team conversation and set up a real-time listener to capture new messages as they arrive from other users"
+    target_endpoints:
+      - PUBLISH / outgoingMessage
+      - SUBSCRIBE / message
+    expected_params:
+      PUBLISH / outgoingMessage:
+        - id
+        - type
+        - channel
+        - text
+      SUBSCRIBE / message:
+        - type
+        - user
+        - channel
+        - text
+        - ts
+  - id: t2
+    description: "Monitor for when a teammate is added to a conversation and detect when a brand-new conversation space is set up in the workspace"
+    target_endpoints:
+      - SUBSCRIBE / memberJoinedChannel
+      - SUBSCRIBE / channelCreated
+    expected_params:
+      SUBSCRIBE / memberJoinedChannel:
+        - type
+        - user
+        - channel
+        - channel_type
+        - inviter
+      SUBSCRIBE / channelCreated:
+        - type
+        - channel

@@ -1,0 +1,43 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api google.cloud.talent.v4
+@base grpc://google.cloud.talent.v4
+@version proto3
+@endpoints 10
+@toc JobService(10)
+
+@type FieldMask {paths: [str]}
+@type MatchingJob {job: Job, job_summary: str, job_title_snippet: str, search_text_snippet: str, commute_info: CommuteInfo{job_location: Location, travel_duration: str(duration){seconds: int(i64), nanos: int}}}
+@type SearchJobsRequest {search_mode: enum(JOB_SEARCH/FEATURED_JOB_SEARCH), job_query: JobQuery, enable_broadening: bool, histogram_queries: [HistogramQuery], job_view: enum(ID_ONLY/MINIMAL/SMALL/FULL), offset: int, max_page_size: int, page_token: str, order_by: str, diversification_level: enum(DISABLED/SIMPLE/ONE_PER_COMPANY/TWO_PER_COMPANY/MAX_THREE_PER_COMPANY/DIVERSIFY_BY_LOOSER_SIMILARITY), custom_ranking_info: CustomRankingInfo, keyword_match_mode: enum(DISABLED/ALL/TITLE_ONLY)}
+@type SearchJobsResponse {matching_jobs: [MatchingJob], histogram_query_results: [HistogramQueryResult], next_page_token: str, location_filters: [Location], total_size: int, metadata: ResponseMetadata, broadened_query_jobs_count: int, spell_correction: SpellingCorrection}
+
+@endpoint UNARY /JobService/CreateJob
+
+@endpoint UNARY /JobService/BatchCreateJobs
+
+@endpoint UNARY /JobService/GetJob
+
+@endpoint UNARY /JobService/UpdateJob
+@optional {update_mask: FieldMask}
+
+@endpoint UNARY /JobService/BatchUpdateJobs
+@optional {update_mask: FieldMask}
+
+@endpoint UNARY /JobService/DeleteJob
+@returns(OK)
+
+@endpoint UNARY /JobService/BatchDeleteJobs
+
+@endpoint UNARY /JobService/ListJobs
+@optional {page_token: str, page_size: int, job_view: enum(ID_ONLY/MINIMAL/SMALL/FULL)}
+@returns(OK) {jobs: [Job], next_page_token: str, metadata: ResponseMetadata}
+
+@endpoint UNARY /JobService/SearchJobs
+@body → SearchJobsRequest
+@returns(OK) → SearchJobsResponse
+
+@endpoint UNARY /JobService/SearchJobsForAlert
+@body → SearchJobsRequest
+@returns(OK) → SearchJobsResponse
+
+@end

@@ -1,0 +1,256 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Braintree GraphQL
+@endpoints 43
+@hint download_for_search
+@toc {{endpoint}}(42), {{host}}(1)
+
+@group {{endpoint}}
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Sale
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+@returns(200) Charge Payment Method
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Authorization
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Capture
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Search using ID
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Customer Create
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Customer Search using ID
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+@returns(200) Charge Payment Method
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Payment Method Create
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Authorization
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Capture
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Authorization
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Capture
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Authorization
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Capture
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Reverse
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Payment Method Create
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Payment Method Node Search using ID
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Authorization
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Capture
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Ping
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc GraphQL ID lookup via Legacy ID
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Customer Create
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Customer Search using ID
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+@returns(200) Charge Payment Method
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Vault PP Billing Agreement
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Payment Method Node Search using ID
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+@returns(200) Charge Payment Method
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Authorization
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Capture
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Search using ID
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+@returns(200) Charge Payment Method
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Authorization
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Capture
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Client Token w/MerchantAccountId
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Customer Search using CreateDate
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Search using Customer ID
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+@returns(200) Charge Payment Method
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Search using CreateDate
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+@returns(200) Charge Payment Method
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Search via Node
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endgroup
+
+@group {{host}}
+@endpoint POST /{{host}}/graphql
+@desc Compound Search (Transaction + Customer)
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+@returns(200) Charge Payment Method
+
+@endgroup
+
+@group {{endpoint}}
+@endpoint POST /{{endpoint}}/graphql
+@desc Ping
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Viewer
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Client Token
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Transaction Introspection
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Node Possible Types
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc Schema Types
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc GraphQL ID lookup via Legacy ID
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@desc PayPal Transaction Details
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200) Charge Payment Method
+@returns(200) Charge Payment Method (w/ Line Items & Custom Fields)
+
+@endgroup
+
+@end

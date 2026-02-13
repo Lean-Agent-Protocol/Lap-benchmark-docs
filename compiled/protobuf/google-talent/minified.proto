@@ -1,0 +1,197 @@
+syntax = "proto3";
+package google.cloud.talent.v4;
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/cloud/talent/v4/common.proto";
+import "google/cloud/talent/v4/filters.proto";
+import "google/cloud/talent/v4/histogram.proto";
+import "google/cloud/talent/v4/job.proto";
+import "google/longrunning/operations.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/rpc/status.proto";
+option go_package = "cloud.google.com/go/talent/apiv4/talentpb;talentpb";
+option java_multiple_files = true;
+option java_outer_classname = "JobServiceProto";
+option java_package = "com.google.cloud.talent.v4";
+option objc_class_prefix = "CTS";
+service JobService {
+option (google.api.default_host) = "jobs.googleapis.com";
+option (google.api.oauth_scopes) =
+"https://www.googleapis.com/auth/cloud-platform,"
+"https://www.googleapis.com/auth/jobs";
+rpc CreateJob(CreateJobRequest) returns (Job) {
+option (google.api.http) = {
+post: "/v4/{parent=projectstenantstenantstenantstenantstenantstenantstenantstenantstenants/*}/jobs:searchForAlert"
+body: "*"
+};
+}
+}
+message CreateJobRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { child_type: "jobs.googleapis.com/Job" }
+];
+Job job = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message GetJobRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "jobs.googleapis.com/Job" }
+];
+}
+message UpdateJobRequest {
+Job job = 1 [(google.api.field_behavior) = REQUIRED];
+google.protobuf.FieldMask update_mask = 2;
+}
+message DeleteJobRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "jobs.googleapis.com/Job" }
+];
+}
+enum JobView {
+JOB_VIEW_UNSPECIFIED = 0;
+JOB_VIEW_ID_ONLY = 1;
+JOB_VIEW_MINIMAL = 2;
+JOB_VIEW_SMALL = 3;
+JOB_VIEW_FULL = 4;
+}
+message ListJobsRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { child_type: "jobs.googleapis.com/Job" }
+];
+string filter = 2 [(google.api.field_behavior) = REQUIRED];
+string page_token = 3;
+int32 page_size = 4;
+JobView job_view = 5;
+}
+message ListJobsResponse {
+repeated Job jobs = 1;
+string next_page_token = 2;
+ResponseMetadata metadata = 3;
+}
+message SearchJobsRequest {
+enum SearchMode {
+SEARCH_MODE_UNSPECIFIED = 0;
+JOB_SEARCH = 1;
+FEATURED_JOB_SEARCH = 2;
+}
+enum DiversificationLevel {
+DIVERSIFICATION_LEVEL_UNSPECIFIED = 0;
+DISABLED = 1;
+SIMPLE = 2;
+ONE_PER_COMPANY = 3;
+TWO_PER_COMPANY = 4;
+MAX_THREE_PER_COMPANY = 6;
+DIVERSIFY_BY_LOOSER_SIMILARITY = 5;
+}
+enum KeywordMatchMode {
+KEYWORD_MATCH_MODE_UNSPECIFIED = 0;
+KEYWORD_MATCH_DISABLED = 1;
+KEYWORD_MATCH_ALL = 2;
+KEYWORD_MATCH_TITLE_ONLY = 3;
+}
+enum RelevanceThreshold {
+RELEVANCE_THRESHOLD_UNSPECIFIED = 0;
+LOWEST = 1;
+LOW = 2;
+MEDIUM = 3;
+HIGH = 4;
+}
+message CustomRankingInfo {
+enum ImportanceLevel {
+IMPORTANCE_LEVEL_UNSPECIFIED = 0;
+NONE = 1;
+LOW = 2;
+MILD = 3;
+MEDIUM = 4;
+HIGH = 5;
+EXTREME = 6;
+}
+ImportanceLevel importance_level = 1
+[(google.api.field_behavior) = REQUIRED];
+string ranking_expression = 2 [(google.api.field_behavior) = REQUIRED];
+}
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { child_type: "jobs.googleapis.com/Job" }
+];
+SearchMode search_mode = 2;
+RequestMetadata request_metadata = 3 [(google.api.field_behavior) = REQUIRED];
+JobQuery job_query = 4;
+bool enable_broadening = 5;
+repeated HistogramQuery histogram_queries = 7;
+JobView job_view = 8;
+int32 offset = 9;
+int32 max_page_size = 10;
+string page_token = 11;
+string order_by = 12;
+DiversificationLevel diversification_level = 13;
+CustomRankingInfo custom_ranking_info = 14;
+bool disable_keyword_match = 16 [deprecated = true];
+KeywordMatchMode keyword_match_mode = 18;
+RelevanceThreshold relevance_threshold = 19
+[(google.api.field_behavior) = OPTIONAL];
+}
+message SearchJobsResponse {
+message MatchingJob {
+Job job = 1;
+string job_summary = 2;
+string job_title_snippet = 3;
+string search_text_snippet = 4;
+CommuteInfo commute_info = 5;
+}
+message CommuteInfo {
+Location job_location = 1;
+google.protobuf.Duration travel_duration = 2;
+}
+repeated MatchingJob matching_jobs = 1;
+repeated HistogramQueryResult histogram_query_results = 2;
+string next_page_token = 3;
+repeated Location location_filters = 4;
+int32 total_size = 6;
+ResponseMetadata metadata = 7;
+int32 broadened_query_jobs_count = 8;
+SpellingCorrection spell_correction = 9;
+}
+message BatchCreateJobsRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { child_type: "jobs.googleapis.com/Job" }
+];
+repeated Job jobs = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message BatchUpdateJobsRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { child_type: "jobs.googleapis.com/Job" }
+];
+repeated Job jobs = 2 [(google.api.field_behavior) = REQUIRED];
+google.protobuf.FieldMask update_mask = 3;
+}
+message BatchDeleteJobsRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "jobs.googleapis.com/Tenant" }
+];
+repeated string names = 2
+[(google.api.resource_reference) = { type: "jobs.googleapis.com/Job" }];
+}
+message JobResult {
+Job job = 1;
+google.rpc.Status status = 2;
+}
+message BatchCreateJobsResponse {
+repeated JobResult job_results = 1;
+}
+message BatchUpdateJobsResponse {
+repeated JobResult job_results = 1;
+}
+message BatchDeleteJobsResponse {
+repeated JobResult job_results = 1;
+}

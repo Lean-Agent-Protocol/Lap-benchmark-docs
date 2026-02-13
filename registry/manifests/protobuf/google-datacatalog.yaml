@@ -1,0 +1,31 @@
+spec_id: google-datacatalog
+tasks:
+  - id: t1
+    description: "Find data assets across the organization by searching with keywords and scope filters, then set up a new logical grouping to organize the discovered data resources"
+    target_endpoints:
+      - RPC SearchCatalog
+      - RPC CreateEntryGroup
+    expected_params:
+      RPC SearchCatalog:
+        - scope
+        - query
+        - page_size
+        - page_token
+        - order_by
+      RPC CreateEntryGroup:
+        - parent
+        - entry_group_id
+        - entry_group
+  - id: t2
+    description: "Define a reusable metadata schema with custom fields for annotating data assets, then apply an instance of that schema as a metadata annotation on a specific cataloged resource"
+    target_endpoints:
+      - RPC CreateTagTemplate
+      - RPC CreateTag
+    expected_params:
+      RPC CreateTagTemplate:
+        - parent
+        - tag_template_id
+        - tag_template
+      RPC CreateTag:
+        - parent
+        - tag

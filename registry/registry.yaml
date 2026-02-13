@@ -1,0 +1,361 @@
+# LAP Benchmark v2 - Spec Registry
+# Central metadata for all benchmark specifications.
+# All specs sourced from real public GitHub repositories.
+# source_file: path relative to project root
+# github_url: raw GitHub URL for fetching the source
+
+specs:
+  # -- OpenAPI (10 specs) --
+  figma:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/figma/rest-api-spec/main/openapi/openapi.yaml
+    source_file: sources/openapi/figma.yaml
+    size_class: medium
+    domain: design
+
+  stripe:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.yaml
+    source_file: sources/openapi/stripe.yaml
+    size_class: large
+    domain: payments
+
+  twilio:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/twilio/twilio-oai/main/spec/json/twilio_api_v2010.json
+    source_file: sources/openapi/twilio.json
+    size_class: large
+    domain: comms
+
+  github-rest:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.yaml
+    source_file: sources/openapi/github-rest.yaml
+    size_class: large
+    domain: devtools
+
+  digitalocean:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml
+    source_file: sources/openapi/digitalocean.yaml
+    size_class: medium
+    domain: cloud
+
+  slack:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/slackapi/slack-api-specs/master/web-api/slack_web_openapi_v2.json
+    source_file: sources/openapi/slack.json
+    size_class: large
+    domain: messaging
+
+  spotify:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/sonallux/spotify-web-api/main/fixed-spotify-open-api.yml
+    source_file: sources/openapi/spotify.yaml
+    size_class: medium
+    domain: media
+
+  box:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/box/box-openapi/main/openapi.json
+    source_file: sources/openapi/box.json
+    size_class: large
+    domain: storage
+
+  plaid:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/plaid/plaid-openapi/master/2020-09-14.yml
+    source_file: sources/openapi/plaid.yaml
+    size_class: large
+    domain: fintech
+
+  resend:
+    format: openapi
+    github_url: https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml
+    source_file: sources/openapi/resend.yaml
+    size_class: medium
+    domain: email
+
+  # -- AsyncAPI (10 specs) --
+  streetlights:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/streetlights-kafka-asyncapi.yml
+    source_file: sources/asyncapi/streetlights.yaml
+    size_class: small
+    domain: iot
+
+  slack-rtm:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/slack-rtm-asyncapi.yml
+    source_file: sources/asyncapi/slack-rtm.yaml
+    size_class: small
+    domain: messaging
+
+  adeo-kafka:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/adeo-kafka-request-reply-asyncapi.yml
+    source_file: sources/asyncapi/adeo-kafka.yaml
+    size_class: small
+    domain: ecommerce
+
+  social-media:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/social-media/backend/asyncapi.yaml
+    source_file: sources/asyncapi/social-media.yaml
+    size_class: small
+    domain: social
+
+  gitter-streaming:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/gitter-streaming-asyncapi.yml
+    source_file: sources/asyncapi/gitter-streaming.yaml
+    size_class: small
+    domain: chat
+
+  websocket-gemini:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/websocket-gemini-asyncapi.yml
+    source_file: sources/asyncapi/websocket-gemini.yaml
+    size_class: small
+    domain: crypto
+
+  kraken-websocket:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/kraken-websocket-request-reply-message-filter-in-reply-asyncapi.yml
+    source_file: sources/asyncapi/kraken-websocket.yaml
+    size_class: small
+    domain: crypto
+
+  correlation-id:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/correlation-id-asyncapi.yml
+    source_file: sources/asyncapi/correlation-id.yaml
+    size_class: small
+    domain: patterns
+
+  operation-security:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/operation-security-asyncapi.yml
+    source_file: sources/asyncapi/operation-security.yaml
+    size_class: small
+    domain: security
+
+  rpc-server:
+    format: asyncapi
+    github_url: https://raw.githubusercontent.com/asyncapi/spec/master/examples/rpc-server-asyncapi.yml
+    source_file: sources/asyncapi/rpc-server.yaml
+    size_class: small
+    domain: microservices
+
+  # -- GraphQL (10 specs) --
+  github-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/octokit/graphql-schema/master/schema.graphql
+    source_file: sources/graphql/github-gql.graphql
+    size_class: large
+    domain: devtools
+
+  swapi-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/graphql/swapi-graphql/master/schema.graphql
+    source_file: sources/graphql/swapi-gql.graphql
+    size_class: small
+    domain: demo
+
+  yelp-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/pranayairan/YelpQL/master/app/src/main/graphql/yelp/schema.json
+    source_file: sources/graphql/yelp-gql.json
+    size_class: small
+    domain: local
+
+  shopify-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/graphql-kit/graphql-voyager/main/demo/presets/shopify_introspection.json
+    source_file: sources/graphql/shopify-gql.json
+    size_class: medium
+    domain: ecommerce
+
+  artsy-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/artsy/metaphysics/main/_schemaV2.graphql
+    source_file: sources/graphql/artsy-gql.graphql
+    size_class: large
+    domain: art
+
+  linear-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/linear/linear/master/packages/sdk/src/schema.graphql
+    source_file: sources/graphql/linear-gql.graphql
+    size_class: large
+    domain: project-mgmt
+
+  saleor-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/saleor/saleor/main/saleor/graphql/schema.graphql
+    source_file: sources/graphql/saleor-gql.graphql
+    size_class: large
+    domain: ecommerce
+
+  elastic-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/graphql-compose/graphql-compose-examples/master/examples/elasticsearch/data/schema.graphql
+    source_file: sources/graphql/elastic-gql.graphql
+    size_class: medium
+    domain: search
+
+  coral-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/coralproject/talk/main/server/src/core/server/graph/schema/schema.graphql
+    source_file: sources/graphql/coral-gql.graphql
+    size_class: medium
+    domain: social
+
+  unraid-gql:
+    format: graphql
+    github_url: https://raw.githubusercontent.com/unraid/api/main/api/generated-schema.graphql
+    source_file: sources/graphql/unraid-gql.graphql
+    size_class: small
+    domain: infra
+
+  # -- Postman (10 specs) --
+  twilio-postman:
+    format: postman
+    github_url: https://raw.githubusercontent.com/twilio/wireless-postman-collection/master/Twilio%20Programmable%20Wireless.postman_collection.json
+    source_file: sources/postman/twilio-postman.json
+    size_class: small
+    domain: comms
+
+  postman-echo:
+    format: postman
+    github_url: https://raw.githubusercontent.com/postmanlabs/postman-collection/develop/examples/collection-v2.json
+    source_file: sources/postman/postman-echo.json
+    size_class: small
+    domain: demo
+
+  adobe-postman:
+    format: postman
+    github_url: https://raw.githubusercontent.com/adobe/experience-platform-postman-samples/master/apis/experience-platform/Data%20Ingestion%20API.postman_collection.json
+    source_file: sources/postman/adobe-postman.json
+    size_class: small
+    domain: marketing
+
+  sap-postman:
+    format: postman
+    github_url: https://raw.githubusercontent.com/SAP-samples/byd-api-samples/main/Postman/Reference%20Scenarios.postman_collection.json
+    source_file: sources/postman/sap-postman.json
+    size_class: medium
+    domain: enterprise
+
+  stripe-postman:
+    format: postman
+    github_url: https://raw.githubusercontent.com/mattmitchell6/stripe-api-postman-collection/master/stripe-api-postman-collection.json
+    source_file: sources/postman/stripe-postman.json
+    size_class: medium
+    domain: payments
+
+  azure-devops-postman:
+    format: postman
+    github_url: https://raw.githubusercontent.com/hkamel/azuredevops-postman-collections/master/Azure%20DevOps%20v5.0.postman_collection.json
+    source_file: sources/postman/azure-devops-postman.json
+    size_class: large
+    domain: devops
+
+  auth0-postman:
+    format: postman
+    github_url: https://raw.githubusercontent.com/auth0/postman-collections/master/Auth0%20Management%20API%20v2.postman_collection.json
+    source_file: sources/postman/auth0-postman.json
+    size_class: medium
+    domain: auth
+
+  braintree-postman:
+    format: postman
+    github_url: https://raw.githubusercontent.com/paypal/integration-packs/main/postman-collections/Braintree-GraphQL.postman_collection.json
+    source_file: sources/postman/braintree-postman.json
+    size_class: medium
+    domain: payments
+
+  influxdb-postman:
+    format: postman
+    github_url: https://raw.githubusercontent.com/InfluxCommunity/postman_influx_v2_api/main/InfluxDB_API_2.0.postman_collection.json
+    source_file: sources/postman/influxdb-postman.json
+    size_class: medium
+    domain: monitoring
+
+  akeneo-postman:
+    format: postman
+    github_url: https://raw.githubusercontent.com/akeneo/pim-api-docs/master/content/files/Akeneo%20PIM%20API.postman_collection.json
+    source_file: sources/postman/akeneo-postman.json
+    size_class: medium
+    domain: ecommerce
+
+  # -- Protobuf/gRPC (10 specs) --
+  google-storage:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/storage/v2/storage.proto
+    source_file: sources/protobuf/google-storage.proto
+    size_class: medium
+    domain: cloud
+
+  google-pubsub:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/pubsub/v1/pubsub.proto
+    source_file: sources/protobuf/google-pubsub.proto
+    size_class: medium
+    domain: messaging
+
+  google-vision:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/vision/v1/image_annotator.proto
+    source_file: sources/protobuf/google-vision.proto
+    size_class: medium
+    domain: ai
+
+  google-datacatalog:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/datacatalog/v1/datacatalog.proto
+    source_file: sources/protobuf/google-datacatalog.proto
+    size_class: medium
+    domain: data
+
+  google-translate:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/translate/v3/translation_service.proto
+    source_file: sources/protobuf/google-translate.proto
+    size_class: medium
+    domain: ai
+
+  google-spanner:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/spanner/v1/spanner.proto
+    source_file: sources/protobuf/google-spanner.proto
+    size_class: medium
+    domain: database
+
+  google-firestore:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/firestore/v1/firestore.proto
+    source_file: sources/protobuf/google-firestore.proto
+    size_class: medium
+    domain: database
+
+  google-talent:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/talent/v4/job_service.proto
+    source_file: sources/protobuf/google-talent.proto
+    size_class: medium
+    domain: hr
+
+  google-language:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/language/v1/language_service.proto
+    source_file: sources/protobuf/google-language.proto
+    size_class: medium
+    domain: ai
+
+  google-billing:
+    format: protobuf
+    github_url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/billing/v1/cloud_billing.proto
+    source_file: sources/protobuf/google-billing.proto
+    size_class: small
+    domain: billing

@@ -1,0 +1,36 @@
+spec_id: slack
+tasks:
+  - id: t1
+    description: "Send a rich-text announcement to a team discussion space, optionally as a threaded reply, then pull up the recent message timeline for that same space within a specific date window"
+    target_endpoints:
+      - POST /chat.postMessage
+      - GET /conversations.history
+    expected_params:
+      POST /chat.postMessage:
+        - token
+        - channel
+        - text
+        - blocks
+        - thread_ts
+      GET /conversations.history:
+        - token
+        - channel
+        - limit
+        - oldest
+        - latest
+  - id: t2
+    description: "Set up a new dedicated discussion space for the team with a chosen visibility level, then browse all the existing discussion spaces filtering out any that have been archived"
+    target_endpoints:
+      - POST /conversations.create
+      - GET /conversations.list
+    expected_params:
+      POST /conversations.create:
+        - token
+        - name
+        - is_private
+      GET /conversations.list:
+        - token
+        - types
+        - exclude_archived
+        - limit
+        - cursor

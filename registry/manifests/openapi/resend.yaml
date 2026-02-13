@@ -1,0 +1,28 @@
+spec_id: resend
+tasks:
+  - id: t1
+    description: "Dispatch a notification to a recipient with a subject line, HTML body, and reply-to address, then look up the delivery status and metadata of that specific message"
+    target_endpoints:
+      - POST /emails
+      - GET /emails/{email_id}
+    expected_params:
+      POST /emails:
+        - from
+        - to
+        - subject
+        - html
+        - text
+        - reply_to
+      GET /emails/{email_id}:
+        - email_id
+  - id: t2
+    description: "Register a new custom sender identity for outbound communications in a preferred geographic region, then trigger a DNS validation check to confirm that identity is properly configured"
+    target_endpoints:
+      - POST /domains
+      - POST /domains/{domain_id}/verify
+    expected_params:
+      POST /domains:
+        - name
+        - region
+      POST /domains/{domain_id}/verify:
+        - domain_id

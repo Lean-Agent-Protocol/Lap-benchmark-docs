@@ -1,0 +1,42 @@
+spec_id: google-storage
+tasks:
+  - id: t1
+    description: "Provision a new container for cloud file storage within a given project, then browse the files already stored in that container with pagination support"
+    target_endpoints:
+      - RPC CreateBucket
+      - RPC ListObjects
+    expected_params:
+      RPC CreateBucket:
+        - parent
+        - bucket
+        - bucket_id
+        - predefined_acl
+        - predefined_default_object_acl
+      RPC ListObjects:
+        - parent
+        - page_size
+        - page_token
+        - delimiter
+        - prefix
+        - versions
+        - read_mask
+  - id: t2
+    description: "Access the details and content of a particular file stored in cloud storage, then modify its metadata properties such as access controls and custom attributes"
+    target_endpoints:
+      - RPC GetObject
+      - RPC UpdateObject
+    expected_params:
+      RPC GetObject:
+        - bucket
+        - object
+        - generation
+        - soft_deleted
+        - if_generation_match
+        - if_metageneration_match
+        - read_mask
+      RPC UpdateObject:
+        - object
+        - if_generation_match
+        - if_metageneration_match
+        - update_mask
+        - predefined_acl

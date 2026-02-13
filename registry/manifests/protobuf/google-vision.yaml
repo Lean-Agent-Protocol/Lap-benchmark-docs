@@ -1,0 +1,31 @@
+spec_id: google-vision
+tasks:
+  - id: t1
+    description: "Run image recognition on a set of photos to detect labels, text, and objects, then perform the same analysis on document files like PDFs in a single synchronous request"
+    target_endpoints:
+      - RPC BatchAnnotateImages
+      - RPC BatchAnnotateFiles
+    expected_params:
+      RPC BatchAnnotateImages:
+        - requests
+        - parent
+        - labels
+      RPC BatchAnnotateFiles:
+        - requests
+        - parent
+        - labels
+  - id: t2
+    description: "Kick off a long-running image analysis job that writes results to a cloud storage destination, and separately start an asynchronous document analysis job for large-scale processing of multi-page files"
+    target_endpoints:
+      - RPC AsyncBatchAnnotateImages
+      - RPC AsyncBatchAnnotateFiles
+    expected_params:
+      RPC AsyncBatchAnnotateImages:
+        - requests
+        - output_config
+        - parent
+        - labels
+      RPC AsyncBatchAnnotateFiles:
+        - requests
+        - parent
+        - labels

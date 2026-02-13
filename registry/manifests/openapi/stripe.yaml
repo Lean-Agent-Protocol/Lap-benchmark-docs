@@ -1,0 +1,32 @@
+spec_id: stripe
+tasks:
+  - id: t1
+    description: "Onboard a new entity into the billing system with their contact details and address, then pull up all the payment transactions associated with that entity within a specific time window"
+    target_endpoints:
+      - POST /v1/customers
+      - GET /v1/charges
+    expected_params:
+      POST /v1/customers:
+        - email
+        - name
+        - description
+        - metadata
+        - address
+      GET /v1/charges:
+        - customer
+        - limit
+        - created
+  - id: t2
+    description: "Add a new item to the merchandise catalog with a name, description, and availability status, then find catalog items that match specific search terms"
+    target_endpoints:
+      - POST /v1/products
+      - GET /v1/products/search
+    expected_params:
+      POST /v1/products:
+        - name
+        - description
+        - active
+        - metadata
+      GET /v1/products/search:
+        - query
+        - limit

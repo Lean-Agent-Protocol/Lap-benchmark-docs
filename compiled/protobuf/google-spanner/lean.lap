@@ -1,0 +1,74 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api google.spanner.v1
+@base grpc://google.spanner.v1
+@version proto3
+@endpoints 16
+@toc Spanner(16)
+
+@type PartitionResponse {partitions: [Partition], transaction: Transaction}
+@type Partition {partition_token: bytes}
+@type PartitionOptions {partition_size_bytes: int(i64), max_partitions: int(i64)}
+@type Session {labels: map<str,str>, creator_role: str}
+@type DirectedReadOptions {include_replicas: IncludeReplicas?{replica_selections: [ReplicaSelection]{location: str, type: enum(WRITE/ONLY)}, auto_failover_disabled: bool}, exclude_replicas: ExcludeReplicas?{replica_selections: [ReplicaSelection]{location: str, type: enum(WRITE/ONLY)}}}
+@type ExecuteSqlRequest {transaction: TransactionSelector, params: map, param_types: map<str,enum(WRITE/ONLY)>, resume_token: bytes, query_mode: enum(PLAN/PROFILE/WITH_STATS/WITH_PLAN_AND_STATS), partition_token: bytes, seqno: int(i64), query_options: QueryOptions, request_options: RequestOptions, directed_read_options: DirectedReadOptions, data_boost_enabled: bool}
+@type Struct {fields: map<str,Value>}
+@type QueryOptions {optimizer_version: str, optimizer_statistics_package: str}
+@type RequestOptions {priority: enum(LOW/MEDIUM/HIGH), request_tag: str, transaction_tag: str}
+@type ReadRequest {transaction: TransactionSelector, index: str, limit: int(i64), resume_token: bytes, partition_token: bytes, request_options: RequestOptions, directed_read_options: DirectedReadOptions, data_boost_enabled: bool}
+
+@endpoint UNARY /Spanner/CreateSession
+@returns(OK) → Session
+
+@endpoint UNARY /Spanner/BatchCreateSessions
+@optional {session_template: Session}
+@returns(OK) {session: [Session]}
+
+@endpoint UNARY /Spanner/GetSession
+@returns(OK) → Session
+
+@endpoint UNARY /Spanner/ListSessions
+@optional {page_size: int, page_token: str, filter: str}
+@returns(OK) {sessions: [Session], next_page_token: str}
+
+@endpoint UNARY /Spanner/DeleteSession
+@returns(OK)
+
+@endpoint UNARY /Spanner/ExecuteSql
+@body → ExecuteSqlRequest
+
+@endpoint SERVER-STREAM /Spanner/ExecuteStreamingSql
+@body → ExecuteSqlRequest
+
+@endpoint UNARY /Spanner/ExecuteBatchDml
+@optional {request_options: RequestOptions}
+@returns(OK) {result_sets: [ResultSet], status: google.rpc.Status}
+
+@endpoint UNARY /Spanner/Read
+@body → ReadRequest
+
+@endpoint SERVER-STREAM /Spanner/StreamingRead
+@body → ReadRequest
+
+@endpoint UNARY /Spanner/BeginTransaction
+@optional {request_options: RequestOptions}
+
+@endpoint UNARY /Spanner/Commit
+@optional {transaction_id: bytes, single_use_transaction: TransactionOptions, mutations: [Mutation], return_commit_stats: bool, request_options: RequestOptions}
+
+@endpoint UNARY /Spanner/Rollback
+@returns(OK)
+
+@endpoint UNARY /Spanner/PartitionQuery
+@optional {transaction: TransactionSelector, partition_options: PartitionOptions}
+@returns(OK) → PartitionResponse
+
+@endpoint UNARY /Spanner/PartitionRead
+@optional {transaction: TransactionSelector, index: str, columns: [str], partition_options: PartitionOptions}
+@returns(OK) → PartitionResponse
+
+@endpoint SERVER-STREAM /Spanner/BatchWrite
+@optional {request_options: RequestOptions}
+@returns(OK) {indexes: [int], status: google.rpc.Status, commit_timestamp: str(timestamp){seconds: int(i64), nanos: int}}
+
+@end

@@ -1,0 +1,31 @@
+spec_id: akeneo-postman
+tasks:
+  - id: t1
+    description: "Define a new product classification group in the PIM with its required attributes, label translations, and image settings, then add a product to that group with category assignments, attribute values, and cross-sell associations"
+    target_endpoints:
+      - POST /api/rest/v1/families
+      - POST /api/rest/v1/products
+    expected_params:
+      POST /api/rest/v1/families:
+        - code
+        - attributes
+        - attribute_as_label
+        - attribute_as_image
+        - attribute_requirements
+        - labels
+      POST /api/rest/v1/products:
+        - identifier
+        - family
+        - categories
+        - enabled
+        - values
+        - associations
+  - id: t2
+    description: "Provision a new product data feed for a connected application, then browse all existing data feeds to confirm the new one appears in the list"
+    target_endpoints:
+      - POST /api/rest/v1/catalogs
+      - GET /api/rest/v1/catalogs
+    expected_params:
+      POST /api/rest/v1/catalogs:
+        - name
+      GET /api/rest/v1/catalogs: []

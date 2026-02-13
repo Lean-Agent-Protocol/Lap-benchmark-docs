@@ -1,0 +1,422 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api InfluxDB_API_2.0
+@base https://us-east-1-1.aws.cloud2.influxdata.com
+@auth ApiKey Authorization in header
+@endpoints 154
+@hint download_for_search
+@toc <INSERT_URL>(150), api(4)
+
+@group <INSERT_URL>
+@endpoint POST /<INSERT_URL>/api/v2/write
+@required {bucket: str, precision: str, org: str}
+@returns(200)
+
+@endgroup
+
+@group api
+@endpoint POST /api/v2/delete
+@required {bucket: str, precision: str, org: str, start: str, stop: str}
+
+@endgroup
+
+@group <INSERT_URL>
+@endpoint GET /<INSERT_URL>/api/v2/buckets
+
+@endpoint POST /<INSERT_URL>/api/v2/query/analyze
+@required {orgID: str, query: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/setup
+
+@endpoint POST /<INSERT_URL>/api/v2/setup
+@required {bucket: str, org: str, password: str, retentionPeriodHrs: int, retentionPeriodSeconds: int, token: str, username: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/write
+@required {bucket: str, precision: str, org: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/query/ast
+@required {query: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/query/suggestions
+
+@endpoint GET /<INSERT_URL>/api/v2/query/suggestions/<INSET_QUERY_SUGGESTION>
+
+@endpoint POST /<INSERT_URL>/api/v2/query/analyze
+@required {orgID: str, extern: map, query: str, type: str, params: map, dialect: map, now: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/query/analyze
+@required {dialect: map, extern: map, now: str, params: map, query: str, type: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/delete
+@required {bucket: str, precision: str, org: str, start: str, stop: str, predicate: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>/labels
+
+@endpoint POST /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>/labels
+@required {labelID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>/labels
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members<INSERT_USER_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners/<INSERT_USER_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/dbrps
+
+@endpoint POST /<INSERT_URL>/api/v2/dbrps
+@required {bucketID: str, default: bool, org: str, orgID: str, retention_policy: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dbrps/<INSERT_dbrpID_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/dbrps/<INSERT_dbrpID_ID>
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dbrps/<INSERT_dbrpID_ID>
+@required {default: bool, retention_policy: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/buckets
+
+@endpoint GET /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>
+
+@endpoint DELETE /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>
+
+@endpoint PATCH /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>
+@required {name: str, description: str, retentionRules: [map]}
+
+@endpoint POST /<INSERT_URL>/api/v2/buckets
+@required {orgID: str, name: str, description: str, rp: str, retentionRules: [map], schemaType: str}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells
+@required {name: str, x: int, y: int, w: int, h: int, usingView: str}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells/<INSERT_CELL_ID>
+@required {x: int, y: int, w: int, h: int}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells/<INSERT_CELL_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells/<INSERT_CELL_ID>/view
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells/<INSERT_CELL_ID>/view
+@required {name: str, properties: map}
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/labels
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/labels
+@required {labelID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/labels/<INSERT_LABEL_ID>
+@required {labelID: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members<INSERT_USER_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners/<INSERT_USER_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>
+@required {name: str, description: str, cells: map}
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards
+@required {orgID: str, name: str, description: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/labels
+
+@endpoint DELETE /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/labels/<INSERT_LABEL_ID>
+
+@endpoint POST /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/labels
+@required {labelID: str}
+
+@endgroup
+
+@group api
+@endpoint POST /api/v2/tasks/<INSERT_TASK_ID>/members
+@required {id: str, name: str}
+
+@endpoint DELETE /api/v2/tasks/<INSERT_TASK_ID>/members/<INSERT_USER_ID>
+
+@endpoint GET /api/v2/tasks/<INSERT_TASK_ID>/members
+
+@endgroup
+
+@group <INSERT_URL>
+@endpoint POST /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>/retry
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>/logs
+
+@endpoint POST /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs
+
+@endpoint DELETE /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs
+@required {limit : str}
+@optional {after: str, afterTime: str, beforeTime: str}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>
+@required {description: str, every: str, flux: str, name: str, offset: str, status: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks
+@required {org : str}
+@optional {after: str, limit: str, status: str, type: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/logs
+
+@endpoint POST /<INSERT_URL>/api/v2/tasks
+@required {orgID: str, status: str, flux: str, description: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>/labels
+@optional {limit: str, offset: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>/labels/<INSERT_LABEL_ID>
+@optional {limit: str, offset: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>/labels
+@required {labelID: str}
+@optional {limit: str, offset: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>/query
+@optional {limit: str, offset: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/checks
+@required {orgID: str}
+@optional {limit: str, offset: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>
+
+@endpoint PATCH /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>
+
+@endpoint POST /<INSERT_URL>/api/v2/checks
+@required {description: str, labels: [map], name: str, orgID: str, query: map, status: str, taskID: str, every: str, level: str, offset: str, reportZero: bool, staleTime: str, statusMessageTemplate: str, tags: [map], timeSince: str, type: str}
+@returns(200)
+@returns(200)
+
+@endpoint GET /<INSERT_URL>/api/v2/resources
+
+@endpoint GET /<INSERT_URL>/api/v2/stacks
+@required {orgID: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/stacks/<INSERT_STACK_ID>
+
+@endpoint POST /<INSERT_URL>/api/v2/stacks
+@required {orgID: str, name: str, description: str, urls: [str]}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/stacks/<INSERT_STACK_ID>
+@required {name: str, description: str, templateURLs: [str], additionalResources: [map]}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/stacks/<INSERT_STACK_ID>
+
+@endpoint POST /<INSERT_URL>/api/v2/stacks/<INSERT_STACK_ID>/uninstall
+
+@endpoint POST /<INSERT_URL>/api/v2/templates/apply
+@required {dryRun: bool, orgID: str, stackID: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/templates/export
+@required {stackID: str, orgIDs: [map]}
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>/labels
+
+@endpoint POST /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>/labels
+@required {labelID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>/labels/<INSERT_LABEL_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationEndpoints
+@required {orgID: str}
+@optional {limit: str, status: str, type: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/notificationEndpoints
+@required {description: str, id: str, labels: [map], name: str, orgID: str, status: str, type: str, userID: str, token: str, url: str}
+@optional {limit: str, status: str, type: str}
+@returns(200)
+@returns(200)
+@returns(200)
+@returns(200)
+
+@endpoint DELETE /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>
+
+@endpoint PATCH /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>
+@required {description: str, name: str, status: str}
+
+@endpoint PUT /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>
+@required {description: str, id: str, labels: [map], name: str, orgID: str, status: str, type: str, userID: str, authMethod: str, contentTemplate: str, headers: map, method: str, password: str, token: str, url: str, username: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>/labels
+
+@endpoint POST /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>/labels
+@required {labelID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>/labels/<INSERT_LABEL_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationRules
+@required {orgID: str}
+@optional {limit: str, status: str, type: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/notificationRules
+@required {description: str, endpointID: str, every: str, labels: [map], limit: int, limitEvery: int, name: str, offset: str, orgID: str, runbookLink: str, sleepUntil: str, status: str, statusRules: [map], tagRules: [map], taskID: str, channel: str, messageTemplate: str, type: str}
+@optional {limit: str, status: str, type: str}
+@returns(200)
+@returns(200)
+@returns(200)
+@returns(200)
+
+@endpoint DELETE /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>
+
+@endpoint PATCH /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>
+@required {description: str, name: str, status: str}
+
+@endpoint PUT /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>
+@required {description: str, endpointID: str, every: str, labels: [map], limit: int, limitEvery: int, name: str, offset: str, orgID: str, runbookLink: str, sleepUntil: str, status: str, statusRules: [map], tagRules: [map], taskID: str, channel: str, messageTemplate: str, type: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/authorizations
+@required {orgID: str, userID: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/authorizations
+@required {orgID: str, userID: str, status: str, description: str, orgID: str, userID: str, permissions: [map]}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/authorizations/<INSERT_AUTH_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/authorizations/{authID}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/authorizations/{authID}
+@required {description: str, status: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/members
+
+@endpoint DELETE /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/members/<INSERT_USER_ID>
+
+@endpoint POST /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/members
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_ID>/owners/<INSERT_USER_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/orgs
+
+@endpoint POST /<INSERT_URL>/api/v2/orgs
+@required {name: str, description: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/buckets/<INSERT_ORG_NAME>
+
+@endpoint DELETE /<INSERT_URL>/api/v2/buckets/<INSERT_ORG_NAME>
+
+@endpoint PATCH /<INSERT_URL>/api/v2/buckets/<INSERT_ORG_NAME>
+@required {name: str, description: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/flags
+
+@endpoint GET /<INSERT_URL>/api/v2/me
+
+@endpoint POST /<INSERT_URL>/api/v2/users/<INSERT_USER_ID>/password
+@required {password: str}
+
+@endpoint PUT /<INSERT_URL>/api/v2/me/password
+@required {password: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/users
+
+@endpoint POST /<INSERT_URL>/api/v2/users/
+@required {oauthID: str, name: str, status: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/users/<INSERT_USER_ID>
+
+@endpoint PATCH /<INSERT_URL>/api/v2/users/<INSERT_USER_ID>
+@required {oauthID: str, name: str, status: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/users/<INSERT_USER_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/secrets
+
+@endpoint POST /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/secrets/delete
+@required {secrets: [str]}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/secrets
+@required {apikey: str}
+
+@endpoint GET /<INSERT_URL>/health
+
+@endpoint GET /<INSERT_URL>/ping
+
+@endpoint HEAD /<INSERT_URL>/ping
+
+@endpoint GET /<INSERT_URL>/ready
+
+@endpoint GET /<INSERT_URL>/api/v2/
+
+@endpoint GET /<INSERT_URL>/api/v2/backup/metadata
+
+@endpoint GET /<INSERT_URL>/api/v2/backup/shards/<INSERT_SHARD_ID>
+
+@endpoint POST /<INSERT_URL>/api/v2/restore/bucketMetadata
+@required {bucketID: str, bucketName: str, defaultRetentionPolicy: str, description: str, organizationID: str, organizationName: str, retentionPolicies: [map]}
+
+@endpoint POST /<INSERT_URL>/api/v2/restore/kv
+@required {token: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/restore/shards/<INSERT_SHARD_ID>
+
+@endpoint POST /<INSERT_URL>/api/v2/restore/sql
+
+@endpoint GET /<INSERT_URL>/api/v2/scrapers
+
+@endpoint POST /<INSERT_URL>/api/v2/scrapers
+@required {allowInsecure: bool, bucketID: str, name: str, orgID: str, type: str, url: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/scrapers/<INSERT_scraperTarget_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/scrapers/<INSERT_scraperTarget_ID>
+
+@endpoint PATCH /<INSERT_URL>/api/v2/scrapers/<INSERT_scraperTarget_ID>
+@required {allowInsecure: bool, bucketID: str, name: str, orgID: str, type: str, url: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/telegrafs
+
+@endpoint POST /<INSERT_URL>/api/v2/telegrafs
+@required {config: str, description: str, metadata: map, name: str, orgID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/telegrafs/<INSERT_telegraf_ID>
+
+@endpoint GET /<INSERT_URL>/api/v2/telegrafs/<INSERT_telegraf_ID>
+
+@endpoint PUT /<INSERT_URL>/api/v2/telegrafs/<INSERT_telegraf_ID>
+@required {config: str, description: str, metadata: map, name: str, orgID: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/telegraf/plugins
+
+@endgroup
+
+@end

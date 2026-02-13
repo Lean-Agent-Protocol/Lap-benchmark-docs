@@ -1,0 +1,29 @@
+spec_id: github-gql
+tasks:
+  - id: t1
+    description: "Find a specific open-source project by its maintainer and project name, then file a bug report against it with a title and description"
+    target_endpoints:
+      - QUERY repository
+      - MUTATION createIssue
+    expected_params:
+      QUERY repository:
+        - followRenames
+        - name
+        - owner
+      MUTATION createIssue:
+        - input
+  - id: t2
+    description: "Find developers or projects matching a keyword across the platform, and pull up a particular developer's public profile using their username"
+    target_endpoints:
+      - QUERY search
+      - QUERY user
+    expected_params:
+      QUERY search:
+        - after
+        - before
+        - first
+        - last
+        - query
+        - type
+      QUERY user:
+        - login

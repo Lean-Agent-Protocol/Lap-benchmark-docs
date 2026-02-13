@@ -1,0 +1,1218 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api DigitalOcean API
+@base https://api.digitalocean.com
+@version 2.0
+@auth Bearer bearer
+@endpoints 545
+@hint download_for_search
+@toc 1-clicks(2), account(6), actions(2), add-ons(8), apps(34), cdn(6), certificates(4), customers(7), billing(1), databases(69), domains(10), droplets(30), firewalls(11), floating_ips(7), functions(9), images(8), kubernetes(28), load_balancers(10), monitoring(61), nfs(8), partner_network_connect(9), projects(13), regions(1), registries(19), registry(18), reports(1), reserved_ips(7), reserved_ipv6(5), byoip_prefixes(6), sizes(1), snapshots(3), spaces(6), tags(6), volumes(13), vpcs(10), vpc_peerings(5), vpc_nat_gateways(5), uptime(11), gen-ai(85)
+
+@group 1-clicks
+@endpoint GET /v2/1-clicks
+
+@endpoint POST /v2/1-clicks/kubernetes
+
+@endgroup
+
+@group account
+@endpoint GET /v2/account
+
+@endpoint GET /v2/account/keys
+
+@endpoint POST /v2/account/keys
+
+@endpoint GET /v2/account/keys/{ssh_key_identifier}
+
+@endpoint PUT /v2/account/keys/{ssh_key_identifier}
+
+@endpoint DELETE /v2/account/keys/{ssh_key_identifier}
+
+@endgroup
+
+@group actions
+@endpoint GET /v2/actions
+
+@endpoint GET /v2/actions/{action_id}
+
+@endgroup
+
+@group add-ons
+@endpoint GET /v2/add-ons/apps
+
+@endpoint GET /v2/add-ons/apps/{app_slug}/metadata
+
+@endpoint GET /v2/add-ons/saas
+
+@endpoint POST /v2/add-ons/saas
+
+@endpoint GET /v2/add-ons/saas/{resource_uuid}
+
+@endpoint DELETE /v2/add-ons/saas/{resource_uuid}
+
+@endpoint PATCH /v2/add-ons/saas/{resource_uuid}
+
+@endpoint PATCH /v2/add-ons/saas/{resource_uuid}/plan
+
+@endgroup
+
+@group apps
+@endpoint GET /v2/apps
+
+@endpoint POST /v2/apps
+
+@endpoint DELETE /v2/apps/{id}
+
+@endpoint GET /v2/apps/{id}
+
+@endpoint PUT /v2/apps/{id}
+
+@endpoint POST /v2/apps/{app_id}/restart
+
+@endpoint GET /v2/apps/{app_id}/components/{component_name}/logs
+
+@endpoint GET /v2/apps/{app_id}/components/{component_name}/exec
+
+@endpoint GET /v2/apps/{app_id}/instances
+
+@endpoint GET /v2/apps/{app_id}/deployments
+
+@endpoint POST /v2/apps/{app_id}/deployments
+
+@endpoint GET /v2/apps/{app_id}/deployments/{deployment_id}
+
+@endpoint POST /v2/apps/{app_id}/deployments/{deployment_id}/cancel
+
+@endpoint GET /v2/apps/{app_id}/deployments/{deployment_id}/components/{component_name}/logs
+
+@endpoint GET /v2/apps/{app_id}/deployments/{deployment_id}/logs
+
+@endpoint GET /v2/apps/{app_id}/deployments/{deployment_id}/components/{component_name}/exec
+
+@endpoint GET /v2/apps/{app_id}/logs
+
+@endpoint GET /v2/apps/{app_id}/job-invocations
+
+@endpoint GET /v2/apps/{app_id}/job-invocations/{job_invocation_id}
+
+@endpoint POST /v2/apps/{app_id}/job-invocations/{job_invocation_id}/cancel
+
+@endpoint GET /v2/apps/{app_id}/jobs/{job_name}/invocations/{job_invocation_id}/logs
+
+@endpoint GET /v2/apps/tiers/instance_sizes
+
+@endpoint GET /v2/apps/tiers/instance_sizes/{slug}
+
+@endpoint GET /v2/apps/regions
+
+@endpoint POST /v2/apps/propose
+
+@endpoint GET /v2/apps/{app_id}/alerts
+
+@endpoint POST /v2/apps/{app_id}/alerts/{alert_id}/destinations
+
+@endpoint POST /v2/apps/{app_id}/rollback
+
+@endpoint POST /v2/apps/{app_id}/rollback/validate
+
+@endpoint POST /v2/apps/{app_id}/rollback/commit
+
+@endpoint POST /v2/apps/{app_id}/rollback/revert
+
+@endpoint GET /v2/apps/{app_id}/metrics/bandwidth_daily
+
+@endpoint POST /v2/apps/metrics/bandwidth_daily
+
+@endpoint GET /v2/apps/{app_id}/health
+
+@endgroup
+
+@group cdn
+@endpoint GET /v2/cdn/endpoints
+
+@endpoint POST /v2/cdn/endpoints
+
+@endpoint GET /v2/cdn/endpoints/{cdn_id}
+
+@endpoint PUT /v2/cdn/endpoints/{cdn_id}
+
+@endpoint DELETE /v2/cdn/endpoints/{cdn_id}
+
+@endpoint DELETE /v2/cdn/endpoints/{cdn_id}/cache
+
+@endgroup
+
+@group certificates
+@endpoint GET /v2/certificates
+
+@endpoint POST /v2/certificates
+
+@endpoint GET /v2/certificates/{certificate_id}
+
+@endpoint DELETE /v2/certificates/{certificate_id}
+
+@endgroup
+
+@group customers
+@endpoint GET /v2/customers/my/balance
+
+@endpoint GET /v2/customers/my/billing_history
+
+@endpoint GET /v2/customers/my/invoices
+
+@endpoint GET /v2/customers/my/invoices/{invoice_uuid}
+
+@endpoint GET /v2/customers/my/invoices/{invoice_uuid}/csv
+
+@endpoint GET /v2/customers/my/invoices/{invoice_uuid}/pdf
+
+@endpoint GET /v2/customers/my/invoices/{invoice_uuid}/summary
+
+@endgroup
+
+@group billing
+@endpoint GET /v2/billing/{account_urn}/insights/{start_date}/{end_date}
+
+@endgroup
+
+@group databases
+@endpoint GET /v2/databases/options
+
+@endpoint GET /v2/databases
+
+@endpoint POST /v2/databases
+
+@endpoint GET /v2/databases/{database_cluster_uuid}
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/config
+
+@endpoint PATCH /v2/databases/{database_cluster_uuid}/config
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/ca
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/online-migration
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/online-migration
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}/online-migration/{migration_id}
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/migrate
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/resize
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/firewall
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/firewall
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/maintenance
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/install_update
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/backups
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/replicas
+
+@endpoint POST /v2/databases/{database_cluster_uuid}/replicas
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/events
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/replicas/{replica_name}
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}/replicas/{replica_name}
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/replicas/{replica_name}/promote
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/users
+
+@endpoint POST /v2/databases/{database_cluster_uuid}/users
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/users/{username}
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}/users/{username}
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/users/{username}
+
+@endpoint POST /v2/databases/{database_cluster_uuid}/users/{username}/reset_auth
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/dbs
+
+@endpoint POST /v2/databases/{database_cluster_uuid}/dbs
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/dbs/{database_name}
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}/dbs/{database_name}
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/pools
+
+@endpoint POST /v2/databases/{database_cluster_uuid}/pools
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/pools/{pool_name}
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/pools/{pool_name}
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}/pools/{pool_name}
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/eviction_policy
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/eviction_policy
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/sql_mode
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/sql_mode
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/upgrade
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/autoscale
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/autoscale
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/topics
+
+@endpoint POST /v2/databases/{database_cluster_uuid}/topics
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/topics/{topic_name}
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/topics/{topic_name}
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}/topics/{topic_name}
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/logsink
+
+@endpoint POST /v2/databases/{database_cluster_uuid}/logsink
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/logsink/{logsink_id}
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/logsink/{logsink_id}
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}/logsink/{logsink_id}
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/schema-registry
+
+@endpoint POST /v2/databases/{database_cluster_uuid}/schema-registry
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/schema-registry/{subject_name}
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}/schema-registry/{subject_name}
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/schema-registry/{subject_name}/versions/{version}
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/schema-registry/config
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/schema-registry/config
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/schema-registry/config/{subject_name}
+
+@endpoint PUT /v2/databases/{database_cluster_uuid}/schema-registry/config/{subject_name}
+
+@endpoint GET /v2/databases/metrics/credentials
+
+@endpoint PUT /v2/databases/metrics/credentials
+
+@endpoint GET /v2/databases/{database_cluster_uuid}/indexes
+
+@endpoint DELETE /v2/databases/{database_cluster_uuid}/indexes/{index_name}
+
+@endgroup
+
+@group domains
+@endpoint GET /v2/domains
+
+@endpoint POST /v2/domains
+
+@endpoint GET /v2/domains/{domain_name}
+
+@endpoint DELETE /v2/domains/{domain_name}
+
+@endpoint GET /v2/domains/{domain_name}/records
+
+@endpoint POST /v2/domains/{domain_name}/records
+
+@endpoint GET /v2/domains/{domain_name}/records/{domain_record_id}
+
+@endpoint PATCH /v2/domains/{domain_name}/records/{domain_record_id}
+
+@endpoint PUT /v2/domains/{domain_name}/records/{domain_record_id}
+
+@endpoint DELETE /v2/domains/{domain_name}/records/{domain_record_id}
+
+@endgroup
+
+@group droplets
+@endpoint GET /v2/droplets
+
+@endpoint POST /v2/droplets
+
+@endpoint DELETE /v2/droplets
+
+@endpoint GET /v2/droplets/{droplet_id}
+
+@endpoint DELETE /v2/droplets/{droplet_id}
+
+@endpoint GET /v2/droplets/{droplet_id}/backups
+
+@endpoint GET /v2/droplets/{droplet_id}/backups/policy
+
+@endpoint GET /v2/droplets/backups/policies
+
+@endpoint GET /v2/droplets/backups/supported_policies
+
+@endpoint GET /v2/droplets/{droplet_id}/snapshots
+
+@endpoint GET /v2/droplets/{droplet_id}/actions
+
+@endpoint POST /v2/droplets/{droplet_id}/actions
+
+@endpoint POST /v2/droplets/actions
+
+@endpoint GET /v2/droplets/{droplet_id}/actions/{action_id}
+
+@endpoint GET /v2/droplets/{droplet_id}/kernels
+
+@endpoint GET /v2/droplets/{droplet_id}/firewalls
+
+@endpoint GET /v2/droplets/{droplet_id}/neighbors
+
+@endpoint GET /v2/droplets/{droplet_id}/destroy_with_associated_resources
+
+@endpoint DELETE /v2/droplets/{droplet_id}/destroy_with_associated_resources/selective
+
+@endpoint DELETE /v2/droplets/{droplet_id}/destroy_with_associated_resources/dangerous
+
+@endpoint GET /v2/droplets/{droplet_id}/destroy_with_associated_resources/status
+
+@endpoint POST /v2/droplets/{droplet_id}/destroy_with_associated_resources/retry
+
+@endpoint GET /v2/droplets/autoscale
+
+@endpoint POST /v2/droplets/autoscale
+
+@endpoint GET /v2/droplets/autoscale/{autoscale_pool_id}
+
+@endpoint PUT /v2/droplets/autoscale/{autoscale_pool_id}
+
+@endpoint DELETE /v2/droplets/autoscale/{autoscale_pool_id}
+
+@endpoint DELETE /v2/droplets/autoscale/{autoscale_pool_id}/dangerous
+
+@endpoint GET /v2/droplets/autoscale/{autoscale_pool_id}/members
+
+@endpoint GET /v2/droplets/autoscale/{autoscale_pool_id}/history
+
+@endgroup
+
+@group firewalls
+@endpoint GET /v2/firewalls
+
+@endpoint POST /v2/firewalls
+
+@endpoint GET /v2/firewalls/{firewall_id}
+
+@endpoint PUT /v2/firewalls/{firewall_id}
+
+@endpoint DELETE /v2/firewalls/{firewall_id}
+
+@endpoint POST /v2/firewalls/{firewall_id}/droplets
+
+@endpoint DELETE /v2/firewalls/{firewall_id}/droplets
+
+@endpoint POST /v2/firewalls/{firewall_id}/tags
+
+@endpoint DELETE /v2/firewalls/{firewall_id}/tags
+
+@endpoint POST /v2/firewalls/{firewall_id}/rules
+
+@endpoint DELETE /v2/firewalls/{firewall_id}/rules
+
+@endgroup
+
+@group floating_ips
+@endpoint GET /v2/floating_ips
+
+@endpoint POST /v2/floating_ips
+
+@endpoint GET /v2/floating_ips/{floating_ip}
+
+@endpoint DELETE /v2/floating_ips/{floating_ip}
+
+@endpoint GET /v2/floating_ips/{floating_ip}/actions
+
+@endpoint POST /v2/floating_ips/{floating_ip}/actions
+
+@endpoint GET /v2/floating_ips/{floating_ip}/actions/{action_id}
+
+@endgroup
+
+@group functions
+@endpoint GET /v2/functions/namespaces
+
+@endpoint POST /v2/functions/namespaces
+
+@endpoint GET /v2/functions/namespaces/{namespace_id}
+
+@endpoint DELETE /v2/functions/namespaces/{namespace_id}
+
+@endpoint GET /v2/functions/namespaces/{namespace_id}/triggers
+
+@endpoint POST /v2/functions/namespaces/{namespace_id}/triggers
+
+@endpoint GET /v2/functions/namespaces/{namespace_id}/triggers/{trigger_name}
+
+@endpoint PUT /v2/functions/namespaces/{namespace_id}/triggers/{trigger_name}
+
+@endpoint DELETE /v2/functions/namespaces/{namespace_id}/triggers/{trigger_name}
+
+@endgroup
+
+@group images
+@endpoint GET /v2/images
+
+@endpoint POST /v2/images
+
+@endpoint GET /v2/images/{image_id}
+
+@endpoint PUT /v2/images/{image_id}
+
+@endpoint DELETE /v2/images/{image_id}
+
+@endpoint GET /v2/images/{image_id}/actions
+
+@endpoint POST /v2/images/{image_id}/actions
+
+@endpoint GET /v2/images/{image_id}/actions/{action_id}
+
+@endgroup
+
+@group kubernetes
+@endpoint GET /v2/kubernetes/clusters
+
+@endpoint POST /v2/kubernetes/clusters
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}
+
+@endpoint PUT /v2/kubernetes/clusters/{cluster_id}
+
+@endpoint DELETE /v2/kubernetes/clusters/{cluster_id}
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}/destroy_with_associated_resources
+
+@endpoint DELETE /v2/kubernetes/clusters/{cluster_id}/destroy_with_associated_resources/selective
+
+@endpoint DELETE /v2/kubernetes/clusters/{cluster_id}/destroy_with_associated_resources/dangerous
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}/kubeconfig
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}/credentials
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}/upgrades
+
+@endpoint POST /v2/kubernetes/clusters/{cluster_id}/upgrade
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}/node_pools
+
+@endpoint POST /v2/kubernetes/clusters/{cluster_id}/node_pools
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}/node_pools/{node_pool_id}
+
+@endpoint PUT /v2/kubernetes/clusters/{cluster_id}/node_pools/{node_pool_id}
+
+@endpoint DELETE /v2/kubernetes/clusters/{cluster_id}/node_pools/{node_pool_id}
+
+@endpoint DELETE /v2/kubernetes/clusters/{cluster_id}/node_pools/{node_pool_id}/nodes/{node_id}
+
+@endpoint POST /v2/kubernetes/clusters/{cluster_id}/node_pools/{node_pool_id}/recycle
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}/user
+
+@endpoint GET /v2/kubernetes/options
+
+@endpoint POST /v2/kubernetes/clusters/{cluster_id}/clusterlint
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}/clusterlint
+
+@endpoint POST /v2/kubernetes/registry
+
+@endpoint DELETE /v2/kubernetes/registry
+
+@endpoint POST /v2/kubernetes/registries
+
+@endpoint DELETE /v2/kubernetes/registries
+
+@endpoint GET /v2/kubernetes/clusters/{cluster_id}/status_messages
+
+@endgroup
+
+@group load_balancers
+@endpoint POST /v2/load_balancers
+
+@endpoint GET /v2/load_balancers
+
+@endpoint GET /v2/load_balancers/{lb_id}
+
+@endpoint PUT /v2/load_balancers/{lb_id}
+
+@endpoint DELETE /v2/load_balancers/{lb_id}
+
+@endpoint DELETE /v2/load_balancers/{lb_id}/cache
+
+@endpoint POST /v2/load_balancers/{lb_id}/droplets
+
+@endpoint DELETE /v2/load_balancers/{lb_id}/droplets
+
+@endpoint POST /v2/load_balancers/{lb_id}/forwarding_rules
+
+@endpoint DELETE /v2/load_balancers/{lb_id}/forwarding_rules
+
+@endgroup
+
+@group monitoring
+@endpoint GET /v2/monitoring/alerts
+
+@endpoint POST /v2/monitoring/alerts
+
+@endpoint GET /v2/monitoring/alerts/{alert_uuid}
+
+@endpoint PUT /v2/monitoring/alerts/{alert_uuid}
+
+@endpoint DELETE /v2/monitoring/alerts/{alert_uuid}
+
+@endpoint GET /v2/monitoring/metrics/droplet/bandwidth
+
+@endpoint GET /v2/monitoring/metrics/droplet/cpu
+
+@endpoint GET /v2/monitoring/metrics/droplet/filesystem_free
+
+@endpoint GET /v2/monitoring/metrics/droplet/filesystem_size
+
+@endpoint GET /v2/monitoring/metrics/droplet/load_1
+
+@endpoint GET /v2/monitoring/metrics/droplet/load_5
+
+@endpoint GET /v2/monitoring/metrics/droplet/load_15
+
+@endpoint GET /v2/monitoring/metrics/droplet/memory_cached
+
+@endpoint GET /v2/monitoring/metrics/droplet/memory_free
+
+@endpoint GET /v2/monitoring/metrics/droplet/memory_total
+
+@endpoint GET /v2/monitoring/metrics/droplet/memory_available
+
+@endpoint GET /v2/monitoring/metrics/apps/memory_percentage
+
+@endpoint GET /v2/monitoring/metrics/apps/cpu_percentage
+
+@endpoint GET /v2/monitoring/metrics/apps/restart_count
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_connections_current
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_connections_limit
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_cpu_utilization
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_firewall_dropped_bytes
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_firewall_dropped_packets
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_http_responses
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_http_requests_per_second
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_network_throughput_http
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_network_throughput_udp
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_network_throughput_tcp
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_nlb_tcp_network_throughput
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_nlb_udp_network_throughput
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_tls_connections_current
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_tls_connections_limit
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/frontend_tls_connections_exceeding_rate_limit
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_http_session_duration_avg
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_http_session_duration_50p
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_http_session_duration_95p
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_http_response_time_avg
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_http_response_time_50p
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_http_response_time_95p
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_http_response_time_99p
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_queue_size
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_http_responses
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_connections
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_health_checks
+
+@endpoint GET /v2/monitoring/metrics/load_balancer/droplets_downtime
+
+@endpoint GET /v2/monitoring/metrics/droplet_autoscale/current_instances
+
+@endpoint GET /v2/monitoring/metrics/droplet_autoscale/target_instances
+
+@endpoint GET /v2/monitoring/metrics/droplet_autoscale/current_cpu_utilization
+
+@endpoint GET /v2/monitoring/metrics/droplet_autoscale/target_cpu_utilization
+
+@endpoint GET /v2/monitoring/metrics/droplet_autoscale/current_memory_utilization
+
+@endpoint GET /v2/monitoring/metrics/droplet_autoscale/target_memory_utilization
+
+@endpoint POST /v2/monitoring/sinks/destinations
+
+@endpoint GET /v2/monitoring/sinks/destinations
+
+@endpoint GET /v2/monitoring/sinks/destinations/{destination_uuid}
+
+@endpoint POST /v2/monitoring/sinks/destinations/{destination_uuid}
+
+@endpoint DELETE /v2/monitoring/sinks/destinations/{destination_uuid}
+
+@endpoint POST /v2/monitoring/sinks
+
+@endpoint GET /v2/monitoring/sinks
+
+@endpoint GET /v2/monitoring/sinks/{sink_uuid}
+
+@endpoint DELETE /v2/monitoring/sinks/{sink_uuid}
+
+@endgroup
+
+@group nfs
+@endpoint POST /v2/nfs
+
+@endpoint GET /v2/nfs
+
+@endpoint GET /v2/nfs/{nfs_id}
+
+@endpoint DELETE /v2/nfs/{nfs_id}
+
+@endpoint POST /v2/nfs/{nfs_id}/actions
+
+@endpoint GET /v2/nfs/snapshots
+
+@endpoint GET /v2/nfs/snapshots/{nfs_snapshot_id}
+
+@endpoint DELETE /v2/nfs/snapshots/{nfs_snapshot_id}
+
+@endgroup
+
+@group partner_network_connect
+@endpoint GET /v2/partner_network_connect/attachments
+
+@endpoint POST /v2/partner_network_connect/attachments
+
+@endpoint GET /v2/partner_network_connect/attachments/{pa_id}
+
+@endpoint PATCH /v2/partner_network_connect/attachments/{pa_id}
+
+@endpoint DELETE /v2/partner_network_connect/attachments/{pa_id}
+
+@endpoint GET /v2/partner_network_connect/attachments/{pa_id}/bgp_auth_key
+
+@endpoint GET /v2/partner_network_connect/attachments/{pa_id}/remote_routes
+
+@endpoint GET /v2/partner_network_connect/attachments/{pa_id}/service_key
+
+@endpoint POST /v2/partner_network_connect/attachments/{pa_id}/service_key
+
+@endgroup
+
+@group projects
+@endpoint GET /v2/projects
+
+@endpoint POST /v2/projects
+
+@endpoint GET /v2/projects/default
+
+@endpoint PUT /v2/projects/default
+
+@endpoint PATCH /v2/projects/default
+
+@endpoint GET /v2/projects/{project_id}
+
+@endpoint PUT /v2/projects/{project_id}
+
+@endpoint PATCH /v2/projects/{project_id}
+
+@endpoint DELETE /v2/projects/{project_id}
+
+@endpoint GET /v2/projects/{project_id}/resources
+
+@endpoint POST /v2/projects/{project_id}/resources
+
+@endpoint GET /v2/projects/default/resources
+
+@endpoint POST /v2/projects/default/resources
+
+@endgroup
+
+@group regions
+@endpoint GET /v2/regions
+
+@endgroup
+
+@group registries
+@endpoint GET /v2/registries
+
+@endpoint POST /v2/registries
+
+@endpoint GET /v2/registries/{registry_name}
+
+@endpoint DELETE /v2/registries/{registry_name}
+
+@endpoint GET /v2/registries/{registry_name}/docker-credentials
+
+@endpoint GET /v2/registries/subscription
+
+@endpoint POST /v2/registries/subscription
+
+@endpoint GET /v2/registries/options
+
+@endpoint GET /v2/registries/{registry_name}/garbage-collection
+
+@endpoint POST /v2/registries/{registry_name}/garbage-collection
+
+@endpoint GET /v2/registries/{registry_name}/garbage-collections
+
+@endpoint PUT /v2/registries/{registry_name}/garbage-collection/{garbage_collection_uuid}
+
+@endpoint GET /v2/registries/{registry_name}/repositoriesV2
+
+@endpoint DELETE /v2/registries/{registry_name}/repositories/{repository_name}
+
+@endpoint GET /v2/registries/{registry_name}/repositories/{repository_name}/tags
+
+@endpoint DELETE /v2/registries/{registry_name}/repositories/{repository_name}/tags/{repository_tag}
+
+@endpoint GET /v2/registries/{registry_name}/repositories/{repository_name}/digests
+
+@endpoint DELETE /v2/registries/{registry_name}/repositories/{repository_name}/digests/{manifest_digest}
+
+@endpoint POST /v2/registries/validate-name
+
+@endgroup
+
+@group registry
+@endpoint GET /v2/registry
+
+@endpoint POST /v2/registry
+
+@endpoint DELETE /v2/registry
+
+@endpoint GET /v2/registry/subscription
+
+@endpoint POST /v2/registry/subscription
+
+@endpoint GET /v2/registry/docker-credentials
+
+@endpoint POST /v2/registry/validate-name
+
+@endpoint GET /v2/registry/{registry_name}/repositories
+
+@endpoint GET /v2/registry/{registry_name}/repositoriesV2
+
+@endpoint GET /v2/registry/{registry_name}/repositories/{repository_name}/tags
+
+@endpoint DELETE /v2/registry/{registry_name}/repositories/{repository_name}/tags/{repository_tag}
+
+@endpoint GET /v2/registry/{registry_name}/repositories/{repository_name}/digests
+
+@endpoint DELETE /v2/registry/{registry_name}/repositories/{repository_name}/digests/{manifest_digest}
+
+@endpoint POST /v2/registry/{registry_name}/garbage-collection
+
+@endpoint GET /v2/registry/{registry_name}/garbage-collection
+
+@endpoint GET /v2/registry/{registry_name}/garbage-collections
+
+@endpoint PUT /v2/registry/{registry_name}/garbage-collection/{garbage_collection_uuid}
+
+@endpoint GET /v2/registry/options
+
+@endgroup
+
+@group reports
+@endpoint GET /v2/reports/droplet_neighbors_ids
+
+@endgroup
+
+@group reserved_ips
+@endpoint GET /v2/reserved_ips
+
+@endpoint POST /v2/reserved_ips
+
+@endpoint GET /v2/reserved_ips/{reserved_ip}
+
+@endpoint DELETE /v2/reserved_ips/{reserved_ip}
+
+@endpoint GET /v2/reserved_ips/{reserved_ip}/actions
+
+@endpoint POST /v2/reserved_ips/{reserved_ip}/actions
+
+@endpoint GET /v2/reserved_ips/{reserved_ip}/actions/{action_id}
+
+@endgroup
+
+@group reserved_ipv6
+@endpoint GET /v2/reserved_ipv6
+
+@endpoint POST /v2/reserved_ipv6
+
+@endpoint GET /v2/reserved_ipv6/{reserved_ipv6}
+
+@endpoint DELETE /v2/reserved_ipv6/{reserved_ipv6}
+
+@endpoint POST /v2/reserved_ipv6/{reserved_ipv6}/actions
+
+@endgroup
+
+@group byoip_prefixes
+@endpoint POST /v2/byoip_prefixes
+
+@endpoint GET /v2/byoip_prefixes
+
+@endpoint GET /v2/byoip_prefixes/{byoip_prefix_uuid}
+
+@endpoint DELETE /v2/byoip_prefixes/{byoip_prefix_uuid}
+
+@endpoint PATCH /v2/byoip_prefixes/{byoip_prefix_uuid}
+
+@endpoint GET /v2/byoip_prefixes/{byoip_prefix_uuid}/ips
+
+@endgroup
+
+@group sizes
+@endpoint GET /v2/sizes
+
+@endgroup
+
+@group snapshots
+@endpoint GET /v2/snapshots
+
+@endpoint GET /v2/snapshots/{snapshot_id}
+
+@endpoint DELETE /v2/snapshots/{snapshot_id}
+
+@endgroup
+
+@group spaces
+@endpoint GET /v2/spaces/keys
+
+@endpoint POST /v2/spaces/keys
+
+@endpoint GET /v2/spaces/keys/{access_key}
+
+@endpoint DELETE /v2/spaces/keys/{access_key}
+
+@endpoint PUT /v2/spaces/keys/{access_key}
+
+@endpoint PATCH /v2/spaces/keys/{access_key}
+
+@endgroup
+
+@group tags
+@endpoint GET /v2/tags
+
+@endpoint POST /v2/tags
+
+@endpoint GET /v2/tags/{tag_id}
+
+@endpoint DELETE /v2/tags/{tag_id}
+
+@endpoint POST /v2/tags/{tag_id}/resources
+
+@endpoint DELETE /v2/tags/{tag_id}/resources
+
+@endgroup
+
+@group volumes
+@endpoint GET /v2/volumes
+
+@endpoint POST /v2/volumes
+
+@endpoint DELETE /v2/volumes
+
+@endpoint POST /v2/volumes/actions
+
+@endpoint GET /v2/volumes/snapshots/{snapshot_id}
+
+@endpoint DELETE /v2/volumes/snapshots/{snapshot_id}
+
+@endpoint GET /v2/volumes/{volume_id}
+
+@endpoint DELETE /v2/volumes/{volume_id}
+
+@endpoint GET /v2/volumes/{volume_id}/actions
+
+@endpoint POST /v2/volumes/{volume_id}/actions
+
+@endpoint GET /v2/volumes/{volume_id}/actions/{action_id}
+
+@endpoint GET /v2/volumes/{volume_id}/snapshots
+
+@endpoint POST /v2/volumes/{volume_id}/snapshots
+
+@endgroup
+
+@group vpcs
+@endpoint GET /v2/vpcs
+
+@endpoint POST /v2/vpcs
+
+@endpoint GET /v2/vpcs/{vpc_id}
+
+@endpoint PUT /v2/vpcs/{vpc_id}
+
+@endpoint PATCH /v2/vpcs/{vpc_id}
+
+@endpoint DELETE /v2/vpcs/{vpc_id}
+
+@endpoint GET /v2/vpcs/{vpc_id}/members
+
+@endpoint GET /v2/vpcs/{vpc_id}/peerings
+
+@endpoint POST /v2/vpcs/{vpc_id}/peerings
+
+@endpoint PATCH /v2/vpcs/{vpc_id}/peerings/{vpc_peering_id}
+
+@endgroup
+
+@group vpc_peerings
+@endpoint GET /v2/vpc_peerings
+
+@endpoint POST /v2/vpc_peerings
+
+@endpoint GET /v2/vpc_peerings/{vpc_peering_id}
+
+@endpoint PATCH /v2/vpc_peerings/{vpc_peering_id}
+
+@endpoint DELETE /v2/vpc_peerings/{vpc_peering_id}
+
+@endgroup
+
+@group vpc_nat_gateways
+@endpoint GET /v2/vpc_nat_gateways
+
+@endpoint POST /v2/vpc_nat_gateways
+
+@endpoint GET /v2/vpc_nat_gateways/{id}
+
+@endpoint PUT /v2/vpc_nat_gateways/{id}
+
+@endpoint DELETE /v2/vpc_nat_gateways/{id}
+
+@endgroup
+
+@group uptime
+@endpoint GET /v2/uptime/checks
+
+@endpoint POST /v2/uptime/checks
+
+@endpoint GET /v2/uptime/checks/{check_id}
+
+@endpoint PUT /v2/uptime/checks/{check_id}
+
+@endpoint DELETE /v2/uptime/checks/{check_id}
+
+@endpoint GET /v2/uptime/checks/{check_id}/state
+
+@endpoint GET /v2/uptime/checks/{check_id}/alerts
+
+@endpoint POST /v2/uptime/checks/{check_id}/alerts
+
+@endpoint GET /v2/uptime/checks/{check_id}/alerts/{alert_id}
+
+@endpoint PUT /v2/uptime/checks/{check_id}/alerts/{alert_id}
+
+@endpoint DELETE /v2/uptime/checks/{check_id}/alerts/{alert_id}
+
+@endgroup
+
+@group gen-ai
+@endpoint GET /v2/gen-ai/agents
+
+@endpoint POST /v2/gen-ai/agents
+
+@endpoint GET /v2/gen-ai/agents/{agent_uuid}/api_keys
+
+@endpoint POST /v2/gen-ai/agents/{agent_uuid}/api_keys
+
+@endpoint PUT /v2/gen-ai/agents/{agent_uuid}/api_keys/{api_key_uuid}
+
+@endpoint DELETE /v2/gen-ai/agents/{agent_uuid}/api_keys/{api_key_uuid}
+
+@endpoint PUT /v2/gen-ai/agents/{agent_uuid}/api_keys/{api_key_uuid}/regenerate
+
+@endpoint POST /v2/gen-ai/agents/{agent_uuid}/functions
+
+@endpoint PUT /v2/gen-ai/agents/{agent_uuid}/functions/{function_uuid}
+
+@endpoint DELETE /v2/gen-ai/agents/{agent_uuid}/functions/{function_uuid}
+
+@endpoint POST /v2/gen-ai/agents/{agent_uuid}/knowledge_bases
+
+@endpoint POST /v2/gen-ai/agents/{agent_uuid}/knowledge_bases/{knowledge_base_uuid}
+
+@endpoint DELETE /v2/gen-ai/agents/{agent_uuid}/knowledge_bases/{knowledge_base_uuid}
+
+@endpoint POST /v2/gen-ai/agents/{parent_agent_uuid}/child_agents/{child_agent_uuid}
+
+@endpoint PUT /v2/gen-ai/agents/{parent_agent_uuid}/child_agents/{child_agent_uuid}
+
+@endpoint DELETE /v2/gen-ai/agents/{parent_agent_uuid}/child_agents/{child_agent_uuid}
+
+@endpoint GET /v2/gen-ai/agents/{uuid}
+
+@endpoint PUT /v2/gen-ai/agents/{uuid}
+
+@endpoint DELETE /v2/gen-ai/agents/{uuid}
+
+@endpoint GET /v2/gen-ai/agents/{uuid}/child_agents
+
+@endpoint PUT /v2/gen-ai/agents/{uuid}/deployment_visibility
+
+@endpoint GET /v2/gen-ai/agents/{uuid}/usage
+
+@endpoint GET /v2/gen-ai/agents/{uuid}/versions
+
+@endpoint PUT /v2/gen-ai/agents/{uuid}/versions
+
+@endpoint GET /v2/gen-ai/anthropic/keys
+
+@endpoint POST /v2/gen-ai/anthropic/keys
+
+@endpoint GET /v2/gen-ai/anthropic/keys/{api_key_uuid}
+
+@endpoint PUT /v2/gen-ai/anthropic/keys/{api_key_uuid}
+
+@endpoint DELETE /v2/gen-ai/anthropic/keys/{api_key_uuid}
+
+@endpoint GET /v2/gen-ai/anthropic/keys/{uuid}/agents
+
+@endpoint POST /v2/gen-ai/evaluation_datasets
+
+@endpoint POST /v2/gen-ai/evaluation_datasets/file_upload_presigned_urls
+
+@endpoint GET /v2/gen-ai/evaluation_metrics
+
+@endpoint POST /v2/gen-ai/evaluation_runs
+
+@endpoint GET /v2/gen-ai/evaluation_runs/{evaluation_run_uuid}
+
+@endpoint GET /v2/gen-ai/evaluation_runs/{evaluation_run_uuid}/results
+
+@endpoint GET /v2/gen-ai/evaluation_runs/{evaluation_run_uuid}/results/{prompt_id}
+
+@endpoint GET /v2/gen-ai/evaluation_test_cases
+
+@endpoint POST /v2/gen-ai/evaluation_test_cases
+
+@endpoint GET /v2/gen-ai/evaluation_test_cases/{evaluation_test_case_uuid}/evaluation_runs
+
+@endpoint GET /v2/gen-ai/evaluation_test_cases/{test_case_uuid}
+
+@endpoint PUT /v2/gen-ai/evaluation_test_cases/{test_case_uuid}
+
+@endpoint GET /v2/gen-ai/indexing_jobs
+
+@endpoint POST /v2/gen-ai/indexing_jobs
+
+@endpoint GET /v2/gen-ai/indexing_jobs/{indexing_job_uuid}/data_sources
+
+@endpoint GET /v2/gen-ai/indexing_jobs/{indexing_job_uuid}/details_signed_url
+
+@endpoint GET /v2/gen-ai/indexing_jobs/{uuid}
+
+@endpoint PUT /v2/gen-ai/indexing_jobs/{uuid}/cancel
+
+@endpoint GET /v2/gen-ai/knowledge_bases
+
+@endpoint POST /v2/gen-ai/knowledge_bases
+
+@endpoint POST /v2/gen-ai/knowledge_bases/data_sources/file_upload_presigned_urls
+
+@endpoint GET /v2/gen-ai/knowledge_bases/{knowledge_base_uuid}/data_sources
+
+@endpoint POST /v2/gen-ai/knowledge_bases/{knowledge_base_uuid}/data_sources
+
+@endpoint PUT /v2/gen-ai/knowledge_bases/{knowledge_base_uuid}/data_sources/{data_source_uuid}
+
+@endpoint DELETE /v2/gen-ai/knowledge_bases/{knowledge_base_uuid}/data_sources/{data_source_uuid}
+
+@endpoint GET /v2/gen-ai/knowledge_bases/{knowledge_base_uuid}/indexing_jobs
+
+@endpoint GET /v2/gen-ai/knowledge_bases/{uuid}
+
+@endpoint PUT /v2/gen-ai/knowledge_bases/{uuid}
+
+@endpoint DELETE /v2/gen-ai/knowledge_bases/{uuid}
+
+@endpoint GET /v2/gen-ai/models
+
+@endpoint GET /v2/gen-ai/models/api_keys
+
+@endpoint POST /v2/gen-ai/models/api_keys
+
+@endpoint PUT /v2/gen-ai/models/api_keys/{api_key_uuid}
+
+@endpoint DELETE /v2/gen-ai/models/api_keys/{api_key_uuid}
+
+@endpoint PUT /v2/gen-ai/models/api_keys/{api_key_uuid}/regenerate
+
+@endpoint POST /v2/gen-ai/oauth2/dropbox/tokens
+
+@endpoint GET /v2/gen-ai/oauth2/url
+
+@endpoint GET /v2/gen-ai/openai/keys
+
+@endpoint POST /v2/gen-ai/openai/keys
+
+@endpoint GET /v2/gen-ai/openai/keys/{api_key_uuid}
+
+@endpoint PUT /v2/gen-ai/openai/keys/{api_key_uuid}
+
+@endpoint DELETE /v2/gen-ai/openai/keys/{api_key_uuid}
+
+@endpoint GET /v2/gen-ai/openai/keys/{uuid}/agents
+
+@endpoint GET /v2/gen-ai/regions
+
+@endpoint POST /v2/gen-ai/scheduled-indexing
+
+@endpoint GET /v2/gen-ai/scheduled-indexing/knowledge-base/{knowledge_base_uuid}
+
+@endpoint DELETE /v2/gen-ai/scheduled-indexing/{uuid}
+
+@endpoint GET /v2/gen-ai/workspaces
+
+@endpoint POST /v2/gen-ai/workspaces
+
+@endpoint GET /v2/gen-ai/workspaces/{workspace_uuid}
+
+@endpoint PUT /v2/gen-ai/workspaces/{workspace_uuid}
+
+@endpoint DELETE /v2/gen-ai/workspaces/{workspace_uuid}
+
+@endpoint GET /v2/gen-ai/workspaces/{workspace_uuid}/agents
+
+@endpoint PUT /v2/gen-ai/workspaces/{workspace_uuid}/agents
+
+@endpoint GET /v2/gen-ai/workspaces/{workspace_uuid}/evaluation_test_cases
+
+@endgroup
+
+@end

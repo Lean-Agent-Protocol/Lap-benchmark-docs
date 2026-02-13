@@ -1,0 +1,318 @@
+syntax = "proto3";
+package google.firestore.v1;
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/routing.proto";
+import "google/firestore/v1/aggregation_result.proto";
+import "google/firestore/v1/common.proto";
+import "google/firestore/v1/document.proto";
+import "google/firestore/v1/explain_stats.proto";
+import "google/firestore/v1/pipeline.proto";
+import "google/firestore/v1/query.proto";
+import "google/firestore/v1/query_profile.proto";
+import "google/firestore/v1/write.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "google/rpc/status.proto";
+option csharp_namespace = "Google.Cloud.Firestore.V1";
+option go_package = "cloud.google.com/go/firestore/apiv1/firestorepb;firestorepb";
+option java_multiple_files = true;
+option java_outer_classname = "FirestoreProto";
+option java_package = "com.google.firestore.v1";
+option php_namespace = "Google\\Cloud\\Firestore\\V1";
+option ruby_package = "Google::Cloud::Firestore::V1";
+service Firestore {
+option (google.api.default_host) = "firestore.googleapis.com";
+option (google.api.oauth_scopes) =
+"https://www.googleapis.com/auth/cloud-platform,"
+"https://www.googleapis.com/auth/datastore";
+rpc GetDocument(GetDocumentRequest) returns (Document) {
+option (google.api.http) = {
+get: "/v1/{name=projectsdocumentsdatabases**}/{collection_id}"
+additional_bindings {
+get: "/v1/{parent=projectsdocuments}/{collection_id}"
+}
+};
+}
+rpc UpdateDocument(UpdateDocumentRequest) returns (Document) {
+option (google.api.http) = {
+patch: "/v1/{document.name=projectsdocumentsdatabases**}"
+};
+option (google.api.method_signature) = "name";
+}
+rpc BatchGetDocuments(BatchGetDocumentsRequest)
+returns (stream BatchGetDocumentsResponse) {
+option (google.api.http) = {
+post: "/v1/{database=projectsdatabasesdatabasesdatabasesdatabasesdatabases**}:runQuery"
+body: "*"
+}
+};
+}
+rpc ExecutePipeline(ExecutePipelineRequest)
+returns (stream ExecutePipelineResponse) {
+option (google.api.http) = {
+post: "/v1/{database=projectsdatabases/{database_id=*}databasesdatabases**}:runAggregationQuery"
+body: "*"
+}
+};
+}
+rpc PartitionQuery(PartitionQueryRequest) returns (PartitionQueryResponse) {
+option (google.api.http) = {
+post: "/v1/{parent=projectsdocuments}:partitionQuery"
+body: "*"
+additional_bindings {
+post: "/v1/{parent=projectsdocumentsdatabasesdatabasesdatabasesdatabases**}:listCollectionIds"
+body: "*"
+}
+};
+option (google.api.method_signature) = "parent";
+}
+rpc BatchWrite(BatchWriteRequest) returns (BatchWriteResponse) {
+option (google.api.http) = {
+post: "/v1/{database=projectsdatabases/*/documents/**}/{collection_id}"
+body: "document"
+};
+}
+}
+message GetDocumentRequest {
+string name = 1 [(google.api.field_behavior) = REQUIRED];
+DocumentMask mask = 2;
+oneof consistency_selector {
+bytes transaction = 3;
+google.protobuf.Timestamp read_time = 5;
+}
+}
+message ListDocumentsRequest {
+string parent = 1 [(google.api.field_behavior) = REQUIRED];
+string collection_id = 2 [(google.api.field_behavior) = OPTIONAL];
+int32 page_size = 3 [(google.api.field_behavior) = OPTIONAL];
+string page_token = 4 [(google.api.field_behavior) = OPTIONAL];
+string order_by = 6 [(google.api.field_behavior) = OPTIONAL];
+DocumentMask mask = 7 [(google.api.field_behavior) = OPTIONAL];
+oneof consistency_selector {
+bytes transaction = 8;
+google.protobuf.Timestamp read_time = 10;
+}
+bool show_missing = 12;
+}
+message ListDocumentsResponse {
+repeated Document documents = 1;
+string next_page_token = 2;
+}
+message CreateDocumentRequest {
+string parent = 1 [(google.api.field_behavior) = REQUIRED];
+string collection_id = 2 [(google.api.field_behavior) = REQUIRED];
+string document_id = 3;
+Document document = 4 [(google.api.field_behavior) = REQUIRED];
+DocumentMask mask = 5;
+}
+message UpdateDocumentRequest {
+Document document = 1 [(google.api.field_behavior) = REQUIRED];
+DocumentMask update_mask = 2;
+DocumentMask mask = 3;
+Precondition current_document = 4;
+}
+message DeleteDocumentRequest {
+string name = 1 [(google.api.field_behavior) = REQUIRED];
+Precondition current_document = 2;
+}
+message BatchGetDocumentsRequest {
+string database = 1 [(google.api.field_behavior) = REQUIRED];
+repeated string documents = 2;
+DocumentMask mask = 3;
+oneof consistency_selector {
+bytes transaction = 4;
+TransactionOptions new_transaction = 5;
+google.protobuf.Timestamp read_time = 7;
+}
+}
+message BatchGetDocumentsResponse {
+oneof result {
+Document found = 1;
+string missing = 2;
+}
+bytes transaction = 3;
+google.protobuf.Timestamp read_time = 4;
+}
+message BeginTransactionRequest {
+string database = 1 [(google.api.field_behavior) = REQUIRED];
+TransactionOptions options = 2;
+}
+message BeginTransactionResponse {
+bytes transaction = 1;
+}
+message CommitRequest {
+string database = 1 [(google.api.field_behavior) = REQUIRED];
+repeated Write writes = 2;
+bytes transaction = 3;
+}
+message CommitResponse {
+repeated WriteResult write_results = 1;
+google.protobuf.Timestamp commit_time = 2;
+}
+message RollbackRequest {
+string database = 1 [(google.api.field_behavior) = REQUIRED];
+bytes transaction = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message RunQueryRequest {
+string parent = 1 [(google.api.field_behavior) = REQUIRED];
+oneof query_type {
+StructuredQuery structured_query = 2;
+}
+oneof consistency_selector {
+bytes transaction = 5;
+TransactionOptions new_transaction = 6;
+google.protobuf.Timestamp read_time = 7;
+}
+ExplainOptions explain_options = 10 [(google.api.field_behavior) = OPTIONAL];
+}
+message RunQueryResponse {
+bytes transaction = 2;
+Document document = 1;
+google.protobuf.Timestamp read_time = 3;
+int32 skipped_results = 4;
+oneof continuation_selector {
+bool done = 6;
+}
+ExplainMetrics explain_metrics = 11;
+}
+message ExecutePipelineRequest {
+string database = 1 [(google.api.field_behavior) = REQUIRED];
+oneof pipeline_type {
+StructuredPipeline structured_pipeline = 2;
+}
+oneof consistency_selector {
+bytes transaction = 5;
+TransactionOptions new_transaction = 6;
+google.protobuf.Timestamp read_time = 7;
+}
+}
+message ExecutePipelineResponse {
+bytes transaction = 1;
+repeated Document results = 2;
+google.protobuf.Timestamp execution_time = 3;
+ExplainStats explain_stats = 4;
+}
+message RunAggregationQueryRequest {
+string parent = 1 [(google.api.field_behavior) = REQUIRED];
+oneof query_type {
+StructuredAggregationQuery structured_aggregation_query = 2;
+}
+oneof consistency_selector {
+bytes transaction = 4;
+TransactionOptions new_transaction = 5;
+google.protobuf.Timestamp read_time = 6;
+}
+ExplainOptions explain_options = 8 [(google.api.field_behavior) = OPTIONAL];
+}
+message RunAggregationQueryResponse {
+AggregationResult result = 1;
+bytes transaction = 2;
+google.protobuf.Timestamp read_time = 3;
+ExplainMetrics explain_metrics = 10;
+}
+message PartitionQueryRequest {
+string parent = 1 [(google.api.field_behavior) = REQUIRED];
+oneof query_type {
+StructuredQuery structured_query = 2;
+}
+int64 partition_count = 3;
+string page_token = 4;
+int32 page_size = 5;
+oneof consistency_selector {
+google.protobuf.Timestamp read_time = 6;
+}
+}
+message PartitionQueryResponse {
+repeated Cursor partitions = 1;
+string next_page_token = 2;
+}
+message WriteRequest {
+string database = 1 [(google.api.field_behavior) = REQUIRED];
+string stream_id = 2;
+repeated Write writes = 3;
+bytes stream_token = 4;
+map<string, string> labels = 5;
+}
+message WriteResponse {
+string stream_id = 1;
+bytes stream_token = 2;
+repeated WriteResult write_results = 3;
+google.protobuf.Timestamp commit_time = 4;
+}
+message ListenRequest {
+string database = 1 [(google.api.field_behavior) = REQUIRED];
+oneof target_change {
+Target add_target = 2;
+int32 remove_target = 3;
+}
+map<string, string> labels = 4;
+}
+message ListenResponse {
+oneof response_type {
+TargetChange target_change = 2;
+DocumentChange document_change = 3;
+DocumentDelete document_delete = 4;
+DocumentRemove document_remove = 6;
+ExistenceFilter filter = 5;
+}
+}
+message Target {
+message DocumentsTarget {
+repeated string documents = 2;
+}
+message QueryTarget {
+string parent = 1;
+oneof query_type {
+StructuredQuery structured_query = 2;
+}
+}
+oneof target_type {
+QueryTarget query = 2;
+DocumentsTarget documents = 3;
+}
+oneof resume_type {
+bytes resume_token = 4;
+google.protobuf.Timestamp read_time = 11;
+}
+int32 target_id = 5;
+bool once = 6;
+google.protobuf.Int32Value expected_count = 12;
+}
+message TargetChange {
+enum TargetChangeType {
+NO_CHANGE = 0;
+ADD = 1;
+REMOVE = 2;
+CURRENT = 3;
+RESET = 4;
+}
+TargetChangeType target_change_type = 1;
+repeated int32 target_ids = 2;
+google.rpc.Status cause = 3;
+bytes resume_token = 4;
+google.protobuf.Timestamp read_time = 6;
+}
+message ListCollectionIdsRequest {
+string parent = 1 [(google.api.field_behavior) = REQUIRED];
+int32 page_size = 2;
+string page_token = 3;
+oneof consistency_selector {
+google.protobuf.Timestamp read_time = 4;
+}
+}
+message ListCollectionIdsResponse {
+repeated string collection_ids = 1;
+string next_page_token = 2;
+}
+message BatchWriteRequest {
+string database = 1 [(google.api.field_behavior) = REQUIRED];
+repeated Write writes = 2;
+map<string, string> labels = 3;
+}
+message BatchWriteResponse {
+repeated WriteResult write_results = 1;
+repeated google.rpc.Status status = 2;
+}

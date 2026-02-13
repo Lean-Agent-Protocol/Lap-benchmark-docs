@@ -1,0 +1,103 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api google.cloud.translation.v3
+@base grpc://google.cloud.translation.v3
+@version proto3
+@endpoints 38
+@hint download_for_search
+@toc TranslationService(38)
+
+@type DocumentTranslation {byte_stream_outputs: [bytes], mime_type: str, detected_language_code: str}
+@type Glossary {language_pair: LanguageCodePair?{source_language_code: str, target_language_code: str}, language_codes_set: LanguageCodesSet?{language_codes: [str]}, input_config: GlossaryInputConfig{gcs_source: GcsSource?}}
+@type Translation {translated_text: str, model: str, detected_language_code: str, glossary_config: TranslateTextGlossaryConfig}
+
+@endpoint UNARY /TranslationService/TranslateText
+@returns(OK) {translations: [Translation], glossary_translations: [Translation]} # TranslateTextResponse
+
+@endpoint UNARY /TranslationService/RomanizeText
+@returns(OK) {romanizations: [Romanization]{romanized_text: str, detected_language_code: str}} # RomanizeTextResponse
+
+@endpoint UNARY /TranslationService/DetectLanguage
+@optional {content: str}
+@returns(OK) {languages: [DetectedLanguage]{language_code: str, confidence: num(f32)}} # DetectLanguageResponse
+
+@endpoint UNARY /TranslationService/GetSupportedLanguages
+@returns(OK) {languages: [SupportedLanguage]{language_code: str, display_name: str, support_source: bool, support_target: bool}} # SupportedLanguages
+
+@endpoint UNARY /TranslationService/TranslateDocument
+@returns(OK) {document_translation: DocumentTranslation, glossary_document_translation: DocumentTranslation, model: str, glossary_config: TranslateTextGlossaryConfig} # TranslateDocumentResponse
+
+@endpoint UNARY /TranslationService/BatchTranslateText
+
+@endpoint UNARY /TranslationService/BatchTranslateDocument
+
+@endpoint UNARY /TranslationService/CreateGlossary
+
+@endpoint UNARY /TranslationService/UpdateGlossary
+@optional {update_mask: FieldMask}
+
+@endpoint UNARY /TranslationService/ListGlossaries
+@returns(OK) {glossaries: [Glossary], next_page_token: str} # ListGlossariesResponse
+
+@endpoint UNARY /TranslationService/GetGlossary
+@returns(OK) → Glossary
+
+@endpoint UNARY /TranslationService/DeleteGlossary
+
+@endpoint UNARY /TranslationService/GetGlossaryEntry
+
+@endpoint UNARY /TranslationService/ListGlossaryEntries
+@returns(OK) ListGlossaryEntriesResponse
+
+@endpoint UNARY /TranslationService/CreateGlossaryEntry
+
+@endpoint UNARY /TranslationService/UpdateGlossaryEntry
+
+@endpoint UNARY /TranslationService/DeleteGlossaryEntry
+@returns(OK) Empty response
+
+@endpoint UNARY /TranslationService/CreateDataset
+
+@endpoint UNARY /TranslationService/GetDataset
+
+@endpoint UNARY /TranslationService/ListDatasets
+
+@endpoint UNARY /TranslationService/DeleteDataset
+
+@endpoint UNARY /TranslationService/CreateAdaptiveMtDataset
+
+@endpoint UNARY /TranslationService/DeleteAdaptiveMtDataset
+@returns(OK) Empty response
+
+@endpoint UNARY /TranslationService/GetAdaptiveMtDataset
+
+@endpoint UNARY /TranslationService/ListAdaptiveMtDatasets
+
+@endpoint UNARY /TranslationService/AdaptiveMtTranslate
+
+@endpoint UNARY /TranslationService/GetAdaptiveMtFile
+
+@endpoint UNARY /TranslationService/DeleteAdaptiveMtFile
+@returns(OK) Empty response
+
+@endpoint UNARY /TranslationService/ImportAdaptiveMtFile
+
+@endpoint UNARY /TranslationService/ListAdaptiveMtFiles
+
+@endpoint UNARY /TranslationService/ListAdaptiveMtSentences
+
+@endpoint UNARY /TranslationService/ImportData
+
+@endpoint UNARY /TranslationService/ExportData
+
+@endpoint UNARY /TranslationService/ListExamples
+
+@endpoint UNARY /TranslationService/CreateModel
+
+@endpoint UNARY /TranslationService/ListModels
+
+@endpoint UNARY /TranslationService/GetModel
+
+@endpoint UNARY /TranslationService/DeleteModel
+
+@end

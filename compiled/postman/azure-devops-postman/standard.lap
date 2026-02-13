@@ -1,0 +1,744 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Azure DevOps v5.0
+@base https://{{feedsServer}}
+@auth Basic username:password
+@endpoints 135
+@hint download_for_search
+@toc {{organization}}(135)
+
+@endpoint GET /{{organization}}/_apis/public/packaging/Feeds/{{feedId}}/Packages/{{packageId}}/badge
+@desc Get Badge
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/packages/{{packageId}}
+@desc Get Package
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeAllVersions: str # True to return all versions of the package in the response. Default is false (latest version only), includeUrls: str # True to return REST Urls with the response. Default is True., isListed: str # Only applicable for NuGet packages, setting it for other package types will result in a 404. If false, delisted package versions will be returned. Use this to filter the response when includeAllVersions is set to true. Default is unset (do not return delisted packages)., isRelease: str # Only applicable for Nuget packages. Use this to filter the response when includeAllVersions is set to true. Default is True (only return packages without prerelease versioning)., includeDeleted: str # Return deleted or unpublished versions of packages in the response. Default is False., includeDescription: str # Return the description for every version of each package in the response. Default is False.}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/Packages/{{packageId}}/versions/{{packageVersionId}}
+@desc Get Package Version
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeUrls: str # True to include urls for each version. Default is true., isListed: str # Only applicable for NuGet packages. If false, delisted package versions will be returned., isDeleted: str # Return deleted or unpublished versions of packages in the response. Default is unset (do not return deleted versions).}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/Packages/{{packageId}}/Versions/{{packageVersionId}}/provenance
+@desc Get Package Version Provenance
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/Packages/{{packageId}}/versions
+@desc Get Package Versions
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeUrls: str # True to include urls for each version. Default is true., isListed: str # Only applicable for NuGet packages. If false, delisted package versions will be returned., isDeleted: str # Return deleted or unpublished versions of packages in the response. Default is unset (do not return deleted versions).}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/packages
+@desc Get Packages
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeDeleted: str # Return deleted or unpublished versions of packages in the response. Default is False., $skip: str # Skip the first N packages (or package versions where getTopPackageVersions=true), $top: str # Get the top N packages (or package versions where getTopPackageVersions=true), includeDescription: str # Return the description for every version of each package in the response. Default is False., isRelease: str # Only applicable for Nuget packages. Use this to filter the response when includeAllVersions is set to true. Default is True (only return packages without prerelease versioning)., getTopPackageVersions: str # Changes the behavior of $top and $skip to return all versions of each package up to $top. Must be used in conjunction with includeAllVersions=true, isListed: str # Only applicable for NuGet packages, setting it for other package types will result in a 404. If false, delisted package versions will be returned. Use this to filter the response when includeAllVersions is set to true. Default is unset (do not return delisted packages)., includeAllVersions: str # True to return all versions of the package in the response. Default is false (latest version only), includeUrls: str # True to return REST Urls with the response. Default is True., packageNameQuery: str # Filter to packages that contain the provided string. Characters in the string must conform to the package name constraints., protocolType: str # One of the supported artifact package types., directUpstreamId: str # Filter results to return packages from a specific upstream.}
+
+@endpoint GET /{{organization}}/_apis/packaging/feedchanges/{{feedId}}
+@desc Get Feed Change
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/feedchanges
+@desc Get Feed Changes
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeDeleted: str # If true, get changes for all feeds including deleted feeds. The default value is false., continuationToken: str # A continuation token which acts as a bookmark to a previously retrieved change. This token allows the user to continue retrieving changes in batches, picking up where the previous batch left off. If specified, all the changes that occur strictly after the token will be returned. If not specified or 0, iteration will start with the first change., batchSize: str # Number of package changes to fetch. The default value is 1000. The maximum value is 2000.}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/packagechanges
+@desc Get Package Changes
+@auth Basic username:password
+@required {api-version: str}
+@optional {continuationToken: str # A continuation token which acts as a bookmark to a previously retrieved change. This token allows the user to continue retrieving changes in batches, picking up where the previous batch left off. If specified, all the changes that occur strictly after the token will be returned. If not specified or 0, iteration will start with the first change., batchSize: str # Number of package changes to fetch. The default value is 1000. The maximum value is 2000.}
+
+@endpoint POST /{{organization}}/_apis/packaging/feeds
+@desc Create Feed
+@auth Basic username:password
+@required {api-version: str, description: str, hideDeletedPackageVersions: bool, badgesEnabled: bool, name: str, upstreamEnabled: bool, fullyQualifiedName: str, upstreamSources: [map], capabilities: str}
+@optional {viewId: any, viewName: any}
+
+@endpoint POST /{{organization}}/_apis/packaging/feeds/{{feedId}}/views
+@desc Create Feed View
+@auth Basic username:password
+@required {api-version: str, visibility: str, name: str, type: str}
+
+@endpoint DELETE /{{organization}}/_apis/packaging/feeds/{{feedId}}
+@desc Delete Feed
+@auth Basic username:password
+@required {api-version: str, description: str, hideDeletedPackageVersions: bool, badgesEnabled: bool, name: str, upstreamEnabled: bool, fullyQualifiedName: str, upstreamSources: [map], capabilities: str}
+@optional {viewId: any, viewName: any}
+
+@endpoint DELETE /{{organization}}/_apis/packaging/feeds/{{feedId}}/views/{{viewId}}
+@desc Delete Feed View
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}
+@desc Get Feed
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/permissions
+@desc Get Feed Permissions
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeIds: str # True to include user Ids in the response. Default is false., excludeInheritedPermissions: str # True to only return explicitly set permissions on the feed. Default is false., identityDescriptor: str # Filter permissions to the provided identity.}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/views/{{viewId}}
+@desc Get Feed View
+@auth Basic username:password
+@required {api-version: str}
+@optional {continuationToken: str # A continuation token which acts as a bookmark to a previously retrieved change. This token allows the user to continue retrieving changes in batches, picking up where the previous batch left off. If specified, all the changes that occur strictly after the token will be returned. If not specified or 0, iteration will start with the first change., batchSize: str # Number of package changes to fetch. The default value is 1000. The maximum value is 2000.}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/views
+@desc Get Feed Views
+@auth Basic username:password
+@required {api-version: str}
+@optional {continuationToken: str # A continuation token which acts as a bookmark to a previously retrieved change. This token allows the user to continue retrieving changes in batches, picking up where the previous batch left off. If specified, all the changes that occur strictly after the token will be returned. If not specified or 0, iteration will start with the first change., batchSize: str # Number of package changes to fetch. The default value is 1000. The maximum value is 2000.}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds
+@desc Get Feeds
+@auth Basic username:password
+@required {api-version: str}
+@optional {feedRole: str # Filter by this role, either Administrator(4), Contributor(3), or Reader(2) level permissions., includeDeletedUpstreams: str # Include upstreams that have been deleted in the response.}
+
+@endpoint PATCH /{{organization}}/_apis/packaging/Feeds/{{feedId}}/permissions
+@desc Set Feed Permissions
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/_apis/packaging/Feeds/{{feedId}}
+@desc Update Feed
+@auth Basic username:password
+@required {api-version: str, description: str, hideDeletedPackageVersions: bool, badgesEnabled: bool}
+
+@endpoint PATCH /{{organization}}/_apis/packaging/feeds/{{feedId}}/views/{{viewId}}
+@desc Update Feed View
+@auth Basic username:password
+@required {api-version: str, visibility: str, name: str, type: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/RecycleBin/Packages/{{packageId}}
+@desc Get Recycle Bin Package
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/RecycleBin/Packages/{{packageId}}/Versions/{{packageVersionGuid}}
+@desc Get Recycle Bin Package Version
+@required {api-version: str}
+@optional {includeUrls: str # True to return REST Urls with the response. Default is True.}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/RecycleBin/Packages/{{packageId}}/Versions
+@desc Get Recycle Bin Package Versions
+@required {api-version: str}
+@optional {includeUrls: str # True to return REST Urls with the response. Default is True.}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/RecycleBin/Packages
+@desc Get Recycle Bin Packages
+@required {api-version: str}
+@optional {protocolType: str # Type of package (e.g. NuGet, npm, ...), packageNameQuery: str # Filter to packages matching this name, includeUrls: str # True to return REST Urls with the response. Default is True., $top: str # Get the top N packages., $skip: str # Skip the first N packages., includeAllVersions: str # True to return all versions of the package in the response. Default is false (latest version only).}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/retentionpolicies
+@desc Get Retention Policy
+@required {api-version: str}
+
+@endpoint PUT /{{organization}}/_apis/packaging/Feeds/{{feedId}}/retentionpolicies
+@desc Set Retention Policy
+@required {api-version: str, ageLimitInDays: int, countLimit: int, daysToKeepRecentlyDownloadedPackages: int}
+
+@endpoint DELETE /{{organization}}/_apis/packaging/Feeds/{{feedId}}/retentionpolicies
+@desc Delete Retention Policy
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/globalpermissions
+@desc Get Global Permissions
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/_apis/packaging/globalpermissions
+@desc Set Global Permissions
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts
+@desc List
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts
+@desc Get Artifact
+@auth Basic username:password
+@required {artifactName: str, api-version: str}
+@optional {fileId: str # The primary key for the file., fileName: str # The name that the file will be set to.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts
+@desc Get File
+@auth Basic username:password
+@required {artifactName: str, api-version: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts
+@desc Create
+@auth Basic username:password
+@required {api-version: str, name: str, resource: map}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/authorizedresources
+@desc List
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/build/controllers/{{}}
+@desc Get Status Badge
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/repos/git/badge
+@desc Get Build Badge Data
+@required {api-version: str, branchName: str # The branch name.}
+@optional {repoId: str # The repository ID.}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}
+@desc Deletes a build
+@auth Basic username:password
+@required {api-version: str, definition: map, sourceBranch: str, reason: int, parameters: str}
+@optional {sourceVersion: str, demands: [any]}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}
+@desc Get a build
+@auth Basic username:password
+@required {api-version: str}
+@optional {propertyFilters: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/changes
+@desc Get Build Changes
+@auth Basic username:password
+@required {api-version: str, includeSourceChange: str}
+@optional {continuationToken: str, $top: str # The maximum number of changes to return}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/logs
+@desc Get Build Logs
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/logs/{{logId}}
+@desc Get Build Log
+@auth Basic username:password
+@required {api-version: str}
+@optional {startLine: str # The start line., endLine: str # The end line.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/workitems
+@desc Get Build Work Items Refs
+@auth Basic username:password
+@required {api-version: str}
+@optional {$top: str # The maximum number of work items to return.}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/workitems
+@desc Get Build Work Items Refs From Commits
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/changes
+@desc Get Changes Between Builds
+@auth Basic username:password
+@required {api-version: str, fromBuildId: str # The ID of the first build., toBuildId: str # The ID of the last build.}
+@optional {$top: str # The maximum number of changes to return}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/workitems
+@desc Get Work Items Between Builds
+@auth Basic username:password
+@required {api-version: str, fromBuildId: str # The ID of the first build., toBuildId: str # The ID of the last build.}
+@optional {$top: str # The maximum number of changes to return}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds
+@desc Get a list of builds
+@auth Basic username:password
+@required {api-version: str}
+@optional {buildIds: str # A comma-delimited list that specifies the IDs of builds to retrieve., branchName: str # If specified, filters to builds that built branches that built this branch., queryOrder: str # The order in which builds should be returned.  https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/list?view=azure-devops-rest-5.0#buildqueryorder, deletedFilter: str # Indicates whether to exclude, include, or only return deleted builds. https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/list?view=azure-devops-rest-5.0#querydeletedoption, maxBuildsPerDefinition: str # The maximum number of builds to return per definition., continuationToken: str # A continuation token, returned by a previous call to this method, that can be used to return the next set of builds., $top: str # The maximum number of builds to return, properties: str # A comma-delimited list of properties to retrieve., tagFilters: str # A comma-delimited list of tags. If specified, filters to builds that have the specified tags., resultFilter: str # If specified, filters to builds that match this result. https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/list?view=azure-devops-rest-5.0#buildresult, statusFilter: str # If specified, filters to builds that match this status.  https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/list?view=azure-devops-rest-5.0#buildstatus, reasonFilter: str # If specified, filters to builds that match this reason. https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/list?view=azure-devops-rest-5.0#buildreason, requestedFor: str # If specified, filters to builds requested for the specified user., maxTime: str # If specified, filters to builds that finished/started/queued before this date based on the queryOrder specified., minTime: str # If specified, filters to builds that finished/started/queued after this date based on the queryOrder specified., buildNumber: str # If specified, filters to builds that match this build number. Append * to do a prefix search., queues: str # A comma-delimited list of queue IDs. If specified, filters to builds that ran against these queues., definitions: str # A comma-delimited list of definition IDs. If specified, filters to builds for these definitions., repositoryType: str # If specified, filters to builds that built from repositories of this type.}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/builds
+@desc Queue a build
+@auth Basic username:password
+@required {api-version: str, definition: map, sourceBranch: str, reason: int, parameters: str}
+@optional {ignoreWarnings: str, checkInTicket: str, sourceBuildId: str, sourceVersion: str, demands: [any]}
+
+@endpoint GET /{{organization}}/_apis/build/controllers
+@desc List controllers
+@auth Basic username:password
+@required {api-version: str}
+@optional {name: str}
+
+@endpoint GET /{{organization}}/_apis/build/controllers/{{controllerId}}
+@desc Get a controller
+@auth Basic username:password
+@required {api-version: str}
+@optional {name: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}
+@desc Get a definiton
+@required {api-version: str}
+@optional {revision: str # The revision number to retrieve. If this is not specified, the latest version will be returned., minMetricsTime: str # If specified, indicates the date from which metrics should be included., propertyFilters: str # A comma-delimited list of properties to include in the results., includeLatestBuilds: str # Indicates whether to return the latest and latest completed builds for this definition.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}/revisions
+@desc Get Definition Revisions
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions
+@desc List existing definitions
+@required {api-version: str}
+@optional {processType: str # If specified, filters to definitions with the given process type., taskIdFilter: str # If specified, filters to definitions that use the specified task., includeLatestBuilds: str # Indicates whether to return the latest and latest completed builds for this definition., includeAllProperties: str # Indicates whether the full definitions should be returned. By default, shallow representations of the definitions are returned., notBuiltAfter: str # If specified, filters to definitions that do not have builds after this date., builtAfter: str # If specified, filters to definitions that have builds after this date., path: str # If specified, filters to definitions under this folder., definitionIds: str # A comma-delimited list that specifies the IDs of definitions to retrieve., minMetricsTime: str # If specified, indicates the date from which metrics should be included., continuationToken: str # A continuation token, returned by a previous call to this method, that can be used to return the next set of definitions., $top: str # The maximum number of definitions to return, queryOrder: str # Indicates the order in which definitions should be returned. https://docs.microsoft.com/en-us/rest/api/azure/devops/build/definitions/list?view=azure-devops-rest-5.0#definitionqueryorder, repositoryType: str # If specified, filters to definitions that have a repository of this type., repositoryId: str # A repository ID. If specified, filters to definitions that use this repository., name: str # If specified, filters to definitions whose names match this pattern., yamlFilename: str # If specified, filters to YAML definitions that match the given filename.}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}
+@desc Deletes a definition
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}
+@desc Restore Definition
+@required {api-version: str, deleted: str # When false, restores a deleted definition.}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/definitions
+@desc Create
+@required {api-version: str, options: [map], triggers: [map], variables: map, retentionRules: [map], jobAuthorizationScope: str, jobCancelTimeoutInMinutes: int, process: map, repository: map, processParameters: map, quality: str, queue: map, name: str, path: str, type: str, queueStatus: str}
+@optional {definitionToCloneId: str, definitionToCloneRevision: str, drafts: [any]}
+
+@endpoint PUT /{{organization}}/{{project}}/_apis/build/definitions/224
+@desc Update
+@required {api-version: str, options: [map], triggers: [map], variables: map, retentionRules: [map], jobAuthorizationScope: str, jobCancelTimeoutInMinutes: int, process: map, repository: map, processParameters: map, quality: str, queue: map, name: str, path: str, type: str, queueStatus: str}
+@optional {secretsSourceDefinitionId: str, secretsSourceDefinitionRevision: str, drafts: [any]}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/folders
+@desc List
+@auth Basic username:password
+@required {api-version: str}
+@optional {path: str # The path to start with, queryOrder: str # The order in which folders should be returned.
+https://docs.microsoft.com/en-us/rest/api/azure/devops/build/folders/list?view=azure-devops-rest-5.0#folderqueryorder}
+
+@endpoint PUT /{{organization}}/{{project}}/_apis/build/folders
+@desc Create
+@auth Basic username:password
+@required {api-version: str, path: str # The path to start with, path: str, description: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/folders
+@desc Update
+@auth Basic username:password
+@required {api-version: str, path: str # The path to start with, path: str, description: str}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/build/folders
+@desc Delete
+@auth Basic username:password
+@required {api-version: str, path: str # The path to start with}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/latest/{{definitonName}}
+@desc Get
+@required {api-version: str}
+@optional {branchName: str # optional parameter that indicates the specific branch to use}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}/metrics
+@desc Get Definition Metrics
+@auth Basic username:password
+@required {api-version: str}
+@optional {minMetricsTime: str # The date from which to calculate metrics.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/metrics
+@desc Get Project Metrics
+@auth Basic username:password
+@required {api-version: str}
+@optional {minMetricsTime: str # The date from which to calculate metrics., metricAggregationType: str # The aggregation type to use (hourly, daily).}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/options
+@desc List
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/properties
+@desc Get Build Properties
+@auth Basic username:password
+@required {api-version: str}
+@optional {filter: str # A comma-delimited list of properties. If specified, filters to these specific properties.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}/properties
+@desc Get Definition Properties
+@auth Basic username:password
+@required {api-version: str}
+@optional {filter: str # A comma-delimited list of properties. If specified, filters to these specific properties.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/report
+@desc Get Build Properties
+@auth Basic username:password
+@required {api-version: str}
+@optional {type: str}
+
+@endpoint GET /{{organization}}/_apis/build/resourceusage
+@desc Get
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}/resources
+@desc List
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/settings
+@desc Get build settings
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/sourceproviders
+@desc List
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/status/{{definitionId}}
+@desc Get
+@auth Basic username:password
+@required {api-version: str}
+@optional {branchName: str # Only consider the most recent build for this branch, stageName: str # Use this stage within the pipeline to render the status., jobName: str # Use this job within a stage of the pipeline to render the status., configuration: str # Use this job configuration to render the status, label: str # Replaces the default text on the left side of the badge.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/timeline
+@desc Gets details for a build
+@auth Basic username:password
+@required {api-version: str}
+@optional {timelineId: str, changeId: str, planId: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/distributedtask/variablegroups
+@desc List Variable Groups
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/distributedtask/variablegroups/{{variableGroupId}}
+@desc Get Variable Group
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/distributedtask/variablegroups/{{variableGroupId}}
+@desc Add Variable Group
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint PUT /{{organization}}/{{project}}/_apis/distributedtask/variablegroups/{{variableGroupId}}
+@desc Update Variable Group
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/distributedtask/variablegroups/{{variableGroupId}}
+@desc Delete Variable Group
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/backlogs
+@desc List all backlog levels
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {count: int, value: [map]} # Fabrikam backlogs
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/backlogs/Microsoft.EpicCategory
+@desc Get backlog level
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {id: str, name: str, rank: int, workItemCountLimit: int, addPanelFields: [map], columnFields: [map], workItemTypes: [map], defaultWorkItemType: map{name: str, url: str}, color: str, isHidden: bool, type: str} # Fabrikam features backlog
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/backlogs/Microsoft.EpicCategory/workItems
+@desc Get backlog level work items
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {workItems: [map]} # Fabrikam team feature work items
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/backlogconfiguration/
+@desc Get team backlog configurations
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {taskBacklog: map{id: str, name: str, rank: int, workItemCountLimit: int, addPanelFields: [map], columnFields: [map], workItemTypes: [map], defaultWorkItemType: map{name: str, url: str}, color: str}, requirementBacklog: map{id: str, name: str, rank: int, workItemCountLimit: int, addPanelFields: [map], columnFields: [map], workItemTypes: [map], defaultWorkItemType: map{name: str, url: str}, color: str}, portfolioBacklogs: [map], workItemTypeMappedStates: [map], backlogFields: map{typeFields: map{Order: str, Effort: str, RemainingWork: str, Activity: str}}, bugsBehavior: str, hiddenBacklogs: [str], url: str} # Fabrikam backlog configurations
+
+@endpoint GET /{{organization}}/{{project}}/_apis/work/boardcolumns
+@desc List
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/boardcolumns
+@desc List
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@desc Get individual work item
+@auth Basic username:password
+@required {api-version: str}
+@optional {asOf: str # Returns the state of the requested item as it was on the given date, fields: str # Comma-separated list of requested fields}
+@returns(200) {id: int, rev: int, fields: map{System.AreaPath: str, System.TeamProject: str, System.IterationPath: str, System.WorkItemType: str, System.State: str, System.Reason: str, System.AssignedTo: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.CreatedDate: str, System.CreatedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.ChangedDate: str, System.ChangedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.Title: str, Microsoft.VSTS.Common.StateChangeDate: str, Microsoft.VSTS.Common.ActivatedDate: str, Microsoft.VSTS.Common.ActivatedBy: str, Microsoft.VSTS.Common.Priority: int, Microsoft.VSTS.Common.ValueArea: str, System.Tags: str}, _links: map{self: map{href: str}, workItemUpdates: map{href: str}, workItemRevisions: map{href: str}, workItemHistory: map{href: str}, html: map{href: str}, workItemType: map{href: str}, fields: map{href: str}}, url: str} # Fabrikam work item
+@errors {404: As Of date before work item existed}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@desc List work items
+@auth Basic username:password
+@required {api-version: str}
+@optional {asOf: str # Returns the state of the requested item as it was on the given date, fields: str # Comma-separated list of requested fields}
+@returns(200) {id: int, rev: int, fields: map{System.AreaPath: str, System.TeamProject: str, System.IterationPath: str, System.WorkItemType: str, System.State: str, System.Reason: str, System.AssignedTo: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.CreatedDate: str, System.CreatedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.ChangedDate: str, System.ChangedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.Title: str, Microsoft.VSTS.Common.StateChangeDate: str, Microsoft.VSTS.Common.ActivatedDate: str, Microsoft.VSTS.Common.ActivatedBy: str, Microsoft.VSTS.Common.Priority: int, Microsoft.VSTS.Common.ValueArea: str, System.Tags: str}, _links: map{self: map{href: str}, workItemUpdates: map{href: str}, workItemRevisions: map{href: str}, workItemHistory: map{href: str}, html: map{href: str}, workItemType: map{href: str}, fields: map{href: str}}, url: str} # Fabrikam work item
+@errors {404: As Of date before work item existed}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}/comments
+@desc Get work item comments
+@auth Basic username:password
+@required {api-version: str}
+@optional {fromRevision: str # Revision from which comments are to be fetched (default is 1), $top: str # The number of comments to return (default is 200), order: str # Ascending or descending by revision id (default is ascending) asc/desc}
+@returns(200) {totalCount: int, fromRevisionCount: int, count: int, value: [map]} # Fabrikam comments
+
+@endpoint POST /{{organization}}/{{project}}/_apis/wit/workitemsbatch
+@desc Get work items in bulk
+@auth Basic username:password
+@required {api-version: str, ids: [int], asOf: str, errorPolicy: str, fields: [str]}
+@returns(200) {count: int, value: [any]} # Error policy omit with very old asOf date (no results)
+@returns(200) {count: int, value: [map]} # Fabrikam bulk work item response
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@desc Get individual work item with relationships
+@auth Basic username:password
+@required {api-version: str, $expand: str # Directive to include the list of related work items in the resulting payload}
+@optional {asOf: str # Returns the state of the requested item as it was on the given date}
+@returns(200) {id: int, rev: int, fields: map{System.AreaPath: str, System.TeamProject: str, System.IterationPath: str, System.WorkItemType: str, System.State: str, System.Reason: str, System.AssignedTo: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.CreatedDate: str, System.CreatedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.ChangedDate: str, System.ChangedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.Title: str, Microsoft.VSTS.Common.StateChangeDate: str, Microsoft.VSTS.Common.ActivatedDate: str, Microsoft.VSTS.Common.ActivatedBy: str, Microsoft.VSTS.Common.Priority: int, Microsoft.VSTS.Common.ValueArea: str, System.Tags: str}, relations: [map], _links: map{self: map{href: str}, workItemUpdates: map{href: str}, workItemRevisions: map{href: str}, workItemHistory: map{href: str}, html: map{href: str}, workItemType: map{href: str}, fields: map{href: str}}, url: str} # Fabrikam individual work item with relationships
+
+@endpoint GET /{{organization}}/_apis/wit/workitemrelationtypes
+@desc List work item relationship types
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {count: int, value: [map]} # Fabrikam work item relationships
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@desc Get individual work item with expanded fields
+@auth Basic username:password
+@required {api-version: str, $expand: str # Directive to include the list of related work items in the resulting payload}
+@optional {asOf: str # Returns the state of the requested item as it was on the given date}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@desc Get individual work item with all links
+@auth Basic username:password
+@required {api-version: str}
+@optional {$expand: str # Directive to include the list of related work items in the resulting payload, asOf: str # Returns the state of the requested item as it was on the given date}
+
+@endpoint POST /{{organization}}/{{project}}/{{team}}/_apis/wit/wiql
+@desc Wiql - Query by Wiql
+@auth Basic username:password
+@required {api-version: str, top: str, query: str}
+@optional {asOf: str # Returns the state of the requested item as it was on the given date, fields: str # Comma-separated list of requested fields}
+@returns(200) {id: int, rev: int, fields: map{System.AreaPath: str, System.TeamProject: str, System.IterationPath: str, System.WorkItemType: str, System.State: str, System.Reason: str, System.AssignedTo: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.CreatedDate: str, System.CreatedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.ChangedDate: str, System.ChangedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.Title: str, Microsoft.VSTS.Common.StateChangeDate: str, Microsoft.VSTS.Common.ActivatedDate: str, Microsoft.VSTS.Common.ActivatedBy: str, Microsoft.VSTS.Common.Priority: int, Microsoft.VSTS.Common.ValueArea: str, System.Tags: str}, _links: map{self: map{href: str}, workItemUpdates: map{href: str}, workItemRevisions: map{href: str}, workItemHistory: map{href: str}, html: map{href: str}, workItemType: map{href: str}, fields: map{href: str}}, url: str} # Fabrikam work item
+@errors {404: As Of date before work item existed}
+
+@endpoint GET /{{organization}}/_apis/projects
+@desc List all projects
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects
+@desc List projects by optional parameters
+@auth Basic username:password
+@required {api-version: str, stateFilter: str # ProjectState: all, createPending, deleted, deleting, new, unchanged, wellFormed, getDefaultTeamImageUrl: str}
+@optional {top: str, skip: str, continuationToken: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{project}}
+@desc Get Project by Id or name
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{project}}
+@desc Get Project by Id or name with optional parameters
+@auth Basic username:password
+@required {api-version: str, includeCapabilities: str # Include capabilities (such as source control) in the team project result (default: false)., includeHistory: str # Search within renamed projects (that had such name in the past).}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/properties
+@desc Get all team project properties
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/properties
+@desc Get specific team project properties
+@auth Basic username:password
+@required {api-version: str, keys: str # A comma-delimited string of team project property names. Wildcard characters ("?" and "*") are supported. If no key is specified, all properties will be returned.}
+
+@endpoint POST /{{organization}}/_apis/projects
+@desc Create
+@auth Basic username:password
+@required {api-version: str, name: str, description: str, capabilities: map}
+
+@endpoint PATCH /{{organization}}/_apis/projects/{{projectId}}/properties
+@desc Create or update a team project property
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/_apis/projects/{{projectId}}/properties
+@desc Delete a team project property
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint DELETE /{{organization}}/_apis/projects/{{projectId}}
+@desc Delete project
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/process/processes/{{processId}}
+@desc Get a process by ID
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/process/processes
+@desc List all processes
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/teams/{{team}}
+@desc Get a specific team
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/teams
+@desc Get All Teams
+@auth Basic username:password
+@required {$mine: str # If true return all the teams requesting user is member, otherwise return all the teams user has read access, $top: str # Maximum number of teams to return., $skip: str # Number of teams to skip., api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/teams
+@desc Get Teams per project
+@auth Basic username:password
+@required {$mine: str # If true return all the teams requesting user is member, otherwise return all the teams user has read access, $top: str # Maximum number of teams to return., $skip: str # Number of teams to skip., api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/teams/{{team}}/members
+@desc Get Team Members With Extended Properties
+@auth Basic username:password
+@required {$mine: str # If true return all the teams requesting user is member, otherwise return all the teams user has read access, $top: str # Maximum number of teams to return., $skip: str # Number of teams to skip., api-version: str}
+
+@endpoint POST /{{organization}}/_apis/projects/{{projectId}}/teams
+@desc Create new team
+@auth Basic username:password
+@required {api-version: str, name: str, description: str}
+
+@endpoint DELETE /{{organization}}/_apis/projects/{{projectId}}/teams/{{team}}
+@desc Delete a team
+@auth Basic username:password
+@required {api-version: str, name: str, description: str}
+
+@endpoint GET /{{organization}}/_apis/graph/users
+@desc List users
+@auth Basic username:password
+@required {api-version: str, subjectTypes: str # A comma separated list of user subject subtypes to reduce the retrieved results, e.g. msa’, ‘aad’, ‘svc’ (service identity), ‘imp’ (imported identity), etc., continuationToken: str # An opaque data blob that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.}
+
+@endpoint GET /{{organization}}/_apis/graph/users/{{userDescriptor}}
+@desc Get a user
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/releases
+@desc List releases
+@auth Basic username:password
+@required {api-version: str}
+@optional {propertyFilters: str # A comma-delimited list of extended properties to be retrieved. If set, the returned Releases will contain values for the specified property Ids (if they exist). If not set, properties will not be included. Note that this will not filter out any Release from results irrespective of whether it has property set or not., tagFilter: str # A comma-delimited list of tags. Only releases with these tags will be returned., isDeleted: str # Gets the soft deleted releases, if true., sourceBranchFilter: str # Releases with given sourceBranchFilter will be returned., artifactVersionId: str # Releases with given artifactVersionId will be returned. E.g. in case of Build artifactType, it is buildId., sourceId: str # Unique identifier of the artifact used. e.g. For build it would be {projectGuid}:{BuildDefinitionId}, for Jenkins it would be {JenkinsConnectionId}:{JenkinsDefinitionId}, for TfsOnPrem it would be {TfsOnPremConnectionId}:{ProjectName}:{TfsOnPremDefinitionId}. For third-party artifacts e.g. TeamCity, BitBucket you may refer 'uniqueSourceIdentifier' inside vss-extension.json https://github.com/Microsoft/vsts-rm-extensions/blob/master/Extensions., artifactTypeId: str # Releases with given artifactTypeId will be returned. Values can be Build, Jenkins, GitHub, Nuget, Team Build (external), ExternalTFSBuild, Git, TFVC, ExternalTfsXamlBuild., $expand: str # The property that should be expanded in the list of releases., continuationToken: str # Gets the releases after the continuation token provided., $top: str # Number of releases to get. Default is 50., queryOrder: str # Gets the results in the defined order of created date for releases. Default is descending., maxCreatedTime: str # Releases that were created before this time., minCreatedTime: str # Releases that were created after this time., environmentStatusFilter: str, statusFilter: str # Releases that have this status., createdBy: str # Releases created by this user., searchText: str # Releases with names containing searchText., definitionEnvironmentId: str, definitionId: str # Releases from this release definition Id., releaseIdFilter: str # A comma-delimited list of releases Ids. Only releases with these Ids will be returned.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/releases/{{releaseId}}
+@desc Get a release
+@auth Basic username:password
+@required {$expand: str # A property that should be expanded in the release., api-version: str}
+@optional {approvalFilters: str # A filter which would allow fetching approval steps selectively based on whether it is automated, or manual. This would also decide whether we should fetch pre and post approval snapshots. Assumes All by default, propertyFilters: str # A comma-delimited list of extended properties to be retrieved. If set, the returned Release will contain values for the specified property Ids (if they exist). If not set, properties will not be included., $topGateRecords: str # Number of release gate records to get. Default is 5.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/releases/{{releaseId}}/logs
+@desc Get release logs
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/definitions
+@desc List release definitions
+@auth Basic username:password
+@required {api-version: str}
+@optional {propertyFilters: str # A comma-delimited list of extended properties to be retrieved. If set, the returned Releases will contain values for the specified property Ids (if they exist). If not set, properties will not be included. Note that this will not filter out any Release from results irrespective of whether it has property set or not., tagFilter: str # A comma-delimited list of tags. Only releases with these tags will be returned., isDeleted: str # Gets the soft deleted releases, if true., sourceBranchFilter: str # Releases with given sourceBranchFilter will be returned., artifactVersionId: str # Releases with given artifactVersionId will be returned. E.g. in case of Build artifactType, it is buildId., sourceId: str # Unique identifier of the artifact used. e.g. For build it would be {projectGuid}:{BuildDefinitionId}, for Jenkins it would be {JenkinsConnectionId}:{JenkinsDefinitionId}, for TfsOnPrem it would be {TfsOnPremConnectionId}:{ProjectName}:{TfsOnPremDefinitionId}. For third-party artifacts e.g. TeamCity, BitBucket you may refer 'uniqueSourceIdentifier' inside vss-extension.json https://github.com/Microsoft/vsts-rm-extensions/blob/master/Extensions., artifactTypeId: str # Releases with given artifactTypeId will be returned. Values can be Build, Jenkins, GitHub, Nuget, Team Build (external), ExternalTFSBuild, Git, TFVC, ExternalTfsXamlBuild., $expand: str # The property that should be expanded in the list of releases., continuationToken: str # Gets the releases after the continuation token provided., $top: str # Number of releases to get. Default is 50., queryOrder: str # Gets the results in the defined order of created date for releases. Default is descending., maxCreatedTime: str # Releases that were created before this time., minCreatedTime: str # Releases that were created after this time., environmentStatusFilter: str, statusFilter: str # Releases that have this status., createdBy: str # Releases created by this user., searchText: str # Releases with names containing searchText., definitionEnvironmentId: str, definitionId: str # Releases from this release definition Id., releaseIdFilter: str # A comma-delimited list of releases Ids. Only releases with these Ids will be returned.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/definitions/{{releaseId}}
+@desc Get a release definition
+@auth Basic username:password
+@required {api-version: str}
+@optional {approvalFilters: str # A filter which would allow fetching approval steps selectively based on whether it is automated, or manual. This would also decide whether we should fetch pre and post approval snapshots. Assumes All by default, propertyFilters: str # A comma-delimited list of extended properties to be retrieved. If set, the returned Release will contain values for the specified property Ids (if they exist). If not set, properties will not be included., $topGateRecords: str # Number of release gate records to get. Default is 5.}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/wiki/wikis
+@desc Create (Create project wiki)
+@auth Basic username:password
+@required {api-version: str}
+@errors {409: Create (Create project wiki)}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/wiki/wikis
+@desc Create (Create code wiki)
+@auth Basic username:password
+@required {api-version: str, version: map, type: str, name: str, projectId: str, repositoryId: str, mappedPath: str}
+@returns(200) {id: str, versions: [map], url: str, remoteUrl: str, type: str, name: str, projectId: str, repositoryId: str, mappedPath: str} # Create (Create code wiki)
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/wiki/wikis/{{wikiIdentifier}}
+@desc Delete
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wiki/wikis/{{wikiIdentifier}}
+@desc Get
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wiki/wikis
+@desc List
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/{{project}}/_apis/wiki/wikis/{{wikiIdentifier}}
+@desc Update
+@auth Basic username:password
+@required {api-version: str, versions: [map], name: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/repositories
+@desc List
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/{{project}}/_apis/git/recycleBin/repositories/{{repositoryId}}
+@desc Restore Repository From Recycle Bin
+@auth Basic username:password
+@required {api-version: str, deleted: bool}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}
+@desc Delete
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint POST /{{organization}}/{{projectId}}/_apis/git/repositories
+@desc Create
+@auth Basic username:password
+@required {api-version: str, name: str, project: map}
+@optional {sourceRef: str # [optional] Specify the source refs to use while creating a fork repo}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}
+@desc Get Repository
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeAllUrls: str # [optional] True to include all remote URLs. The default value is false., includeHidden: str # [optional] True to include hidden repositories. The default value is false., includeLinks: str # [optional] True to include reference links. The default value is false.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}
+@desc Get Repository With Parent
+@auth Basic username:password
+@required {api-version: str, includeParent: str # True to include parent repository. Only available in authenticated calls.}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/recycleBin/repositories
+@desc Get Recycle Bin Repositories
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeAllUrls: str # [optional] True to include all remote URLs. The default value is false., includeHidden: str # [optional] True to include hidden repositories. The default value is false., includeLinks: str # [optional] True to include reference links. The default value is false.}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/git/recycleBin/repositories/{{repositoryId}}
+@desc Delete Repository From Recycle Bin
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/deletedrepositories
+@desc Get Deleted Repositories
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}
+@desc Update
+@auth Basic username:password
+@required {api-version: str, name: str, defaultBranch: str}
+
+@end

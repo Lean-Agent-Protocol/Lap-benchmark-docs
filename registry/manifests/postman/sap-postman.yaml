@@ -1,0 +1,40 @@
+spec_id: sap-postman
+tasks:
+  - id: t1
+    description: "Register a new prospective business opportunity in the CRM with qualification level, classification, source info, and responsible parties, then look it up with full stakeholder details to confirm it was saved correctly"
+    target_endpoints:
+      - POST /sap/byd/odata/cust/v1/khlead/LeadCollection
+      - GET /sap/byd/odata/cust/v1/khlead/LeadCollection
+    expected_params:
+      POST /sap/byd/odata/cust/v1/khlead/LeadCollection:
+        - Description
+        - StartDate
+        - EndDate
+        - QualificationLevelCode
+        - ClassificationCategoryCode
+        - SourceCode
+        - ProspectParty
+        - EmployeeResponsibleMarketingParty
+        - EmployeeResponsibleSalesParty
+      GET /sap/byd/odata/cust/v1/khlead/LeadCollection:
+        - $format
+        - $expand
+        - $filter
+  - id: t2
+    description: "Place a new commercial order for a buyer including service line items and pricing terms, then pull up the order back with full item breakdown and price calculations to verify accuracy"
+    target_endpoints:
+      - POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+      - GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+    expected_params:
+      POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection:
+        - ExternalReference
+        - Name
+        - DataOriginTypeCode
+        - SalesUnitParty
+        - BuyerParty
+        - PricingTerms
+        - Item
+      GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection:
+        - $format
+        - $expand
+        - $filter

@@ -1,0 +1,30 @@
+spec_id: websocket-gemini
+tasks:
+  - id: t1
+    description: "Connect to a live feed for a specific cryptocurrency trading pair and parse each incoming update to extract trade executions and order book depth changes"
+    target_endpoints:
+      - PUBLISH /v1/marketdata/{symbol} marketData
+      - SUBSCRIBE /v1/marketdata/{symbol} marketData
+    expected_params:
+      PUBLISH /v1/marketdata/{symbol} marketData:
+        - type
+        - eventId
+        - timestamp
+        - timestampms
+        - socket_sequence
+      SUBSCRIBE /v1/marketdata/{symbol} marketData:
+        - events
+  - id: t2
+    description: "Configure the live data feed to only deliver specific event categories such as top-of-book snapshots, bid/offer levels, trade fills, and auction data, while also toggling the connection health check"
+    target_endpoints:
+      - PUBLISH /v1/marketdata/{symbol} marketData
+      - SUBSCRIBE /v1/marketdata/{symbol} marketData
+    expected_params:
+      PUBLISH /v1/marketdata/{symbol} marketData:
+        - heartbeat
+        - top_of_book
+        - bids
+        - offers
+      SUBSCRIBE /v1/marketdata/{symbol} marketData:
+        - trades
+        - auctions

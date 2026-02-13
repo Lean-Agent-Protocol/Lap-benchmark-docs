@@ -1,0 +1,27 @@
+spec_id: spotify
+tasks:
+  - id: t1
+    description: "Look up the full metadata of a music release including artwork and label info for a given market, then browse through the individual songs on that release with pagination"
+    target_endpoints:
+      - GET /albums/{id}
+      - GET /albums/{id}/tracks
+    expected_params:
+      GET /albums/{id}:
+        - id
+        - market
+      GET /albums/{id}/tracks:
+        - id
+        - market
+        - limit
+        - offset
+  - id: t2
+    description: "Pull up the biography and popularity metrics for a specific musician, then find out which of their songs are currently the most streamed in a given country"
+    target_endpoints:
+      - GET /artists/{id}
+      - GET /artists/{id}/top-tracks
+    expected_params:
+      GET /artists/{id}:
+        - id
+      GET /artists/{id}/top-tracks:
+        - id
+        - market

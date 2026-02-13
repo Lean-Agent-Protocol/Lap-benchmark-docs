@@ -1,0 +1,1261 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Slack Web API
+@version 1.7.0
+@common_fields {token: any}
+@endpoints 174
+@hint download_for_search
+@toc admin.apps.approve(1), admin.apps.approved.list(1), admin.apps.requests.list(1), admin.apps.restrict(1), admin.apps.restricted.list(1), admin.conversations.archive(1), admin.conversations.convertToPrivate(1), admin.conversations.create(1), admin.conversations.delete(1), admin.conversations.disconnectShared(1), admin.conversations.ekm.listOriginalConnectedChannelInfo(1), admin.conversations.getConversationPrefs(1), admin.conversations.getTeams(1), admin.conversations.invite(1), admin.conversations.rename(1), admin.conversations.restrictAccess.addGroup(1), admin.conversations.restrictAccess.listGroups(1), admin.conversations.restrictAccess.removeGroup(1), admin.conversations.search(1), admin.conversations.setConversationPrefs(1), admin.conversations.setTeams(1), admin.conversations.unarchive(1), admin.emoji.add(1), admin.emoji.addAlias(1), admin.emoji.list(1), admin.emoji.remove(1), admin.emoji.rename(1), admin.inviteRequests.approve(1), admin.inviteRequests.approved.list(1), admin.inviteRequests.denied.list(1), admin.inviteRequests.deny(1), admin.inviteRequests.list(1), admin.teams.admins.list(1), admin.teams.create(1), admin.teams.list(1), admin.teams.owners.list(1), admin.teams.settings.info(1), admin.teams.settings.setDefaultChannels(1), admin.teams.settings.setDescription(1), admin.teams.settings.setDiscoverability(1), admin.teams.settings.setIcon(1), admin.teams.settings.setName(1), admin.usergroups.addChannels(1), admin.usergroups.addTeams(1), admin.usergroups.listChannels(1), admin.usergroups.removeChannels(1), admin.users.assign(1), admin.users.invite(1), admin.users.list(1), admin.users.remove(1), admin.users.session.invalidate(1), admin.users.session.reset(1), admin.users.setAdmin(1), admin.users.setExpiration(1), admin.users.setOwner(1), admin.users.setRegular(1), api.test(1), apps.event.authorizations.list(1), apps.permissions.info(1), apps.permissions.request(1), apps.permissions.resources.list(1), apps.permissions.scopes.list(1), apps.permissions.users.list(1), apps.permissions.users.request(1), apps.uninstall(1), auth.revoke(1), auth.test(1), bots.info(1), calls.add(1), calls.end(1), calls.info(1), calls.participants.add(1), calls.participants.remove(1), calls.update(1), chat.delete(1), chat.deleteScheduledMessage(1), chat.getPermalink(1), chat.meMessage(1), chat.postEphemeral(1), chat.postMessage(1), chat.scheduleMessage(1), chat.scheduledMessages.list(1), chat.unfurl(1), chat.update(1), conversations.archive(1), conversations.close(1), conversations.create(1), conversations.history(1), conversations.info(1), conversations.invite(1), conversations.join(1), conversations.kick(1), conversations.leave(1), conversations.list(1), conversations.mark(1), conversations.members(1), conversations.open(1), conversations.rename(1), conversations.replies(1), conversations.setPurpose(1), conversations.setTopic(1), conversations.unarchive(1), dialog.open(1), dnd.endDnd(1), dnd.endSnooze(1), dnd.info(1), dnd.setSnooze(1), dnd.teamInfo(1), emoji.list(1), files.comments.delete(1), files.delete(1), files.info(1), files.list(1), files.remote.add(1), files.remote.info(1), files.remote.list(1), files.remote.remove(1), files.remote.share(1), files.remote.update(1), files.revokePublicURL(1), files.sharedPublicURL(1), files.upload(1), migration.exchange(1), oauth.access(1), oauth.token(1), oauth.v2.access(1), pins.add(1), pins.list(1), pins.remove(1), reactions.add(1), reactions.get(1), reactions.list(1), reactions.remove(1), reminders.add(1), reminders.complete(1), reminders.delete(1), reminders.info(1), reminders.list(1), rtm.connect(1), search.messages(1), stars.add(1), stars.list(1), stars.remove(1), team.accessLogs(1), team.billableInfo(1), team.info(1), team.integrationLogs(1), team.profile.get(1), usergroups.create(1), usergroups.disable(1), usergroups.enable(1), usergroups.list(1), usergroups.update(1), usergroups.users.list(1), usergroups.users.update(1), users.conversations(1), users.deletePhoto(1), users.getPresence(1), users.identity(1), users.info(1), users.list(1), users.lookupByEmail(1), users.profile.get(1), users.profile.set(1), users.setActive(1), users.setPhoto(1), users.setPresence(1), views.open(1), views.publish(1), views.push(1), views.update(1), workflows.stepCompleted(1), workflows.stepFailed(1), workflows.updateStep(1)
+
+@group admin.apps.approve
+@endpoint POST /admin.apps.approve
+@optional {app_id: any, request_id: any, team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.apps.approved.list
+@endpoint GET /admin.apps.approved.list
+@optional {limit: any, cursor: any, team_id: any, enterprise_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.apps.requests.list
+@endpoint GET /admin.apps.requests.list
+@optional {limit: any, cursor: any, team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.apps.restrict
+@endpoint POST /admin.apps.restrict
+@optional {app_id: any, request_id: any, team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.apps.restricted.list
+@endpoint GET /admin.apps.restricted.list
+@optional {limit: any, cursor: any, team_id: any, enterprise_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.archive
+@endpoint POST /admin.conversations.archive
+@required {channel_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.convertToPrivate
+@endpoint POST /admin.conversations.convertToPrivate
+@required {channel_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.create
+@endpoint POST /admin.conversations.create
+@required {name: any, is_private: any}
+@optional {description: any, org_wide: any, team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.delete
+@endpoint POST /admin.conversations.delete
+@required {channel_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.disconnectShared
+@endpoint POST /admin.conversations.disconnectShared
+@required {channel_id: any}
+@optional {leaving_team_ids: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.ekm.listOriginalConnectedChannelInfo
+@endpoint GET /admin.conversations.ekm.listOriginalConnectedChannelInfo
+@optional {channel_ids: any, team_ids: any, limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.getConversationPrefs
+@endpoint GET /admin.conversations.getConversationPrefs
+@required {channel_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.getTeams
+@endpoint GET /admin.conversations.getTeams
+@required {channel_id: any}
+@optional {cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.invite
+@endpoint POST /admin.conversations.invite
+@required {user_ids: any, channel_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.rename
+@endpoint POST /admin.conversations.rename
+@required {channel_id: any, name: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.restrictAccess.addGroup
+@endpoint POST /admin.conversations.restrictAccess.addGroup
+@required {group_id: any, channel_id: any}
+@optional {team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.restrictAccess.listGroups
+@endpoint GET /admin.conversations.restrictAccess.listGroups
+@required {channel_id: any}
+@optional {team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.restrictAccess.removeGroup
+@endpoint POST /admin.conversations.restrictAccess.removeGroup
+@required {team_id: any, group_id: any, channel_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.search
+@endpoint GET /admin.conversations.search
+@optional {team_ids: any, query: any, limit: any, cursor: any, search_channel_types: any, sort: any, sort_dir: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.setConversationPrefs
+@endpoint POST /admin.conversations.setConversationPrefs
+@required {channel_id: any, prefs: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.setTeams
+@endpoint POST /admin.conversations.setTeams
+@required {channel_id: any}
+@optional {team_id: any, target_team_ids: any, org_channel: any}
+@returns(200)
+
+@endgroup
+
+@group admin.conversations.unarchive
+@endpoint POST /admin.conversations.unarchive
+@required {channel_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.emoji.add
+@endpoint POST /admin.emoji.add
+@required {name: any, url: any}
+@returns(200)
+
+@endgroup
+
+@group admin.emoji.addAlias
+@endpoint POST /admin.emoji.addAlias
+@required {name: any, alias_for: any}
+@returns(200)
+
+@endgroup
+
+@group admin.emoji.list
+@endpoint GET /admin.emoji.list
+@optional {cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group admin.emoji.remove
+@endpoint POST /admin.emoji.remove
+@required {name: any}
+@returns(200)
+
+@endgroup
+
+@group admin.emoji.rename
+@endpoint POST /admin.emoji.rename
+@required {name: any, new_name: any}
+@returns(200)
+
+@endgroup
+
+@group admin.inviteRequests.approve
+@endpoint POST /admin.inviteRequests.approve
+@required {invite_request_id: any}
+@optional {team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.inviteRequests.approved.list
+@endpoint GET /admin.inviteRequests.approved.list
+@optional {team_id: any, cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group admin.inviteRequests.denied.list
+@endpoint GET /admin.inviteRequests.denied.list
+@optional {team_id: any, cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group admin.inviteRequests.deny
+@endpoint POST /admin.inviteRequests.deny
+@required {invite_request_id: any}
+@optional {team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.inviteRequests.list
+@endpoint GET /admin.inviteRequests.list
+@optional {team_id: any, cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.admins.list
+@endpoint GET /admin.teams.admins.list
+@required {team_id: any}
+@optional {limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.create
+@endpoint POST /admin.teams.create
+@required {team_domain: any, team_name: any}
+@optional {team_description: any, team_discoverability: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.list
+@endpoint GET /admin.teams.list
+@optional {limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.owners.list
+@endpoint GET /admin.teams.owners.list
+@required {team_id: any}
+@optional {limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.settings.info
+@endpoint GET /admin.teams.settings.info
+@required {team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.settings.setDefaultChannels
+@endpoint POST /admin.teams.settings.setDefaultChannels
+@required {team_id: any, channel_ids: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.settings.setDescription
+@endpoint POST /admin.teams.settings.setDescription
+@required {team_id: any, description: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.settings.setDiscoverability
+@endpoint POST /admin.teams.settings.setDiscoverability
+@required {team_id: any, discoverability: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.settings.setIcon
+@endpoint POST /admin.teams.settings.setIcon
+@required {image_url: any, team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.teams.settings.setName
+@endpoint POST /admin.teams.settings.setName
+@required {team_id: any, name: any}
+@returns(200)
+
+@endgroup
+
+@group admin.usergroups.addChannels
+@endpoint POST /admin.usergroups.addChannels
+@required {usergroup_id: any, channel_ids: any}
+@optional {team_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.usergroups.addTeams
+@endpoint POST /admin.usergroups.addTeams
+@required {usergroup_id: any, team_ids: any}
+@optional {auto_provision: any}
+@returns(200)
+
+@endgroup
+
+@group admin.usergroups.listChannels
+@endpoint GET /admin.usergroups.listChannels
+@required {usergroup_id: any}
+@optional {team_id: any, include_num_members: any}
+@returns(200)
+
+@endgroup
+
+@group admin.usergroups.removeChannels
+@endpoint POST /admin.usergroups.removeChannels
+@required {usergroup_id: any, channel_ids: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.assign
+@endpoint POST /admin.users.assign
+@required {team_id: any, user_id: any}
+@optional {is_restricted: any, is_ultra_restricted: any, channel_ids: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.invite
+@endpoint POST /admin.users.invite
+@required {team_id: any, email: any, channel_ids: any}
+@optional {custom_message: any, real_name: any, resend: any, is_restricted: any, is_ultra_restricted: any, guest_expiration_ts: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.list
+@endpoint GET /admin.users.list
+@required {team_id: any}
+@optional {cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.remove
+@endpoint POST /admin.users.remove
+@required {team_id: any, user_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.session.invalidate
+@endpoint POST /admin.users.session.invalidate
+@required {team_id: any, session_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.session.reset
+@endpoint POST /admin.users.session.reset
+@required {user_id: any}
+@optional {mobile_only: any, web_only: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.setAdmin
+@endpoint POST /admin.users.setAdmin
+@required {team_id: any, user_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.setExpiration
+@endpoint POST /admin.users.setExpiration
+@required {team_id: any, user_id: any, expiration_ts: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.setOwner
+@endpoint POST /admin.users.setOwner
+@required {team_id: any, user_id: any}
+@returns(200)
+
+@endgroup
+
+@group admin.users.setRegular
+@endpoint POST /admin.users.setRegular
+@required {team_id: any, user_id: any}
+@returns(200)
+
+@endgroup
+
+@group api.test
+@endpoint GET /api.test
+@optional {error: any, foo: any}
+@returns(200)
+
+@endgroup
+
+@group apps.event.authorizations.list
+@endpoint GET /apps.event.authorizations.list
+@required {event_context: any}
+@optional {cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group apps.permissions.info
+@endpoint GET /apps.permissions.info
+@returns(200)
+
+@endgroup
+
+@group apps.permissions.request
+@endpoint GET /apps.permissions.request
+@required {scopes: any, trigger_id: any}
+@returns(200)
+
+@endgroup
+
+@group apps.permissions.resources.list
+@endpoint GET /apps.permissions.resources.list
+@optional {cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group apps.permissions.scopes.list
+@endpoint GET /apps.permissions.scopes.list
+@returns(200)
+
+@endgroup
+
+@group apps.permissions.users.list
+@endpoint GET /apps.permissions.users.list
+@optional {cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group apps.permissions.users.request
+@endpoint GET /apps.permissions.users.request
+@required {scopes: any, trigger_id: any, user: any}
+@returns(200)
+
+@endgroup
+
+@group apps.uninstall
+@endpoint GET /apps.uninstall
+@optional {client_id: any, client_secret: any}
+@returns(200)
+
+@endgroup
+
+@group auth.revoke
+@endpoint GET /auth.revoke
+@optional {test: any}
+@returns(200)
+
+@endgroup
+
+@group auth.test
+@endpoint GET /auth.test
+@returns(200)
+
+@endgroup
+
+@group bots.info
+@endpoint GET /bots.info
+@optional {bot: any}
+@returns(200)
+
+@endgroup
+
+@group calls.add
+@endpoint POST /calls.add
+@required {external_unique_id: any, join_url: any}
+@optional {external_display_id: any, desktop_app_join_url: any, date_start: any, title: any, created_by: any, users: any}
+@returns(200)
+
+@endgroup
+
+@group calls.end
+@endpoint POST /calls.end
+@required {id: any}
+@optional {duration: any}
+@returns(200)
+
+@endgroup
+
+@group calls.info
+@endpoint GET /calls.info
+@required {id: any}
+@returns(200)
+
+@endgroup
+
+@group calls.participants.add
+@endpoint POST /calls.participants.add
+@required {id: any, users: any}
+@returns(200)
+
+@endgroup
+
+@group calls.participants.remove
+@endpoint POST /calls.participants.remove
+@required {id: any, users: any}
+@returns(200)
+
+@endgroup
+
+@group calls.update
+@endpoint POST /calls.update
+@required {id: any}
+@optional {title: any, join_url: any, desktop_app_join_url: any}
+@returns(200)
+
+@endgroup
+
+@group chat.delete
+@endpoint POST /chat.delete
+@optional {ts: any, channel: any, as_user: any}
+@returns(200)
+
+@endgroup
+
+@group chat.deleteScheduledMessage
+@endpoint POST /chat.deleteScheduledMessage
+@required {channel: any, scheduled_message_id: any}
+@optional {as_user: any}
+@returns(200)
+
+@endgroup
+
+@group chat.getPermalink
+@endpoint GET /chat.getPermalink
+@required {channel: any, message_ts: any}
+@returns(200)
+
+@endgroup
+
+@group chat.meMessage
+@endpoint POST /chat.meMessage
+@optional {channel: any, text: any}
+@returns(200)
+
+@endgroup
+
+@group chat.postEphemeral
+@endpoint POST /chat.postEphemeral
+@required {channel: any, user: any}
+@optional {as_user: any, attachments: any, blocks: any, icon_emoji: any, icon_url: any, link_names: any, parse: any, text: any, thread_ts: any, username: any}
+@returns(200)
+
+@endgroup
+
+@group chat.postMessage
+@endpoint POST /chat.postMessage
+@required {channel: any}
+@optional {as_user: any, attachments: any, blocks: any, icon_emoji: any, icon_url: any, link_names: any, mrkdwn: any, parse: any, reply_broadcast: any, text: any, thread_ts: any, unfurl_links: any, unfurl_media: any, username: any}
+@returns(200)
+
+@endgroup
+
+@group chat.scheduleMessage
+@endpoint POST /chat.scheduleMessage
+@optional {channel: any, text: any, post_at: any, parse: any, as_user: any, link_names: any, attachments: any, blocks: any, unfurl_links: any, unfurl_media: any, thread_ts: any, reply_broadcast: any}
+@returns(200)
+
+@endgroup
+
+@group chat.scheduledMessages.list
+@endpoint GET /chat.scheduledMessages.list
+@optional {channel: any, latest: any, oldest: any, limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group chat.unfurl
+@endpoint POST /chat.unfurl
+@required {channel: any, ts: any}
+@optional {unfurls: any, user_auth_message: any, user_auth_required: any, user_auth_url: any}
+@returns(200)
+
+@endgroup
+
+@group chat.update
+@endpoint POST /chat.update
+@required {channel: any, ts: any}
+@optional {as_user: any, attachments: any, blocks: any, link_names: any, parse: any, text: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.archive
+@endpoint POST /conversations.archive
+@optional {channel: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.close
+@endpoint POST /conversations.close
+@optional {channel: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.create
+@endpoint POST /conversations.create
+@optional {name: any, is_private: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.history
+@endpoint GET /conversations.history
+@optional {channel: any, latest: any, oldest: any, inclusive: any, limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.info
+@endpoint GET /conversations.info
+@optional {channel: any, include_locale: any, include_num_members: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.invite
+@endpoint POST /conversations.invite
+@optional {channel: any, users: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.join
+@endpoint POST /conversations.join
+@optional {channel: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.kick
+@endpoint POST /conversations.kick
+@optional {channel: any, user: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.leave
+@endpoint POST /conversations.leave
+@optional {channel: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.list
+@endpoint GET /conversations.list
+@optional {exclude_archived: any, types: any, limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.mark
+@endpoint POST /conversations.mark
+@optional {channel: any, ts: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.members
+@endpoint GET /conversations.members
+@optional {channel: any, limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.open
+@endpoint POST /conversations.open
+@optional {channel: any, users: any, return_im: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.rename
+@endpoint POST /conversations.rename
+@optional {channel: any, name: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.replies
+@endpoint GET /conversations.replies
+@optional {channel: any, ts: any, latest: any, oldest: any, inclusive: any, limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.setPurpose
+@endpoint POST /conversations.setPurpose
+@optional {channel: any, purpose: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.setTopic
+@endpoint POST /conversations.setTopic
+@optional {channel: any, topic: any}
+@returns(200)
+
+@endgroup
+
+@group conversations.unarchive
+@endpoint POST /conversations.unarchive
+@optional {channel: any}
+@returns(200)
+
+@endgroup
+
+@group dialog.open
+@endpoint GET /dialog.open
+@required {dialog: any, trigger_id: any}
+@returns(200)
+
+@endgroup
+
+@group dnd.endDnd
+@endpoint POST /dnd.endDnd
+@returns(200)
+
+@endgroup
+
+@group dnd.endSnooze
+@endpoint POST /dnd.endSnooze
+@returns(200)
+
+@endgroup
+
+@group dnd.info
+@endpoint GET /dnd.info
+@optional {user: any}
+@returns(200)
+
+@endgroup
+
+@group dnd.setSnooze
+@endpoint POST /dnd.setSnooze
+@required {num_minutes: any}
+@returns(200)
+
+@endgroup
+
+@group dnd.teamInfo
+@endpoint GET /dnd.teamInfo
+@optional {users: any}
+@returns(200)
+
+@endgroup
+
+@group emoji.list
+@endpoint GET /emoji.list
+@returns(200)
+
+@endgroup
+
+@group files.comments.delete
+@endpoint POST /files.comments.delete
+@optional {file: any, id: any}
+@returns(200)
+
+@endgroup
+
+@group files.delete
+@endpoint POST /files.delete
+@optional {file: any}
+@returns(200)
+
+@endgroup
+
+@group files.info
+@endpoint GET /files.info
+@optional {file: any, count: any, page: any, limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group files.list
+@endpoint GET /files.list
+@optional {user: any, channel: any, ts_from: any, ts_to: any, types: any, count: any, page: any, show_files_hidden_by_limit: any}
+@returns(200)
+
+@endgroup
+
+@group files.remote.add
+@endpoint POST /files.remote.add
+@optional {external_id: any, title: any, filetype: any, external_url: any, preview_image: any, indexable_file_contents: any}
+@returns(200)
+
+@endgroup
+
+@group files.remote.info
+@endpoint GET /files.remote.info
+@optional {file: any, external_id: any}
+@returns(200)
+
+@endgroup
+
+@group files.remote.list
+@endpoint GET /files.remote.list
+@optional {channel: any, ts_from: any, ts_to: any, limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group files.remote.remove
+@endpoint POST /files.remote.remove
+@optional {file: any, external_id: any}
+@returns(200)
+
+@endgroup
+
+@group files.remote.share
+@endpoint GET /files.remote.share
+@optional {file: any, external_id: any, channels: any}
+@returns(200)
+
+@endgroup
+
+@group files.remote.update
+@endpoint POST /files.remote.update
+@optional {file: any, external_id: any, title: any, filetype: any, external_url: any, preview_image: any, indexable_file_contents: any}
+@returns(200)
+
+@endgroup
+
+@group files.revokePublicURL
+@endpoint POST /files.revokePublicURL
+@optional {file: any}
+@returns(200)
+
+@endgroup
+
+@group files.sharedPublicURL
+@endpoint POST /files.sharedPublicURL
+@optional {file: any}
+@returns(200)
+
+@endgroup
+
+@group files.upload
+@endpoint POST /files.upload
+@optional {file: any, content: any, filetype: any, filename: any, title: any, initial_comment: any, channels: any, thread_ts: any}
+@returns(200)
+
+@endgroup
+
+@group migration.exchange
+@endpoint GET /migration.exchange
+@required {users: any}
+@optional {team_id: any, to_old: any}
+@returns(200)
+
+@endgroup
+
+@group oauth.access
+@endpoint GET /oauth.access
+@optional {client_id: any, client_secret: any, code: any, redirect_uri: any, single_channel: any}
+@returns(200)
+
+@endgroup
+
+@group oauth.token
+@endpoint GET /oauth.token
+@optional {client_id: any, client_secret: any, code: any, redirect_uri: any, single_channel: any}
+@returns(200)
+
+@endgroup
+
+@group oauth.v2.access
+@endpoint GET /oauth.v2.access
+@required {code: any}
+@optional {client_id: any, client_secret: any, redirect_uri: any}
+@returns(200)
+
+@endgroup
+
+@group pins.add
+@endpoint POST /pins.add
+@required {channel: any}
+@optional {timestamp: any}
+@returns(200)
+
+@endgroup
+
+@group pins.list
+@endpoint GET /pins.list
+@required {channel: any}
+@returns(200)
+
+@endgroup
+
+@group pins.remove
+@endpoint POST /pins.remove
+@required {channel: any}
+@optional {timestamp: any}
+@returns(200)
+
+@endgroup
+
+@group reactions.add
+@endpoint POST /reactions.add
+@required {channel: any, name: any, timestamp: any}
+@returns(200)
+
+@endgroup
+
+@group reactions.get
+@endpoint GET /reactions.get
+@optional {channel: any, file: any, file_comment: any, full: any, timestamp: any}
+@returns(200)
+
+@endgroup
+
+@group reactions.list
+@endpoint GET /reactions.list
+@optional {user: any, full: any, count: any, page: any, cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group reactions.remove
+@endpoint POST /reactions.remove
+@required {name: any}
+@optional {file: any, file_comment: any, channel: any, timestamp: any}
+@returns(200)
+
+@endgroup
+
+@group reminders.add
+@endpoint POST /reminders.add
+@required {text: any, time: any}
+@optional {user: any}
+@returns(200)
+
+@endgroup
+
+@group reminders.complete
+@endpoint POST /reminders.complete
+@optional {reminder: any}
+@returns(200)
+
+@endgroup
+
+@group reminders.delete
+@endpoint POST /reminders.delete
+@optional {reminder: any}
+@returns(200)
+
+@endgroup
+
+@group reminders.info
+@endpoint GET /reminders.info
+@optional {reminder: any}
+@returns(200)
+
+@endgroup
+
+@group reminders.list
+@endpoint GET /reminders.list
+@returns(200)
+
+@endgroup
+
+@group rtm.connect
+@endpoint GET /rtm.connect
+@optional {batch_presence_aware: any, presence_sub: any}
+@returns(200)
+
+@endgroup
+
+@group search.messages
+@endpoint GET /search.messages
+@required {query: any}
+@optional {count: any, highlight: any, page: any, sort: any, sort_dir: any}
+@returns(200)
+
+@endgroup
+
+@group stars.add
+@endpoint POST /stars.add
+@optional {channel: any, file: any, file_comment: any, timestamp: any}
+@returns(200)
+
+@endgroup
+
+@group stars.list
+@endpoint GET /stars.list
+@optional {count: any, page: any, cursor: any, limit: any}
+@returns(200)
+
+@endgroup
+
+@group stars.remove
+@endpoint POST /stars.remove
+@optional {channel: any, file: any, file_comment: any, timestamp: any}
+@returns(200)
+
+@endgroup
+
+@group team.accessLogs
+@endpoint GET /team.accessLogs
+@optional {before: any, count: any, page: any}
+@returns(200)
+
+@endgroup
+
+@group team.billableInfo
+@endpoint GET /team.billableInfo
+@optional {user: any}
+@returns(200)
+
+@endgroup
+
+@group team.info
+@endpoint GET /team.info
+@optional {team: any}
+@returns(200)
+
+@endgroup
+
+@group team.integrationLogs
+@endpoint GET /team.integrationLogs
+@optional {app_id: any, change_type: any, count: any, page: any, service_id: any, user: any}
+@returns(200)
+
+@endgroup
+
+@group team.profile.get
+@endpoint GET /team.profile.get
+@optional {visibility: any}
+@returns(200)
+
+@endgroup
+
+@group usergroups.create
+@endpoint POST /usergroups.create
+@required {name: any}
+@optional {channels: any, description: any, handle: any, include_count: any}
+@returns(200)
+
+@endgroup
+
+@group usergroups.disable
+@endpoint POST /usergroups.disable
+@required {usergroup: any}
+@optional {include_count: any}
+@returns(200)
+
+@endgroup
+
+@group usergroups.enable
+@endpoint POST /usergroups.enable
+@required {usergroup: any}
+@optional {include_count: any}
+@returns(200)
+
+@endgroup
+
+@group usergroups.list
+@endpoint GET /usergroups.list
+@optional {include_users: any, include_count: any, include_disabled: any}
+@returns(200)
+
+@endgroup
+
+@group usergroups.update
+@endpoint POST /usergroups.update
+@required {usergroup: any}
+@optional {handle: any, description: any, channels: any, include_count: any, name: any}
+@returns(200)
+
+@endgroup
+
+@group usergroups.users.list
+@endpoint GET /usergroups.users.list
+@required {usergroup: any}
+@optional {include_disabled: any}
+@returns(200)
+
+@endgroup
+
+@group usergroups.users.update
+@endpoint POST /usergroups.users.update
+@required {usergroup: any, users: any}
+@optional {include_count: any}
+@returns(200)
+
+@endgroup
+
+@group users.conversations
+@endpoint GET /users.conversations
+@optional {user: any, types: any, exclude_archived: any, limit: any, cursor: any}
+@returns(200)
+
+@endgroup
+
+@group users.deletePhoto
+@endpoint POST /users.deletePhoto
+@returns(200)
+
+@endgroup
+
+@group users.getPresence
+@endpoint GET /users.getPresence
+@optional {user: any}
+@returns(200)
+
+@endgroup
+
+@group users.identity
+@endpoint GET /users.identity
+@returns(200)
+
+@endgroup
+
+@group users.info
+@endpoint GET /users.info
+@optional {include_locale: any, user: any}
+@returns(200)
+
+@endgroup
+
+@group users.list
+@endpoint GET /users.list
+@optional {limit: any, cursor: any, include_locale: any}
+@returns(200)
+
+@endgroup
+
+@group users.lookupByEmail
+@endpoint GET /users.lookupByEmail
+@required {email: any}
+@returns(200)
+
+@endgroup
+
+@group users.profile.get
+@endpoint GET /users.profile.get
+@optional {include_labels: any, user: any}
+@returns(200)
+
+@endgroup
+
+@group users.profile.set
+@endpoint POST /users.profile.set
+@optional {name: any, profile: any, user: any, value: any}
+@returns(200)
+
+@endgroup
+
+@group users.setActive
+@endpoint POST /users.setActive
+@returns(200)
+
+@endgroup
+
+@group users.setPhoto
+@endpoint POST /users.setPhoto
+@optional {crop_w: any, crop_x: any, crop_y: any, image: any}
+@returns(200)
+
+@endgroup
+
+@group users.setPresence
+@endpoint POST /users.setPresence
+@required {presence: any}
+@returns(200)
+
+@endgroup
+
+@group views.open
+@endpoint GET /views.open
+@required {trigger_id: any, view: any}
+@returns(200)
+
+@endgroup
+
+@group views.publish
+@endpoint GET /views.publish
+@required {user_id: any, view: any}
+@optional {hash: any}
+@returns(200)
+
+@endgroup
+
+@group views.push
+@endpoint GET /views.push
+@required {trigger_id: any, view: any}
+@returns(200)
+
+@endgroup
+
+@group views.update
+@endpoint GET /views.update
+@optional {view_id: any, external_id: any, view: any, hash: any}
+@returns(200)
+
+@endgroup
+
+@group workflows.stepCompleted
+@endpoint GET /workflows.stepCompleted
+@required {workflow_step_execute_id: any}
+@optional {outputs: any}
+@returns(200)
+
+@endgroup
+
+@group workflows.stepFailed
+@endpoint GET /workflows.stepFailed
+@required {workflow_step_execute_id: any, error: any}
+@returns(200)
+
+@endgroup
+
+@group workflows.updateStep
+@endpoint GET /workflows.updateStep
+@required {workflow_step_edit_id: any}
+@optional {inputs: any, outputs: any, step_name: any, step_image_url: any}
+@returns(200)
+
+@endgroup
+
+@end

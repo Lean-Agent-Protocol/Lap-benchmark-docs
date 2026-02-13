@@ -1,0 +1,25 @@
+spec_id: unraid-gql
+tasks:
+  - id: t1
+    description: "Pull up the details of a particular access credential on the server, and read a section of the system diagnostic output from a given file location"
+    target_endpoints:
+      - QUERY apiKey
+      - QUERY logFile
+    expected_params:
+      QUERY apiKey:
+        - id
+      QUERY logFile:
+        - path
+        - lines
+        - startLine
+  - id: t2
+    description: "Send a new system alert to the server's notification feed, and change the display name of an existing container group on the server"
+    target_endpoints:
+      - MUTATION createNotification
+      - MUTATION renameDockerFolder
+    expected_params:
+      MUTATION createNotification:
+        - input
+      MUTATION renameDockerFolder:
+        - folderId
+        - newName

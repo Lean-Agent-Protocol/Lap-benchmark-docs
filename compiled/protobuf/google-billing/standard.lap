@@ -1,0 +1,46 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api google.cloud.billing.v1
+@base grpc://google.cloud.billing.v1
+@version proto3
+@endpoints 11
+@toc CloudBilling(11)
+
+@type BillingAccount {display_name: str, master_billing_account: str}
+@type ProjectBillingInfo {billing_account_name: str}
+
+@endpoint UNARY /CloudBilling/GetBillingAccount
+@returns(OK) → BillingAccount
+
+@endpoint UNARY /CloudBilling/ListBillingAccounts
+@optional {page_size: int, page_token: str, filter: str}
+@returns(OK) {billing_accounts: [BillingAccount], next_page_token: str} # ListBillingAccountsResponse
+
+@endpoint UNARY /CloudBilling/UpdateBillingAccount
+@optional {update_mask: FieldMask}
+@returns(OK) → BillingAccount
+
+@endpoint UNARY /CloudBilling/CreateBillingAccount
+@returns(OK) → BillingAccount
+
+@endpoint UNARY /CloudBilling/ListProjectBillingInfo
+@optional {page_size: int, page_token: str}
+@returns(OK) {project_billing_info: [ProjectBillingInfo], next_page_token: str} # ListProjectBillingInfoResponse
+
+@endpoint UNARY /CloudBilling/GetProjectBillingInfo
+@returns(OK) → ProjectBillingInfo
+
+@endpoint UNARY /CloudBilling/UpdateProjectBillingInfo
+@optional {project_billing_info: ProjectBillingInfo}
+@returns(OK) → ProjectBillingInfo
+
+@endpoint UNARY /CloudBilling/GetIamPolicy
+
+@endpoint UNARY /CloudBilling/SetIamPolicy
+
+@endpoint UNARY /CloudBilling/TestIamPermissions
+
+@endpoint UNARY /CloudBilling/MoveBillingAccount
+@returns(OK) → BillingAccount
+
+@end

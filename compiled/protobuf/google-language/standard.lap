@@ -1,0 +1,42 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api google.cloud.language.v1
+@base grpc://google.cloud.language.v1
+@version proto3
+@endpoints 7
+@toc LanguageService(7)
+
+@type Sentiment {magnitude: num(f32), score: num(f32)}
+@type Sentence {text: TextSpan{content: str, begin_offset: int}, sentiment: Sentiment}
+@type ClassificationCategory {name: str, confidence: num(f32)}
+@type Token {text: TextSpan{content: str, begin_offset: int}, part_of_speech: PartOfSpeech{tag: enum(ADJ/ADP/ADV/CONJ/DET/NOUN/NUM/PRON/PRT/PUNCT/VERB/X/AFFIX), aspect: enum(PERFECTIVE/IMPERFECTIVE/PROGRESSIVE), case: enum(ACCUSATIVE/ADVERBIAL/COMPLEMENTIVE/DATIVE/GENITIVE/INSTRUMENTAL/LOCATIVE/NOMINATIVE/OBLIQUE/PARTITIVE/PREPOSITIONAL/REFLEXIVE_CASE/RELATIVE_CASE/VOCATIVE), form: enum(ADNOMIAL/AUXILIARY/COMPLEMENTIZER/FINAL_ENDING/GERUND/REALIS/IRREALIS/SHORT/LONG/ORDER/SPECIFIC), gender: enum(FEMININE/MASCULINE/NEUTER), mood: enum(CONDITIONAL_MOOD/IMPERATIVE/INDICATIVE/INTERROGATIVE/JUSSIVE/SUBJUNCTIVE), number: enum(SINGULAR/PLURAL/DUAL), person: enum(FIRST/SECOND/THIRD/REFLEXIVE_PERSON), proper: enum(PROPER/NOT_PROPER), reciprocity: enum(RECIPROCAL/NON_RECIPROCAL), tense: enum(CONDITIONAL_TENSE/FUTURE/PAST/PRESENT/IMPERFECT/PLUPERFECT), voice: enum(ACTIVE/CAUSATIVE/PASSIVE)}, dependency_edge: DependencyEdge{head_token_index: int, label: enum(ABBREV/ACOMP/ADVCL/ADVMOD/AMOD/APPOS/ATTR/AUX/AUXPASS/CC/CCOMP/CONJ/CSUBJ/CSUBJPASS/DEP/DET/DISCOURSE/DOBJ/EXPL/GOESWITH/IOBJ/MARK/MWE/MWV/NEG/NN/NPADVMOD/NSUBJ/NSUBJPASS/NUM/NUMBER/P/PARATAXIS/PARTMOD/PCOMP/POBJ/POSS/POSTNEG/PRECOMP/PRECONJ/PREDET/PREF/PREP/PRONL/PRT/PS/QUANTMOD/RCMOD/RCMODREL/RDROP/REF/REMNANT/REPARANDUM/ROOT/SNUM/SUFF/TMOD/TOPIC/VMOD/VOCATIVE/XCOMP/SUFFIX/TITLE/ADVPHMOD/AUXCAUS/AUXVV/DTMOD/FOREIGN/KW/LIST/NOMC/NOMCSUBJ/NOMCSUBJPASS/NUMC/COP/DISLOCATED/ASP/GMOD/GOBJ/INFMOD/MES/NCOMP)}, lemma: str}
+@type Entity {name: str, type: enum(PROPER/COMMON), metadata: map<str,str>, salience: num(f32), mentions: [EntityMention]{text: TextSpan{content: str, begin_offset: int}, type: enum(PROPER/COMMON), sentiment: Sentiment}, sentiment: Sentiment}
+
+@endpoint UNARY /LanguageService/AnalyzeSentiment
+@optional {encoding_type: enum(UTF8/UTF16/UTF32)}
+@returns(OK) {document_sentiment: Sentiment, language: str, sentences: [Sentence]} # AnalyzeSentimentResponse
+
+@endpoint UNARY /LanguageService/AnalyzeEntities
+@optional {encoding_type: enum(UTF8/UTF16/UTF32)}
+@returns(OK) {entities: [Entity], language: str} # AnalyzeEntitiesResponse
+
+@endpoint UNARY /LanguageService/AnalyzeEntitySentiment
+@optional {encoding_type: enum(UTF8/UTF16/UTF32)}
+@returns(OK) {entities: [Entity], language: str} # AnalyzeEntitySentimentResponse
+
+@endpoint UNARY /LanguageService/AnalyzeSyntax
+@optional {encoding_type: enum(UTF8/UTF16/UTF32)}
+@returns(OK) {sentences: [Sentence], tokens: [Token], language: str} # AnalyzeSyntaxResponse
+
+@endpoint UNARY /LanguageService/ClassifyText
+@optional {classification_model_options: ClassificationModelOptions}
+@returns(OK) {categories: [ClassificationCategory]} # ClassifyTextResponse
+
+@endpoint UNARY /LanguageService/ModerateText
+@returns(OK) {moderation_categories: [ClassificationCategory]} # ModerateTextResponse
+
+@endpoint UNARY /LanguageService/AnnotateText
+@optional {encoding_type: enum(UTF8/UTF16/UTF32)}
+@returns(OK) {sentences: [Sentence], tokens: [Token], entities: [Entity], document_sentiment: Sentiment, language: str, categories: [ClassificationCategory], moderation_categories: [ClassificationCategory]} # AnnotateTextResponse
+
+@end

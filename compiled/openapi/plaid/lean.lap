@@ -1,0 +1,1696 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api The Plaid API
+@base https://production.plaid.com
+@version 2020-09-14_1.680.8
+@auth ApiKey PLAID-CLIENT-ID in header | ApiKey PLAID-SECRET in header | ApiKey Plaid-Version in header
+@common_fields {client_id: str, secret: str}
+@endpoints 324
+@hint download_for_search
+@toc asset_report(10), cra(18), credit(22), consumer_report(1), oauth(3), statements(3), consent(1), item(11), application(1), user_account(2), profile(1), network(1), auth(2), transactions(5), sandbox(27), cashflow_report(4), user(13), institutions(3), accounts(2), categories(1), identity(4), dashboard_user(2), identity_verification(5), watchlist_screening(20), beacon(13), protect(4), business_verification(2), processor(23), webhook_verification_key(1), liabilities(1), payment_initiation(12), investments(4), link(3), session(1), transfer(42), bank_transfer(10), employers(1), income(5), employment(1), beta(11), signal(5), wallet(6), issues(3), payment_profile(3), partner(5), link_delivery(2), fdx(3), network_insights(1)
+
+@group asset_report
+@endpoint POST /asset_report/create
+@required {days_requested: int}
+@optional {access_tokens: [str], options: map{client_report_id: str, webhook: str(url), include_fast_report: bool, products: [str], add_ons: [str], user: map, require_all_items: bool}}
+@returns(200) {asset_report_token: str, asset_report_id: str, request_id: str}
+
+@endpoint POST /asset_report/get
+@optional {asset_report_token: str, user_token: str, include_insights: bool=False, fast_report: bool=False, options: map{days_to_include: int}}
+@returns(200) {report: map{asset_report_id: str, insights: map?{risk: map?, affordability: map?}, client_report_id: str?, date_generated: str(date-time), days_requested: num, user: map{client_user_id: str?, first_name: str?, middle_name: str?, last_name: str?, ssn: str?, phone_number: str?, email: str?}, items: [map]}, warnings: [map], request_id: str}
+
+@endpoint POST /asset_report/pdf/get
+@required {asset_report_token: str}
+@optional {options: map{days_to_include: int}}
+@returns(200)
+
+@endpoint POST /asset_report/refresh
+@required {asset_report_token: str}
+@optional {days_requested: int, options: map{client_report_id: str, webhook: str(url), user: map}}
+@returns(200) {asset_report_id: str, asset_report_token: str, request_id: str}
+
+@endpoint POST /asset_report/filter
+@required {asset_report_token: str, account_ids_to_exclude: [str]}
+@returns(200) {asset_report_token: str, asset_report_id: str, request_id: str}
+
+@endpoint POST /asset_report/remove
+@required {asset_report_token: str}
+@returns(200) {removed: bool, request_id: str}
+
+@endpoint POST /asset_report/audit_copy/create
+@required {asset_report_token: str}
+@optional {auditor_id: str}
+@returns(200) {audit_copy_token: str, request_id: str}
+
+@endpoint POST /asset_report/audit_copy/get
+@required {audit_copy_token: str}
+@returns(200) {report: map{asset_report_id: str, insights: map?{risk: map?, affordability: map?}, client_report_id: str?, date_generated: str(date-time), days_requested: num, user: map{client_user_id: str?, first_name: str?, middle_name: str?, last_name: str?, ssn: str?, phone_number: str?, email: str?}, items: [map]}, warnings: [map], request_id: str}
+
+@endpoint POST /asset_report/audit_copy/pdf/get
+@required {audit_copy_token: str}
+@optional {options: map{days_to_include: int}}
+@returns(200)
+
+@endpoint POST /asset_report/audit_copy/remove
+@required {audit_copy_token: str}
+@returns(200) {removed: bool, request_id: str}
+
+@endgroup
+
+@group cra
+@endpoint POST /cra/monitoring_insights/subscribe
+@required {webhook: str(url)}
+@optional {user_id: str, item_id: str, income_categories: [str], user_token: str}
+@returns(200) {request_id: str, subscription_id: str}
+
+@endpoint POST /cra/monitoring_insights/unsubscribe
+@required {subscription_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /cra/monitoring_insights/get
+@required {consumer_report_permissible_purpose: str(ACCOUNT_REVIEW_CREDIT/WRITTEN_INSTRUCTION_OTHER)}
+@optional {user_id: str, user_token: str}
+@returns(200) {request_id: str, user_insights_id: str, items: [map]}
+
+@endgroup
+
+@group credit
+@endpoint POST /credit/audit_copy_token/update
+@required {audit_copy_token: str, report_tokens: [str]}
+@returns(200) {request_id: str, updated: bool}
+
+@endgroup
+
+@group cra
+@endpoint POST /cra/partner_insights/get
+@required {user_token: str}
+@returns(200) {report: [map], request_id: str}
+
+@endpoint POST /cra/check_report/income_insights/get
+@optional {user_token: str, third_party_user_token: str, user_id: str}
+@returns(200) {report: map{report_id: str, generated_time: str(date-time), days_requested: int, client_report_id: str?, items: [map], bank_income_summary: map{total_amounts: [map], start_date: str(date), end_date: str(date), income_sources_count: int, income_categories_count: int, income_transactions_count: int, historical_average_monthly_gross_income: [map], historical_average_monthly_income: [map], forecasted_average_monthly_income: [map], historical_annual_gross_income: [map], historical_annual_income: [map], forecasted_annual_income: [map], historical_summary: [map]}, warnings: [map]}, request_id: str, warnings: [map]}
+
+@endpoint POST /cra/check_report/base_report/get
+@optional {user_id: str, third_party_user_token: str, item_ids: [str], user_token: str}
+@returns(200) {report: map{report_id: str, date_generated: str(date-time), days_requested: num, client_report_id: str?, items: [map], attributes: map{nsf_overdraft_transactions_count: int, nsf_overdraft_transactions_count_30d: int, nsf_overdraft_transactions_count_60d: int, nsf_overdraft_transactions_count_90d: int, total_inflow_amount: map?, total_inflow_amount_30d: map?, total_inflow_amount_60d: map?, total_inflow_amount_90d: map?, total_outflow_amount: map?, total_outflow_amount_30d: map?, total_outflow_amount_60d: map?, total_outflow_amount_90d: map?}}, warnings: [map], request_id: str}
+
+@endpoint POST /cra/check_report/pdf/get
+@optional {user_id: str, third_party_user_token: str, add_ons: [str], user_token: str}
+@returns(200)
+
+@endpoint POST /cra/check_report/create
+@required {webhook: str(url), days_requested: int, consumer_report_permissible_purpose: str(ACCOUNT_REVIEW_CREDIT/ACCOUNT_REVIEW_NON_CREDIT/EXTENSION_OF_CREDIT/LEGITIMATE_BUSINESS_NEED_TENANT_SCREENING/LEGITIMATE_BUSINESS_NEED_OTHER/WRITTEN_INSTRUCTION_PREQUALIFICATION/WRITTEN_INSTRUCTION_OTHER)}
+@optional {user_id: str, user_token: str, days_required: int, client_report_id: str, products: [str], base_report: map{client_report_id: str, gse_options: map, require_identity: bool}, cashflow_insights: map{plaid_check_score_version: str, attributes_version: str}, partner_insights: map{prism_products: [str], prism_versions: map}, lend_score: map{lend_score_version: str}, network_insights: map{network_insights_version: str}, include_investments: bool}
+@returns(200) {request_id: str}
+
+@endpoint POST /cra/check_report/partner_insights/get
+@optional {user_id: str, third_party_user_token: str, user_token: str, partner_insights: map{prism_versions: map}, options: map{prism_products: [str], prism_versions: map}}
+@returns(200) {report: map{report_id: str, generated_time: str(date-time), client_report_id: str?, prism: map{insights: map?, cash_score: map?, extend: map?, first_detect: map?, detect: map?, status: str}, items: [map]}, request_id: str, warnings: [map]}
+
+@endpoint POST /cra/check_report/cashflow_insights/get
+@optional {user_id: str, third_party_user_token: str, user_token: str, options: map{plaid_check_score_version: str, attributes_version: str}}
+@returns(200) {report: map{report_id: str, generated_time: str(date-time), plaid_check_score: map?{score: int?, reason_codes: [str], error_reason: str?}, attributes: map}, request_id: str, warnings: [map]}
+
+@endpoint POST /cra/check_report/lend_score/get
+@optional {user_id: str, third_party_user_token: str, user_token: str, options: map{lend_score_version: str}}
+@returns(200) {report: map{report_id: str, generated_time: str(date-time), lend_score: map?{score: int?, reason_codes: [str], error_reason: str?}}, request_id: str, warnings: [map]}
+
+@endpoint POST /cra/check_report/network_insights/get
+@optional {user_id: str, options: map{network_insights_version: str}, third_party_user_token: str, user_token: str}
+@returns(200) {report: map{report_id: str, generated_time: str(date-time), network_attributes: map, items: [map]}, request_id: str, warnings: [map]}
+
+@endpoint POST /cra/check_report/verification/get
+@required {reports_requested: [str]}
+@optional {user_id: str, employment_refresh_options: map{days_requested!: int}, user_token: str}
+@returns(200) {report: map{report_id: str, client_report_id: str?, voa: map?{generated_time: str(date-time), days_requested: num, items: [map], attributes: map}, employment_refresh: map?{generated_time: str(date-time), days_requested: num, items: [map]}}, request_id: str, warnings: [map]}
+
+@endpoint POST /cra/check_report/verification/pdf/get
+@required {report_requested: str(voa/employment_refresh)}
+@optional {user_id: str, third_party_user_token: str, user_token: str}
+@returns(200)
+
+@endpoint POST /cra/loans/applications/register
+@required {applications: [map{user_token!: str, application_id!: str, type!: str, decision!: str, application_date: str(date), decision_date: str(date)}]}
+@returns(200) {request_id: str}
+
+@endpoint POST /cra/loans/register
+@required {loans: [map{user_token!: str, loan_id!: str, type!: str, payment_schedule!: str, opened_date!: str(date), opened_with_status!: map, loan_amount: num, application: map}]}
+@returns(200) {request_id: str}
+
+@endpoint POST /cra/loans/update
+@required {loans: [map{loan_id: str, status_history: [map], payment_history: [map]}]}
+@returns(200) {request_id: str}
+
+@endpoint POST /cra/loans/unregister
+@required {loans: [map{loan_id!: str, closed_with_status!: map}]}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group consumer_report
+@endpoint POST /consumer_report/pdf/get
+@required {user_token: str}
+@returns(200)
+
+@endgroup
+
+@group oauth
+@endpoint POST /oauth/token
+@required {grant_type: str(refresh_token/urn:ietf:params:oauth:grant-type:token-exchange/client_credentials)}
+@optional {client_secret: str, scope: str, refresh_token: str, resource: str, audience: str, subject_token: str, subject_token_type: str(urn:plaid:params:tokens:user/urn:plaid:params:oauth:user-token/urn:plaid:params:credit:multi-user)}
+@returns(200) {access_token: str, refresh_token: str, token_type: str, expires_in: int, request_id: str}
+
+@endpoint POST /oauth/introspect
+@required {token: str}
+@optional {client_secret: str}
+@returns(200) {active: bool, scope: str, client_id: str, exp: int, iat: int, sub: str, aud: str, iss: str, token_type: str, user_id: str, request_id: str}
+
+@endpoint POST /oauth/revoke
+@required {token: str}
+@optional {client_secret: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group statements
+@endpoint POST /statements/list
+@required {access_token: str}
+@returns(200) {accounts: [map], institution_id: str, institution_name: str, item_id: str, request_id: str}
+
+@endpoint POST /statements/download
+@required {access_token: str, statement_id: str}
+@returns(200)
+
+@endpoint POST /statements/refresh
+@required {access_token: str, start_date: str(date), end_date: str(date)}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group consent
+@endpoint POST /consent/events/get
+@required {access_token: str}
+@returns(200) {request_id: str, consent_events: [map]}
+
+@endgroup
+
+@group item
+@endpoint POST /item/activity/list
+@optional {access_token: str, cursor: str, count: int=50}
+@returns(200) {request_id: str, activities: [map], last_data_access_times: [map], cursor: str}
+
+@endpoint POST /item/application/list
+@optional {access_token: str}
+@returns(200) {request_id: str, applications: [map]}
+
+@endpoint POST /item/application/unlink
+@required {access_token: str, application_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /item/application/scopes/update
+@required {access_token: str, application_id: str, scopes: map{product_access: map, accounts: [map], new_accounts: bool}, context: str(ENROLLMENT/PORTAL)}
+@optional {state: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group application
+@endpoint POST /application/get
+@required {application_id: str}
+@returns(200) {request_id: str, application: map{application_id: str, name: str, display_name: str?, join_date: str(date), logo_url: str?, application_url: str?, reason_for_access: str?, use_case: str?, company_legal_name: str?, city: str?, region: str?, postal_code: str?, country_code: str?}}
+
+@endgroup
+
+@group item
+@endpoint POST /item/get
+@required {access_token: str}
+@returns(200) {item: map, status: any?, request_id: str}
+
+@endgroup
+
+@group user_account
+@endpoint POST /user_account/session/get
+@required {public_token: str}
+@returns(200) {identity: map?{name: map?{first_name: str, last_name: str}, address: map?{city: str?, region: str?, street: str?, street2: str?, postal_code: str?, country: str?}, phone_number: str, email: str?, date_of_birth: str?, ssn: str?, ssn_last_4: str?}, items: [map], request_id: str}
+
+@endpoint POST /user_account/session/event/send
+@required {link_session_id: str, event: map{name!: str, timestamp!: str(date-time), outcome: str}}
+@optional {cohort_id: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group profile
+@endpoint POST /profile/network_status/get
+@required {user: map{phone_number!: str}}
+@returns(200) {network_status: str, request_id: str}
+
+@endgroup
+
+@group network
+@endpoint POST /network/status/get
+@required {user: map{phone_number!: str}}
+@optional {template_id: str}
+@returns(200) {network_status: str, layer: map?{eligible: bool}, request_id: str}
+
+@endgroup
+
+@group auth
+@endpoint POST /auth/get
+@required {access_token: str}
+@optional {options: map{account_ids: [str]}}
+@returns(200) {accounts: [map], numbers: map{ach: [map], eft: [map], international: [map], bacs: [map]}, item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str}
+
+@endpoint POST /auth/verify
+@required {numbers: map{ach!: map}}
+@optional {legal_name: str}
+@returns(200) {request_id: str, item_id: str?, verification_status: str, verification_insights: map{name_match_score: int?, network_status: map{has_numbers_match: bool, is_numbers_match_verified: bool}, previous_returns: map{has_previous_administrative_return: bool}, account_number_format: str}}
+
+@endgroup
+
+@group transactions
+@endpoint POST /transactions/get
+@required {access_token: str, start_date: str(date), end_date: str(date)}
+@optional {options: map{account_ids: [str], count: int, offset: int, include_original_description: bool, include_personal_finance_category_beta: bool, include_personal_finance_category: bool, include_logo_and_counterparty_beta: bool, personal_finance_category_version: str, days_requested: int}}
+@returns(200) {accounts: [map], transactions: [any], total_transactions: int, item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str}
+
+@endpoint POST /transactions/refresh
+@required {access_token: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group sandbox
+@endpoint POST /sandbox/transactions/create
+@required {access_token: str, transactions: [map{date_transacted!: str(date), date_posted!: str(date), amount!: num(double), description!: str, iso_currency_code: str}]}
+@returns(200) {request_id: str}
+@errors {400}
+
+@endgroup
+
+@group cashflow_report
+@endpoint POST /cashflow_report/refresh
+@required {access_token: str, days_requested: int=365}
+@returns(200) {request_id: str}
+
+@endpoint POST /cashflow_report/get
+@required {access_token: str, days_requested: int}
+@optional {count: int=100, cursor: str, options: map{account_ids: [str]}}
+@returns(200) {accounts: [any], transactions: [map], total_transactions: int, item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, next_cursor: str, has_more: bool, last_successful_update_time: str(date-time), request_id: str}
+
+@endpoint POST /cashflow_report/transactions/get
+@required {access_token: str}
+@optional {count: int=100, cursor: str, options: map{account_ids: [str]}}
+@returns(200) {accounts: [any], transactions: [map], total_transactions: int, item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, next_cursor: str, has_more: bool, request_id: str}
+
+@endpoint POST /cashflow_report/insights/get
+@required {access_token: str}
+@returns(200) {item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, accounts: [any], account_insights: map{historical_balances: [map], monthly_summaries: [map]}, last_generated_time: str(date-time), request_id: str}
+
+@endgroup
+
+@group transactions
+@endpoint POST /transactions/recurring/get
+@required {access_token: str}
+@optional {options: map{include_personal_finance_category: bool, personal_finance_category_version: str}, account_ids: [str]}
+@returns(200) {inflow_streams: [map], outflow_streams: [map], updated_datetime: str(date-time), personal_finance_category_version: str, request_id: str}
+
+@endpoint POST /transactions/sync
+@required {access_token: str}
+@optional {cursor: str, count: int=100, options: map{include_original_description: bool, include_personal_finance_category: bool, include_logo_and_counterparty_beta: bool, personal_finance_category_version: str, days_requested: int, account_id: str}}
+@returns(200) {transactions_update_status: str, accounts: [map], added: [any], modified: [any], removed: [map], next_cursor: str, has_more: bool, request_id: str}
+
+@endpoint POST /transactions/enrich
+@required {account_type: str, transactions: [map{id!: str, user_id: str, client_user_id: str, client_account_id: str, account_type: str, account_subtype: str, description!: str, amount!: num(double), direction!: str, iso_currency_code!: str, location: map, mcc: str, date_posted: str(date)}]}
+@optional {options: map{include_legacy_category: bool, personal_finance_category_version: str}}
+@returns(200) {enriched_transactions: [map], request_id: str}
+
+@endgroup
+
+@group user
+@endpoint POST /user/transactions/refresh
+@required {user_id: str}
+@returns(200) {request_id: str, user_id: str, results: [map]}
+
+@endpoint POST /user/financial_data/refresh
+@required {user_id: str}
+@returns(200) {request_id: str, user_id: str, results: [map]}
+
+@endgroup
+
+@group institutions
+@endpoint POST /institutions/get
+@required {count: int, offset: int, country_codes: [str]}
+@optional {options: map{products: [str], routing_numbers: [str], oauth: bool, include_optional_metadata: bool, include_auth_metadata: bool, include_payment_initiation_metadata: bool}}
+@returns(200) {institutions: [map], total: int, request_id: str}
+
+@endpoint POST /institutions/search
+@required {query: str, country_codes: [str]}
+@optional {products: [str], options: map{oauth: bool, include_optional_metadata: bool, include_auth_metadata: bool, include_payment_initiation_metadata: bool, payment_initiation: map}}
+@returns(200) {institutions: [map], request_id: str}
+
+@endpoint POST /institutions/get_by_id
+@required {institution_id: str, country_codes: [str]}
+@optional {options: map{include_optional_metadata: bool, include_status: bool, include_auth_metadata: bool, include_payment_initiation_metadata: bool}}
+@returns(200) {institution: map{institution_id: str, name: str, products: [str], country_codes: [str], url: str?, primary_color: str?, logo: str?, routing_numbers: [str], dtc_numbers: [str], oauth: bool, status: map?{item_logins: map?, transactions_updates: map?, auth: map?, identity: map?, investments_updates: map?, liabilities_updates: map?, liabilities: map?, investments: map?, health_incidents: [map]?}, payment_initiation_metadata: map?{supports_international_payments: bool, supports_sepa_instant: bool, maximum_payment_amount: map, supports_refund_details: bool, standing_order_metadata: map?, supports_payment_consents: bool}, auth_metadata: map?{supported_methods: map?}}, request_id: str}
+
+@endgroup
+
+@group item
+@endpoint POST /item/remove
+@required {access_token: str}
+@optional {reason_code: str(FRAUD_FIRST_PARTY/FRAUD_FALSE_IDENTITY/FRAUD_ABUSE/FRAUD_OTHER/CONNECTION_IS_NON_FUNCTIONAL/OTHER), reason_note: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group accounts
+@endpoint POST /accounts/get
+@required {access_token: str}
+@optional {options: map{account_ids: [str]}}
+@returns(200) {accounts: [map], item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str}
+
+@endgroup
+
+@group categories
+@endpoint POST /categories/get
+@returns(200) {categories: [map], request_id: str}
+
+@endgroup
+
+@group sandbox
+@endpoint POST /sandbox/processor_token/create
+@required {institution_id: str}
+@optional {options: map{override_username: str, override_password: str}}
+@returns(200) {processor_token: str, request_id: str}
+
+@endpoint POST /sandbox/public_token/create
+@required {institution_id: str, initial_products: [str]}
+@optional {options: map{webhook: str(url), override_username: str, override_password: str, transactions: map, statements: map, income_verification: map}, user_token: str, user_id: str}
+@returns(200) {public_token: str, request_id: str}
+
+@endpoint POST /sandbox/item/fire_webhook
+@required {access_token: str, webhook_code: str(DEFAULT_UPDATE/NEW_ACCOUNTS_AVAILABLE/SMS_MICRODEPOSITS_VERIFICATION/AUTHORIZATION_GRANTED/USER_PERMISSION_REVOKED/USER_ACCOUNT_REVOKED/PENDING_DISCONNECT/RECURRING_TRANSACTIONS_UPDATE/LOGIN_REPAIRED/SYNC_UPDATES_AVAILABLE/PRODUCT_READY/ERROR)}
+@optional {webhook_type: str(AUTH/HOLDINGS/INVESTMENTS_TRANSACTIONS/ITEM/LIABILITIES/TRANSACTIONS/ASSETS)}
+@returns(200) {webhook_fired: bool, request_id: str}
+
+@endgroup
+
+@group accounts
+@endpoint POST /accounts/balance/get
+@required {access_token: str}
+@optional {options: map{account_ids: [str], min_last_updated_datetime: str(date-time)}}
+@returns(200) {accounts: [map], item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str}
+
+@endgroup
+
+@group identity
+@endpoint POST /identity/get
+@required {access_token: str}
+@optional {options: map{account_ids: [str]}}
+@returns(200) {accounts: [any], item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str}
+
+@endpoint POST /identity/documents/uploads/get
+@required {access_token: str}
+@optional {options: map{account_ids: [str]}}
+@returns(200) {accounts: [any], item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str}
+
+@endpoint POST /identity/match
+@required {access_token: str}
+@optional {user: map{legal_name: str, phone_number: str, email_address: str, address: any}, options: map{account_ids: [str]}}
+@returns(200) {accounts: [any], item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str}
+
+@endpoint POST /identity/refresh
+@required {access_token: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group dashboard_user
+@endpoint POST /dashboard_user/get
+@required {dashboard_user_id: str}
+@returns(200) {id: str, created_at: str(date-time), email_address: str(email), status: str, request_id: str}
+
+@endpoint POST /dashboard_user/list
+@optional {cursor: str}
+@returns(200) {dashboard_users: [map], next_cursor: str?, request_id: str}
+
+@endgroup
+
+@group identity_verification
+@endpoint POST /identity_verification/create
+@required {is_shareable: bool, template_id: str, gave_consent: bool=False}
+@optional {client_user_id: str, user_id: str, user: map{email_address: str(email), phone_number: str, date_of_birth: str(date), name: map, address: map, id_number: map, client_user_id: str}, is_idempotent: bool}
+@returns(200) {id: str, client_user_id: str, created_at: str(date-time), completed_at: str(date-time)?, previous_attempt_id: str?, shareable_url: str?, template: map{id: str, version: int}, user: map{phone_number: str?, date_of_birth: str(date)?, ip_address: str?, email_address: str(email)?, name: map?{given_name: str, family_name: str}, address: map?{street: str?, street2: str?, city: str?, region: str?, postal_code: str?, country: str}, id_number: map?{value: str, type: str}}, status: str, steps: map{accept_tos: str, verify_sms: str, kyc_check: str, documentary_verification: str, selfie_check: str, watchlist_screening: str, risk_check: str}, documentary_verification: map?{status: str, documents: [map]}, selfie_check: map?{status: str, selfies: [map]}, kyc_check: map?{status: str, address: map{summary: str, po_box: str, type: str, street: str, city: str, region: str, postal_code: str, international_details: map?}, name: map{summary: str, given_name: str, family_name: str}, date_of_birth: map{summary: str, day: str, month: str, year: str}, id_number: map{summary: str}, phone_number: map{summary: str, area_code: str}}, risk_check: map?{status: str, behavior: map?{user_interactions: str, fraud_ring_detected: str, bot_detected: str, risk_level: str}, email: map?{is_deliverable: str, breach_count: int?, first_breached_at: str(date)?, last_breached_at: str(date)?, domain_registered_at: str(date)?, domain_is_free_provider: str, domain_is_custom: str, domain_is_disposable: str, top_level_domain_is_suspicious: str, linked_services: [str], risk_level: str, factors: [str]}, phone: map?{linked_services: [str], risk_level: str, factors: [str]}, devices: [map], identity_abuse_signals: map?{synthetic_identity: map?, stolen_identity: map?}, network: map?{risk_level: str, factors: [str]}, facial_duplicates: [map]}, verify_sms: map?{status: str, verifications: [map]}, watchlist_screening_id: str?, beacon_user_id: str?, user_id: str?, redacted_at: str(date-time)?, latest_scored_protect_event: map?{event_id: str, timestamp: str(date-time), trust_index: map?{score: int, model: str, subscores: map?}, fraud_attributes: map?}, request_id: str}
+
+@endpoint POST /identity_verification/get
+@required {identity_verification_id: str}
+@returns(200) {id: str, client_user_id: str, created_at: str(date-time), completed_at: str(date-time)?, previous_attempt_id: str?, shareable_url: str?, template: map{id: str, version: int}, user: map{phone_number: str?, date_of_birth: str(date)?, ip_address: str?, email_address: str(email)?, name: map?{given_name: str, family_name: str}, address: map?{street: str?, street2: str?, city: str?, region: str?, postal_code: str?, country: str}, id_number: map?{value: str, type: str}}, status: str, steps: map{accept_tos: str, verify_sms: str, kyc_check: str, documentary_verification: str, selfie_check: str, watchlist_screening: str, risk_check: str}, documentary_verification: map?{status: str, documents: [map]}, selfie_check: map?{status: str, selfies: [map]}, kyc_check: map?{status: str, address: map{summary: str, po_box: str, type: str, street: str, city: str, region: str, postal_code: str, international_details: map?}, name: map{summary: str, given_name: str, family_name: str}, date_of_birth: map{summary: str, day: str, month: str, year: str}, id_number: map{summary: str}, phone_number: map{summary: str, area_code: str}}, risk_check: map?{status: str, behavior: map?{user_interactions: str, fraud_ring_detected: str, bot_detected: str, risk_level: str}, email: map?{is_deliverable: str, breach_count: int?, first_breached_at: str(date)?, last_breached_at: str(date)?, domain_registered_at: str(date)?, domain_is_free_provider: str, domain_is_custom: str, domain_is_disposable: str, top_level_domain_is_suspicious: str, linked_services: [str], risk_level: str, factors: [str]}, phone: map?{linked_services: [str], risk_level: str, factors: [str]}, devices: [map], identity_abuse_signals: map?{synthetic_identity: map?, stolen_identity: map?}, network: map?{risk_level: str, factors: [str]}, facial_duplicates: [map]}, verify_sms: map?{status: str, verifications: [map]}, watchlist_screening_id: str?, beacon_user_id: str?, user_id: str?, redacted_at: str(date-time)?, latest_scored_protect_event: map?{event_id: str, timestamp: str(date-time), trust_index: map?{score: int, model: str, subscores: map?}, fraud_attributes: map?}, request_id: str}
+
+@endpoint POST /identity_verification/list
+@required {template_id: str}
+@optional {client_user_id: str, user_id: any, cursor: str}
+@returns(200) {identity_verifications: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /identity_verification/retry
+@required {client_user_id: str, template_id: str, strategy: str(reset/incomplete/infer/custom)}
+@optional {user: map{email_address: str(email), phone_number: str, date_of_birth: str(date), name: map, address: map, id_number: map}, steps: map{verify_sms!: bool, kyc_check!: bool, documentary_verification!: bool, selfie_check!: bool}, is_shareable: bool}
+@returns(200) {id: str, client_user_id: str, created_at: str(date-time), completed_at: str(date-time)?, previous_attempt_id: str?, shareable_url: str?, template: map{id: str, version: int}, user: map{phone_number: str?, date_of_birth: str(date)?, ip_address: str?, email_address: str(email)?, name: map?{given_name: str, family_name: str}, address: map?{street: str?, street2: str?, city: str?, region: str?, postal_code: str?, country: str}, id_number: map?{value: str, type: str}}, status: str, steps: map{accept_tos: str, verify_sms: str, kyc_check: str, documentary_verification: str, selfie_check: str, watchlist_screening: str, risk_check: str}, documentary_verification: map?{status: str, documents: [map]}, selfie_check: map?{status: str, selfies: [map]}, kyc_check: map?{status: str, address: map{summary: str, po_box: str, type: str, street: str, city: str, region: str, postal_code: str, international_details: map?}, name: map{summary: str, given_name: str, family_name: str}, date_of_birth: map{summary: str, day: str, month: str, year: str}, id_number: map{summary: str}, phone_number: map{summary: str, area_code: str}}, risk_check: map?{status: str, behavior: map?{user_interactions: str, fraud_ring_detected: str, bot_detected: str, risk_level: str}, email: map?{is_deliverable: str, breach_count: int?, first_breached_at: str(date)?, last_breached_at: str(date)?, domain_registered_at: str(date)?, domain_is_free_provider: str, domain_is_custom: str, domain_is_disposable: str, top_level_domain_is_suspicious: str, linked_services: [str], risk_level: str, factors: [str]}, phone: map?{linked_services: [str], risk_level: str, factors: [str]}, devices: [map], identity_abuse_signals: map?{synthetic_identity: map?, stolen_identity: map?}, network: map?{risk_level: str, factors: [str]}, facial_duplicates: [map]}, verify_sms: map?{status: str, verifications: [map]}, watchlist_screening_id: str?, beacon_user_id: str?, user_id: str?, redacted_at: str(date-time)?, latest_scored_protect_event: map?{event_id: str, timestamp: str(date-time), trust_index: map?{score: int, model: str, subscores: map?}, fraud_attributes: map?}, request_id: str}
+
+@endgroup
+
+@group watchlist_screening
+@endpoint POST /watchlist_screening/entity/create
+@required {search_terms: map{entity_watchlist_program_id!: str, legal_name!: str, document_number: str, email_address: str(email), country: str, phone_number: str, url: str(uri)}}
+@optional {client_user_id: str}
+@returns(200) {id: str, search_terms: map{entity_watchlist_program_id: str, legal_name: str, document_number: str?, email_address: str(email)?, country: str?, phone_number: str?, url: str(uri)?, version: int}, assignee: str?, status: str, client_user_id: str?, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /watchlist_screening/entity/get
+@required {entity_watchlist_screening_id: str}
+@returns(200) {id: str, search_terms: map{entity_watchlist_program_id: str, legal_name: str, document_number: str?, email_address: str(email)?, country: str?, phone_number: str?, url: str(uri)?, version: int}, assignee: str?, status: str, client_user_id: str?, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /watchlist_screening/entity/history/list
+@required {entity_watchlist_screening_id: str}
+@optional {cursor: str}
+@returns(200) {entity_watchlist_screenings: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/entity/hit/list
+@required {entity_watchlist_screening_id: str}
+@optional {cursor: str}
+@returns(200) {entity_watchlist_screening_hits: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/entity/list
+@required {entity_watchlist_program_id: str}
+@optional {client_user_id: str, status: str(rejected/pending_review/cleared), assignee: str, cursor: str}
+@returns(200) {entity_watchlist_screenings: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/entity/program/get
+@required {entity_watchlist_program_id: str}
+@returns(200) {id: str, created_at: str(date-time), is_rescanning_enabled: bool, lists_enabled: [str], name: str, name_sensitivity: str, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, is_archived: bool, request_id: str}
+
+@endpoint POST /watchlist_screening/entity/program/list
+@optional {cursor: str}
+@returns(200) {entity_watchlist_programs: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/entity/review/create
+@required {confirmed_hits: [str], dismissed_hits: [str], entity_watchlist_screening_id: str}
+@optional {comment: str}
+@returns(200) {id: str, confirmed_hits: [str], dismissed_hits: [str], comment: str?, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /watchlist_screening/entity/review/list
+@required {entity_watchlist_screening_id: str}
+@optional {cursor: str}
+@returns(200) {entity_watchlist_screening_reviews: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/entity/update
+@required {entity_watchlist_screening_id: str}
+@optional {search_terms: map{entity_watchlist_program_id!: str, legal_name: str, document_number: str, email_address: str(email), country: str, phone_number: str, url: str(uri)}, assignee: str, status: str(rejected/pending_review/cleared), client_user_id: str, reset_fields: [str]}
+@returns(200) {id: str, search_terms: map{entity_watchlist_program_id: str, legal_name: str, document_number: str?, email_address: str(email)?, country: str?, phone_number: str?, url: str(uri)?, version: int}, assignee: str?, status: str, client_user_id: str?, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/create
+@required {search_terms: map{watchlist_program_id!: str, legal_name!: str, date_of_birth: str(date), document_number: str, country: str}}
+@optional {client_user_id: str}
+@returns(200) {id: str, search_terms: map{watchlist_program_id: str, legal_name: str, date_of_birth: str(date)?, document_number: str?, country: str?, version: int}, assignee: str?, status: str, client_user_id: str?, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/get
+@required {watchlist_screening_id: str}
+@returns(200) {id: str, search_terms: map{watchlist_program_id: str, legal_name: str, date_of_birth: str(date)?, document_number: str?, country: str?, version: int}, assignee: str?, status: str, client_user_id: str?, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/history/list
+@required {watchlist_screening_id: str}
+@optional {cursor: str}
+@returns(200) {watchlist_screenings: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/hit/list
+@required {watchlist_screening_id: str}
+@optional {cursor: str}
+@returns(200) {watchlist_screening_hits: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/list
+@required {watchlist_program_id: str}
+@optional {client_user_id: str, status: str(rejected/pending_review/cleared), assignee: str, cursor: str}
+@returns(200) {watchlist_screenings: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/program/get
+@required {watchlist_program_id: str}
+@returns(200) {id: str, created_at: str(date-time), is_rescanning_enabled: bool, lists_enabled: [str], name: str, name_sensitivity: str, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, is_archived: bool, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/program/list
+@optional {cursor: str}
+@returns(200) {watchlist_programs: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/review/create
+@required {confirmed_hits: [str], dismissed_hits: [str], watchlist_screening_id: str}
+@optional {comment: str}
+@returns(200) {id: str, confirmed_hits: [str], dismissed_hits: [str], comment: str?, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/review/list
+@required {watchlist_screening_id: str}
+@optional {cursor: str}
+@returns(200) {watchlist_screening_reviews: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /watchlist_screening/individual/update
+@required {watchlist_screening_id: str}
+@optional {search_terms: map{watchlist_program_id: str, legal_name: str, date_of_birth: str(date), document_number: str, country: str}, assignee: str, status: str(rejected/pending_review/cleared), client_user_id: str, reset_fields: [str]}
+@returns(200) {id: str, search_terms: map{watchlist_program_id: str, legal_name: str, date_of_birth: str(date)?, document_number: str?, country: str?, version: int}, assignee: str?, status: str, client_user_id: str?, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endgroup
+
+@group beacon
+@endpoint POST /beacon/account_risk/v1/evaluate
+@optional {access_token: str, options: map{account_ids: [str]}, client_user_id: str, client_evaluation_id: str, evaluation_reason: str(ONBOARDING/NEW_ACCOUNT/INFORMATION_CHANGE/DORMANT_USER/OTHER), device: map{ip_address: str, user_agent: str}, evaluate_time: str}
+@returns(200) {request_id: str, accounts: [map]}
+
+@endpoint POST /beacon/user/create
+@required {program_id: str, client_user_id: str, user: map{date_of_birth: str(date), name!: map, address: map, email_address: str(email), phone_number: str, id_number: map, ip_address: str, depository_accounts: [map]}}
+@optional {access_tokens: [str]}
+@returns(200) {item_ids: [str], id: str, version: int, created_at: str(date-time), updated_at: str(date-time), status: str, program_id: str, client_user_id: str, user: map{date_of_birth: str(date), name: map{given_name: str, family_name: str}, address: map{street: str, street2: str?, city: str, region: str?, postal_code: str?, country: str}, email_address: str(email)?, phone_number: str?, id_number: map?{value: str, type: str}, ip_address: str?, depository_accounts: [map]}, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /beacon/user/get
+@required {beacon_user_id: str}
+@returns(200) {item_ids: [str], id: str, version: int, created_at: str(date-time), updated_at: str(date-time), status: str, program_id: str, client_user_id: str, user: map{date_of_birth: str(date), name: map{given_name: str, family_name: str}, address: map{street: str, street2: str?, city: str, region: str?, postal_code: str?, country: str}, email_address: str(email)?, phone_number: str?, id_number: map?{value: str, type: str}, ip_address: str?, depository_accounts: [map]}, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /beacon/user/review
+@required {beacon_user_id: str, status: str(rejected/pending_review/cleared)}
+@returns(200) {item_ids: [str], id: str, version: int, created_at: str(date-time), updated_at: str(date-time), status: str, program_id: str, client_user_id: str, user: map{date_of_birth: str(date), name: map{given_name: str, family_name: str}, address: map{street: str, street2: str?, city: str, region: str?, postal_code: str?, country: str}, email_address: str(email)?, phone_number: str?, id_number: map?{value: str, type: str}, ip_address: str?, depository_accounts: [map]}, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /beacon/report/create
+@required {beacon_user_id: str, type: str(first_party/stolen/synthetic/account_takeover/data_breach/unknown), fraud_date: str(date)}
+@optional {fraud_amount: map{iso_currency_code!: str, value!: num(double)}}
+@returns(200) {id: str, beacon_user_id: str, created_at: str(date-time), type: str, fraud_date: str(date)?, event_date: str(date), fraud_amount: map?{iso_currency_code: str, value: num(double)}, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /beacon/report/list
+@required {beacon_user_id: str}
+@optional {cursor: str}
+@returns(200) {beacon_reports: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /beacon/report_syndication/list
+@required {beacon_user_id: str}
+@optional {cursor: str}
+@returns(200) {beacon_report_syndications: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /beacon/report/get
+@required {beacon_report_id: str}
+@returns(200) {id: str, beacon_user_id: str, created_at: str(date-time), type: str, fraud_date: str(date)?, event_date: str(date), fraud_amount: map?{iso_currency_code: str, value: num(double)}, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /beacon/report_syndication/get
+@required {beacon_report_syndication_id: str}
+@returns(200) {id: str, beacon_user_id: str, report: map{id: str?, created_at: str(date-time), type: str, fraud_date: str(date)?, event_date: str(date)}, analysis: map{address: str, date_of_birth: str, email_address: str, name: str, id_number: str, ip_address: str, phone_number: str, depository_accounts: [map]}, request_id: str}
+
+@endpoint POST /beacon/user/update
+@required {beacon_user_id: str}
+@optional {user: map{date_of_birth: str(date), name: map, address: map, email_address: str(email), phone_number: str, id_number: map, ip_address: str, depository_accounts: [map]}, access_tokens: [str]}
+@returns(200) {item_ids: [str], id: str, version: int, created_at: str(date-time), updated_at: str(date-time), status: str, program_id: str, client_user_id: str, user: map{date_of_birth: str(date), name: map{given_name: str, family_name: str}, address: map{street: str, street2: str?, city: str, region: str?, postal_code: str?, country: str}, email_address: str(email)?, phone_number: str?, id_number: map?{value: str, type: str}, ip_address: str?, depository_accounts: [map]}, audit_trail: map{source: str, dashboard_user_id: str?, timestamp: str(date-time)}, request_id: str}
+
+@endpoint POST /beacon/duplicate/get
+@required {beacon_duplicate_id: str}
+@returns(200) {id: str, beacon_user1: map{id: str, version: int}, beacon_user2: map{id: str, version: int}, analysis: map{address: str, date_of_birth: str, email_address: str, name: str, id_number: str, ip_address: str, phone_number: str}, request_id: str}
+
+@endgroup
+
+@group identity_verification
+@endpoint POST /identity_verification/autofill/create
+@required {identity_verification_id: str}
+@returns(200) {status: str, user: map?{name: map?{given_name: str, family_name: str}, address: map?{street: str, street2: str?, city: str?, region: str?, postal_code: str?, country: str, po_box: str, type: str}, id_number: map?{value: str, type: str}}, request_id: str}
+
+@endgroup
+
+@group beacon
+@endpoint POST /beacon/user/history/list
+@required {beacon_user_id: str}
+@optional {cursor: str}
+@returns(200) {beacon_users: [map], next_cursor: str?, request_id: str}
+
+@endpoint POST /beacon/user/account_insights/get
+@required {beacon_user_id: str, access_token: str}
+@returns(200) {beacon_user_id: str, created_at: str(date-time), updated_at: str(date-time), bank_account_insights: map{item_id: str, accounts: [map]}, request_id: str}
+
+@endgroup
+
+@group protect
+@endpoint POST /protect/user/insights/get
+@optional {user_id: str, client_user_id: str}
+@returns(200) {user_id: str, latest_scored_event: map?{event_id: str, timestamp: str(date-time), event_type: str, trust_index: map?{score: int, model: str, subscores: map?}, fraud_attributes: map?}, reports: [map], request_id: str}
+
+@endpoint POST /protect/report/create
+@required {report_confidence: str(CONFIRMED/SUSPECTED), report_type: str(USER_ACCOUNT_TAKEOVER/FALSE_IDENTITY/STOLEN_IDENTITY/SYNTHETIC_IDENTITY/MULTIPLE_USER_ACCOUNTS/SCAM_VICTIM/BANK_ACCOUNT_TAKEOVER/BANK_CONNECTION_REVOKED/CARD_TESTING/UNAUTHORIZED_TRANSACTION/CARD_CHARGEBACK/ACH_RETURN/DISPUTE/FIRST_PARTY_FRAUD/MISSED_PAYMENT/LOAN_STACKING/MONEY_LAUNDERING/NO_FRAUD/OTHER), report_source: str(INTERNAL_REVIEW/USER_SELF_REPORTED/BANK_FEEDBACK/NETWORK_FEEDBACK/AUTOMATED_SYSTEM/THIRD_PARTY_ALERT/OTHER)}
+@optional {user_id: str, incident_event: map{protect_event_id: str, link_session_id: str, idv_session_id: str, signal_client_transaction_id: str, internal_reference: str, time: str(date-time), amount: map, access_token: any}, bank_account: map{account_id: str, account_number: str, routing_number: str}, ach_return_code: str, notes: str}
+@returns(200) {report_id: str, request_id: str}
+
+@endpoint POST /protect/event/send
+@required {event: map{timestamp!: str(date-time), protect_session_id: str, app_visit: map, user_sign_in: map, user_sign_up: map}}
+@optional {timestamp: str(date-time), protect_session_id: str, request_trust_index: bool}
+@returns(200) {event_id: str, trust_index: map?{score: int, model: str, subscores: map?{device_and_connection: map?, bank_account_insights: map?}}, fraud_attributes: map?, request_id: str}
+
+@endpoint POST /protect/event/get
+@required {event_id: str}
+@returns(200) {event_id: str, timestamp: str(date-time), trust_index: map?{score: int, model: str, subscores: map?{device_and_connection: map?, bank_account_insights: map?}}, fraud_attributes: map?, request_id: str}
+
+@endgroup
+
+@group business_verification
+@endpoint POST /business_verification/get
+@required {business_verification_id: str(cognito_id)}
+@returns(200) {id: str(cognito_id), client_user_id: str, created_at: str(date-time), completed_at: str(date-time)?, redacted_at: str(date-time)?, status: str, search_terms: map{name: str?, address: map{street: str?, street2: str?, city: str?, region: str?, postal_code: str?, country: str}, website: str(uri)?, phone_number: str?, email_address: str(email)?}, kyb_check: map?{status: str, score: int, name: map{summary: str}, address: map{summary: str}, website: map{summary: str}, match_details: map?{name: str?, entity_type: str?, addresses: [map], phone_numbers: [map], email_addresses: [map], websites: [map], formation_date: str(date)?}}, risk_check: map?{status: str, score: int}, request_id: str}
+
+@endpoint POST /business_verification/create
+@required {client_user_id: str, business: map{name!: str, address!: map, website: str(uri), phone_number: str, email_address: str(email)}}
+@returns(200) {id: str(cognito_id), client_user_id: str, created_at: str(date-time), completed_at: str(date-time)?, redacted_at: str(date-time)?, status: str, search_terms: map{name: str?, address: map{street: str?, street2: str?, city: str?, region: str?, postal_code: str?, country: str}, website: str(uri)?, phone_number: str?, email_address: str(email)?}, kyb_check: map?{status: str, score: int, name: map{summary: str}, address: map{summary: str}, website: map{summary: str}, match_details: map?{name: str?, entity_type: str?, addresses: [map], phone_numbers: [map], email_addresses: [map], websites: [map], formation_date: str(date)?}}, risk_check: map?{status: str, score: int}, request_id: str}
+
+@endgroup
+
+@group processor
+@endpoint POST /processor/auth/get
+@required {processor_token: str}
+@returns(200) {request_id: str, numbers: map{ach: any?, eft: any?, international: any?, bacs: any?}, account: map{account_id: str, balances: map{available: num(double)?, current: num(double)?, limit: num(double)?, iso_currency_code: str?, unofficial_currency_code: str?, last_updated_datetime: str(date-time)?}, mask: str?, name: str, official_name: str?, type: str, subtype: str?, verification_status: str, verification_name: str, verification_insights: map{name_match_score: int?, network_status: map, previous_returns: map, account_number_format: str}, persistent_account_id: str, holder_category: str?}}
+
+@endpoint POST /processor/account/get
+@required {processor_token: str}
+@returns(200) {account: map{account_id: str, balances: map{available: num(double)?, current: num(double)?, limit: num(double)?, iso_currency_code: str?, unofficial_currency_code: str?, last_updated_datetime: str(date-time)?}, mask: str?, name: str, official_name: str?, type: str, subtype: str?, verification_status: str, verification_name: str, verification_insights: map{name_match_score: int?, network_status: map, previous_returns: map, account_number_format: str}, persistent_account_id: str, holder_category: str?}, institution_id: str, request_id: str}
+
+@endpoint POST /processor/investments/holdings/get
+@required {processor_token: str}
+@returns(200) {account: map{account_id: str, balances: map{available: num(double)?, current: num(double)?, limit: num(double)?, iso_currency_code: str?, unofficial_currency_code: str?, last_updated_datetime: str(date-time)?}, mask: str?, name: str, official_name: str?, type: str, subtype: str?, verification_status: str, verification_name: str, verification_insights: map{name_match_score: int?, network_status: map, previous_returns: map, account_number_format: str}, persistent_account_id: str, holder_category: str?}, holdings: [map], securities: [map], is_investments_fallback_item: bool, request_id: str}
+
+@endpoint POST /processor/investments/transactions/get
+@required {processor_token: str, start_date: str(date), end_date: str(date)}
+@optional {options: map{account_ids: [str], count: int, offset: int, async_update: bool}}
+@returns(200) {account: map{account_id: str, balances: map{available: num(double)?, current: num(double)?, limit: num(double)?, iso_currency_code: str?, unofficial_currency_code: str?, last_updated_datetime: str(date-time)?}, mask: str?, name: str, official_name: str?, type: str, subtype: str?, verification_status: str, verification_name: str, verification_insights: map{name_match_score: int?, network_status: map, previous_returns: map, account_number_format: str}, persistent_account_id: str, holder_category: str?}, investment_transactions: [map], securities: [map], total_investment_transactions: int, request_id: str, is_investments_fallback_item: bool}
+
+@endpoint POST /processor/transactions/get
+@required {processor_token: str, start_date: str(date), end_date: str(date)}
+@optional {options: map{count: int, offset: int, include_original_description: bool, include_personal_finance_category_beta: bool, include_personal_finance_category: bool, include_logo_and_counterparty_beta: bool}}
+@returns(200) {account: map{account_id: str, balances: map{available: num(double)?, current: num(double)?, limit: num(double)?, iso_currency_code: str?, unofficial_currency_code: str?, last_updated_datetime: str(date-time)?}, mask: str?, name: str, official_name: str?, type: str, subtype: str?, verification_status: str, verification_name: str, verification_insights: map{name_match_score: int?, network_status: map, previous_returns: map, account_number_format: str}, persistent_account_id: str, holder_category: str?}, transactions: [any], total_transactions: int, request_id: str}
+
+@endpoint POST /processor/transactions/sync
+@required {processor_token: str}
+@optional {cursor: str, count: int=100, options: map{include_original_description: bool, include_personal_finance_category: bool, include_logo_and_counterparty_beta: bool, personal_finance_category_version: str, days_requested: int, account_id: str}}
+@returns(200) {transactions_update_status: str, account: map?, added: [any], modified: [any], removed: [map], next_cursor: str, has_more: bool, request_id: str}
+
+@endpoint POST /processor/transactions/refresh
+@required {processor_token: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /processor/transactions/recurring/get
+@required {processor_token: str}
+@optional {options: map{include_personal_finance_category: bool, personal_finance_category_version: str}}
+@returns(200) {inflow_streams: [map], outflow_streams: [map], updated_datetime: str(date-time), personal_finance_category_version: str, request_id: str}
+
+@endpoint POST /processor/signal/evaluate
+@required {processor_token: str, client_transaction_id: str, amount: num(double)}
+@optional {user_present: bool, client_user_id: str, is_recurring: bool, default_payment_method: str, user: map{name: map, phone_number: str, email_address: str, address: map}, device: map{ip_address: str, user_agent: str}, ruleset_key: str}
+@returns(200) {request_id: str, scores: map?{customer_initiated_return_risk: map{score: int, risk_tier: int}, bank_initiated_return_risk: map{score: int, risk_tier: int}}, core_attributes: map{unauthorized_transactions_count_7d: int?, unauthorized_transactions_count_30d: int?, unauthorized_transactions_count_60d: int?, unauthorized_transactions_count_90d: int?, nsf_overdraft_transactions_count_7d: int?, nsf_overdraft_transactions_count_30d: int?, nsf_overdraft_transactions_count_60d: int?, nsf_overdraft_transactions_count_90d: int?, days_since_first_plaid_connection: int?, plaid_connections_count_7d: int?, plaid_connections_count_30d: int?, total_plaid_connections_count: int?, is_savings_or_money_market_account: bool?, total_credit_transactions_amount_10d: num(double)?, total_debit_transactions_amount_10d: num(double)?, p50_credit_transactions_amount_28d: num(double)?, p50_debit_transactions_amount_28d: num(double)?, p95_credit_transactions_amount_28d: num(double)?, p95_debit_transactions_amount_28d: num(double)?, days_with_negative_balance_count_90d: int?, p90_eod_balance_30d: num(double)?, p90_eod_balance_60d: num(double)?, p90_eod_balance_90d: num(double)?, p10_eod_balance_30d: num(double)?, p10_eod_balance_60d: num(double)?, p10_eod_balance_90d: num(double)?, available_balance: num(double)?, current_balance: num(double)?, balance_last_updated: str(date-time)?, phone_change_count_28d: int?, phone_change_count_90d: int?, email_change_count_28d: int?, email_change_count_90d: int?, address_change_count_28d: int?, address_change_count_90d: int?, plaid_non_oauth_authentication_attempts_count_3d: int?, plaid_non_oauth_authentication_attempts_count_7d: int?, plaid_non_oauth_authentication_attempts_count_30d: int?, failed_plaid_non_oauth_authentication_attempts_count_3d: int?, failed_plaid_non_oauth_authentication_attempts_count_7d: int?, failed_plaid_non_oauth_authentication_attempts_count_30d: int?, debit_transactions_count_10d: int?, credit_transactions_count_10d: int?, debit_transactions_count_30d: int?, credit_transactions_count_30d: int?, debit_transactions_count_60d: int?, credit_transactions_count_60d: int?, debit_transactions_count_90d: int?, credit_transactions_count_90d: int?, total_debit_transactions_amount_30d: num(double)?, total_credit_transactions_amount_30d: num(double)?, total_debit_transactions_amount_60d: num(double)?, total_credit_transactions_amount_60d: num(double)?, total_debit_transactions_amount_90d: num(double)?, total_credit_transactions_amount_90d: num(double)?, p50_eod_balance_30d: num(double)?, p50_eod_balance_60d: num(double)?, p50_eod_balance_90d: num(double)?, p50_eod_balance_31d_to_60d: num(double)?, p50_eod_balance_61d_to_90d: num(double)?, p90_eod_balance_31d_to_60d: num(double)?, p90_eod_balance_61d_to_90d: num(double)?, p10_eod_balance_31d_to_60d: num(double)?, p10_eod_balance_61d_to_90d: num(double)?, transactions_last_updated: str(date-time)?, is_account_closed: bool?, is_account_frozen_or_restricted: bool?, distinct_ip_addresses_count_3d: int?, distinct_ip_addresses_count_7d: int?, distinct_ip_addresses_count_30d: int?, distinct_ip_addresses_count_90d: int?, distinct_user_agents_count_3d: int?, distinct_user_agents_count_7d: int?, distinct_user_agents_count_30d: int?, distinct_user_agents_count_90d: int?, distinct_ssl_tls_connection_sessions_count_3d: int?, distinct_ssl_tls_connection_sessions_count_7d: int?, distinct_ssl_tls_connection_sessions_count_30d: int?, distinct_ssl_tls_connection_sessions_count_90d: int?, days_since_account_opening: int?, balance_to_transaction_amount_ratio: num(double)?}, ruleset: map?{ruleset_key: str, result: str, triggered_rule_details: map?{internal_note: str, custom_action_key: str}, outcome: str}, warnings: [map]}
+
+@endpoint POST /processor/signal/decision/report
+@required {processor_token: str, client_transaction_id: str, initiated: bool}
+@optional {days_funds_on_hold: int, decision_outcome: str(APPROVE/REVIEW/REJECT/TAKE_OTHER_RISK_MEASURES/NOT_EVALUATED), payment_method: str(SAME_DAY_ACH/NEXT_DAY_ACH/STANDARD_ACH/MULTIPLE_PAYMENT_METHODS), amount_instantly_available: num(double)}
+@returns(200) {request_id: str}
+
+@endpoint POST /processor/signal/return/report
+@required {processor_token: str, client_transaction_id: str, return_code: str}
+@optional {returned_at: str(date-time)}
+@returns(200) {request_id: str}
+
+@endpoint POST /processor/signal/prepare
+@required {processor_token: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /processor/bank_transfer/create
+@required {idempotency_key: str, processor_token: str, type: str(debit/credit), network: str(ach/same-day-ach/wire), amount: str, iso_currency_code: str, description: str, user: map{legal_name!: str, email_address: str, routing_number: str}}
+@optional {ach_class: str(ccd/ppd/tel/web), custom_tag: str, metadata: map, origination_account_id: str}
+@returns(200) {bank_transfer: map{id: str, ach_class: str, account_id: str, type: str, user: map{legal_name: str, email_address: str?, routing_number: str}, amount: str, iso_currency_code: str, description: str, created: str(date-time), status: str, network: str, cancellable: bool, failure_reason: map?{ach_return_code: str?, description: str}, custom_tag: str?, metadata: map?, origination_account_id: str, direction: str?}, request_id: str}
+
+@endpoint POST /processor/liabilities/get
+@required {processor_token: str}
+@returns(200) {account: map{account_id: str, balances: map{available: num(double)?, current: num(double)?, limit: num(double)?, iso_currency_code: str?, unofficial_currency_code: str?, last_updated_datetime: str(date-time)?}, mask: str?, name: str, official_name: str?, type: str, subtype: str?, verification_status: str, verification_name: str, verification_insights: map{name_match_score: int?, network_status: map, previous_returns: map, account_number_format: str}, persistent_account_id: str, holder_category: str?}, liabilities: map{credit: [map]?, mortgage: [map]?, student: [map]?}, request_id: str}
+
+@endpoint POST /processor/identity/get
+@required {processor_token: str}
+@returns(200) {account: any, request_id: str}
+
+@endpoint POST /processor/identity/match
+@required {processor_token: str}
+@optional {user: map{legal_name: str, phone_number: str, email_address: str, address: any}}
+@returns(200) {account: any, request_id: str}
+
+@endpoint POST /processor/balance/get
+@required {processor_token: str}
+@optional {options: map{min_last_updated_datetime: str(date-time)}}
+@returns(200) {account: map{account_id: str, balances: map{available: num(double)?, current: num(double)?, limit: num(double)?, iso_currency_code: str?, unofficial_currency_code: str?, last_updated_datetime: str(date-time)?}, mask: str?, name: str, official_name: str?, type: str, subtype: str?, verification_status: str, verification_name: str, verification_insights: map{name_match_score: int?, network_status: map, previous_returns: map, account_number_format: str}, persistent_account_id: str, holder_category: str?}, request_id: str}
+
+@endgroup
+
+@group item
+@endpoint POST /item/webhook/update
+@required {access_token: str}
+@optional {webhook: str(url)}
+@returns(200) {item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str}
+
+@endpoint POST /item/access_token/invalidate
+@required {access_token: str}
+@returns(200) {new_access_token: str, request_id: str}
+
+@endgroup
+
+@group webhook_verification_key
+@endpoint POST /webhook_verification_key/get
+@required {key_id: str}
+@returns(200) {key: map{alg: str, crv: str, kid: str, kty: str, use: str, x: str, y: str, created_at: int, expired_at: int?}, request_id: str}
+
+@endgroup
+
+@group liabilities
+@endpoint POST /liabilities/get
+@required {access_token: str}
+@optional {options: map{account_ids: [str]}}
+@returns(200) {accounts: [map], item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, liabilities: map{credit: [map]?, mortgage: [map]?, student: [map]?}, request_id: str}
+
+@endgroup
+
+@group payment_initiation
+@endpoint POST /payment_initiation/recipient/create
+@required {name: str}
+@optional {iban: str, bacs: any, address: map{street!: [str], city!: str, postal_code!: str, country!: str}}
+@returns(200) {recipient_id: str, request_id: str}
+
+@endpoint POST /payment_initiation/payment/reverse
+@required {payment_id: str, idempotency_key: str, reference: str}
+@optional {amount: any, counterparty_date_of_birth: str(date), counterparty_address: map{street!: [str], city!: str, postal_code!: str, country!: str}}
+@returns(200) {refund_id: str, status: str, request_id: str}
+
+@endpoint POST /payment_initiation/recipient/get
+@required {recipient_id: str}
+@returns(200)
+
+@endpoint POST /payment_initiation/recipient/list
+@optional {count: int=100, cursor: str}
+@returns(200) {recipients: [map], request_id: str, next_cursor: str}
+
+@endpoint POST /payment_initiation/payment/create
+@required {recipient_id: str, reference: str, amount: map{currency!: str, value!: num(double)}}
+@optional {schedule: any, options: map{request_refund_details: bool, iban: str, bacs: any, scheme: str}}
+@returns(200) {payment_id: str, status: str, request_id: str}
+
+@endpoint POST /payment_initiation/payment/token/create
+@required {payment_id: str}
+@returns(200) {payment_token: str, payment_token_expiration_time: str(date-time), request_id: str}
+
+@endpoint POST /payment_initiation/consent/create
+@required {recipient_id: str, reference: str, constraints: map{valid_date_time: map, max_payment_amount!: any, periodic_amounts!: [map]}}
+@optional {scopes: [str], type: str(SWEEPING/COMMERCIAL), options: map{request_refund_details: bool, iban: str, bacs: any}, payer_details: map{name!: str, numbers!: map, address: map, date_of_birth: str(date), phone_numbers: [str], emails: [str]}}
+@returns(200) {consent_id: str, status: str, request_id: str}
+
+@endpoint POST /payment_initiation/consent/get
+@required {consent_id: str}
+@returns(200)
+
+@endpoint POST /payment_initiation/consent/revoke
+@required {consent_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /payment_initiation/consent/payment/execute
+@required {consent_id: str, amount: map{currency!: str, value!: num(double)}, idempotency_key: str}
+@optional {reference: str, scope: any, processing_mode: str(ASYNC/IMMEDIATE)}
+@returns(200) {payment_id: str, status: str, request_id: str, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}}
+
+@endgroup
+
+@group sandbox
+@endpoint POST /sandbox/item/reset_login
+@required {access_token: str}
+@returns(200) {reset_login: bool, request_id: str}
+
+@endpoint POST /sandbox/item/set_verification_status
+@required {access_token: str, account_id: str, verification_status: str(automatically_verified/verification_expired)}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/user/reset_login
+@optional {user_token: str, item_ids: [str], user_id: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group item
+@endpoint POST /item/public_token/exchange
+@required {public_token: str}
+@returns(200) {access_token: str, item_id: str, request_id: str}
+
+@endpoint POST /item/public_token/create
+@required {access_token: str}
+@returns(200) {public_token: str, expiration: str(date-time), request_id: str}
+
+@endgroup
+
+@group user
+@endpoint POST /user/create
+@required {client_user_id: str}
+@optional {Plaid-New-User-API-Enabled: bool=False, identity: map{name: map, date_of_birth: str(date), emails: [map], phone_numbers: [map], addresses: [map], id_numbers: [map]}, end_customer: str, consumer_report_user_identity: map{first_name!: str, last_name!: str, phone_numbers!: [str], emails!: [str], ssn_full: str, ssn_last_4: str, date_of_birth!: str(date), primary_address!: map}, with_upgraded_user: bool}
+@returns(200) {user_token: str, user_id: str, request_id: str}
+@returns(201) {user_token: str, user_id: str, request_id: str}
+
+@endpoint POST /user/get
+@required {user_id: str}
+@optional {Plaid-New-User-API-Enabled: bool=False}
+@returns(200) {request_id: str, user_id: str, client_user_id: str?, created_at: str(date-time), updated_at: str(date-time), identity: map?{name: map?{given_name: str, family_name: str}, date_of_birth: str(date)?, emails: [map], phone_numbers: [map], addresses: [map], id_numbers: [map]}}
+
+@endpoint POST /user/identity/remove
+@required {user_id: str}
+@optional {Plaid-New-User-API-Enabled: bool=False}
+@returns(200) {request_id: str}
+
+@endpoint POST /user/update
+@optional {Plaid-New-User-API-Enabled: bool=False, user_id: str, identity: map{name: map, date_of_birth: str(date), emails: [map], phone_numbers: [map], addresses: [map], id_numbers: [map]}, user_token: str, consumer_report_user_identity: map{first_name!: str, last_name!: str, phone_numbers!: [str], emails!: [str], ssn_full: str, ssn_last_4: str, date_of_birth!: str(date), primary_address!: map}}
+@returns(200) {request_id: str}
+
+@endpoint POST /user/remove
+@optional {Plaid-New-User-API-Enabled: bool=False, user_id: str, user_token: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /user/products/terminate
+@required {user_id: str}
+@optional {products: [str]}
+@returns(200) {request_id: str}
+
+@endpoint POST /user/items/get
+@optional {user_token: str, user_id: str}
+@returns(200) {items: [map], request_id: str}
+
+@endpoint POST /user/items/associate
+@required {user_id: str, item_ids: [str]}
+@returns(200) {request_id: str}
+
+@endpoint POST /user/items/remove
+@required {item_ids: [str]}
+@optional {user_token: str, user_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /user/third_party_token/create
+@required {third_party_client_id: str}
+@optional {user_token: str, expiration_time: str(date-time), user_id: str}
+@returns(200) {request_id: str, third_party_user_token: str}
+
+@endpoint POST /user/third_party_token/remove
+@required {third_party_user_token: str}
+@returns(200) {removed: bool, request_id: str}
+
+@endgroup
+
+@group credit
+@endpoint POST /credit/sessions/get
+@required {user_token: str}
+@returns(200) {sessions: [map], request_id: str}
+
+@endgroup
+
+@group payment_initiation
+@endpoint POST /payment_initiation/payment/get
+@required {payment_id: str}
+@returns(200)
+
+@endpoint POST /payment_initiation/payment/list
+@optional {count: int=10, cursor: str(date-time), consent_id: str}
+@returns(200) {payments: [map], next_cursor: str(date-time)?, request_id: str}
+
+@endgroup
+
+@group investments
+@endpoint POST /investments/holdings/get
+@required {access_token: str}
+@optional {options: map{account_ids: [str]}}
+@returns(200) {accounts: [map], holdings: [map], securities: [map], item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str, is_investments_fallback_item: bool}
+
+@endpoint POST /investments/transactions/get
+@required {access_token: str, start_date: str(date), end_date: str(date)}
+@optional {options: map{account_ids: [str], count: int, offset: int, async_update: bool}}
+@returns(200) {item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, accounts: [map], securities: [map], investment_transactions: [map], total_investment_transactions: int, request_id: str, is_investments_fallback_item: bool}
+
+@endpoint POST /investments/refresh
+@required {access_token: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /investments/auth/get
+@required {access_token: str}
+@optional {options: map{account_ids: [str]}}
+@returns(200) {accounts: [map], holdings: [map], securities: [map], owners: [map], numbers: map{acats: [map], aton: [map], retirement_401k: [map]}, data_sources: map{numbers: str, owners: str, holdings: str}, account_details_401k: [map], item: map{item_id: str, institution_id: str?, institution_name: str?, webhook: str?, auth_method: str?, error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, available_products: [str], billed_products: [str], products: [str], consented_products: [str], consent_expiration_time: str(date-time)?, update_type: str}, request_id: str}
+
+@endgroup
+
+@group processor
+@endpoint POST /processor/token/create
+@required {access_token: str, account_id: str, processor: str(dwolla/galileo/modern_treasury/ocrolus/vesta/drivewealth/vopay/achq/check/checkbook/circle/sila_money/rize/svb_api/unit/wyre/lithic/alpaca/astra/moov/treasury_prime/marqeta/checkout/solid/highnote/gemini/apex_clearing/gusto/adyen/atomic/i2c/wepay/riskified/utb/adp_roll/fortress_trust/bond/bakkt/teal/zero_hash/taba_pay/knot/sardine/alloy/finix/nuvei/layer/boom/paynote/stake/wedbush/esusu/ansa/scribeup/straddle/loanpro/bloom_credit/sfox/brale/parafin/cardless/open_ledger/valon/gainbridge/cardlytics/pinwheel/thread_bank/array/fiant/oatfi)}
+@returns(200) {processor_token: str, request_id: str}
+
+@endpoint POST /processor/token/permissions/set
+@required {processor_token: str, products: [str]}
+@returns(200) {request_id: str}
+
+@endpoint POST /processor/token/permissions/get
+@required {processor_token: str}
+@returns(200) {request_id: str, products: [str]}
+
+@endpoint POST /processor/token/webhook/update
+@required {processor_token: str, webhook: str(url)}
+@returns(200) {request_id: str}
+
+@endpoint POST /processor/stripe/bank_account_token/create
+@required {access_token: str, account_id: str}
+@returns(200) {stripe_bank_account_token: str, request_id: str}
+
+@endpoint POST /processor/apex/processor_token/create
+@required {access_token: str, account_id: str}
+@returns(200) {processor_token: str, request_id: str}
+
+@endgroup
+
+@group item
+@endpoint POST /item/import
+@required {products: [str], user_auth: map{user_id!: str, auth_token!: str}}
+@optional {institution_id: str, options: map{webhook: str(url)}}
+@returns(200) {access_token: str, request_id: str}
+
+@endgroup
+
+@group link
+@endpoint POST /link/token/create
+@required {client_name: str, language: str, country_codes: [str]}
+@optional {user: map{client_user_id!: str, legal_name: str, name: any, phone_number: str, phone_number_verified_time: str(date-time), email_address: str, email_address_verified_time: str(date-time), ssn: str, date_of_birth: str(date), address: any, id_number: any}, user_id: str, products: [str], required_if_supported_products: [str], optional_products: [str], additional_consented_products: [str], webhook: str(url), access_token: str, access_tokens: [str], link_customization_name: str, appearance_mode: str(LIGHT/DARK/SYSTEM), redirect_uri: str, android_package_name: str, institution_data: map{routing_number: str}, card_switch: map{card_bin!: str}, account_filters: map{depository: map, credit: map, loan: map, investment: map, other: map}, eu_config: map{headless: bool}, institution_id: str, payment_configuration: map{amount!: str, description: str}, payment_initiation: map{payment_id: str, consent_id: str}, employment: map{employment_source_types: [str], bank_employment: map}, income_verification: map{income_verification_id: str, asset_report_id: str, access_tokens: [str], income_source_types: [str], bank_income: map, payroll_income: map, stated_income_sources: [map]}, base_report: map{days_requested!: int, client_report_id: str}, credit_partner_insights: map{days_requested: int, prism_products: [str]}, cra_options: map{days_requested!: int, days_required: int, client_report_id: str, partner_insights: map, base_report: map, cashflow_insights: map, lend_score: map, network_insights: map, include_investments: bool}, consumer_report_permissible_purpose: any, auth: map{auth_type_select_enabled: bool, automated_microdeposits_enabled: bool, instant_match_enabled: bool, same_day_microdeposits_enabled: bool, instant_microdeposits_enabled: bool, reroute_to_credentials: str, database_match_enabled: bool, database_insights_enabled: bool, flow_type: str, sms_microdeposits_verification_enabled: bool}, transfer: map{intent_id: str, authorization_id: str, payment_profile_token: str}, update: map{account_selection_enabled: bool, reauthorization_enabled: bool, user: bool, item_ids: [str]}, identity_verification: map{template_id!: any, consent: any, gave_consent: bool}, statements: map{start_date!: str(date), end_date!: str(date)}, third_party_user_token: str, investments: map{allow_unverified_crypto_wallets: bool, allow_manual_entry: bool}, investments_auth: map{manual_entry_enabled: bool, masked_number_match_enabled: bool, stated_account_number_enabled: bool, rollover_401k_enabled: bool}, hosted_link: map{delivery_method: str, completion_redirect_uri: str, url_lifetime_seconds: int, is_mobile_app: bool}, transactions: map{days_requested: int}, cashflow_report: map{days_requested: int}, cra_enabled: bool, identity: map{is_document_upload: bool, account_ids: [str], parsing_configs: [str]}, financekit_supported: bool, enable_multi_item_link: bool, user_token: str}
+@returns(200) {link_token: str, expiration: str(date-time), request_id: str, hosted_link_url: str, user_id: str}
+
+@endpoint POST /link/token/get
+@required {link_token: str}
+@returns(200) {link_token: str, created_at: str(date-time)?, expiration: str(date-time)?, link_sessions: [map], metadata: map{initial_products: [str], webhook: str(url)?, country_codes: [str], language: str?, institution_data: map{routing_number: str}, account_filters: map{depository: map, credit: map, loan: map, investment: map}, redirect_uri: str?, client_name: str?}, user_id: str, request_id: str}
+
+@endpoint POST /link/oauth/correlation_id/exchange
+@required {link_correlation_id: str}
+@returns(200) {link_token: str, request_id: str}
+
+@endgroup
+
+@group session
+@endpoint POST /session/token/create
+@required {template_id: str}
+@optional {user: map{client_user_id!: str, user_id: any}, redirect_uri: str, android_package_name: str, webhook: str(url), user_id: str}
+@returns(200) {request_id: str, link: map{link_token: str, expiration: str(date-time), user_id: str}}
+
+@endgroup
+
+@group transfer
+@endpoint POST /transfer/get
+@optional {transfer_id: str, authorization_id: str, originator_client_id: str}
+@returns(200) {transfer: map{id: str, authorization_id: str, ach_class: str, account_id: str, funding_account_id: str?, ledger_id: str?, type: str, user: map{legal_name: str, phone_number: str?, email_address: str?, address: map?}, amount: str, description: str, created: str(date-time), status: str, sweep_status: str?, network: str, wire_details: map?{message_to_beneficiary: str?, wire_return_fee: str?}, cancellable: bool, failure_reason: map?{failure_code: str?, ach_return_code: str?, description: str}, metadata: map?, origination_account_id: str, guarantee_decision: str?, guarantee_decision_rationale: map?{code: str, description: str}, iso_currency_code: str, standard_return_window: str(date)?, unauthorized_return_window: str(date)?, expected_settlement_date: str(date)?, expected_funds_available_date: str(date)?, originator_client_id: str?, refunds: [map], recurring_transfer_id: str?, expected_sweep_settlement_schedule: [map], credit_funds_source: any, facilitator_fee: str, network_trace_id: str?}, request_id: str}
+
+@endpoint POST /transfer/recurring/get
+@required {recurring_transfer_id: str}
+@returns(200) {recurring_transfer: map{recurring_transfer_id: str, created: str(date-time), next_origination_date: str(date)?, test_clock_id: str?, type: str, amount: str, status: str, ach_class: str, network: str, origination_account_id: str, account_id: str, funding_account_id: str, iso_currency_code: str, description: str, transfer_ids: [str], user: map{legal_name: str, phone_number: str?, email_address: str?, address: map?}, schedule: map{interval_unit: str, interval_count: int, interval_execution_day: int, start_date: str(date), end_date: str(date)?}}, request_id: str}
+
+@endgroup
+
+@group bank_transfer
+@endpoint POST /bank_transfer/get
+@required {bank_transfer_id: str}
+@returns(200) {bank_transfer: map{id: str, ach_class: str, account_id: str, type: str, user: map{legal_name: str, email_address: str?, routing_number: str}, amount: str, iso_currency_code: str, description: str, created: str(date-time), status: str, network: str, cancellable: bool, failure_reason: map?{ach_return_code: str?, description: str}, custom_tag: str?, metadata: map?, origination_account_id: str, direction: str?}, request_id: str}
+
+@endgroup
+
+@group transfer
+@endpoint POST /transfer/authorization/create
+@required {access_token: str, account_id: str, type: str(debit/credit), network: str(ach/same-day-ach/rtp/wire), amount: str, user: map{legal_name!: str, phone_number: str, email_address: str, address: map}}
+@optional {funding_account_id: str, ledger_id: str, payment_profile_token: str, ach_class: str(ccd/ppd/tel/web), wire_details: map{message_to_beneficiary: str, wire_return_fee: str}, device: map{ip_address: str, user_agent: str}, origination_account_id: str, iso_currency_code: str, idempotency_key: str, user_present: bool, with_guarantee: bool=True, request_guarantee: bool, beacon_session_id: str, originator_client_id: str, credit_funds_source: any, test_clock_id: str, ruleset_key: str}
+@returns(200) {authorization: map{id: str, created: str(date-time), decision: str, decision_rationale: map?{code: str, description: str}, guarantee_decision: str?, guarantee_decision_rationale: map?{code: str, description: str}, payment_risk: map?{bank_initiated_return_score: int?, customer_initiated_return_score: int?, risk_level: str?, warnings: [map]}, proposed_transfer: map{ach_class: str, account_id: str, funding_account_id: str?, ledger_id: str?, type: str, user: map, amount: str, network: str, wire_details: map?, origination_account_id: str, iso_currency_code: str, originator_client_id: str?, credit_funds_source: any}}, request_id: str}
+
+@endpoint POST /transfer/authorization/cancel
+@required {authorization_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /transfer/balance/get
+@optional {originator_client_id: str, type: str(prefunded_rtp_credits/prefunded_ach_credits)}
+@returns(200) {balance: map{available: str, current: str, type: str}, request_id: str}
+
+@endpoint POST /transfer/capabilities/get
+@required {access_token: str, account_id: str}
+@optional {payment_profile_token: str}
+@returns(200) {institution_supported_networks: map{rtp: map{credit: bool}, rfp: map{debit: bool, max_amount: str?, iso_currency_code: str?}}, request_id: str}
+
+@endpoint POST /transfer/configuration/get
+@optional {originator_client_id: str}
+@returns(200) {request_id: str, max_single_transfer_amount: str, max_single_transfer_credit_amount: str, max_single_transfer_debit_amount: str, max_daily_credit_amount: str, max_daily_debit_amount: str, max_monthly_amount: str, max_monthly_credit_amount: str, max_monthly_debit_amount: str, iso_currency_code: str}
+
+@endpoint POST /transfer/ledger/get
+@optional {ledger_id: str, originator_client_id: str}
+@returns(200) {ledger_id: str, balance: map{available: str, pending: str}, name: str, is_default: bool, request_id: str}
+
+@endpoint POST /transfer/ledger/distribute
+@required {from_ledger_id: str, to_ledger_id: str, amount: str, idempotency_key: str}
+@optional {description: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /transfer/ledger/deposit
+@required {amount: str, idempotency_key: str, network: str(ach/same-day-ach)}
+@optional {originator_client_id: str, funding_account_id: str, ledger_id: str, description: str}
+@returns(200) {sweep: map{id: str, funding_account_id: str, ledger_id: str?, created: str(date-time), amount: str, iso_currency_code: str, settled: str(date)?, expected_funds_available_date: str(date)?, status: str?, trigger: str?, description: str, network_trace_id: str?, failure_reason: map?{failure_code: str?, description: str?}}, request_id: str}
+
+@endpoint POST /transfer/ledger/withdraw
+@required {amount: str, idempotency_key: str, network: str(ach/same-day-ach/rtp/wire)}
+@optional {originator_client_id: str, funding_account_id: str, ledger_id: str, description: str}
+@returns(200) {sweep: map{id: str, funding_account_id: str, ledger_id: str?, created: str(date-time), amount: str, iso_currency_code: str, settled: str(date)?, expected_funds_available_date: str(date)?, status: str?, trigger: str?, description: str, network_trace_id: str?, failure_reason: map?{failure_code: str?, description: str?}}, request_id: str}
+
+@endpoint POST /transfer/originator/funding_account/update
+@required {originator_client_id: str, funding_account: map{access_token!: str, account_id!: str}}
+@returns(200) {request_id: str}
+
+@endpoint POST /transfer/originator/funding_account/create
+@required {originator_client_id: str, funding_account: map}
+@returns(200) {funding_account_id: str, request_id: str}
+
+@endpoint POST /transfer/metrics/get
+@optional {originator_client_id: str}
+@returns(200) {request_id: str, daily_debit_transfer_volume: str, daily_credit_transfer_volume: str, monthly_transfer_volume: str, monthly_debit_transfer_volume: str, monthly_credit_transfer_volume: str, iso_currency_code: str, return_rates: map?{last_60d: map?{overall_return_rate: str, unauthorized_return_rate: str, administrative_return_rate: str}}, authorization_usage: map?{daily_credit_utilization: str, daily_debit_utilization: str, monthly_credit_utilization: str, monthly_debit_utilization: str}}
+
+@endpoint POST /transfer/create
+@required {access_token: str, account_id: str, authorization_id: str, description: str}
+@optional {idempotency_key: str, type: any, network: any, amount: str, ach_class: any, user: map{legal_name: str, phone_number: str, email_address: str, address: map}, metadata: map, origination_account_id: str, iso_currency_code: str, test_clock_id: str, facilitator_fee: str}
+@returns(200) {transfer: map{id: str, authorization_id: str, ach_class: str, account_id: str, funding_account_id: str?, ledger_id: str?, type: str, user: map{legal_name: str, phone_number: str?, email_address: str?, address: map?}, amount: str, description: str, created: str(date-time), status: str, sweep_status: str?, network: str, wire_details: map?{message_to_beneficiary: str?, wire_return_fee: str?}, cancellable: bool, failure_reason: map?{failure_code: str?, ach_return_code: str?, description: str}, metadata: map?, origination_account_id: str, guarantee_decision: str?, guarantee_decision_rationale: map?{code: str, description: str}, iso_currency_code: str, standard_return_window: str(date)?, unauthorized_return_window: str(date)?, expected_settlement_date: str(date)?, expected_funds_available_date: str(date)?, originator_client_id: str?, refunds: [map], recurring_transfer_id: str?, expected_sweep_settlement_schedule: [map], credit_funds_source: any, facilitator_fee: str, network_trace_id: str?}, request_id: str}
+
+@endpoint POST /transfer/recurring/create
+@required {access_token: str, idempotency_key: str, account_id: str, type: str(debit/credit), network: str(ach/same-day-ach/rtp), amount: str, description: str, schedule: map{interval_unit!: str, interval_count!: int, interval_execution_day!: int, start_date!: str(date), end_date: str(date)}, user: map{legal_name!: str, phone_number: str, email_address: str, address: map}}
+@optional {funding_account_id: str, ach_class: str(ccd/ppd/tel/web), user_present: bool, iso_currency_code: str, test_clock_id: str, device: map{ip_address!: str, user_agent!: str}}
+@returns(200) {recurring_transfer: map, decision: str, decision_rationale: map?{code: str, description: str}, request_id: str}
+
+@endgroup
+
+@group bank_transfer
+@endpoint POST /bank_transfer/create
+@required {idempotency_key: str, access_token: str, account_id: str, type: str(debit/credit), network: str(ach/same-day-ach/wire), amount: str, iso_currency_code: str, description: str, user: map{legal_name!: str, email_address: str, routing_number: str}}
+@optional {ach_class: str(ccd/ppd/tel/web), custom_tag: str, metadata: map, origination_account_id: str}
+@returns(200) {bank_transfer: map{id: str, ach_class: str, account_id: str, type: str, user: map{legal_name: str, email_address: str?, routing_number: str}, amount: str, iso_currency_code: str, description: str, created: str(date-time), status: str, network: str, cancellable: bool, failure_reason: map?{ach_return_code: str?, description: str}, custom_tag: str?, metadata: map?, origination_account_id: str, direction: str?}, request_id: str}
+
+@endgroup
+
+@group transfer
+@endpoint POST /transfer/list
+@optional {start_date: str(date-time), end_date: str(date-time), count: int=25, offset: int=0, origination_account_id: str, originator_client_id: str, funding_account_id: str}
+@returns(200) {transfers: [map], request_id: str}
+
+@endpoint POST /transfer/recurring/list
+@optional {start_time: str(date-time), end_time: str(date-time), count: int=25, offset: int=0, funding_account_id: str}
+@returns(200) {recurring_transfers: [map], request_id: str}
+
+@endgroup
+
+@group bank_transfer
+@endpoint POST /bank_transfer/list
+@optional {start_date: str(date-time), end_date: str(date-time), count: int=25, offset: int=0, origination_account_id: str, direction: str(outbound/inbound)}
+@returns(200) {bank_transfers: [map], request_id: str}
+
+@endgroup
+
+@group transfer
+@endpoint POST /transfer/cancel
+@required {transfer_id: str}
+@optional {originator_client_id: str, reason_code: str(AC03/AM09/CUST/DUPL/FRAD/TECH/UPAY/AC14/AM06/BE05/FOCR/MS02/MS03/RR04/RUTA)}
+@returns(200) {request_id: str}
+
+@endpoint POST /transfer/recurring/cancel
+@required {recurring_transfer_id: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group bank_transfer
+@endpoint POST /bank_transfer/cancel
+@required {bank_transfer_id: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group transfer
+@endpoint POST /transfer/event/list
+@optional {start_date: str(date-time), end_date: str(date-time), transfer_id: str, account_id: str, transfer_type: str(debit/credit), event_types: [str], sweep_id: str, count: int=25, offset: int=0, origination_account_id: str, originator_client_id: str, funding_account_id: str}
+@returns(200) {transfer_events: [map], has_more: bool, request_id: str}
+
+@endpoint POST /transfer/ledger/event/list
+@optional {originator_client_id: str, start_date: str(date-time), end_date: str(date-time), ledger_id: str, ledger_event_id: str, source_type: str(TRANSFER/SWEEP/REFUND), source_id: str, count: int=25, offset: int=0}
+@returns(200) {ledger_events: [map], has_more: bool, request_id: str}
+
+@endgroup
+
+@group bank_transfer
+@endpoint POST /bank_transfer/event/list
+@optional {start_date: str(date-time), end_date: str(date-time), bank_transfer_id: str, account_id: str, bank_transfer_type: str(debit/credit), event_types: [str], count: int=25, offset: int=0, origination_account_id: str, direction: str(inbound/outbound)}
+@returns(200) {bank_transfer_events: [map], request_id: str}
+
+@endgroup
+
+@group transfer
+@endpoint POST /transfer/event/sync
+@required {after_id: int}
+@optional {count: int=100}
+@returns(200) {transfer_events: [map], has_more: bool, request_id: str}
+
+@endgroup
+
+@group bank_transfer
+@endpoint POST /bank_transfer/event/sync
+@required {after_id: int}
+@optional {count: int=25}
+@returns(200) {bank_transfer_events: [map], request_id: str}
+
+@endgroup
+
+@group transfer
+@endpoint POST /transfer/sweep/get
+@required {sweep_id: str}
+@returns(200) {sweep: map{id: str, funding_account_id: str, ledger_id: str?, created: str(date-time), amount: str, iso_currency_code: str, settled: str(date)?, expected_funds_available_date: str(date)?, status: str?, trigger: str?, description: str, network_trace_id: str?, failure_reason: map?{failure_code: str?, description: str?}}, request_id: str}
+
+@endgroup
+
+@group bank_transfer
+@endpoint POST /bank_transfer/sweep/get
+@required {sweep_id: str}
+@returns(200) {sweep: map{id: str, created_at: str(date-time), amount: str, iso_currency_code: str}, request_id: str}
+
+@endgroup
+
+@group transfer
+@endpoint POST /transfer/sweep/list
+@optional {start_date: str(date-time), end_date: str(date-time), count: int=25, offset: int=0, amount: str, status: str(pending/posted/settled/funds_available/returned/failed), originator_client_id: str, funding_account_id: str, transfer_id: str, trigger: str(manual/incoming/balance_threshold/automatic_aggregate)}
+@returns(200) {sweeps: [map], request_id: str}
+
+@endgroup
+
+@group bank_transfer
+@endpoint POST /bank_transfer/sweep/list
+@optional {origination_account_id: str, start_time: str(date-time), end_time: str(date-time), count: int=25}
+@returns(200) {sweeps: [map], request_id: str}
+
+@endpoint POST /bank_transfer/balance/get
+@optional {origination_account_id: str}
+@returns(200) {balance: map{available: str, transactable: str}, origination_account_id: str?, request_id: str}
+
+@endpoint POST /bank_transfer/migrate_account
+@required {account_number: str, routing_number: str, account_type: str}
+@optional {wire_routing_number: str}
+@returns(200) {access_token: str, account_id: str, request_id: str}
+
+@endgroup
+
+@group transfer
+@endpoint POST /transfer/migrate_account
+@required {account_number: str, routing_number: str, account_type: str}
+@optional {wire_routing_number: str}
+@returns(200) {access_token: str, account_id: str, request_id: str}
+
+@endpoint POST /transfer/intent/create
+@required {mode: str(PAYMENT/DISBURSEMENT), amount: str, description: str, user: map{legal_name!: str, phone_number: str, email_address: str, address: map}}
+@optional {account_id: str, funding_account_id: str, network: str(ach/same-day-ach/rtp)=same-day-ach, ach_class: str(ccd/ppd/tel/web), origination_account_id: str, metadata: map, iso_currency_code: str, require_guarantee: bool=False}
+@returns(200) {transfer_intent: map{id: str, created: str(date-time), status: str, account_id: str?, origination_account_id: str, funding_account_id: str, amount: str, mode: str, network: str, ach_class: str, user: map{legal_name: str, phone_number: str?, email_address: str?, address: map?}, description: str, metadata: map?, iso_currency_code: str, require_guarantee: bool?}, request_id: str}
+
+@endpoint POST /transfer/intent/get
+@required {transfer_intent_id: str}
+@returns(200) {transfer_intent: map{id: str, created: str(date-time), status: str, transfer_id: str?, failure_reason: map?{error_type: str, error_code: str, error_message: str}, authorization_decision: str?, authorization_decision_rationale: map?{code: str, description: str}, account_id: str?, origination_account_id: str, funding_account_id: str, amount: str, mode: str, network: str, ach_class: str, user: map{legal_name: str, phone_number: str?, email_address: str?, address: map?}, description: str, metadata: map?, iso_currency_code: str, require_guarantee: bool?, guarantee_decision: str?, guarantee_decision_rationale: map?{code: str, description: str}}, request_id: str}
+
+@endpoint POST /transfer/repayment/list
+@optional {start_date: str(date-time), end_date: str(date-time), count: int=25, offset: int=0}
+@returns(200) {repayments: [map], request_id: str}
+
+@endpoint POST /transfer/repayment/return/list
+@required {repayment_id: str}
+@optional {count: int=25, offset: int=0}
+@returns(200) {repayment_returns: [map], request_id: str}
+
+@endpoint POST /transfer/platform/requirement/submit
+@required {originator_client_id: str, requirement_submissions: [map{requirement_type!: str, value!: str, person_id: str(uuid)}]}
+@returns(200) {request_id: str}
+
+@endpoint POST /transfer/originator/create
+@required {company_name: str}
+@returns(200) {originator_client_id: str, company_name: str, request_id: str}
+
+@endpoint POST /transfer/questionnaire/create
+@required {originator_client_id: str, redirect_uri: str(url)}
+@returns(200) {onboarding_url: str, request_id: str}
+
+@endpoint POST /transfer/diligence/submit
+@required {originator_client_id: str, originator_diligence: map{dba!: str, tax_id!: str, credit_usage_configuration: map, debit_usage_configuration: map, address!: map, website!: str(url), naics_code!: str, funding_account!: map}}
+@returns(200) {request_id: str}
+
+@endpoint POST /transfer/diligence/document/upload
+@required {originator_client_id: str, file: str(binary), purpose: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /transfer/originator/get
+@required {originator_client_id: str}
+@returns(200) {originator: map{client_id: str, transfer_diligence_status: str, company_name: str, outstanding_requirements: [map]}, request_id: str}
+
+@endpoint POST /transfer/originator/list
+@optional {count: int=25, offset: int=0}
+@returns(200) {originators: [map], request_id: str}
+
+@endpoint POST /transfer/refund/create
+@required {transfer_id: str, amount: str, idempotency_key: str}
+@returns(200) {refund: map{id: str, transfer_id: str, amount: str, status: str, failure_reason: map?{failure_code: str?, ach_return_code: str?, description: str}, ledger_id: str?, created: str(date-time), network_trace_id: str?}, request_id: str}
+
+@endpoint POST /transfer/refund/get
+@required {refund_id: str}
+@returns(200) {refund: map{id: str, transfer_id: str, amount: str, status: str, failure_reason: map?{failure_code: str?, ach_return_code: str?, description: str}, ledger_id: str?, created: str(date-time), network_trace_id: str?}, request_id: str}
+
+@endpoint POST /transfer/refund/cancel
+@required {refund_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /transfer/platform/originator/create
+@required {originator_client_id: str, tos_acceptance_metadata: map{agreement_accepted!: bool, originator_ip_address!: str, agreement_accepted_at!: str(date-time)}, originator_reviewed_at: str(date-time)}
+@optional {webhook: str(url)}
+@returns(200) {request_id: str}
+
+@endpoint POST /transfer/platform/person/create
+@required {originator_client_id: str}
+@optional {name: map{given_name!: str, family_name!: str}, email_address: str, phone_number: str, address: map{city!: str, country!: str, postal_code!: str, region!: str, street!: str, street2: str}, id_number: map{value!: str, type!: str}, date_of_birth: str(date), relationship_to_originator: str, ownership_percentage: int, title: str}
+@returns(200) {request_id: str, person_id: str}
+
+@endgroup
+
+@group sandbox
+@endpoint POST /sandbox/bank_transfer/simulate
+@required {bank_transfer_id: str, event_type: str}
+@optional {failure_reason: map{ach_return_code: str, description: str}}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/transfer/sweep/simulate
+@optional {test_clock_id: str, webhook: str(url)}
+@returns(200) {sweep: map, request_id: str}
+
+@endpoint POST /sandbox/transfer/simulate
+@required {transfer_id: str, event_type: str}
+@optional {test_clock_id: str, failure_reason: map{failure_code: str, ach_return_code: str, description: str}, webhook: str(url)}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/transfer/refund/simulate
+@required {refund_id: str, event_type: str}
+@optional {test_clock_id: str, failure_reason: map{failure_code: str, ach_return_code: str, description: str}, webhook: str(url)}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/transfer/ledger/simulate_available
+@optional {ledger_id: str, originator_client_id: str, test_clock_id: str, webhook: str(url)}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/transfer/ledger/deposit/simulate
+@required {sweep_id: str, event_type: str(sweep.posted/sweep.settled/sweep.returned/sweep.failed)}
+@optional {failure_reason: map{failure_code: str, ach_return_code: str, description: str}}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/transfer/ledger/withdraw/simulate
+@required {sweep_id: str, event_type: str(sweep.posted/sweep.settled/sweep.returned/sweep.failed)}
+@optional {failure_reason: map{failure_code: str, ach_return_code: str, description: str}}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/transfer/repayment/simulate
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/transfer/fire_webhook
+@required {webhook: str(url)}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/transfer/test_clock/create
+@optional {virtual_time: str(date-time)}
+@returns(200) {test_clock: map{test_clock_id: str, virtual_time: str(date-time)}, request_id: str}
+
+@endpoint POST /sandbox/transfer/test_clock/advance
+@required {test_clock_id: str, new_virtual_time: str(date-time)}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/transfer/test_clock/get
+@required {test_clock_id: str}
+@returns(200) {test_clock: map{test_clock_id: str, virtual_time: str(date-time)}, request_id: str}
+
+@endpoint POST /sandbox/transfer/test_clock/list
+@optional {start_virtual_time: str(date-time), end_virtual_time: str(date-time), count: int=25, offset: int=0}
+@returns(200) {test_clocks: [map], request_id: str}
+
+@endpoint POST /sandbox/payment_profile/reset_login
+@required {payment_profile_token: str}
+@returns(200) {reset_login: bool, request_id: str}
+
+@endpoint POST /sandbox/payment/simulate
+@required {payment_id: str, webhook: str, status: str}
+@returns(200) {request_id: str, old_status: str, new_status: str}
+
+@endgroup
+
+@group employers
+@endpoint POST /employers/search
+@required {query: str, products: [str]}
+@returns(200) {employers: [map], request_id: str}
+
+@endgroup
+
+@group income
+@endpoint POST /income/verification/create
+@required {webhook: str}
+@optional {precheck_id: str, options: map{access_tokens: [str]}}
+@returns(200) {income_verification_id: str, request_id: str}
+
+@endpoint POST /income/verification/paystubs/get
+@optional {income_verification_id: str, access_token: str}
+@returns(200) {document_metadata: [map], paystubs: [map], error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, request_id: str}
+
+@endpoint POST /income/verification/documents/download
+@optional {income_verification_id: str, access_token: str, document_id: str}
+@returns(200)
+
+@endpoint POST /income/verification/taxforms/get
+@optional {income_verification_id: str, access_token: str}
+@returns(200) {request_id: str, document_metadata: [map], taxforms: [map], error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}}
+
+@endpoint POST /income/verification/precheck
+@optional {user: map{first_name: str, last_name: str, email_address: str, home_address: map}, employer: map{name: str, address: map, tax_id: str, url: str(url)}, payroll_institution: map{name: str}, transactions_access_token: any, transactions_access_tokens: [str], us_military_info: map{is_active_duty: bool, branch: str}}
+@returns(200) {precheck_id: str, request_id: str, confidence: str}
+
+@endgroup
+
+@group employment
+@endpoint POST /employment/verification/get
+@required {access_token: str}
+@returns(200) {employments: [map], request_id: str}
+
+@endgroup
+
+@group credit
+@endpoint POST /credit/audit_copy_token/create
+@required {report_tokens: [str]}
+@returns(200) {audit_copy_token: str, request_id: str}
+
+@endpoint POST /credit/audit_copy_token/remove
+@required {audit_copy_token: str}
+@returns(200) {removed: bool, request_id: str}
+
+@endpoint POST /credit/asset_report/freddie_mac/get
+@required {audit_copy_token: str}
+@returns(200) {DEAL: map{LOANS: map{LOAN: map}, PARTIES: map{PARTY: [map]}, SERVICES: map{SERVICE: map}}, request_id: str, SchemaVersion: num}
+
+@endpoint POST /credit/freddie_mac/reports/get
+@required {audit_copy_token: str}
+@returns(200) {DEAL: map{LOANS: map{LOAN: map}, PARTIES: map{PARTY: [map]}, SERVICES: map{SERVICE: map}}, request_id: str, SchemaVersion: num}
+
+@endgroup
+
+@group beta
+@endpoint POST /beta/credit/v1/bank_employment/get
+@required {user_token: str}
+@returns(200) {bank_employment_reports: [map], request_id: str}
+
+@endgroup
+
+@group credit
+@endpoint POST /credit/bank_income/get
+@optional {user_token: str, options: map{count: int}}
+@returns(200) {bank_income: [map], request_id: str}
+
+@endpoint POST /credit/bank_income/pdf/get
+@required {user_token: str}
+@returns(200)
+
+@endpoint POST /credit/bank_income/refresh
+@required {user_token: str}
+@optional {options: map{days_requested: int}}
+@returns(200) {request_id: str}
+
+@endpoint POST /credit/bank_income/webhook/update
+@required {user_token: str, enable_webhooks: bool}
+@returns(200) {request_id: str}
+
+@endpoint POST /credit/payroll_income/parsing_config/update
+@required {user_token: str, parsing_config: [str]}
+@optional {item_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /credit/bank_statements/uploads/get
+@required {user_token: str}
+@optional {options: map{item_ids: [str]}}
+@returns(200) {items: [map], request_id: str}
+
+@endpoint POST /credit/payroll_income/get
+@optional {user_token: str, options: map{item_ids: [str]}}
+@returns(200) {items: [map], error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, request_id: str}
+
+@endpoint POST /credit/payroll_income/risk_signals/get
+@optional {user_token: str}
+@returns(200) {items: [map], error: map?{error_type: str, error_code: str, error_code_reason: str?, error_message: str, display_message: str?, request_id: str, causes: [any], status: int?, documentation_url: str, suggested_action: str?, required_account_subtypes: [str], provided_account_subtypes: [str]}, request_id: str}
+
+@endpoint POST /credit/payroll_income/precheck
+@optional {user_token: str, access_tokens: [str], employer: map{name: str, address: map, tax_id: str, url: str(url)}, us_military_info: map{is_active_duty: bool, branch: str}, payroll_institution: map{name: str}}
+@returns(200) {request_id: str, confidence: str}
+
+@endpoint POST /credit/employment/get
+@required {user_token: str}
+@returns(200) {items: [map], request_id: str}
+
+@endpoint POST /credit/payroll_income/refresh
+@required {user_token: str}
+@optional {options: map{item_ids: [str], webhook: str}}
+@returns(200) {request_id: str, verification_refresh_status: str}
+
+@endpoint POST /credit/relay/create
+@required {report_tokens: [str], secondary_client_id: str}
+@optional {webhook: str(url)}
+@returns(200) {relay_token: str, request_id: str}
+
+@endpoint POST /credit/relay/get
+@required {relay_token: str, report_type: str}
+@optional {include_insights: bool=False}
+@returns(200) {report: map{asset_report_id: str, insights: map?{risk: map?, affordability: map?}, client_report_id: str?, date_generated: str(date-time), days_requested: num, user: map{client_user_id: str?, first_name: str?, middle_name: str?, last_name: str?, ssn: str?, phone_number: str?, email: str?}, items: [map]}, warnings: [map], request_id: str}
+
+@endpoint POST /credit/relay/pdf/get
+@required {relay_token: str, report_type: str}
+@returns(200)
+
+@endpoint POST /credit/relay/refresh
+@required {relay_token: str, report_type: str}
+@optional {webhook: str(url)}
+@returns(200) {relay_token: str, asset_report_id: str, request_id: str}
+
+@endpoint POST /credit/relay/remove
+@required {relay_token: str}
+@returns(200) {removed: bool, request_id: str}
+
+@endgroup
+
+@group sandbox
+@endpoint POST /sandbox/bank_transfer/fire_webhook
+@required {webhook: str(url)}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/income/fire_webhook
+@required {item_id: str, webhook: str(url), webhook_code: str(INCOME_VERIFICATION/INCOME_VERIFICATION_RISK_SIGNALS)}
+@optional {user_id: str, verification_status: str(VERIFICATION_STATUS_PROCESSING_COMPLETE/VERIFICATION_STATUS_PROCESSING_FAILED/VERIFICATION_STATUS_PENDING_APPROVAL)}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/bank_income/fire_webhook
+@required {webhook_code: str(BANK_INCOME_REFRESH_UPDATE/BANK_INCOME_REFRESH_COMPLETE), webhook_fields: map{user_id!: str, bank_income_refresh_complete_result: str}}
+@optional {webhook_override: str(url)}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/cra/cashflow_updates/update
+@optional {user_token: str, webhook_codes: [str], user_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /sandbox/oauth/select_accounts
+@required {oauth_state_id: str, accounts: [str]}
+@returns(200)
+
+@endgroup
+
+@group signal
+@endpoint POST /signal/evaluate
+@required {access_token: str, account_id: str, client_transaction_id: str, amount: num(double)}
+@optional {user_present: bool, client_user_id: str, is_recurring: bool, default_payment_method: str, user: map{name: map, phone_number: str, email_address: str, address: map}, device: map{ip_address: str, user_agent: str}, risk_profile_key: str, ruleset_key: str}
+@returns(200) {request_id: str, scores: map?{customer_initiated_return_risk: map{score: int, risk_tier: int}, bank_initiated_return_risk: map{score: int, risk_tier: int}}, core_attributes: map{unauthorized_transactions_count_7d: int?, unauthorized_transactions_count_30d: int?, unauthorized_transactions_count_60d: int?, unauthorized_transactions_count_90d: int?, nsf_overdraft_transactions_count_7d: int?, nsf_overdraft_transactions_count_30d: int?, nsf_overdraft_transactions_count_60d: int?, nsf_overdraft_transactions_count_90d: int?, days_since_first_plaid_connection: int?, plaid_connections_count_7d: int?, plaid_connections_count_30d: int?, total_plaid_connections_count: int?, is_savings_or_money_market_account: bool?, total_credit_transactions_amount_10d: num(double)?, total_debit_transactions_amount_10d: num(double)?, p50_credit_transactions_amount_28d: num(double)?, p50_debit_transactions_amount_28d: num(double)?, p95_credit_transactions_amount_28d: num(double)?, p95_debit_transactions_amount_28d: num(double)?, days_with_negative_balance_count_90d: int?, p90_eod_balance_30d: num(double)?, p90_eod_balance_60d: num(double)?, p90_eod_balance_90d: num(double)?, p10_eod_balance_30d: num(double)?, p10_eod_balance_60d: num(double)?, p10_eod_balance_90d: num(double)?, available_balance: num(double)?, current_balance: num(double)?, balance_last_updated: str(date-time)?, phone_change_count_28d: int?, phone_change_count_90d: int?, email_change_count_28d: int?, email_change_count_90d: int?, address_change_count_28d: int?, address_change_count_90d: int?, plaid_non_oauth_authentication_attempts_count_3d: int?, plaid_non_oauth_authentication_attempts_count_7d: int?, plaid_non_oauth_authentication_attempts_count_30d: int?, failed_plaid_non_oauth_authentication_attempts_count_3d: int?, failed_plaid_non_oauth_authentication_attempts_count_7d: int?, failed_plaid_non_oauth_authentication_attempts_count_30d: int?, debit_transactions_count_10d: int?, credit_transactions_count_10d: int?, debit_transactions_count_30d: int?, credit_transactions_count_30d: int?, debit_transactions_count_60d: int?, credit_transactions_count_60d: int?, debit_transactions_count_90d: int?, credit_transactions_count_90d: int?, total_debit_transactions_amount_30d: num(double)?, total_credit_transactions_amount_30d: num(double)?, total_debit_transactions_amount_60d: num(double)?, total_credit_transactions_amount_60d: num(double)?, total_debit_transactions_amount_90d: num(double)?, total_credit_transactions_amount_90d: num(double)?, p50_eod_balance_30d: num(double)?, p50_eod_balance_60d: num(double)?, p50_eod_balance_90d: num(double)?, p50_eod_balance_31d_to_60d: num(double)?, p50_eod_balance_61d_to_90d: num(double)?, p90_eod_balance_31d_to_60d: num(double)?, p90_eod_balance_61d_to_90d: num(double)?, p10_eod_balance_31d_to_60d: num(double)?, p10_eod_balance_61d_to_90d: num(double)?, transactions_last_updated: str(date-time)?, is_account_closed: bool?, is_account_frozen_or_restricted: bool?, distinct_ip_addresses_count_3d: int?, distinct_ip_addresses_count_7d: int?, distinct_ip_addresses_count_30d: int?, distinct_ip_addresses_count_90d: int?, distinct_user_agents_count_3d: int?, distinct_user_agents_count_7d: int?, distinct_user_agents_count_30d: int?, distinct_user_agents_count_90d: int?, distinct_ssl_tls_connection_sessions_count_3d: int?, distinct_ssl_tls_connection_sessions_count_7d: int?, distinct_ssl_tls_connection_sessions_count_30d: int?, distinct_ssl_tls_connection_sessions_count_90d: int?, days_since_account_opening: int?, balance_to_transaction_amount_ratio: num(double)?}, risk_profile: map?{key: str, outcome: str}, ruleset: map?{ruleset_key: str, result: str, triggered_rule_details: map?{internal_note: str, custom_action_key: str}, outcome: str}, warnings: [map]}
+
+@endpoint POST /signal/schedule
+@required {access_token: str, account_id: str, client_transaction_id: str, amount: num(double)}
+@optional {default_payment_method: str(SAME_DAY_ACH/STANDARD_ACH/MULTIPLE_PAYMENT_METHODS)}
+@returns(200) {optimal_date: str(date)?, recommendations: [map], warnings: [map], request_id: str}
+
+@endpoint POST /signal/decision/report
+@required {client_transaction_id: str, initiated: bool}
+@optional {days_funds_on_hold: int, decision_outcome: str(APPROVE/REVIEW/REJECT/TAKE_OTHER_RISK_MEASURES/NOT_EVALUATED), payment_method: str(SAME_DAY_ACH/NEXT_DAY_ACH/STANDARD_ACH/MULTIPLE_PAYMENT_METHODS), amount_instantly_available: num(double), submitted_at: str(date-time)}
+@returns(200) {request_id: str}
+
+@endpoint POST /signal/return/report
+@required {client_transaction_id: str, return_code: str}
+@optional {returned_at: str(date-time)}
+@returns(200) {request_id: str}
+
+@endpoint POST /signal/prepare
+@required {access_token: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group wallet
+@endpoint POST /wallet/create
+@required {iso_currency_code: str(GBP/EUR)}
+@returns(200)
+
+@endpoint POST /wallet/get
+@required {wallet_id: str}
+@returns(200)
+
+@endpoint POST /wallet/list
+@optional {iso_currency_code: str(GBP/EUR), cursor: str, count: int=10}
+@returns(200) {wallets: [map], next_cursor: str, request_id: str}
+
+@endpoint POST /wallet/transaction/execute
+@required {idempotency_key: str, wallet_id: str, counterparty: map{name!: str, numbers!: map, address: map, date_of_birth: str(date)}, amount: map{iso_currency_code!: str, value!: num(double)}, reference: str}
+@optional {originating_fund_source: map{full_name!: str, address!: map, account_number!: str, bic!: str}}
+@returns(200) {transaction_id: str, status: str, request_id: str}
+
+@endpoint POST /wallet/transaction/get
+@required {transaction_id: str}
+@returns(200)
+
+@endpoint POST /wallet/transaction/list
+@required {wallet_id: str}
+@optional {cursor: str, count: int=10, options: map{start_time: str(date-time), end_time: str(date-time)}}
+@returns(200) {transactions: [map], next_cursor: str, request_id: str}
+
+@endgroup
+
+@group beta
+@endpoint POST /beta/transactions/v1/enhance
+@required {account_type: str, transactions: [map{id!: str, description!: str, amount!: num(double), iso_currency_code!: str}]}
+@returns(200) {enhanced_transactions: [map]}
+
+@endpoint POST /beta/transactions/rules/v1/create
+@required {access_token: str, personal_finance_category: str, rule_details: map{field!: str, type!: str, query!: str}}
+@returns(200) {rule: map{id: str, item_id: str, created_at: str(date-time), personal_finance_category: str, rule_details: map{field: str, type: str, query: str}}, request_id: str}
+
+@endpoint POST /beta/transactions/rules/v1/list
+@required {access_token: str}
+@returns(200) {rules: [map], request_id: str}
+
+@endpoint POST /beta/transactions/rules/v1/remove
+@required {access_token: str, rule_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /beta/transactions/user_insights/v1/get
+@required {client_user_id: str}
+@returns(200) {user_data_overview: map{transaction_count: int, oldest_transaction_date: str(date), newest_transaction_date: str(date), days_available: int, total_outflows: num(double), total_inflows: num(double)}, counterparty_insights: map{financial_institution_insights: [map], merchant_insights: [map]}, category_insights: map{primary_category_insights: [map], detailed_category_insights: [map]}, recurring_transactions: map{inflow_streams: [map], outflow_streams: [map]}}
+
+@endpoint POST /beta/ewa_report/v1/get
+@required {access_token: str}
+@returns(200) {request_id: str, ewa_report_id: str, generation_time: str(date-time), ewa_scores: [map]}
+
+@endgroup
+
+@group issues
+@endpoint POST /issues/search
+@optional {item_id: str, link_session_id: str, link_session_request_id: str}
+@returns(200) {issues: [map], request_id: str}
+
+@endpoint POST /issues/get
+@required {issue_id: str}
+@returns(200) {issue: map{issue_id: str, institution_names: [str], institution_ids: [str], created_at: str(date-time), summary: str, detailed_description: str, status: str}, request_id: str}
+
+@endpoint POST /issues/subscribe
+@required {issue_id: str, webhook: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group payment_profile
+@endpoint POST /payment_profile/create
+@returns(200) {payment_profile_token: str, request_id: str}
+
+@endpoint POST /payment_profile/get
+@required {payment_profile_token: str}
+@returns(200) {updated_at: str(date-time), created_at: str(date-time), deleted_at: str(date-time)?, status: str, request_id: str}
+
+@endpoint POST /payment_profile/remove
+@required {payment_profile_token: str}
+@returns(200) {request_id: str}
+
+@endgroup
+
+@group partner
+@endpoint POST /partner/customer/create
+@required {company_name: str, is_diligence_attested: bool, legal_entity_name: str, website: str, application_name: str, address: map{city: str, street: str, region: str, postal_code: str, country_code: str}, is_bank_addendum_completed: bool}
+@optional {products: [str], create_link_customization: bool, logo: str, technical_contact: map{given_name: str, family_name: str, email: str}, billing_contact: map{given_name: str, family_name: str, email: str}, customer_support_info: map{email: str, phone_number: str, contact_url: str, link_update_url: str}, assets_under_management: map{amount!: num(double), iso_currency_code!: str}, redirect_uris: [str], registration_number: str}
+@returns(200) {end_customer: map, request_id: str}
+
+@endpoint POST /partner/customer/get
+@required {end_customer_client_id: str}
+@returns(200) {end_customer: map{client_id: str, company_name: str, status: str}, request_id: str}
+
+@endpoint POST /partner/customer/enable
+@required {end_customer_client_id: str}
+@returns(200) {production_secret: str, request_id: str}
+
+@endpoint POST /partner/customer/remove
+@required {end_customer_client_id: str}
+@returns(200) {request_id: str}
+
+@endpoint POST /partner/customer/oauth_institutions/get
+@required {end_customer_client_id: str}
+@returns(200) {flowdown_status: str, questionnaire_status: str, institutions: [map], request_id: str}
+
+@endgroup
+
+@group beta
+@endpoint POST /beta/partner/customer/v1/create
+@required {company_name: str, website: str, application_name: str, customer_support_info: map{email: str, phone_number: str, contact_url: str, link_update_url: str}, address: map{city: str, street: str, region: str, postal_code: str, country_code: str}}
+@optional {is_diligence_attested: bool, products: [str], create_link_customization: bool, logo: str, legal_entity_name: str, technical_contact: map{given_name: str, family_name: str, email: str}, billing_contact: map{given_name: str, family_name: str, email: str}, redirect_uris: [str], bank_addendum_acceptance: map{customer_accepted: bool, customer_ip_address: str, customer_agreement_timestamp: str(date-time)}, questionnaires: map{cra: map}}
+@returns(200) {end_customer: map, request_id: str}
+
+@endpoint POST /beta/partner/customer/v1/get
+@required {end_customer_client_id: str}
+@returns(200) {end_customer: map{client_id: str, company_name: str, status: str, product_statuses: map, requirements_due: [str]}, request_id: str}
+
+@endpoint POST /beta/partner/customer/v1/update
+@required {end_customer_client_id: str}
+@optional {legal_entity_name: str, redirect_uris: [str], bank_addendum_acceptance: map{customer_accepted: bool, customer_ip_address: str, customer_agreement_timestamp: str(date-time)}, questionnaires: map{cra: map}}
+@returns(200) {end_customer: map{client_id: str, company_name: str, status: str, product_statuses: map, requirements_due: [str]}, request_id: str}
+
+@endpoint POST /beta/partner/customer/v1/enable
+@required {end_customer_client_id: str}
+@optional {products: [str]}
+@returns(200) {end_customer_client_id: str, status: str, product_statuses: map, production_secret: str, request_id: str}
+
+@endgroup
+
+@group link_delivery
+@endpoint POST /link_delivery/create
+@required {link_token: str}
+@optional {options: map{recipient: map}}
+@returns(200) {link_delivery_url: str, link_delivery_session_id: str, request_id: str}
+
+@endpoint POST /link_delivery/get
+@required {link_delivery_session_id: str}
+@returns(200) {status: str, created_at: str(date-time), completed_at: str(date-time)?, request_id: str, access_tokens: [str]?, item_ids: [str]?}
+
+@endgroup
+
+@group fdx
+@endpoint POST /fdx/notifications
+@required {notificationId: str, type: str(CONSENT_REVOKED/CONSENT_UPDATED/CUSTOM/SERVICE/BALANCE/PLANNED_OUTAGE/TAN_REVOKED), sentOn: str(date-time), category: str(SECURITY/MAINTENANCE/FRAUD/CONSENT/NEW_DATA/TOKENIZED_ACCOUNT_NUMBER), notificationPayload: map{id: str, idType: str, event: map}}
+@optional {severity: str(EMERGENCY/ALERT/WARNING/NOTICE/INFO), priority: str(HIGH/MEDIUM/LOW), publisher: map{name!: str, type!: str, homeUri: str(uri), logoUri: str(uri), registry: str, registeredEntityName: str, registeredEntityId: str}, subscriber: map{name!: str, type!: str, homeUri: str(uri), logoUri: str(uri), registry: str, registeredEntityName: str, registeredEntityId: str}, url: map{href!: str(uri-reference), action: str, rel: str, types: [str]}}
+@returns(200)
+
+@endpoint GET /fdx/recipients
+@returns(200) {recipients: [any]}
+
+@endpoint GET /fdx/recipient/{recipientId}
+@required {recipientId: str}
+@optional {OAUTH-STATE-ID: str}
+@returns(200)
+
+@endgroup
+
+@group network_insights
+@endpoint POST /network_insights/report/get
+@required {access_tokens: [str]}
+@returns(200) {report: map{report_id: str, generated_time: str(date-time), network_attributes: map, items: [map]}, request_id: str}
+
+@endgroup
+
+@end

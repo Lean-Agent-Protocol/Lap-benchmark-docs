@@ -1,0 +1,36 @@
+spec_id: google-firestore
+tasks:
+  - id: t1
+    description: "Search a document database using filter criteria and ordering rules, then obtain several documents at once by their paths in a single bulk retrieval operation"
+    target_endpoints:
+      - RPC RunQuery
+      - RPC BatchGetDocuments
+    expected_params:
+      RPC RunQuery:
+        - parent
+        - structured_query
+        - transaction
+        - new_transaction
+        - read_time
+      RPC BatchGetDocuments:
+        - database
+        - documents
+        - mask
+        - transaction
+        - new_transaction
+  - id: t2
+    description: "Add a new record to a specific collection in the document database with a given identifier, then persist a set of write operations atomically as part of a transaction"
+    target_endpoints:
+      - RPC CreateDocument
+      - RPC Commit
+    expected_params:
+      RPC CreateDocument:
+        - parent
+        - collection_id
+        - document_id
+        - document
+        - mask
+      RPC Commit:
+        - database
+        - writes
+        - transaction

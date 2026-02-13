@@ -1,0 +1,38 @@
+spec_id: auth0-postman
+tasks:
+  - id: t1
+    description: "Set up a new identity provider link in the tenant specifying the authentication strategy and provider options, then add a custom login pipeline hook with executable logic to run during authentication"
+    target_endpoints:
+      - POST /api/v2/connections
+      - POST /api/v2/rules
+    expected_params:
+      POST /api/v2/connections:
+        - name
+        - strategy
+        - options
+        - enabled_clients
+      POST /api/v2/rules:
+        - name
+        - script
+        - order
+        - enabled
+        - stage
+  - id: t2
+    description: "Onboard a new user account with their credentials, contact info, and profile metadata through a specific identity provider, then authorize an application to access a protected resource by defining its allowed permission scopes"
+    target_endpoints:
+      - POST /api/v2/users
+      - POST /api/v2/client-grants
+    expected_params:
+      POST /api/v2/users:
+        - connection
+        - email
+        - username
+        - password
+        - phone_number
+        - user_metadata
+        - email_verified
+        - app_metadata
+      POST /api/v2/client-grants:
+        - client_id
+        - audience
+        - scope

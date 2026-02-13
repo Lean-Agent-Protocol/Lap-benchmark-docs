@@ -1,0 +1,811 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Twilio - Api
+@base https://api.twilio.com
+@version 1.0.0
+@auth Bearer basic
+@common_fields {AccountSid: str}
+@endpoints 197
+@hint download_for_search
+@toc 2010-04-01(197)
+
+@endpoint POST /2010-04-01/Accounts.json
+@returns(201) {auth_token: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, owner_account_sid: str?, sid: str?, status: str, subresource_uris: map?, type: str, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts.json
+@optional {FriendlyName: str, Status: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {accounts: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{Sid}.json
+@required {Sid: str}
+@returns(200) {auth_token: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, owner_account_sid: str?, sid: str?, status: str, subresource_uris: map?, type: str, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{Sid}.json
+@required {Sid: str}
+@returns(200) {auth_token: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, owner_account_sid: str?, sid: str?, status: str, subresource_uris: map?, type: str, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Addresses.json
+@returns(201) {account_sid: str?, city: str?, customer_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, iso_country: str(iso-country-code)?, postal_code: str?, region: str?, sid: str?, street: str?, uri: str?, emergency_enabled: bool?, validated: bool?, verified: bool?, street_secondary: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Addresses.json
+@optional {CustomerName: str, FriendlyName: str, EmergencyEnabled: bool, IsoCountry: str(iso-country-code), PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {addresses: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Addresses/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Addresses/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, city: str?, customer_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, iso_country: str(iso-country-code)?, postal_code: str?, region: str?, sid: str?, street: str?, uri: str?, emergency_enabled: bool?, validated: bool?, verified: bool?, street_secondary: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Addresses/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, city: str?, customer_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, iso_country: str(iso-country-code)?, postal_code: str?, region: str?, sid: str?, street: str?, uri: str?, emergency_enabled: bool?, validated: bool?, verified: bool?, street_secondary: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Applications.json
+@returns(201) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, message_status_callback: str(uri)?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_status_callback: str(uri)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, uri: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, public_application_connect_enabled: bool?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Applications.json
+@optional {FriendlyName: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {applications: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Applications/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Applications/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, message_status_callback: str(uri)?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_status_callback: str(uri)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, uri: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, public_application_connect_enabled: bool?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Applications/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, message_status_callback: str(uri)?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_status_callback: str(uri)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, uri: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, public_application_connect_enabled: bool?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AuthorizedConnectApps/{ConnectAppSid}.json
+@required {ConnectAppSid: str}
+@returns(200) {account_sid: str?, connect_app_company_name: str?, connect_app_description: str?, connect_app_friendly_name: str?, connect_app_homepage_url: str(uri)?, connect_app_sid: str?, permissions: [str]?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AuthorizedConnectApps.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {authorized_connect_apps: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {countries: [map], uri: str(uri)?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}.json
+@required {CountryCode: str(iso-country-code)}
+@returns(200) {country_code: str(iso-country-code)?, country: str?, uri: str(uri)?, beta: bool?, subresource_uris: map?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/Local.json
+@required {CountryCode: str(iso-country-code)}
+@optional {AreaCode: int, Contains: str, SmsEnabled: bool, MmsEnabled: bool, VoiceEnabled: bool, ExcludeAllAddressRequired: bool, ExcludeLocalAddressRequired: bool, ExcludeForeignAddressRequired: bool, Beta: bool, NearNumber: str(phone-number), NearLatLong: str, Distance: int, InPostalCode: str, InRegion: str, InRateCenter: str, InLata: str, InLocality: str, FaxEnabled: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/MachineToMachine.json
+@required {CountryCode: str(iso-country-code)}
+@optional {AreaCode: int, Contains: str, SmsEnabled: bool, MmsEnabled: bool, VoiceEnabled: bool, ExcludeAllAddressRequired: bool, ExcludeLocalAddressRequired: bool, ExcludeForeignAddressRequired: bool, Beta: bool, NearNumber: str(phone-number), NearLatLong: str, Distance: int, InPostalCode: str, InRegion: str, InRateCenter: str, InLata: str, InLocality: str, FaxEnabled: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/Mobile.json
+@required {CountryCode: str(iso-country-code)}
+@optional {AreaCode: int, Contains: str, SmsEnabled: bool, MmsEnabled: bool, VoiceEnabled: bool, ExcludeAllAddressRequired: bool, ExcludeLocalAddressRequired: bool, ExcludeForeignAddressRequired: bool, Beta: bool, NearNumber: str(phone-number), NearLatLong: str, Distance: int, InPostalCode: str, InRegion: str, InRateCenter: str, InLata: str, InLocality: str, FaxEnabled: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/National.json
+@required {CountryCode: str(iso-country-code)}
+@optional {AreaCode: int, Contains: str, SmsEnabled: bool, MmsEnabled: bool, VoiceEnabled: bool, ExcludeAllAddressRequired: bool, ExcludeLocalAddressRequired: bool, ExcludeForeignAddressRequired: bool, Beta: bool, NearNumber: str(phone-number), NearLatLong: str, Distance: int, InPostalCode: str, InRegion: str, InRateCenter: str, InLata: str, InLocality: str, FaxEnabled: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/SharedCost.json
+@required {CountryCode: str(iso-country-code)}
+@optional {AreaCode: int, Contains: str, SmsEnabled: bool, MmsEnabled: bool, VoiceEnabled: bool, ExcludeAllAddressRequired: bool, ExcludeLocalAddressRequired: bool, ExcludeForeignAddressRequired: bool, Beta: bool, NearNumber: str(phone-number), NearLatLong: str, Distance: int, InPostalCode: str, InRegion: str, InRateCenter: str, InLata: str, InLocality: str, FaxEnabled: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/TollFree.json
+@required {CountryCode: str(iso-country-code)}
+@optional {AreaCode: int, Contains: str, SmsEnabled: bool, MmsEnabled: bool, VoiceEnabled: bool, ExcludeAllAddressRequired: bool, ExcludeLocalAddressRequired: bool, ExcludeForeignAddressRequired: bool, Beta: bool, NearNumber: str(phone-number), NearLatLong: str, Distance: int, InPostalCode: str, InRegion: str, InRateCenter: str, InLata: str, InLocality: str, FaxEnabled: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/Voip.json
+@required {CountryCode: str(iso-country-code)}
+@optional {AreaCode: int, Contains: str, SmsEnabled: bool, MmsEnabled: bool, VoiceEnabled: bool, ExcludeAllAddressRequired: bool, ExcludeLocalAddressRequired: bool, ExcludeForeignAddressRequired: bool, Beta: bool, NearNumber: str(phone-number), NearLatLong: str, Distance: int, InPostalCode: str, InRegion: str, InRateCenter: str, InLata: str, InLocality: str, FaxEnabled: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Balance.json
+@returns(200) {account_sid: str?, balance: str?, currency: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls.json
+@returns(201) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, parent_call_sid: str?, account_sid: str?, to: str?, to_formatted: str?, from: str?, from_formatted: str?, phone_number_sid: str?, status: str, start_time: str(date-time-rfc-2822)?, end_time: str(date-time-rfc-2822)?, duration: str?, price: str?, price_unit: str(currency)?, direction: str?, answered_by: str?, api_version: str?, forwarded_from: str?, group_sid: str?, caller_name: str?, queue_time: str?, trunk_sid: str?, uri: str?, subresource_uris: map?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls.json
+@optional {To: str(phone-number), From: str(phone-number), ParentCallSid: str, Status: str, StartTime: str(date-time), StartTime<: str(date-time), StartTime>: str(date-time), EndTime: str(date-time), EndTime<: str(date-time), EndTime>: str(date-time), PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {calls: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Calls/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, parent_call_sid: str?, account_sid: str?, to: str?, to_formatted: str?, from: str?, from_formatted: str?, phone_number_sid: str?, status: str, start_time: str(date-time-rfc-2822)?, end_time: str(date-time-rfc-2822)?, duration: str?, price: str?, price_unit: str(currency)?, direction: str?, answered_by: str?, api_version: str?, forwarded_from: str?, group_sid: str?, caller_name: str?, queue_time: str?, trunk_sid: str?, uri: str?, subresource_uris: map?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, parent_call_sid: str?, account_sid: str?, to: str?, to_formatted: str?, from: str?, from_formatted: str?, phone_number_sid: str?, status: str, start_time: str(date-time-rfc-2822)?, end_time: str(date-time-rfc-2822)?, duration: str?, price: str?, price_unit: str(currency)?, direction: str?, answered_by: str?, api_version: str?, forwarded_from: str?, group_sid: str?, caller_name: str?, queue_time: str?, trunk_sid: str?, uri: str?, subresource_uris: map?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Events.json
+@required {CallSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {events: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Notifications/{Sid}.json
+@required {CallSid: str, Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, error_code: str?, log: str?, message_date: str(date-time-rfc-2822)?, message_text: str?, more_info: str(uri)?, request_method: str(http-method)?, request_url: str(uri)?, request_variables: str?, response_body: str?, response_headers: str?, sid: str?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Notifications.json
+@required {CallSid: str}
+@optional {Log: int, MessageDate: str(date), MessageDate<: str(date), MessageDate>: str(date), PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {notifications: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings.json
+@required {CallSid: str}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: num?, uri: str?, encryption_details: any?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, track: str?}
+@returns(201) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: num?, uri: str?, encryption_details: any?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, track: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings.json
+@required {CallSid: str}
+@optional {DateCreated: str(date), DateCreated<: str(date), DateCreated>: str(date), PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {recordings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings/{Sid}.json
+@required {CallSid: str, Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: num?, uri: str?, encryption_details: any?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, track: str?}
+@errors {408}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings/{Sid}.json
+@required {CallSid: str, Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: num?, uri: str?, encryption_details: any?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, track: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings/{Sid}.json
+@required {CallSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, api_version: str?, friendly_name: str?, region: str?, sid: str?, status: str, uri: str?, subresource_uris: map?, reason_conference_ended: str, call_sid_ending_conference: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Conferences/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, api_version: str?, friendly_name: str?, region: str?, sid: str?, status: str, uri: str?, subresource_uris: map?, reason_conference_ended: str, call_sid_ending_conference: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences.json
+@optional {DateCreated: str(date), DateCreated<: str(date), DateCreated>: str(date), DateUpdated: str(date), DateUpdated<: str(date), DateUpdated>: str(date), FriendlyName: str, Status: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {conferences: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Recordings.json
+@required {ConferenceSid: str}
+@optional {DateCreated: str(date), DateCreated<: str(date), DateCreated>: str(date), PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {recordings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Recordings/{Sid}.json
+@required {ConferenceSid: str, Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: str?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, encryption_details: any?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Recordings/{Sid}.json
+@required {ConferenceSid: str, Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: str?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, encryption_details: any?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Recordings/{Sid}.json
+@required {ConferenceSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/ConnectApps/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, authorize_redirect_url: str(uri)?, company_name: str?, deauthorize_callback_method: str(http-method)?, deauthorize_callback_url: str(uri)?, description: str?, friendly_name: str?, homepage_url: str(uri)?, permissions: [str]?, sid: str?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/ConnectApps/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, authorize_redirect_url: str(uri)?, company_name: str?, deauthorize_callback_method: str(http-method)?, deauthorize_callback_url: str(uri)?, description: str?, friendly_name: str?, homepage_url: str(uri)?, permissions: [str]?, sid: str?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/ConnectApps/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/ConnectApps.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {connect_apps: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Addresses/{AddressSid}/DependentPhoneNumbers.json
+@required {AddressSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {dependent_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?, type: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?, type: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers.json
+@optional {Beta: bool, FriendlyName: str, PhoneNumber: str(phone-number), Origin: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {incoming_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers.json
+@returns(201) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?, type: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns/{Sid}.json
+@required {ResourceSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, resource_sid: str?, friendly_name: str?, description: str?, configuration: any?, unique_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?, subresource_uris: map?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns/{Sid}.json
+@required {ResourceSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns.json
+@required {ResourceSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {assigned_add_ons: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns.json
+@required {ResourceSid: str}
+@returns(201) {sid: str?, account_sid: str?, resource_sid: str?, friendly_name: str?, description: str?, configuration: any?, unique_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?, subresource_uris: map?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns/{AssignedAddOnSid}/Extensions/{Sid}.json
+@required {ResourceSid: str, AssignedAddOnSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, resource_sid: str?, assigned_add_on_sid: str?, friendly_name: str?, product_name: str?, unique_name: str?, uri: str?, enabled: bool?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns/{AssignedAddOnSid}/Extensions.json
+@required {ResourceSid: str, AssignedAddOnSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {extensions: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/Local.json
+@optional {Beta: bool, FriendlyName: str, PhoneNumber: str(phone-number), Origin: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {incoming_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/Local.json
+@returns(201) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/Mobile.json
+@optional {Beta: bool, FriendlyName: str, PhoneNumber: str(phone-number), Origin: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {incoming_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/Mobile.json
+@returns(201) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/TollFree.json
+@optional {Beta: bool, FriendlyName: str, PhoneNumber: str(phone-number), Origin: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {incoming_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/TollFree.json
+@returns(201) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Keys/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Keys/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Keys/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Keys.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {keys: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Keys.json
+@returns(201) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, secret: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}/Media/{Sid}.json
+@required {MessageSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}/Media/{Sid}.json
+@required {MessageSid: str, Sid: str}
+@returns(200) {account_sid: str?, content_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, parent_sid: str?, sid: str?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}/Media.json
+@required {MessageSid: str}
+@optional {DateCreated: str(date-time), DateCreated<: str(date-time), DateCreated>: str(date-time), PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {media_list: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Queues/{QueueSid}/Members/{CallSid}.json
+@required {QueueSid: str, CallSid: str}
+@returns(200) {call_sid: str?, date_enqueued: str(date-time-rfc-2822)?, position: int, uri: str?, wait_time: int, queue_sid: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Queues/{QueueSid}/Members/{CallSid}.json
+@required {QueueSid: str, CallSid: str}
+@returns(200) {call_sid: str?, date_enqueued: str(date-time-rfc-2822)?, position: int, uri: str?, wait_time: int, queue_sid: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Queues/{QueueSid}/Members.json
+@required {QueueSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {queue_members: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Messages.json
+@returns(201) {body: str?, num_segments: str?, direction: str, from: str(phone-number)?, to: str?, date_updated: str(date-time-rfc-2822)?, price: str?, error_message: str?, uri: str?, account_sid: str?, num_media: str?, status: str, messaging_service_sid: str?, sid: str?, date_sent: str(date-time-rfc-2822)?, date_created: str(date-time-rfc-2822)?, error_code: int?, price_unit: str(currency)?, api_version: str?, subresource_uris: map?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Messages.json
+@optional {To: str(phone-number), From: str(phone-number), DateSent: str(date-time), DateSent<: str(date-time), DateSent>: str(date-time), PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {messages: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json
+@required {Sid: str}
+@returns(200) {body: str?, num_segments: str?, direction: str, from: str(phone-number)?, to: str?, date_updated: str(date-time-rfc-2822)?, price: str?, error_message: str?, uri: str?, account_sid: str?, num_media: str?, status: str, messaging_service_sid: str?, sid: str?, date_sent: str(date-time-rfc-2822)?, date_created: str(date-time-rfc-2822)?, error_code: int?, price_unit: str(currency)?, api_version: str?, subresource_uris: map?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json
+@required {Sid: str}
+@returns(200) {body: str?, num_segments: str?, direction: str, from: str(phone-number)?, to: str?, date_updated: str(date-time-rfc-2822)?, price: str?, error_message: str?, uri: str?, account_sid: str?, num_media: str?, status: str, messaging_service_sid: str?, sid: str?, date_sent: str(date-time-rfc-2822)?, date_created: str(date-time-rfc-2822)?, error_code: int?, price_unit: str(currency)?, api_version: str?, subresource_uris: map?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}/Feedback.json
+@required {MessageSid: str}
+@returns(200) {account_sid: str?, message_sid: str?, outcome: str, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SigningKeys.json
+@returns(201) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, secret: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SigningKeys.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {signing_keys: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Notifications/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, error_code: str?, log: str?, message_date: str(date-time-rfc-2822)?, message_text: str?, more_info: str(uri)?, request_method: str(http-method)?, request_url: str(uri)?, request_variables: str?, response_body: str?, response_headers: str?, sid: str?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Notifications.json
+@optional {Log: int, MessageDate: str(date), MessageDate<: str(date), MessageDate>: str(date), PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {notifications: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, account_sid: str?, phone_number: str(phone-number)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, account_sid: str?, phone_number: str(phone-number)?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds.json
+@optional {PhoneNumber: str(phone-number), FriendlyName: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {outgoing_caller_ids: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds.json
+@returns(200) {account_sid: str?, call_sid: str?, friendly_name: str?, phone_number: str(phone-number)?, validation_code: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants/{CallSid}.json
+@required {ConferenceSid: str, CallSid: str}
+@returns(200) {account_sid: str?, call_sid: str?, label: str?, call_sid_to_coach: str?, coaching: bool?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, end_conference_on_exit: bool?, muted: bool?, hold: bool?, start_conference_on_enter: bool?, status: str, queue_time: str?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants/{CallSid}.json
+@required {ConferenceSid: str, CallSid: str}
+@returns(200) {account_sid: str?, call_sid: str?, label: str?, call_sid_to_coach: str?, coaching: bool?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, end_conference_on_exit: bool?, muted: bool?, hold: bool?, start_conference_on_enter: bool?, status: str, queue_time: str?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants/{CallSid}.json
+@required {ConferenceSid: str, CallSid: str}
+@returns(204)
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants.json
+@required {ConferenceSid: str}
+@returns(201) {account_sid: str?, call_sid: str?, label: str?, call_sid_to_coach: str?, coaching: bool?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, end_conference_on_exit: bool?, muted: bool?, hold: bool?, start_conference_on_enter: bool?, status: str, queue_time: str?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants.json
+@required {ConferenceSid: str}
+@optional {Muted: bool, Hold: bool, Coaching: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {participants: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Payments.json
+@required {CallSid: str}
+@returns(201) {account_sid: str?, call_sid: str?, sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Payments/{Sid}.json
+@required {CallSid: str, Sid: str}
+@returns(202) {account_sid: str?, call_sid: str?, sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Queues/{Sid}.json
+@required {Sid: str}
+@returns(200) {date_updated: str(date-time-rfc-2822)?, current_size: int, friendly_name: str?, uri: str?, account_sid: str?, average_wait_time: int, sid: str?, date_created: str(date-time-rfc-2822)?, max_size: int}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Queues/{Sid}.json
+@required {Sid: str}
+@returns(200) {date_updated: str(date-time-rfc-2822)?, current_size: int, friendly_name: str?, uri: str?, account_sid: str?, average_wait_time: int, sid: str?, date_created: str(date-time-rfc-2822)?, max_size: int}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Queues/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Queues.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {queues: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Queues.json
+@returns(201) {date_updated: str(date-time-rfc-2822)?, current_size: int, friendly_name: str?, uri: str?, account_sid: str?, average_wait_time: int, sid: str?, date_created: str(date-time-rfc-2822)?, max_size: int}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Transcriptions.json
+@required {CallSid: str}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Transcriptions/{Sid}.json
+@required {CallSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{Sid}.json
+@required {Sid: str}
+@optional {IncludeSoftDeleted: bool}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: str?, price_unit: str?, status: str, channels: int?, source: str, error_code: int?, uri: str?, encryption_details: any?, subresource_uris: map?, media_url: str(uri)?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Recordings/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings.json
+@optional {DateCreated: str(date-time), DateCreated<: str(date-time), DateCreated>: str(date-time), CallSid: str, ConferenceSid: str, IncludeSoftDeleted: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {recordings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{Sid}.json
+@required {ReferenceSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, status: str, add_on_sid: str?, add_on_configuration_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, date_completed: str(date-time-rfc-2822)?, reference_sid: str?, subresource_uris: map?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{Sid}.json
+@required {ReferenceSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults.json
+@required {ReferenceSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {add_on_results: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{AddOnResultSid}/Payloads/{Sid}.json
+@required {ReferenceSid: str, AddOnResultSid: str, Sid: str}
+@returns(200) {sid: str?, add_on_result_sid: str?, account_sid: str?, label: str?, add_on_sid: str?, add_on_configuration_sid: str?, content_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, reference_sid: str?, subresource_uris: map?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{AddOnResultSid}/Payloads/{Sid}.json
+@required {ReferenceSid: str, AddOnResultSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{AddOnResultSid}/Payloads.json
+@required {ReferenceSid: str, AddOnResultSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {payloads: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{AddOnResultSid}/Payloads/{PayloadSid}/Data.json
+@required {ReferenceSid: str, AddOnResultSid: str, PayloadSid: str}
+@errors {307}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{RecordingSid}/Transcriptions/{Sid}.json
+@required {RecordingSid: str, Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, duration: str?, price: num?, price_unit: str(currency)?, recording_sid: str?, sid: str?, status: str, transcription_text: str?, type: str?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Recordings/{RecordingSid}/Transcriptions/{Sid}.json
+@required {RecordingSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{RecordingSid}/Transcriptions.json
+@required {RecordingSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {transcriptions: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SMS/ShortCodes/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, short_code: str?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SMS/ShortCodes/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, short_code: str?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SMS/ShortCodes.json
+@optional {FriendlyName: str, ShortCode: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {short_codes: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SigningKeys/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SigningKeys/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SigningKeys/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/CredentialListMappings.json
+@required {DomainSid: str}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/CredentialListMappings.json
+@required {DomainSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {contents: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/CredentialListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/CredentialListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(204)
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/IpAccessControlListMappings.json
+@required {DomainSid: str}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/IpAccessControlListMappings.json
+@required {DomainSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {contents: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/IpAccessControlListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/IpAccessControlListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(204)
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Registrations/CredentialListMappings.json
+@required {DomainSid: str}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Registrations/CredentialListMappings.json
+@required {DomainSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {contents: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Registrations/CredentialListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Registrations/CredentialListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials.json
+@required {CredentialListSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {credentials: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials.json
+@required {CredentialListSid: str}
+@returns(201) {sid: str?, account_sid: str?, credential_list_sid: str?, username: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials/{Sid}.json
+@required {CredentialListSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, credential_list_sid: str?, username: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials/{Sid}.json
+@required {CredentialListSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, credential_list_sid: str?, username: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials/{Sid}.json
+@required {CredentialListSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {credential_lists: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists.json
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?, subresource_uris: map?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?, subresource_uris: map?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?, subresource_uris: map?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/CredentialListMappings.json
+@required {DomainSid: str}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_sid: str?, friendly_name: str?, sid: str?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/CredentialListMappings.json
+@required {DomainSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {credential_list_mappings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/CredentialListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_sid: str?, friendly_name: str?, sid: str?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/CredentialListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {domains: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains.json
+@returns(201) {account_sid: str?, api_version: str?, auth_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_name: str?, friendly_name: str?, sid: str?, uri: str?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_status_callback_method: str(http-method)?, voice_status_callback_url: str(uri)?, voice_url: str(uri)?, subresource_uris: map?, sip_registration: bool?, emergency_calling_enabled: bool?, secure: bool?, byoc_trunk_sid: str?, emergency_caller_sid: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, auth_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_name: str?, friendly_name: str?, sid: str?, uri: str?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_status_callback_method: str(http-method)?, voice_status_callback_url: str(uri)?, voice_url: str(uri)?, subresource_uris: map?, sip_registration: bool?, emergency_calling_enabled: bool?, secure: bool?, byoc_trunk_sid: str?, emergency_caller_sid: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, auth_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_name: str?, friendly_name: str?, sid: str?, uri: str?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_status_callback_method: str(http-method)?, voice_status_callback_url: str(uri)?, voice_url: str(uri)?, subresource_uris: map?, sip_registration: bool?, emergency_calling_enabled: bool?, secure: bool?, byoc_trunk_sid: str?, emergency_caller_sid: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {ip_access_control_lists: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists.json
+@returns(201) {sid: str?, account_sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, subresource_uris: map?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, account_sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, subresource_uris: map?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, account_sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, subresource_uris: map?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/IpAccessControlListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_sid: str?, friendly_name: str?, sid: str?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/IpAccessControlListMappings/{Sid}.json
+@required {DomainSid: str, Sid: str}
+@returns(204)
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/IpAccessControlListMappings.json
+@required {DomainSid: str}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_sid: str?, friendly_name: str?, sid: str?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/IpAccessControlListMappings.json
+@required {DomainSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {ip_access_control_list_mappings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses.json
+@required {IpAccessControlListSid: str}
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {ip_addresses: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses.json
+@required {IpAccessControlListSid: str}
+@returns(201) {sid: str?, account_sid: str?, friendly_name: str?, ip_address: str?, cidr_prefix_length: int, ip_access_control_list_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses/{Sid}.json
+@required {IpAccessControlListSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, friendly_name: str?, ip_address: str?, cidr_prefix_length: int, ip_access_control_list_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses/{Sid}.json
+@required {IpAccessControlListSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, friendly_name: str?, ip_address: str?, cidr_prefix_length: int, ip_access_control_list_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses/{Sid}.json
+@required {IpAccessControlListSid: str, Sid: str}
+@returns(204)
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Siprec.json
+@required {CallSid: str}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Siprec/{Sid}.json
+@required {CallSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Streams.json
+@required {CallSid: str}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Streams/{Sid}.json
+@required {CallSid: str, Sid: str}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Tokens.json
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, ice_servers: [map]?, password: str?, ttl: str?, username: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Transcriptions/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, duration: str?, price: num?, price_unit: str(currency)?, recording_sid: str?, sid: str?, status: str, transcription_text: str?, type: str?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Transcriptions/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Transcriptions.json
+@optional {PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {transcriptions: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records.json
+@optional {Category: str, StartDate: str(date), EndDate: str(date), IncludeSubaccounts: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/AllTime.json
+@optional {Category: str, StartDate: str(date), EndDate: str(date), IncludeSubaccounts: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Daily.json
+@optional {Category: str, StartDate: str(date), EndDate: str(date), IncludeSubaccounts: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/LastMonth.json
+@optional {Category: str, StartDate: str(date), EndDate: str(date), IncludeSubaccounts: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Monthly.json
+@optional {Category: str, StartDate: str(date), EndDate: str(date), IncludeSubaccounts: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/ThisMonth.json
+@optional {Category: str, StartDate: str(date), EndDate: str(date), IncludeSubaccounts: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Today.json
+@optional {Category: str, StartDate: str(date), EndDate: str(date), IncludeSubaccounts: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Yearly.json
+@optional {Category: str, StartDate: str(date), EndDate: str(date), IncludeSubaccounts: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Yesterday.json
+@optional {Category: str, StartDate: str(date), EndDate: str(date), IncludeSubaccounts: bool, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Triggers/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, callback_method: str(http-method)?, callback_url: str(uri)?, current_value: str?, date_created: str(date-time-rfc-2822)?, date_fired: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, recurring: str, sid: str?, trigger_by: str, trigger_value: str?, uri: str?, usage_category: str?, usage_record_uri: str?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Usage/Triggers/{Sid}.json
+@required {Sid: str}
+@returns(200) {account_sid: str?, api_version: str?, callback_method: str(http-method)?, callback_url: str(uri)?, current_value: str?, date_created: str(date-time-rfc-2822)?, date_fired: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, recurring: str, sid: str?, trigger_by: str, trigger_value: str?, uri: str?, usage_category: str?, usage_record_uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Usage/Triggers/{Sid}.json
+@required {Sid: str}
+@returns(204)
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Usage/Triggers.json
+@returns(201) {account_sid: str?, api_version: str?, callback_method: str(http-method)?, callback_url: str(uri)?, current_value: str?, date_created: str(date-time-rfc-2822)?, date_fired: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, recurring: str, sid: str?, trigger_by: str, trigger_value: str?, uri: str?, usage_category: str?, usage_record_uri: str?}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Triggers.json
+@optional {Recurring: str, TriggerBy: str, UsageCategory: str, PageSize: int(int64), Page: int, PageToken: str}
+@returns(200) {usage_triggers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/UserDefinedMessages.json
+@required {CallSid: str}
+@returns(201) {account_sid: str?, call_sid: str?, sid: str?, date_created: str(date-time-rfc-2822)?}
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/UserDefinedMessageSubscriptions.json
+@required {CallSid: str}
+@returns(201) {account_sid: str?, call_sid: str?, sid: str?, date_created: str(date-time-rfc-2822)?, uri: str?}
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/UserDefinedMessageSubscriptions/{Sid}.json
+@required {CallSid: str, Sid: str}
+@returns(204)
+
+@end

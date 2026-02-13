@@ -1,0 +1,41 @@
+# LAP Benchmark v2 - Runtime Configuration
+
+model: claude-sonnet-4-5-20250929
+concurrency: 3
+timeout_seconds: 180
+retry_attempts: 2
+priority_order: size_desc  # large specs first
+
+tiers:
+  - none
+  - pretty
+  - minified
+  - lap-standard
+  - lap-lean
+
+formats:
+  - openapi
+  - asyncapi
+  - graphql
+  - postman
+  - protobuf
+
+claude_cli:
+  allowed_tools:
+    - Bash
+    - Read
+    - Write
+    - Glob
+    - Grep
+    - WebFetch
+
+scoring:
+  endpoint_weight: 0.6
+  param_weight: 0.3
+  code_weight: 0.1
+  success_threshold: 0.7
+
+github:
+  repo: "anthropics/Lap-benchmark-docs"
+  branch: "master"
+  base_url: "https://raw.githubusercontent.com"

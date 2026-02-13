@@ -1,0 +1,22 @@
+spec_id: elastic-gql
+tasks:
+  - id: t1
+    description: "Establish connections to both a current-generation and a previous-generation search cluster to run queries across two different platform versions simultaneously"
+    target_endpoints:
+      - QUERY elastic77
+      - QUERY elastic68
+    expected_params:
+      QUERY elastic77:
+        - host
+      QUERY elastic68:
+        - host
+  - id: t2
+    description: "Access a legacy search cluster for historical data migration alongside a modern cluster for current production data, both requiring host configuration"
+    target_endpoints:
+      - QUERY elastic56
+      - QUERY elastic77
+    expected_params:
+      QUERY elastic56:
+        - host
+      QUERY elastic77:
+        - host

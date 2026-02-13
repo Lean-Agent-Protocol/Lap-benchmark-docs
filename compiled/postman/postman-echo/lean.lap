@@ -1,0 +1,36 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api HTTP Status Messages
+@base http://echo.getpostman.com
+@endpoints 5
+@toc post(2), status(1), p(2)
+
+@group post
+@endpoint POST /post
+@required {yo: str}
+@returns(200)
+
+@endgroup
+
+@group status
+@endpoint PUT /status/201
+@required {yo: str}
+
+@endgroup
+
+@group post
+@endpoint GET /post
+@auth Basic username:password
+
+@endgroup
+
+@group p
+@endpoint GET /p/a/t/h///t/o///d/o/c/u/m/e/n/t
+
+@endpoint GET /p/a/t/h///t/o///d/o/c/u/m/e/n/t
+@auth hawk
+@optional {Access-Control-Allow-Credentials: str, Server: str}
+
+@endgroup
+
+@end

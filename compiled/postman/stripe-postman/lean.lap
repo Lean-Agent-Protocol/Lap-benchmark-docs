@@ -1,0 +1,717 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Stripe API
+@base https://api.stripe.com
+@auth Bearer token
+@endpoints 224
+@hint download_for_search
+@toc balance(1), balance_transactions(2), charges(5), customers(27), disputes(4), events(2), files(3), file_links(4), payment_intents(7), setup_intents(6), payouts(5), refunds(4), tokens(5), payment_methods(6), sources(3), checkout(2), coupons(5), credit_notes(5), subscriptions(6), invoices(13), invoiceitems
+(1), invoiceitems(4), plans(5), products(5), subscription_items(7), subscription_schedules(1), tax_rates(4), accounts(24), account_links(1), application_fees(6), country_specs(2), topups(5), transfers(8), issuing(18), terminal(11), orders(4), webhook_endpoints(1), https:(2)
+
+@group balance
+@endpoint GET /v1/balance
+
+@endgroup
+
+@group balance_transactions
+@endpoint GET /v1/balance_transactions/txn_1F7YnJGCrGF7V6ZERqsarxp7
+
+@endpoint GET /v1/balance_transactions
+@required {limit: str}
+
+@endgroup
+
+@group charges
+@endpoint POST /v1/charges
+@required {amount: str, currency: str, source: str}
+@optional {Stripe-Account: str, statement_descriptor: str, customer: str, transfer_data[destination]: str, on_behalf_of: str, capture: str}
+
+@endpoint GET /v1/charges/ch_1F5EWzGCrGF7V6ZE7xo2maPj
+
+@endpoint POST /v1/charges/ch_1F5EWzGCrGF7V6ZE7xo2maPj
+@required {metadata[order_id]: str}
+@optional {customer: str}
+
+@endpoint POST /v1/charges/ch_1F7mbUGCrGF7V6ZEy0mH7guD/capture
+@optional {amount: str}
+
+@endpoint GET /v1/charges
+@required {limit: str}
+
+@endgroup
+
+@group customers
+@endpoint POST /v1/customers
+@required {source: str, name: str, email: str, description: str}
+
+@endpoint GET /v1/customers/{{customer_id}}
+
+@endpoint POST /v1/customers/{{customer_id}}
+@required {source: str}
+
+@endpoint DELETE /v1/customers/cus_Fd2ozj1rGMbReA
+
+@endpoint GET /v1/customers
+@required {limit: str}
+
+@endgroup
+
+@group disputes
+@endpoint GET /v1/disputes/dp_1F7mp7GCrGF7V6ZEUZsjW7va
+
+@endpoint POST /v1/disputes/dp_1F7mp7GCrGF7V6ZEUZsjW7va
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/disputes/dp_1F7mp7GCrGF7V6ZEUZsjW7va/close
+
+@endpoint GET /v1/disputes
+
+@endgroup
+
+@group events
+@endpoint GET /v1/events/evt_1F7n8mGCrGF7V6ZETVihKcUf
+
+@endpoint GET /v1/events
+@required {limit: str}
+
+@endgroup
+
+@group files
+@endpoint POST /v1/files
+@required {purpose: str, file: file, file_link_data[create]: str}
+
+@endpoint GET /v1/files/file_1F7nVKGCrGF7V6ZEi68rMU3c
+
+@endpoint GET /v1/files
+
+@endgroup
+
+@group file_links
+@endpoint POST /v1/file_links
+@required {file: str}
+
+@endpoint GET /v1/file_links/link_1F7nfpGCrGF7V6ZEwsbnIjHO
+
+@endpoint POST /v1/file_links/link_1F7nfpGCrGF7V6ZEwsbnIjHO
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/file_links
+
+@endgroup
+
+@group payment_intents
+@endpoint POST /v1/payment_intents
+@required {amount: str, currency: str, capture_method: str, confirm: str, customer: str, payment_method: str}
+
+@endpoint GET /v1/payment_intents/pi_1F5EctGCrGF7V6ZElBCVk4Pt
+
+@endpoint POST /v1/payment_intents/pi_1F7nrSGCrGF7V6ZEUQThCC3l
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/payment_intents/pi_1ESsBCGCrGF7V6ZEyHTPyzMY/confirm
+@required {payment_method: str}
+
+@endpoint POST /v1/payment_intents/pi_1F5EcdGCrGF7V6ZEroW0b0vO/capture
+
+@endpoint POST /v1/payment_intents/pi_1ESsBCGCrGF7V6ZEyHTPyzMY/cancel
+
+@endpoint GET /v1/payment_intents
+@required {limit: str}
+
+@endgroup
+
+@group setup_intents
+@endpoint POST /v1/setup_intents
+@required {payment_method_types[]: str}
+
+@endpoint GET /v1/setup_intents/seti_1F7pMbGCrGF7V6ZEWKaF3EOE
+
+@endpoint POST /v1/setup_intents/seti_1F7pMbGCrGF7V6ZEWKaF3EOE
+@required {metadata[user_id]: str}
+
+@endpoint POST /v1/setup_intents/seti_1F7pMbGCrGF7V6ZEWKaF3EOE/confirm
+@required {payment_method: str}
+
+@endpoint POST /v1/setup_intents/seti_1F7pQGGCrGF7V6ZENTR3JLAr/cancel
+
+@endpoint GET /v1/setup_intents
+@required {limit: str}
+
+@endgroup
+
+@group payouts
+@endpoint POST /v1/payouts
+@required {amount: str, currency: str}
+
+@endpoint GET /v1/payouts
+
+@endpoint GET /v1/payouts/po_1F7XrJGCrGF7V6ZEoRy3uphg
+
+@endpoint POST /v1/payouts/po_1F7XrJGCrGF7V6ZEoRy3uphg
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/payouts/po_1F7XrJGCrGF7V6ZEoRy3uphg/cancel
+
+@endgroup
+
+@group refunds
+@endpoint POST /v1/refunds
+@required {charge: str}
+
+@endpoint GET /v1/refunds/re_1F7pYpGCrGF7V6ZEoB7YvBjs
+
+@endpoint POST /v1/refunds/re_1F7pYpGCrGF7V6ZEoB7YvBjs
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/refunds
+@required {limit: str}
+
+@endgroup
+
+@group tokens
+@endpoint POST /v1/tokens
+@required {card[number]: str, card[exp_month]: str, card[exp_year]: str, card[cvc]: str}
+
+@endpoint POST /v1/tokens
+@required {bank_account[country]: str, bank_account[currency]: str, bank_account[account_holder_name]: str, bank_account[account_holder_type]: str, bank_account[routing_number]: str, bank_account[account_number]: str}
+
+@endpoint POST /v1/tokens
+@required {pii[id_number]: str}
+
+@endpoint POST /v1/tokens
+@required {account[individual][first_name]: str, account[individual][last_name]: str, account[tos_shown_and_accepted]: str}
+
+@endpoint GET /v1/tokens/btok_1F5EwEGCrGF7V6ZES01sKjJ8
+
+@endgroup
+
+@group payment_methods
+@endpoint POST /v1/payment_methods
+@required {type: str, card[number]: str, card[exp_month]: str, card[exp_year]: str, card[cvc]: str}
+
+@endpoint GET /v1/payment_methods/card_1F5FrAGCrGF7V6ZEfKdGpCQQ
+
+@endpoint POST /v1/payment_methods/card_1F5FrAGCrGF7V6ZEfKdGpCQQ
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/payment_methods
+@required {customer: str, type: str}
+
+@endpoint POST /v1/payment_methods/pm_card_visa/attach
+@required {customer: str}
+
+@endpoint POST /v1/payment_methods/pm_1F7qjmGCrGF7V6ZEoCwOb4sy/detach
+
+@endgroup
+
+@group customers
+@endpoint POST /v1/customers/{{customer_id}}/sources
+
+@required {source[object]: str, source[country]: str, source[currency]: str, source[account_holder_name]: str, source[account_holder_type]: str, source[routing_number]: str, source[account_number]: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/sources/ba_1F7qmHGCrGF7V6ZEya4auqya
+
+@endpoint POST /v1/customers/{{customer_id}}/sources/ba_1F7qmHGCrGF7V6ZEya4auqya
+@required {metadata[key]: str}
+
+@endpoint POST /v1/customers/{{customer_id}}/sources/ba_1F5EzcGCrGF7V6ZEqlibeus7/verify
+
+@required {amounts[]: str, amounts[]: str}
+
+@endpoint DELETE /v1/customers/{{customer_id}}/sources/ba_1F7qmHGCrGF7V6ZEya4auqya
+
+@endpoint GET /v1/customers/{{customer_id}}/sources
+@required {object: str, limit: str}
+
+@endpoint POST /v1/customers/{{customer_id}}/sources
+@required {source: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/sources/card_1F87InGCrGF7V6ZEKrUOmC6J
+
+@endpoint POST /v1/customers/{{customer_id}}/sources/card_1F87InGCrGF7V6ZEKrUOmC6J
+@auth Bearer token
+@required {name: str}
+
+@endpoint DELETE /v1/customers/{{customer_id}}/sources/card_1F87InGCrGF7V6ZEKrUOmC6J
+@auth Bearer token
+
+@endpoint GET /v1/customers/{{customer_id}}/sources
+@required {object: str}
+
+@endgroup
+
+@group sources
+@endpoint POST /v1/sources
+@required {type: str, currency: str, owner[email]: str}
+
+@endpoint GET /v1/sources/src_1F88LbGCrGF7V6ZETYEZ6mSW
+
+@endpoint POST /v1/sources/src_1F88LbGCrGF7V6ZETYEZ6mSW
+@required {metadata[order_id]: str}
+
+@endgroup
+
+@group customers
+@endpoint POST /v1/customers/{{customer_id}}/sources
+@required {source: str}
+
+@endpoint DELETE /v1/customers/{{customer_id}}/sources/src_1F88LbGCrGF7V6ZETYEZ6mSW
+
+@endgroup
+
+@group checkout
+@endpoint POST /v1/checkout/sessions
+@required {cancel_url: str, payment_method_types[]: str, success_url: str, line_items[][amount]: str, line_items[][description]: str, line_items[][name]: str, line_items[][quantity]: str, line_items[][currency]: str, line_items[][images][]: str}
+
+@endpoint GET /v1/checkout/sessions/cs_test_1nL3hOZylWskfkOnfCef7TXSMQjaHpcOctS2FeZgrXZBN8HgQ8qJeQBL
+
+@endgroup
+
+@group coupons
+@endpoint POST /v1/coupons
+@required {percent_off: str, duration: str, duration_in_months: str, id: str}
+
+@endpoint GET /v1/coupons/25OFF
+
+@endpoint POST /v1/coupons/25OFF
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/coupons/25OFF
+
+@endpoint GET /v1/coupons
+
+@endgroup
+
+@group credit_notes
+@endpoint POST /v1/credit_notes
+@required {invoice: str, amount: str}
+
+@endpoint GET /v1/credit_notes/cn_1F89akGCrGF7V6ZEp6f50Vdd
+
+@endpoint POST /v1/credit_notes/cn_1F89akGCrGF7V6ZEp6f50Vdd
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/credit_notes/cn_1F89akGCrGF7V6ZEp6f50Vdd/void
+
+@endpoint GET /v1/credit_notes
+
+@endgroup
+
+@group customers
+@endpoint POST /v1/customers/{{customer_id}}/balance_transactions
+@required {amount: str, currency: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/balance_transactions/cbtxn_1F89gAGCrGF7V6ZENYTQp9RA
+
+@endpoint POST /v1/customers/{{customer_id}}/balance_transactions/cbtxn_1F89gAGCrGF7V6ZENYTQp9RA
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/balance_transactions
+
+@endpoint POST /v1/customers/{{customer_id}}/tax_ids
+@required {value: str, type: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/tax_ids/txi_1F89lYGCrGF7V6ZEHiQPJgBc
+
+@endpoint DELETE /v1/customers/{{customer_id}}/tax_ids/txi_1F89lYGCrGF7V6ZEHiQPJgBc
+
+@endpoint GET /v1/customers/{{customer_id}}/tax_ids
+
+@endpoint DELETE /v1/customers/{{customer_id}}/discount
+
+@endgroup
+
+@group subscriptions
+@endpoint DELETE /v1/subscriptions/sub_Elx5JUFaU4HftA/discount
+
+@endgroup
+
+@group invoices
+@endpoint POST /v1/invoices
+@required {customer: str}
+
+@endpoint GET /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54
+
+@endpoint POST /v1/invoices/in_1EouITEkd1HXinYnlrzTWhnC/finalize
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/pay
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/send
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/void
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/mark_uncollectible
+
+@endpoint GET /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/lines
+
+@endpoint GET /v1/invoices/upcoming
+@required {customer: str}
+
+@endpoint GET /v1/invoices/upcoming/lines
+@required {customer: str}
+
+@endpoint GET /v1/invoices
+@required {limit: str}
+
+@endgroup
+
+@group invoiceitems
+
+@endpoint POST /v1/invoiceitems
+
+@required {currency: str, customer: str, amount: str, currency: str, description: str}
+
+@endgroup
+
+@group invoiceitems
+@endpoint GET /v1/invoiceitems/ii_1F8A5xGCrGF7V6ZEFE4XHOGN
+
+@endpoint POST /v1/invoiceitems/ii_1F8A5xGCrGF7V6ZEFE4XHOGN
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/invoiceitems/ii_1F8A5xGCrGF7V6ZEFE4XHOGN
+
+@endpoint GET /v1/invoiceitems
+
+@endgroup
+
+@group plans
+@endpoint POST /v1/plans
+@required {currency: str, interval: str, product: str, amount: str}
+
+@endpoint GET /v1/plans/plan_FaQBlI3RnWDMgn
+
+@endpoint POST /v1/plans/plan_FaQBlI3RnWDMgn
+@required {metadata[test]: str}
+
+@endpoint DELETE /v1/plans/plan_FaQBlI3RnWDMgn
+
+@endpoint GET /v1/plans
+
+@endgroup
+
+@group products
+@endpoint POST /v1/products
+@required {name: str, type: str}
+
+@endpoint GET /v1/products/prod_FdR6041c1jsmuO
+
+@endpoint POST /v1/products/prod_FdR6041c1jsmuO
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/products/prod_FdR6041c1jsmuO
+
+@endpoint GET /v1/products
+@required {limit: str}
+
+@endgroup
+
+@group subscriptions
+@endpoint POST /v1/subscriptions
+@required {customer: str, items[0][plan]: str, trial_from_plan: str}
+@optional {billing_cycle_anchor: str, prorate: str}
+
+@endpoint GET /v1/subscriptions/sub_FdRSPHUV782ihQ
+
+@endpoint POST /v1/subscriptions/sub_FdRSPHUV782ihQ
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/subscriptions/sub_FdRSPHUV782ihQ
+
+@endpoint GET /v1/subscriptions
+
+@endgroup
+
+@group subscription_items
+@endpoint POST /v1/subscription_items
+@required {subscription: str, plan: str, quantity: str}
+
+@endpoint GET /v1/subscription_items/si_FdQf0HawiKF5ob
+
+@endpoint POST /v1/subscription_items/si_FdQf0HawiKF5ob
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/subscription_items/si_FdQf0HawiKF5ob
+
+@endpoint GET /v1/subscription_items
+@required {subscription: str}
+
+@endgroup
+
+@group subscription_schedules
+@endpoint POST /v1/subscription_schedules
+@required {customer: str, phases[0][plans][0][plan]: str, phases[0][iterations]: str, renewal_behavior: str, start_date: str}
+
+@endgroup
+
+@group tax_rates
+@endpoint POST /v1/tax_rates
+@required {display_name: str, inclusive: str, percentage: str, jurisdiction: str, description: str}
+
+@endpoint GET /v1/tax_rates/txr_1FAIvHGCrGF7V6ZEGIikhJdm
+
+@endpoint POST /v1/tax_rates/txr_1FAIvHGCrGF7V6ZEGIikhJdm
+@required {active: str}
+
+@endpoint GET /v1/tax_rates
+
+@endgroup
+
+@group subscription_items
+@endpoint POST /v1/subscription_items/si_F4ZSoPueLzWuHv/usage_records
+@required {quantity: str, timestamp: str}
+
+@endpoint GET /v1/subscription_items/si_F4ZSoPueLzWuHv/usage_record_summaries
+
+@endgroup
+
+@group accounts
+@endpoint POST /v1/accounts
+@required {type: str, country: str, email: str, requested_capabilities[]: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}
+
+@endpoint POST /v1/accounts/{{connect_account_id}}
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/accounts/acct_1F5FVWFjJ5sbYUYr
+
+@endpoint POST /v1/accounts/acct_1F9EubBrJgej6O7E/reject
+@required {reason: str}
+
+@endpoint GET /v1/accounts
+@required {limit: str}
+
+@endpoint POST /v1/accounts/acct_1EPdQlDEQaE4g9hn/login_links
+
+@endgroup
+
+@group account_links
+@endpoint POST /v1/account_links
+@required {account: str, failure_url: str, success_url: str, type: str}
+
+@endgroup
+
+@group application_fees
+@endpoint GET /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW
+
+@endpoint GET /v1/application_fees
+
+@endpoint POST /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW/refund
+
+@endpoint GET /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW/refunds/fr_1F9F7CCYlx8NNrIeTeqCYRrs
+
+@endpoint POST /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW/refunds/fr_1F9F7CCYlx8NNrIeTeqCYRrs
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW/refunds
+
+@endgroup
+
+@group accounts
+@endpoint GET /v1/accounts/{{connect_account_id}}/capabilities/card_payments
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/capabilities/platform_payments
+@required {requested: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/capabilities
+
+@endgroup
+
+@group country_specs
+@endpoint GET /v1/country_specs
+@required {limit: str}
+
+@endpoint GET /v1/country_specs/US
+
+@endgroup
+
+@group accounts
+@endpoint POST /v1/accounts/{{connect_account_id}}
+@required {external_account: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/external_accounts/ba_1F5FfhCYlx8NNrIedWPm5dHa
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/external_accounts/ba_1F5FfhCYlx8NNrIedWPm5dHa
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/external_accounts
+@required {object: str}
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/external_accounts
+
+@required {external_account: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/external_accounts/card_1F9vu4CYlx8NNrIeJWEAxVky
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/external_accounts/card_1F9vu4CYlx8NNrIeJWEAxVky
+@required {name: str}
+
+@endpoint DELETE /v1/accounts/{{connect_account_id}}/external_accounts/card_1F9vu4CYlx8NNrIeJWEAxVky
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/external_accounts
+@required {object: str}
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/persons
+@required {first_name: str, last_name: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/persons/person_FezDQ8xIe609RE
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/persons/person_FezDQ8xIe609RE
+@required {first_name: str}
+
+@endpoint DELETE /v1/accounts/{{connect_account_id}}/persons/person_FezDQ8xIe609RE
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/persons
+
+@endgroup
+
+@group topups
+@endpoint POST /v1/topups
+@required {amount: str, currency: str, description: str}
+
+@endpoint GET /v1/topups/tu_123456789
+
+@endpoint POST /v1/topups/tu_123456789
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/topups
+
+@endpoint POST /v1/topups/tu_123456789/cancel
+
+@endgroup
+
+@group transfers
+@endpoint POST /v1/transfers
+@required {amount: str, currency: str, destination: str, transfer_group: str}
+
+@endpoint GET /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj
+
+@endpoint POST /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/transfers
+@required {limit: str}
+
+@endpoint POST /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj/reversals
+
+@endpoint GET /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj/reversals/trr_1F9zx7GCrGF7V6ZEtDzIHXVC
+
+@endpoint POST /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj/reversals/trr_1F9zx7GCrGF7V6ZEtDzIHXVC
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj/reversals
+
+@endgroup
+
+@group issuing
+@endpoint GET /v1/issuing/authorizations/iauth_1ELxKaGCrGF7V6ZEaHih7SEx
+
+@endpoint POST /v1/issuing/authorizations/iauth_1ELxKaGCrGF7V6ZEaHih7SEx
+@required {metadata[foo]: str}
+
+@endpoint POST /v1/issuing/authorizations/iauth_1ELxKaGCrGF7V6ZEaHih7SEx/approve
+
+@endpoint POST /v1/issuing/authorizations/iauth_1ELxKaGCrGF7V6ZEaHih7SEx/decline
+
+@endpoint GET /v1/issuing/authorizations
+
+@endpoint POST /v1/issuing/cardholders
+@required {billing[address][city]: str, billing[address][state]: str, billing[address][country]: str, billing[address][line1]: str, billing[address][postal_code]: str, name: str, type: str}
+
+@endpoint GET /v1/issuing/cardholders/ich_1GQK3YGCrGF7V6ZEU7ijTNUe
+
+@endpoint POST /v1/issuing/cardholders/ich_1GQK3YGCrGF7V6ZEU7ijTNUe
+@required {email: str}
+
+@endpoint GET /v1/issuing/cardholders
+
+@endpoint POST /v1/issuing/cards
+@required {currency: str, type: str, cardholder: str, status: str}
+
+@endpoint GET /v1/issuing/cards/ic_1GQK5PGCrGF7V6ZEJIr0Sr9b
+
+@endpoint GET /v1/issuing/cards/ic_1GQK5PGCrGF7V6ZEJIr0Sr9b/details
+
+@endpoint POST /v1/issuing/cards/ic_1GQK5PGCrGF7V6ZEJIr0Sr9b
+@required {metadata[foo]: str}
+
+@endpoint GET /v1/issuing/cards
+
+@endpoint GET /v1/issuing/transactions/ipi_1ELxKbGCrGF7V6ZExh8m18PU
+
+@endpoint POST /v1/issuing/transactions/ipi_1ELxKbGCrGF7V6ZExh8m18PU
+@required {metadata[foo]: str}
+
+@endpoint GET /v1/issuing/transactions
+
+@endgroup
+
+@group terminal
+@endpoint POST /v1/terminal/connection_tokens
+
+@endpoint POST /v1/terminal/locations
+@required {address[line1]: str, address[city]: str, address[country]: str, address[postal_code]: str, display_name: str}
+
+@endpoint GET /v1/terminal/locations/tml_DVpoBAHbt8zG4e
+
+@endpoint POST /v1/terminal/locations/tml_DVpoBAHbt8zG4e
+@required {display_name: str}
+
+@endpoint DELETE /v1/terminal/locations/tml_DVpoBAHbt8zG4e
+
+@endpoint GET /v1/terminal/locations
+
+@endpoint POST /v1/terminal/readers
+@required {registration_code: str, label: str, location: str}
+
+@endpoint GET /v1/terminal/readers/tmr_62330545-b12f-4bbf-8bf1-280e8f2b1a63
+
+@endpoint POST /v1/terminal/readers/tmr_62330545-b12f-4bbf-8bf1-280e8f2b1a63
+@required {label: str}
+
+@endpoint GET /v1/terminal/readers
+
+@endpoint DELETE /v1/terminal/readers/tmr_62330545-b12f-4bbf-6bf1-280e8f2b1a64
+
+@endgroup
+
+@group orders
+@endpoint POST /v1/orders
+@required {items[][type]: str, items[][parent]: str, currency: str, shipping[name]: str, shipping[address][line1]: str, shipping[address][city]: str, shipping[address][country]: str, shipping[address][state]: str, shipping[address][postal_code]: str, email: str}
+
+@endpoint GET /v1/orders/or_1FJS10GCrGF7V6ZE5it3STZC
+
+@endpoint POST /v1/orders/or_1FJS10GCrGF7V6ZE5it3STZC
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/orders/or_1FJS10GCrGF7V6ZE5it3STZC/pay
+@required {customer: str}
+
+@endgroup
+
+@group webhook_endpoints
+@endpoint POST /v1/webhook_endpoints
+@required {url: str, enabled_events[]: str}
+
+@endgroup
+
+@group https:
+@endpoint GET /https:///
+
+@endpoint GET /https:///
+
+@endgroup
+
+@group issuing
+@endpoint POST /v1/issuing/cards/ic_1FZOnfGZxoUWXy90AQEgRIwr
+@auth Bearer token
+
+@endgroup
+
+@end

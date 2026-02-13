@@ -1,0 +1,608 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Azure DevOps v5.0
+@base https://{{feedsServer}}
+@auth Basic username:password
+@endpoints 135
+@hint download_for_search
+@toc {{organization}}(135)
+
+@endpoint GET /{{organization}}/_apis/public/packaging/Feeds/{{feedId}}/Packages/{{packageId}}/badge
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/packages/{{packageId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeAllVersions: str, includeUrls: str, isListed: str, isRelease: str, includeDeleted: str, includeDescription: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/Packages/{{packageId}}/versions/{{packageVersionId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeUrls: str, isListed: str, isDeleted: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/Packages/{{packageId}}/Versions/{{packageVersionId}}/provenance
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/Packages/{{packageId}}/versions
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeUrls: str, isListed: str, isDeleted: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/packages
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeDeleted: str, $skip: str, $top: str, includeDescription: str, isRelease: str, getTopPackageVersions: str, isListed: str, includeAllVersions: str, includeUrls: str, packageNameQuery: str, protocolType: str, directUpstreamId: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/feedchanges/{{feedId}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/feedchanges
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeDeleted: str, continuationToken: str, batchSize: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/packagechanges
+@auth Basic username:password
+@required {api-version: str}
+@optional {continuationToken: str, batchSize: str}
+
+@endpoint POST /{{organization}}/_apis/packaging/feeds
+@auth Basic username:password
+@required {api-version: str, description: str, hideDeletedPackageVersions: bool, badgesEnabled: bool, name: str, upstreamEnabled: bool, fullyQualifiedName: str, upstreamSources: [map], capabilities: str}
+@optional {viewId: any, viewName: any}
+
+@endpoint POST /{{organization}}/_apis/packaging/feeds/{{feedId}}/views
+@auth Basic username:password
+@required {api-version: str, visibility: str, name: str, type: str}
+
+@endpoint DELETE /{{organization}}/_apis/packaging/feeds/{{feedId}}
+@auth Basic username:password
+@required {api-version: str, description: str, hideDeletedPackageVersions: bool, badgesEnabled: bool, name: str, upstreamEnabled: bool, fullyQualifiedName: str, upstreamSources: [map], capabilities: str}
+@optional {viewId: any, viewName: any}
+
+@endpoint DELETE /{{organization}}/_apis/packaging/feeds/{{feedId}}/views/{{viewId}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/permissions
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeIds: str, excludeInheritedPermissions: str, identityDescriptor: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/views/{{viewId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {continuationToken: str, batchSize: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/views
+@auth Basic username:password
+@required {api-version: str}
+@optional {continuationToken: str, batchSize: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds
+@auth Basic username:password
+@required {api-version: str}
+@optional {feedRole: str, includeDeletedUpstreams: str}
+
+@endpoint PATCH /{{organization}}/_apis/packaging/Feeds/{{feedId}}/permissions
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/_apis/packaging/Feeds/{{feedId}}
+@auth Basic username:password
+@required {api-version: str, description: str, hideDeletedPackageVersions: bool, badgesEnabled: bool}
+
+@endpoint PATCH /{{organization}}/_apis/packaging/feeds/{{feedId}}/views/{{viewId}}
+@auth Basic username:password
+@required {api-version: str, visibility: str, name: str, type: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/RecycleBin/Packages/{{packageId}}
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/RecycleBin/Packages/{{packageId}}/Versions/{{packageVersionGuid}}
+@required {api-version: str}
+@optional {includeUrls: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/RecycleBin/Packages/{{packageId}}/Versions
+@required {api-version: str}
+@optional {includeUrls: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/RecycleBin/Packages
+@required {api-version: str}
+@optional {protocolType: str, packageNameQuery: str, includeUrls: str, $top: str, $skip: str, includeAllVersions: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/Feeds/{{feedId}}/retentionpolicies
+@required {api-version: str}
+
+@endpoint PUT /{{organization}}/_apis/packaging/Feeds/{{feedId}}/retentionpolicies
+@required {api-version: str, ageLimitInDays: int, countLimit: int, daysToKeepRecentlyDownloadedPackages: int}
+
+@endpoint DELETE /{{organization}}/_apis/packaging/Feeds/{{feedId}}/retentionpolicies
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/packaging/globalpermissions
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/_apis/packaging/globalpermissions
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts
+@auth Basic username:password
+@required {artifactName: str, api-version: str}
+@optional {fileId: str, fileName: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts
+@auth Basic username:password
+@required {artifactName: str, api-version: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts
+@auth Basic username:password
+@required {api-version: str, name: str, resource: map}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/authorizedresources
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/build/controllers/{{}}
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/repos/git/badge
+@required {api-version: str, branchName: str}
+@optional {repoId: str}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}
+@auth Basic username:password
+@required {api-version: str, definition: map, sourceBranch: str, reason: int, parameters: str}
+@optional {sourceVersion: str, demands: [any]}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {propertyFilters: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/changes
+@auth Basic username:password
+@required {api-version: str, includeSourceChange: str}
+@optional {continuationToken: str, $top: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/logs
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/logs/{{logId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {startLine: str, endLine: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/workitems
+@auth Basic username:password
+@required {api-version: str}
+@optional {$top: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/workitems
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/changes
+@auth Basic username:password
+@required {api-version: str, fromBuildId: str, toBuildId: str}
+@optional {$top: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/workitems
+@auth Basic username:password
+@required {api-version: str, fromBuildId: str, toBuildId: str}
+@optional {$top: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds
+@auth Basic username:password
+@required {api-version: str}
+@optional {buildIds: str, branchName: str, queryOrder: str, deletedFilter: str, maxBuildsPerDefinition: str, continuationToken: str, $top: str, properties: str, tagFilters: str, resultFilter: str, statusFilter: str, reasonFilter: str, requestedFor: str, maxTime: str, minTime: str, buildNumber: str, queues: str, definitions: str, repositoryType: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/builds
+@auth Basic username:password
+@required {api-version: str, definition: map, sourceBranch: str, reason: int, parameters: str}
+@optional {ignoreWarnings: str, checkInTicket: str, sourceBuildId: str, sourceVersion: str, demands: [any]}
+
+@endpoint GET /{{organization}}/_apis/build/controllers
+@auth Basic username:password
+@required {api-version: str}
+@optional {name: str}
+
+@endpoint GET /{{organization}}/_apis/build/controllers/{{controllerId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {name: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}
+@required {api-version: str}
+@optional {revision: str, minMetricsTime: str, propertyFilters: str, includeLatestBuilds: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}/revisions
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions
+@required {api-version: str}
+@optional {processType: str, taskIdFilter: str, includeLatestBuilds: str, includeAllProperties: str, notBuiltAfter: str, builtAfter: str, path: str, definitionIds: str, minMetricsTime: str, continuationToken: str, $top: str, queryOrder: str, repositoryType: str, repositoryId: str, name: str, yamlFilename: str}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}
+@required {api-version: str, deleted: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/definitions
+@required {api-version: str, options: [map], triggers: [map], variables: map, retentionRules: [map], jobAuthorizationScope: str, jobCancelTimeoutInMinutes: int, process: map, repository: map, processParameters: map, quality: str, queue: map, name: str, path: str, type: str, queueStatus: str}
+@optional {definitionToCloneId: str, definitionToCloneRevision: str, drafts: [any]}
+
+@endpoint PUT /{{organization}}/{{project}}/_apis/build/definitions/224
+@required {api-version: str, options: [map], triggers: [map], variables: map, retentionRules: [map], jobAuthorizationScope: str, jobCancelTimeoutInMinutes: int, process: map, repository: map, processParameters: map, quality: str, queue: map, name: str, path: str, type: str, queueStatus: str}
+@optional {secretsSourceDefinitionId: str, secretsSourceDefinitionRevision: str, drafts: [any]}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/folders
+@auth Basic username:password
+@required {api-version: str}
+@optional {path: str, queryOrder: str}
+
+@endpoint PUT /{{organization}}/{{project}}/_apis/build/folders
+@auth Basic username:password
+@required {api-version: str, path: str, path: str, description: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/build/folders
+@auth Basic username:password
+@required {api-version: str, path: str, path: str, description: str}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/build/folders
+@auth Basic username:password
+@required {api-version: str, path: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/latest/{{definitonName}}
+@required {api-version: str}
+@optional {branchName: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}/metrics
+@auth Basic username:password
+@required {api-version: str}
+@optional {minMetricsTime: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/metrics
+@auth Basic username:password
+@required {api-version: str}
+@optional {minMetricsTime: str, metricAggregationType: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/options
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/properties
+@auth Basic username:password
+@required {api-version: str}
+@optional {filter: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}/properties
+@auth Basic username:password
+@required {api-version: str}
+@optional {filter: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/report
+@auth Basic username:password
+@required {api-version: str}
+@optional {type: str}
+
+@endpoint GET /{{organization}}/_apis/build/resourceusage
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/definitions/{{definitionId}}/resources
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/settings
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/sourceproviders
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/status/{{definitionId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {branchName: str, stageName: str, jobName: str, configuration: str, label: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/timeline
+@auth Basic username:password
+@required {api-version: str}
+@optional {timelineId: str, changeId: str, planId: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/distributedtask/variablegroups
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/distributedtask/variablegroups/{{variableGroupId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/distributedtask/variablegroups/{{variableGroupId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint PUT /{{organization}}/{{project}}/_apis/distributedtask/variablegroups/{{variableGroupId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/distributedtask/variablegroups/{{variableGroupId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {temp: str}
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/backlogs
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {count: int, value: [map]}
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/backlogs/Microsoft.EpicCategory
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {id: str, name: str, rank: int, workItemCountLimit: int, addPanelFields: [map], columnFields: [map], workItemTypes: [map], defaultWorkItemType: map{name: str, url: str}, color: str, isHidden: bool, type: str}
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/backlogs/Microsoft.EpicCategory/workItems
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {workItems: [map]}
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/backlogconfiguration/
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {taskBacklog: map{id: str, name: str, rank: int, workItemCountLimit: int, addPanelFields: [map], columnFields: [map], workItemTypes: [map], defaultWorkItemType: map{name: str, url: str}, color: str}, requirementBacklog: map{id: str, name: str, rank: int, workItemCountLimit: int, addPanelFields: [map], columnFields: [map], workItemTypes: [map], defaultWorkItemType: map{name: str, url: str}, color: str}, portfolioBacklogs: [map], workItemTypeMappedStates: [map], backlogFields: map{typeFields: map{Order: str, Effort: str, RemainingWork: str, Activity: str}}, bugsBehavior: str, hiddenBacklogs: [str], url: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/work/boardcolumns
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/{{team}}/_apis/work/boardcolumns
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {asOf: str, fields: str}
+@returns(200) {id: int, rev: int, fields: map{System.AreaPath: str, System.TeamProject: str, System.IterationPath: str, System.WorkItemType: str, System.State: str, System.Reason: str, System.AssignedTo: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.CreatedDate: str, System.CreatedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.ChangedDate: str, System.ChangedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.Title: str, Microsoft.VSTS.Common.StateChangeDate: str, Microsoft.VSTS.Common.ActivatedDate: str, Microsoft.VSTS.Common.ActivatedBy: str, Microsoft.VSTS.Common.Priority: int, Microsoft.VSTS.Common.ValueArea: str, System.Tags: str}, _links: map{self: map{href: str}, workItemUpdates: map{href: str}, workItemRevisions: map{href: str}, workItemHistory: map{href: str}, html: map{href: str}, workItemType: map{href: str}, fields: map{href: str}}, url: str}
+@errors {404}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {asOf: str, fields: str}
+@returns(200) {id: int, rev: int, fields: map{System.AreaPath: str, System.TeamProject: str, System.IterationPath: str, System.WorkItemType: str, System.State: str, System.Reason: str, System.AssignedTo: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.CreatedDate: str, System.CreatedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.ChangedDate: str, System.ChangedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.Title: str, Microsoft.VSTS.Common.StateChangeDate: str, Microsoft.VSTS.Common.ActivatedDate: str, Microsoft.VSTS.Common.ActivatedBy: str, Microsoft.VSTS.Common.Priority: int, Microsoft.VSTS.Common.ValueArea: str, System.Tags: str}, _links: map{self: map{href: str}, workItemUpdates: map{href: str}, workItemRevisions: map{href: str}, workItemHistory: map{href: str}, html: map{href: str}, workItemType: map{href: str}, fields: map{href: str}}, url: str}
+@errors {404}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}/comments
+@auth Basic username:password
+@required {api-version: str}
+@optional {fromRevision: str, $top: str, order: str}
+@returns(200) {totalCount: int, fromRevisionCount: int, count: int, value: [map]}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/wit/workitemsbatch
+@auth Basic username:password
+@required {api-version: str, ids: [int], asOf: str, errorPolicy: str, fields: [str]}
+@returns(200) {count: int, value: [any]}
+@returns(200) {count: int, value: [map]}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@auth Basic username:password
+@required {api-version: str, $expand: str}
+@optional {asOf: str}
+@returns(200) {id: int, rev: int, fields: map{System.AreaPath: str, System.TeamProject: str, System.IterationPath: str, System.WorkItemType: str, System.State: str, System.Reason: str, System.AssignedTo: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.CreatedDate: str, System.CreatedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.ChangedDate: str, System.ChangedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.Title: str, Microsoft.VSTS.Common.StateChangeDate: str, Microsoft.VSTS.Common.ActivatedDate: str, Microsoft.VSTS.Common.ActivatedBy: str, Microsoft.VSTS.Common.Priority: int, Microsoft.VSTS.Common.ValueArea: str, System.Tags: str}, relations: [map], _links: map{self: map{href: str}, workItemUpdates: map{href: str}, workItemRevisions: map{href: str}, workItemHistory: map{href: str}, html: map{href: str}, workItemType: map{href: str}, fields: map{href: str}}, url: str}
+
+@endpoint GET /{{organization}}/_apis/wit/workitemrelationtypes
+@auth Basic username:password
+@required {api-version: str}
+@returns(200) {count: int, value: [map]}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@auth Basic username:password
+@required {api-version: str, $expand: str}
+@optional {asOf: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wit/workitems/{{workItemId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {$expand: str, asOf: str}
+
+@endpoint POST /{{organization}}/{{project}}/{{team}}/_apis/wit/wiql
+@auth Basic username:password
+@required {api-version: str, top: str, query: str}
+@optional {asOf: str, fields: str}
+@returns(200) {id: int, rev: int, fields: map{System.AreaPath: str, System.TeamProject: str, System.IterationPath: str, System.WorkItemType: str, System.State: str, System.Reason: str, System.AssignedTo: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.CreatedDate: str, System.CreatedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.ChangedDate: str, System.ChangedBy: map{displayName: str, url: str, _links: map, id: str, uniqueName: str, imageUrl: str, descriptor: str}, System.Title: str, Microsoft.VSTS.Common.StateChangeDate: str, Microsoft.VSTS.Common.ActivatedDate: str, Microsoft.VSTS.Common.ActivatedBy: str, Microsoft.VSTS.Common.Priority: int, Microsoft.VSTS.Common.ValueArea: str, System.Tags: str}, _links: map{self: map{href: str}, workItemUpdates: map{href: str}, workItemRevisions: map{href: str}, workItemHistory: map{href: str}, html: map{href: str}, workItemType: map{href: str}, fields: map{href: str}}, url: str}
+@errors {404}
+
+@endpoint GET /{{organization}}/_apis/projects
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects
+@auth Basic username:password
+@required {api-version: str, stateFilter: str, getDefaultTeamImageUrl: str}
+@optional {top: str, skip: str, continuationToken: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{project}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{project}}
+@auth Basic username:password
+@required {api-version: str, includeCapabilities: str, includeHistory: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/properties
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/properties
+@auth Basic username:password
+@required {api-version: str, keys: str}
+
+@endpoint POST /{{organization}}/_apis/projects
+@auth Basic username:password
+@required {api-version: str, name: str, description: str, capabilities: map}
+
+@endpoint PATCH /{{organization}}/_apis/projects/{{projectId}}/properties
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/_apis/projects/{{projectId}}/properties
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint DELETE /{{organization}}/_apis/projects/{{projectId}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/process/processes/{{processId}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/process/processes
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/teams/{{team}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/_apis/teams
+@auth Basic username:password
+@required {$mine: str, $top: str, $skip: str, api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/teams
+@auth Basic username:password
+@required {$mine: str, $top: str, $skip: str, api-version: str}
+
+@endpoint GET /{{organization}}/_apis/projects/{{projectId}}/teams/{{team}}/members
+@auth Basic username:password
+@required {$mine: str, $top: str, $skip: str, api-version: str}
+
+@endpoint POST /{{organization}}/_apis/projects/{{projectId}}/teams
+@auth Basic username:password
+@required {api-version: str, name: str, description: str}
+
+@endpoint DELETE /{{organization}}/_apis/projects/{{projectId}}/teams/{{team}}
+@auth Basic username:password
+@required {api-version: str, name: str, description: str}
+
+@endpoint GET /{{organization}}/_apis/graph/users
+@auth Basic username:password
+@required {api-version: str, subjectTypes: str, continuationToken: str}
+
+@endpoint GET /{{organization}}/_apis/graph/users/{{userDescriptor}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/releases
+@auth Basic username:password
+@required {api-version: str}
+@optional {propertyFilters: str, tagFilter: str, isDeleted: str, sourceBranchFilter: str, artifactVersionId: str, sourceId: str, artifactTypeId: str, $expand: str, continuationToken: str, $top: str, queryOrder: str, maxCreatedTime: str, minCreatedTime: str, environmentStatusFilter: str, statusFilter: str, createdBy: str, searchText: str, definitionEnvironmentId: str, definitionId: str, releaseIdFilter: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/releases/{{releaseId}}
+@auth Basic username:password
+@required {$expand: str, api-version: str}
+@optional {approvalFilters: str, propertyFilters: str, $topGateRecords: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/releases/{{releaseId}}/logs
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/definitions
+@auth Basic username:password
+@required {api-version: str}
+@optional {propertyFilters: str, tagFilter: str, isDeleted: str, sourceBranchFilter: str, artifactVersionId: str, sourceId: str, artifactTypeId: str, $expand: str, continuationToken: str, $top: str, queryOrder: str, maxCreatedTime: str, minCreatedTime: str, environmentStatusFilter: str, statusFilter: str, createdBy: str, searchText: str, definitionEnvironmentId: str, definitionId: str, releaseIdFilter: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/release/definitions/{{releaseId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {approvalFilters: str, propertyFilters: str, $topGateRecords: str}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/wiki/wikis
+@auth Basic username:password
+@required {api-version: str}
+@errors {409}
+
+@endpoint POST /{{organization}}/{{project}}/_apis/wiki/wikis
+@auth Basic username:password
+@required {api-version: str, version: map, type: str, name: str, projectId: str, repositoryId: str, mappedPath: str}
+@returns(200) {id: str, versions: [map], url: str, remoteUrl: str, type: str, name: str, projectId: str, repositoryId: str, mappedPath: str}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/wiki/wikis/{{wikiIdentifier}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wiki/wikis/{{wikiIdentifier}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/wiki/wikis
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/{{project}}/_apis/wiki/wikis/{{wikiIdentifier}}
+@auth Basic username:password
+@required {api-version: str, versions: [map], name: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/repositories
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/{{project}}/_apis/git/recycleBin/repositories/{{repositoryId}}
+@auth Basic username:password
+@required {api-version: str, deleted: bool}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint POST /{{organization}}/{{projectId}}/_apis/git/repositories
+@auth Basic username:password
+@required {api-version: str, name: str, project: map}
+@optional {sourceRef: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeAllUrls: str, includeHidden: str, includeLinks: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}
+@auth Basic username:password
+@required {api-version: str, includeParent: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/recycleBin/repositories
+@auth Basic username:password
+@required {api-version: str}
+@optional {includeAllUrls: str, includeHidden: str, includeLinks: str}
+
+@endpoint DELETE /{{organization}}/{{project}}/_apis/git/recycleBin/repositories/{{repositoryId}}
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint GET /{{organization}}/{{project}}/_apis/git/deletedrepositories
+@auth Basic username:password
+@required {api-version: str}
+
+@endpoint PATCH /{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}
+@auth Basic username:password
+@required {api-version: str, name: str, defaultBranch: str}
+
+@end

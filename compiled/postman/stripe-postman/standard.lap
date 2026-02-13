@@ -1,0 +1,941 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Stripe API
+@base https://api.stripe.com
+@auth Bearer token
+@endpoints 224
+@hint download_for_search
+@toc balance(1), balance_transactions(2), charges(5), customers(27), disputes(4), events(2), files(3), file_links(4), payment_intents(7), setup_intents(6), payouts(5), refunds(4), tokens(5), payment_methods(6), sources(3), checkout(2), coupons(5), credit_notes(5), subscriptions(6), invoices(13), invoiceitems
+(1), invoiceitems(4), plans(5), products(5), subscription_items(7), subscription_schedules(1), tax_rates(4), accounts(24), account_links(1), application_fees(6), country_specs(2), topups(5), transfers(8), issuing(18), terminal(11), orders(4), webhook_endpoints(1), https:(2)
+
+@group balance
+@endpoint GET /v1/balance
+@desc Retrieve Balance
+
+@endgroup
+
+@group balance_transactions
+@endpoint GET /v1/balance_transactions/txn_1F7YnJGCrGF7V6ZERqsarxp7
+@desc Retrieve a balance transaction
+
+@endpoint GET /v1/balance_transactions
+@desc List all balance transactions
+@required {limit: str}
+
+@endgroup
+
+@group charges
+@endpoint POST /v1/charges
+@desc Create a charge
+@required {amount: str, currency: str, source: str}
+@optional {Stripe-Account: str, statement_descriptor: str, customer: str, transfer_data[destination]: str, on_behalf_of: str, capture: str}
+
+@endpoint GET /v1/charges/ch_1F5EWzGCrGF7V6ZE7xo2maPj
+@desc Retrieve a charge
+
+@endpoint POST /v1/charges/ch_1F5EWzGCrGF7V6ZE7xo2maPj
+@desc Update a charge
+@required {metadata[order_id]: str}
+@optional {customer: str}
+
+@endpoint POST /v1/charges/ch_1F7mbUGCrGF7V6ZEy0mH7guD/capture
+@desc Capture a charge
+@optional {amount: str}
+
+@endpoint GET /v1/charges
+@desc List all charges
+@required {limit: str}
+
+@endgroup
+
+@group customers
+@endpoint POST /v1/customers
+@desc Create a customer
+@required {source: str, name: str, email: str, description: str}
+
+@endpoint GET /v1/customers/{{customer_id}}
+@desc Retrieve a Customer
+
+@endpoint POST /v1/customers/{{customer_id}}
+@desc Update a Customer
+@required {source: str}
+
+@endpoint DELETE /v1/customers/cus_Fd2ozj1rGMbReA
+@desc Delete a customer
+
+@endpoint GET /v1/customers
+@desc List all Customers
+@required {limit: str}
+
+@endgroup
+
+@group disputes
+@endpoint GET /v1/disputes/dp_1F7mp7GCrGF7V6ZEUZsjW7va
+@desc Retrieve a dispute
+
+@endpoint POST /v1/disputes/dp_1F7mp7GCrGF7V6ZEUZsjW7va
+@desc Update a dispute
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/disputes/dp_1F7mp7GCrGF7V6ZEUZsjW7va/close
+@desc Close a dispute
+
+@endpoint GET /v1/disputes
+@desc List all disputes
+
+@endgroup
+
+@group events
+@endpoint GET /v1/events/evt_1F7n8mGCrGF7V6ZETVihKcUf
+@desc Retrieve an event
+
+@endpoint GET /v1/events
+@desc List all events
+@required {limit: str}
+
+@endgroup
+
+@group files
+@endpoint POST /v1/files
+@desc Create a file
+@required {purpose: str, file: file, file_link_data[create]: str}
+
+@endpoint GET /v1/files/file_1F7nVKGCrGF7V6ZEi68rMU3c
+@desc Retrieve a file
+
+@endpoint GET /v1/files
+@desc List all files
+
+@endgroup
+
+@group file_links
+@endpoint POST /v1/file_links
+@desc Create a file link
+@required {file: str}
+
+@endpoint GET /v1/file_links/link_1F7nfpGCrGF7V6ZEwsbnIjHO
+@desc Retrieve a file link
+
+@endpoint POST /v1/file_links/link_1F7nfpGCrGF7V6ZEwsbnIjHO
+@desc Update a file link
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/file_links
+@desc List all file links
+
+@endgroup
+
+@group payment_intents
+@endpoint POST /v1/payment_intents
+@desc Create a PaymentIntent
+@required {amount: str, currency: str, capture_method: str, confirm: str, customer: str, payment_method: str}
+
+@endpoint GET /v1/payment_intents/pi_1F5EctGCrGF7V6ZElBCVk4Pt
+@desc Retrieve a PaymentIntent
+
+@endpoint POST /v1/payment_intents/pi_1F7nrSGCrGF7V6ZEUQThCC3l
+@desc Update a PaymentIntent
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/payment_intents/pi_1ESsBCGCrGF7V6ZEyHTPyzMY/confirm
+@desc Confirm a PaymentIntent
+@required {payment_method: str}
+
+@endpoint POST /v1/payment_intents/pi_1F5EcdGCrGF7V6ZEroW0b0vO/capture
+@desc Capture a PaymentIntent
+
+@endpoint POST /v1/payment_intents/pi_1ESsBCGCrGF7V6ZEyHTPyzMY/cancel
+@desc Cancel a PaymentIntent
+
+@endpoint GET /v1/payment_intents
+@desc List all PaymentIntents
+@required {limit: str}
+
+@endgroup
+
+@group setup_intents
+@endpoint POST /v1/setup_intents
+@desc Create a SetupIntent
+@required {payment_method_types[]: str}
+
+@endpoint GET /v1/setup_intents/seti_1F7pMbGCrGF7V6ZEWKaF3EOE
+@desc Retrieve a SetupIntent
+
+@endpoint POST /v1/setup_intents/seti_1F7pMbGCrGF7V6ZEWKaF3EOE
+@desc Update a SetupIntent
+@required {metadata[user_id]: str}
+
+@endpoint POST /v1/setup_intents/seti_1F7pMbGCrGF7V6ZEWKaF3EOE/confirm
+@desc Confirm a SetupIntent
+@required {payment_method: str}
+
+@endpoint POST /v1/setup_intents/seti_1F7pQGGCrGF7V6ZENTR3JLAr/cancel
+@desc Cancel a SetupIntent
+
+@endpoint GET /v1/setup_intents
+@desc List all SetupIntents
+@required {limit: str}
+
+@endgroup
+
+@group payouts
+@endpoint POST /v1/payouts
+@desc Create a payout
+@required {amount: str, currency: str}
+
+@endpoint GET /v1/payouts
+@desc List all payouts
+
+@endpoint GET /v1/payouts/po_1F7XrJGCrGF7V6ZEoRy3uphg
+@desc Retrieve a payout
+
+@endpoint POST /v1/payouts/po_1F7XrJGCrGF7V6ZEoRy3uphg
+@desc Update a payout
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/payouts/po_1F7XrJGCrGF7V6ZEoRy3uphg/cancel
+@desc Cancel a payout
+
+@endgroup
+
+@group refunds
+@endpoint POST /v1/refunds
+@desc Create a refund
+@required {charge: str}
+
+@endpoint GET /v1/refunds/re_1F7pYpGCrGF7V6ZEoB7YvBjs
+@desc Retrieve a refund
+
+@endpoint POST /v1/refunds/re_1F7pYpGCrGF7V6ZEoB7YvBjs
+@desc Update a refund
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/refunds
+@desc List all refunds
+@required {limit: str}
+
+@endgroup
+
+@group tokens
+@endpoint POST /v1/tokens
+@desc Create a card token
+@required {card[number]: str, card[exp_month]: str, card[exp_year]: str, card[cvc]: str}
+
+@endpoint POST /v1/tokens
+@desc Create a bank account token
+@required {bank_account[country]: str, bank_account[currency]: str, bank_account[account_holder_name]: str, bank_account[account_holder_type]: str, bank_account[routing_number]: str, bank_account[account_number]: str}
+
+@endpoint POST /v1/tokens
+@desc Create a PII Token
+@required {pii[id_number]: str}
+
+@endpoint POST /v1/tokens
+@desc Create an account token
+@required {account[individual][first_name]: str, account[individual][last_name]: str, account[tos_shown_and_accepted]: str}
+
+@endpoint GET /v1/tokens/btok_1F5EwEGCrGF7V6ZES01sKjJ8
+@desc Retrieve a token
+
+@endgroup
+
+@group payment_methods
+@endpoint POST /v1/payment_methods
+@desc Create a PaymentMethod
+@required {type: str, card[number]: str, card[exp_month]: str, card[exp_year]: str, card[cvc]: str}
+
+@endpoint GET /v1/payment_methods/card_1F5FrAGCrGF7V6ZEfKdGpCQQ
+@desc Retrieve a PaymentMethod
+
+@endpoint POST /v1/payment_methods/card_1F5FrAGCrGF7V6ZEfKdGpCQQ
+@desc Update a PaymentMethod
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/payment_methods
+@desc List a Customer's PaymentMethods
+@required {customer: str, type: str}
+
+@endpoint POST /v1/payment_methods/pm_card_visa/attach
+@desc Attach a PaymentMethod to a customer
+@required {customer: str}
+
+@endpoint POST /v1/payment_methods/pm_1F7qjmGCrGF7V6ZEoCwOb4sy/detach
+@desc Detach a PaymentMethod from a customer
+
+@endgroup
+
+@group customers
+@endpoint POST /v1/customers/{{customer_id}}/sources
+
+@desc Create a bank account
+@required {source[object]: str, source[country]: str, source[currency]: str, source[account_holder_name]: str, source[account_holder_type]: str, source[routing_number]: str, source[account_number]: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/sources/ba_1F7qmHGCrGF7V6ZEya4auqya
+@desc Retrieve a Bank Account
+
+@endpoint POST /v1/customers/{{customer_id}}/sources/ba_1F7qmHGCrGF7V6ZEya4auqya
+@desc Update a bank account
+@required {metadata[key]: str}
+
+@endpoint POST /v1/customers/{{customer_id}}/sources/ba_1F5EzcGCrGF7V6ZEqlibeus7/verify
+
+@desc Verify a bank account
+@required {amounts[]: str, amounts[]: str}
+
+@endpoint DELETE /v1/customers/{{customer_id}}/sources/ba_1F7qmHGCrGF7V6ZEya4auqya
+@desc Delete a bank account
+
+@endpoint GET /v1/customers/{{customer_id}}/sources
+@desc List all bank accounts
+@required {object: str, limit: str}
+
+@endpoint POST /v1/customers/{{customer_id}}/sources
+@desc Create a card
+@required {source: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/sources/card_1F87InGCrGF7V6ZEKrUOmC6J
+@desc Retrieve a card
+
+@endpoint POST /v1/customers/{{customer_id}}/sources/card_1F87InGCrGF7V6ZEKrUOmC6J
+@desc Update a card
+@auth Bearer token
+@required {name: str}
+
+@endpoint DELETE /v1/customers/{{customer_id}}/sources/card_1F87InGCrGF7V6ZEKrUOmC6J
+@desc Delete a card
+@auth Bearer token
+
+@endpoint GET /v1/customers/{{customer_id}}/sources
+@desc List all cards
+@required {object: str}
+
+@endgroup
+
+@group sources
+@endpoint POST /v1/sources
+@desc Create a new source
+@required {type: str, currency: str, owner[email]: str}
+
+@endpoint GET /v1/sources/src_1F88LbGCrGF7V6ZETYEZ6mSW
+@desc Retrieve a source
+
+@endpoint POST /v1/sources/src_1F88LbGCrGF7V6ZETYEZ6mSW
+@desc Update a source
+@required {metadata[order_id]: str}
+
+@endgroup
+
+@group customers
+@endpoint POST /v1/customers/{{customer_id}}/sources
+@desc Attach a source
+@required {source: str}
+
+@endpoint DELETE /v1/customers/{{customer_id}}/sources/src_1F88LbGCrGF7V6ZETYEZ6mSW
+@desc Detach a source
+
+@endgroup
+
+@group checkout
+@endpoint POST /v1/checkout/sessions
+@desc Create a Session
+@required {cancel_url: str, payment_method_types[]: str, success_url: str, line_items[][amount]: str, line_items[][description]: str, line_items[][name]: str, line_items[][quantity]: str, line_items[][currency]: str, line_items[][images][]: str}
+
+@endpoint GET /v1/checkout/sessions/cs_test_1nL3hOZylWskfkOnfCef7TXSMQjaHpcOctS2FeZgrXZBN8HgQ8qJeQBL
+@desc Retrieve a Session
+
+@endgroup
+
+@group coupons
+@endpoint POST /v1/coupons
+@desc Create a coupon
+@required {percent_off: str, duration: str, duration_in_months: str, id: str}
+
+@endpoint GET /v1/coupons/25OFF
+@desc Retrieve a coupon
+
+@endpoint POST /v1/coupons/25OFF
+@desc Update a coupon
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/coupons/25OFF
+@desc Delete a coupon
+
+@endpoint GET /v1/coupons
+@desc List all coupons
+
+@endgroup
+
+@group credit_notes
+@endpoint POST /v1/credit_notes
+@desc Create a credit note
+@required {invoice: str, amount: str}
+
+@endpoint GET /v1/credit_notes/cn_1F89akGCrGF7V6ZEp6f50Vdd
+@desc Retrieve a credit note
+
+@endpoint POST /v1/credit_notes/cn_1F89akGCrGF7V6ZEp6f50Vdd
+@desc Update a credit note
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/credit_notes/cn_1F89akGCrGF7V6ZEp6f50Vdd/void
+@desc Void a credit note
+
+@endpoint GET /v1/credit_notes
+@desc List all credit notes
+
+@endgroup
+
+@group customers
+@endpoint POST /v1/customers/{{customer_id}}/balance_transactions
+@desc Create a customer balance transaction
+@required {amount: str, currency: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/balance_transactions/cbtxn_1F89gAGCrGF7V6ZENYTQp9RA
+@desc Retrieve a customer balance transaction
+
+@endpoint POST /v1/customers/{{customer_id}}/balance_transactions/cbtxn_1F89gAGCrGF7V6ZENYTQp9RA
+@desc Update a customer balance transaction
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/balance_transactions
+@desc List a customer balance transaction
+
+@endpoint POST /v1/customers/{{customer_id}}/tax_ids
+@desc Create a tax ID
+@required {value: str, type: str}
+
+@endpoint GET /v1/customers/{{customer_id}}/tax_ids/txi_1F89lYGCrGF7V6ZEHiQPJgBc
+@desc Retrieve a tax ID
+
+@endpoint DELETE /v1/customers/{{customer_id}}/tax_ids/txi_1F89lYGCrGF7V6ZEHiQPJgBc
+@desc Delete a tax ID
+
+@endpoint GET /v1/customers/{{customer_id}}/tax_ids
+@desc List all tax IDs
+
+@endpoint DELETE /v1/customers/{{customer_id}}/discount
+@desc Delete a customer discount
+
+@endgroup
+
+@group subscriptions
+@endpoint DELETE /v1/subscriptions/sub_Elx5JUFaU4HftA/discount
+@desc Delete a subscription discount
+
+@endgroup
+
+@group invoices
+@endpoint POST /v1/invoices
+@desc Create an Invoice
+@required {customer: str}
+
+@endpoint GET /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54
+@desc Retrieve an invoice
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54
+@desc Update an invoice
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54
+@desc Delete a draft invoice
+
+@endpoint POST /v1/invoices/in_1EouITEkd1HXinYnlrzTWhnC/finalize
+@desc Finalize an invoice
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/pay
+@desc Pay an invoice
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/send
+@desc Send invoice for manual payment
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/void
+@desc Void an invoice
+
+@endpoint POST /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/mark_uncollectible
+@desc Mark an invoice as uncollectible
+
+@endpoint GET /v1/invoices/in_1EIPAtGCrGF7V6ZER5jrEJ54/lines
+@desc Retrieve an invoice's line items
+
+@endpoint GET /v1/invoices/upcoming
+@desc Retrieve an Upcoming Invoice
+@required {customer: str}
+
+@endpoint GET /v1/invoices/upcoming/lines
+@desc Retrieve an upcoming invoice's line items
+@required {customer: str}
+
+@endpoint GET /v1/invoices
+@desc List all invoices
+@required {limit: str}
+
+@endgroup
+
+@group invoiceitems
+
+@endpoint POST /v1/invoiceitems
+
+@desc Create an invoice item
+@required {currency: str, customer: str, amount: str, currency: str, description: str}
+
+@endgroup
+
+@group invoiceitems
+@endpoint GET /v1/invoiceitems/ii_1F8A5xGCrGF7V6ZEFE4XHOGN
+@desc Retrieve an invoice item
+
+@endpoint POST /v1/invoiceitems/ii_1F8A5xGCrGF7V6ZEFE4XHOGN
+@desc Update an invoice item
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/invoiceitems/ii_1F8A5xGCrGF7V6ZEFE4XHOGN
+@desc Delete an invoice item
+
+@endpoint GET /v1/invoiceitems
+@desc List all invoice items
+
+@endgroup
+
+@group plans
+@endpoint POST /v1/plans
+@desc Create a plan
+@required {currency: str, interval: str, product: str, amount: str}
+
+@endpoint GET /v1/plans/plan_FaQBlI3RnWDMgn
+@desc Retrieve a plan
+
+@endpoint POST /v1/plans/plan_FaQBlI3RnWDMgn
+@desc Update a plan
+@required {metadata[test]: str}
+
+@endpoint DELETE /v1/plans/plan_FaQBlI3RnWDMgn
+@desc Delete a plan
+
+@endpoint GET /v1/plans
+@desc List all plans
+
+@endgroup
+
+@group products
+@endpoint POST /v1/products
+@desc Create a product
+@required {name: str, type: str}
+
+@endpoint GET /v1/products/prod_FdR6041c1jsmuO
+@desc Retrieve a product
+
+@endpoint POST /v1/products/prod_FdR6041c1jsmuO
+@desc Update a product
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/products/prod_FdR6041c1jsmuO
+@desc Delete a product
+
+@endpoint GET /v1/products
+@desc List all Products
+@required {limit: str}
+
+@endgroup
+
+@group subscriptions
+@endpoint POST /v1/subscriptions
+@desc Create a subscription
+@required {customer: str, items[0][plan]: str, trial_from_plan: str}
+@optional {billing_cycle_anchor: str, prorate: str}
+
+@endpoint GET /v1/subscriptions/sub_FdRSPHUV782ihQ
+@desc Retrieve a subscription
+
+@endpoint POST /v1/subscriptions/sub_FdRSPHUV782ihQ
+@desc Update a subscription
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/subscriptions/sub_FdRSPHUV782ihQ
+@desc Cancel a subscription
+
+@endpoint GET /v1/subscriptions
+@desc List subscriptions
+
+@endgroup
+
+@group subscription_items
+@endpoint POST /v1/subscription_items
+@desc Create a subscription item
+@required {subscription: str, plan: str, quantity: str}
+
+@endpoint GET /v1/subscription_items/si_FdQf0HawiKF5ob
+@desc Retrieve a subscription item
+
+@endpoint POST /v1/subscription_items/si_FdQf0HawiKF5ob
+@desc Update a subscription item
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/subscription_items/si_FdQf0HawiKF5ob
+@desc Delete a subscription item
+
+@endpoint GET /v1/subscription_items
+@desc List all subscription items
+@required {subscription: str}
+
+@endgroup
+
+@group subscription_schedules
+@endpoint POST /v1/subscription_schedules
+@desc Create a schedule
+@required {customer: str, phases[0][plans][0][plan]: str, phases[0][iterations]: str, renewal_behavior: str, start_date: str}
+
+@endgroup
+
+@group tax_rates
+@endpoint POST /v1/tax_rates
+@desc Create a tax rate
+@required {display_name: str, inclusive: str, percentage: str, jurisdiction: str, description: str}
+
+@endpoint GET /v1/tax_rates/txr_1FAIvHGCrGF7V6ZEGIikhJdm
+@desc Retrieves a tax rate
+
+@endpoint POST /v1/tax_rates/txr_1FAIvHGCrGF7V6ZEGIikhJdm
+@desc Update a tax rate
+@required {active: str}
+
+@endpoint GET /v1/tax_rates
+@desc List all tax rates
+
+@endgroup
+
+@group subscription_items
+@endpoint POST /v1/subscription_items/si_F4ZSoPueLzWuHv/usage_records
+@desc Create a usage record
+@required {quantity: str, timestamp: str}
+
+@endpoint GET /v1/subscription_items/si_F4ZSoPueLzWuHv/usage_record_summaries
+@desc List all subscription item period summaries
+
+@endgroup
+
+@group accounts
+@endpoint POST /v1/accounts
+@desc Create an account
+@required {type: str, country: str, email: str, requested_capabilities[]: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}
+@desc Retrieve account
+
+@endpoint POST /v1/accounts/{{connect_account_id}}
+@desc Update an account
+@required {metadata[order_id]: str}
+
+@endpoint DELETE /v1/accounts/acct_1F5FVWFjJ5sbYUYr
+@desc Delete an account
+
+@endpoint POST /v1/accounts/acct_1F9EubBrJgej6O7E/reject
+@desc Reject an account
+@required {reason: str}
+
+@endpoint GET /v1/accounts
+@desc List all connected accounts
+@required {limit: str}
+
+@endpoint POST /v1/accounts/acct_1EPdQlDEQaE4g9hn/login_links
+@desc Create a login link
+
+@endgroup
+
+@group account_links
+@endpoint POST /v1/account_links
+@desc Create an account link
+@required {account: str, failure_url: str, success_url: str, type: str}
+
+@endgroup
+
+@group application_fees
+@endpoint GET /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW
+@desc Retrieve an application fee
+
+@endpoint GET /v1/application_fees
+@desc List all application fees
+
+@endpoint POST /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW/refund
+@desc Create an application fee refund
+
+@endpoint GET /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW/refunds/fr_1F9F7CCYlx8NNrIeTeqCYRrs
+@desc Retrieve an application fee refund
+
+@endpoint POST /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW/refunds/fr_1F9F7CCYlx8NNrIeTeqCYRrs
+@desc Update an application fee refund
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/application_fees/fee_1F9F5mCYlx8NNrIeem2p7zcW/refunds
+@desc List all application fee refunds
+
+@endgroup
+
+@group accounts
+@endpoint GET /v1/accounts/{{connect_account_id}}/capabilities/card_payments
+@desc Retrieve an Account Capability
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/capabilities/platform_payments
+@desc Update an Account Capability
+@required {requested: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/capabilities
+@desc List all Account Capabilities
+
+@endgroup
+
+@group country_specs
+@endpoint GET /v1/country_specs
+@desc List Country Specs
+@required {limit: str}
+
+@endpoint GET /v1/country_specs/US
+@desc Retrieve a Country Spec
+
+@endgroup
+
+@group accounts
+@endpoint POST /v1/accounts/{{connect_account_id}}
+@desc Create a bank account
+@required {external_account: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/external_accounts/ba_1F5FfhCYlx8NNrIedWPm5dHa
+@desc Retrieve a bank account
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/external_accounts/ba_1F5FfhCYlx8NNrIedWPm5dHa
+@desc Update a bank account
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/external_accounts
+@desc List all bank accounts
+@required {object: str}
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/external_accounts
+
+@desc Create a card
+@required {external_account: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/external_accounts/card_1F9vu4CYlx8NNrIeJWEAxVky
+@desc Retrieve a card
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/external_accounts/card_1F9vu4CYlx8NNrIeJWEAxVky
+@desc Update a card
+@required {name: str}
+
+@endpoint DELETE /v1/accounts/{{connect_account_id}}/external_accounts/card_1F9vu4CYlx8NNrIeJWEAxVky
+@desc Delete a card
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/external_accounts
+@desc List all cards
+@required {object: str}
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/persons
+@desc Create a person
+@required {first_name: str, last_name: str}
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/persons/person_FezDQ8xIe609RE
+@desc Retrieve a person
+
+@endpoint POST /v1/accounts/{{connect_account_id}}/persons/person_FezDQ8xIe609RE
+@desc Update a person
+@required {first_name: str}
+
+@endpoint DELETE /v1/accounts/{{connect_account_id}}/persons/person_FezDQ8xIe609RE
+@desc Delete a person
+
+@endpoint GET /v1/accounts/{{connect_account_id}}/persons
+@desc List all persons
+
+@endgroup
+
+@group topups
+@endpoint POST /v1/topups
+@desc Create a top-up
+@required {amount: str, currency: str, description: str}
+
+@endpoint GET /v1/topups/tu_123456789
+@desc Retrieve a top-up
+
+@endpoint POST /v1/topups/tu_123456789
+@desc Update a top-up
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/topups
+@desc List all top-ups
+
+@endpoint POST /v1/topups/tu_123456789/cancel
+@desc Cancel a top-up
+
+@endgroup
+
+@group transfers
+@endpoint POST /v1/transfers
+@desc Create a transfer
+@required {amount: str, currency: str, destination: str, transfer_group: str}
+
+@endpoint GET /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj
+@desc Retrieve a transfer
+
+@endpoint POST /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj
+@desc Update a transfer
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/transfers
+@desc List all transfers
+@required {limit: str}
+
+@endpoint POST /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj/reversals
+@desc Create a transfer reversal
+
+@endpoint GET /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj/reversals/trr_1F9zx7GCrGF7V6ZEtDzIHXVC
+@desc Retrieve a transfer reversal
+
+@endpoint POST /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj/reversals/trr_1F9zx7GCrGF7V6ZEtDzIHXVC
+@desc Update a transfer reversal
+@required {metadata[order_id]: str}
+
+@endpoint GET /v1/transfers/tr_1F9F5mGCrGF7V6ZEV5aTL7Sj/reversals
+@desc List all reversals
+
+@endgroup
+
+@group issuing
+@endpoint GET /v1/issuing/authorizations/iauth_1ELxKaGCrGF7V6ZEaHih7SEx
+@desc Retrieve an authorization
+
+@endpoint POST /v1/issuing/authorizations/iauth_1ELxKaGCrGF7V6ZEaHih7SEx
+@desc Update an authorization
+@required {metadata[foo]: str}
+
+@endpoint POST /v1/issuing/authorizations/iauth_1ELxKaGCrGF7V6ZEaHih7SEx/approve
+@desc Approve an authorization
+
+@endpoint POST /v1/issuing/authorizations/iauth_1ELxKaGCrGF7V6ZEaHih7SEx/decline
+@desc Decline an authorization
+
+@endpoint GET /v1/issuing/authorizations
+@desc List all Authorizations
+
+@endpoint POST /v1/issuing/cardholders
+@desc Create a cardholder
+@required {billing[address][city]: str, billing[address][state]: str, billing[address][country]: str, billing[address][line1]: str, billing[address][postal_code]: str, name: str, type: str}
+
+@endpoint GET /v1/issuing/cardholders/ich_1GQK3YGCrGF7V6ZEU7ijTNUe
+@desc Retrieve a cardholder
+
+@endpoint POST /v1/issuing/cardholders/ich_1GQK3YGCrGF7V6ZEU7ijTNUe
+@desc Update cardholder
+@required {email: str}
+
+@endpoint GET /v1/issuing/cardholders
+@desc List all cardholders
+
+@endpoint POST /v1/issuing/cards
+@desc Create a card
+@required {currency: str, type: str, cardholder: str, status: str}
+
+@endpoint GET /v1/issuing/cards/ic_1GQK5PGCrGF7V6ZEJIr0Sr9b
+@desc Retrieve a card
+
+@endpoint GET /v1/issuing/cards/ic_1GQK5PGCrGF7V6ZEJIr0Sr9b/details
+@desc Retrieve card details
+
+@endpoint POST /v1/issuing/cards/ic_1GQK5PGCrGF7V6ZEJIr0Sr9b
+@desc Update a card
+@required {metadata[foo]: str}
+
+@endpoint GET /v1/issuing/cards
+@desc List all cards
+
+@endpoint GET /v1/issuing/transactions/ipi_1ELxKbGCrGF7V6ZExh8m18PU
+@desc Retrieve a transaction
+
+@endpoint POST /v1/issuing/transactions/ipi_1ELxKbGCrGF7V6ZExh8m18PU
+@desc Update a transaction
+@required {metadata[foo]: str}
+
+@endpoint GET /v1/issuing/transactions
+@desc List all transactions
+
+@endgroup
+
+@group terminal
+@endpoint POST /v1/terminal/connection_tokens
+@desc Create a connection token
+
+@endpoint POST /v1/terminal/locations
+@desc Create a location
+@required {address[line1]: str, address[city]: str, address[country]: str, address[postal_code]: str, display_name: str}
+
+@endpoint GET /v1/terminal/locations/tml_DVpoBAHbt8zG4e
+@desc Retrieve a location
+
+@endpoint POST /v1/terminal/locations/tml_DVpoBAHbt8zG4e
+@desc Update a location
+@required {display_name: str}
+
+@endpoint DELETE /v1/terminal/locations/tml_DVpoBAHbt8zG4e
+@desc Delete a location
+
+@endpoint GET /v1/terminal/locations
+@desc List all locations
+
+@endpoint POST /v1/terminal/readers
+@desc Register a Reader
+@required {registration_code: str, label: str, location: str}
+
+@endpoint GET /v1/terminal/readers/tmr_62330545-b12f-4bbf-8bf1-280e8f2b1a63
+@desc Retrieve a Reader
+
+@endpoint POST /v1/terminal/readers/tmr_62330545-b12f-4bbf-8bf1-280e8f2b1a63
+@desc Update a Reader
+@required {label: str}
+
+@endpoint GET /v1/terminal/readers
+@desc List all Readers
+
+@endpoint DELETE /v1/terminal/readers/tmr_62330545-b12f-4bbf-6bf1-280e8f2b1a64
+@desc Delete a Reader
+
+@endgroup
+
+@group orders
+@endpoint POST /v1/orders
+@desc Create an order
+@required {items[][type]: str, items[][parent]: str, currency: str, shipping[name]: str, shipping[address][line1]: str, shipping[address][city]: str, shipping[address][country]: str, shipping[address][state]: str, shipping[address][postal_code]: str, email: str}
+
+@endpoint GET /v1/orders/or_1FJS10GCrGF7V6ZE5it3STZC
+@desc Retrieve an order
+
+@endpoint POST /v1/orders/or_1FJS10GCrGF7V6ZE5it3STZC
+@desc Update an order
+@required {metadata[order_id]: str}
+
+@endpoint POST /v1/orders/or_1FJS10GCrGF7V6ZE5it3STZC/pay
+@desc Pay an order
+@required {customer: str}
+
+@endgroup
+
+@group webhook_endpoints
+@endpoint POST /v1/webhook_endpoints
+@desc Create a webhook endpoint
+@required {url: str, enabled_events[]: str}
+
+@endgroup
+
+@group https:
+@endpoint GET /https:///
+@desc List all transactions
+
+@endpoint GET /https:///
+@desc Retrieve a card
+
+@endgroup
+
+@group issuing
+@endpoint POST /v1/issuing/cards/ic_1FZOnfGZxoUWXy90AQEgRIwr
+@desc Update a card
+@auth Bearer token
+
+@endgroup
+
+@end

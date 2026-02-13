@@ -1,0 +1,26 @@
+spec_id: braintree-postman
+tasks:
+  - id: t1
+    description: "Register a new buyer profile in the payment gateway, then process a payment against a saved payment method including shipping address and fraud risk assessment details"
+    target_endpoints:
+      - POST /graphql [CreateCustomer]
+      - POST /graphql [ChargePaymentMethod]
+    expected_params:
+      POST /graphql [CreateCustomer]:
+        - query
+        - variables
+      POST /graphql [ChargePaymentMethod]:
+        - query
+        - variables
+  - id: t2
+    description: "Place a hold on funds from a buyer's payment method to reserve the transaction amount, then finalize the settlement to move the held funds and complete the purchase"
+    target_endpoints:
+      - POST /graphql [AuthorizePaymentMethod]
+      - POST /graphql [CaptureTransaction]
+    expected_params:
+      POST /graphql [AuthorizePaymentMethod]:
+        - query
+        - variables
+      POST /graphql [CaptureTransaction]:
+        - query
+        - variables

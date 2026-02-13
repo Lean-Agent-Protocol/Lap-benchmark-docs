@@ -1,0 +1,24 @@
+spec_id: linear-gql
+tasks:
+  - id: t1
+    description: "Look up the details of a particular work item in the tracker, then modify its properties such as status, assignee, or priority"
+    target_endpoints:
+      - QUERY issue
+      - MUTATION issueUpdate
+    expected_params:
+      QUERY issue:
+        - id
+      MUTATION issueUpdate:
+        - id
+        - input
+  - id: t2
+    description: "View the details of an existing initiative in the tracker, then spin up a brand new initiative with an optional linked team chat channel for notifications"
+    target_endpoints:
+      - QUERY project
+      - MUTATION projectCreate
+    expected_params:
+      QUERY project:
+        - id
+      MUTATION projectCreate:
+        - input
+        - slackChannelName

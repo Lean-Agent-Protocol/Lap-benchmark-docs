@@ -1,0 +1,38 @@
+spec_id: github-rest
+tasks:
+  - id: t1
+    description: "Review all open bug reports and feature requests for a project sorted by recent activity, then file a new work item with a title, description, tags, and assigned team members"
+    target_endpoints:
+      - GET /repos/{owner}/{repo}/issues
+      - POST /repos/{owner}/{repo}/issues
+    expected_params:
+      GET /repos/{owner}/{repo}/issues:
+        - owner
+        - repo
+        - state
+        - labels
+        - sort
+        - per_page
+      POST /repos/{owner}/{repo}/issues:
+        - owner
+        - repo
+        - title
+        - body
+        - labels
+        - assignees
+  - id: t2
+    description: "Look up the metadata and configuration of a specific code project, then browse all the pending code change proposals for that project sorted and paginated"
+    target_endpoints:
+      - GET /repos/{owner}/{repo}
+      - GET /repos/{owner}/{repo}/pulls
+    expected_params:
+      GET /repos/{owner}/{repo}:
+        - owner
+        - repo
+      GET /repos/{owner}/{repo}/pulls:
+        - owner
+        - repo
+        - state
+        - sort
+        - direction
+        - per_page

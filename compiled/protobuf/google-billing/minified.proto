@@ -1,0 +1,227 @@
+syntax = "proto3";
+package google.cloud.billing.v1;
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/iam/v1/iam_policy.proto";
+import "google/iam/v1/policy.proto";
+import "google/protobuf/field_mask.proto";
+option go_package = "cloud.google.com/go/billing/apiv1/billingpb;billingpb";
+option java_multiple_files = true;
+option java_outer_classname = "CloudBillingProto";
+option java_package = "com.google.cloud.billing.v1";
+option (google.api.resource_definition) = {
+type: "cloudresourcemanager.googleapis.com/Project"
+pattern: "projects/{project}"
+};
+option (google.api.resource_definition) = {
+type: "cloudresourcemanager.googleapis.com/Organization"
+pattern: "organizations/{organization}"
+};
+service CloudBilling {
+option (google.api.default_host) = "cloudbilling.googleapis.com";
+option (google.api.oauth_scopes) =
+"https://www.googleapis.com/auth/cloud-billing,"
+"https://www.googleapis.com/auth/cloud-billing.readonly,"
+"https://www.googleapis.com/auth/cloud-platform";
+rpc GetBillingAccount(GetBillingAccountRequest) returns (BillingAccount) {
+option (google.api.http) = {
+get: "/v1/{name=billingAccounts/*}"
+};
+option (google.api.method_signature) = "name";
+}
+rpc ListBillingAccounts(ListBillingAccountsRequest)
+returns (ListBillingAccountsResponse) {
+option (google.api.http) = {
+get: "/v1/billingAccounts"
+additional_bindings {
+get: "/v1/{parent=organizations/*}/billingAccounts"
+}
+additional_bindings { get: "/v1/{parent=billingAccounts/*}/subAccounts" }
+};
+option (google.api.method_signature) = "";
+option (google.api.method_signature) = "parent";
+}
+rpc UpdateBillingAccount(UpdateBillingAccountRequest)
+returns (BillingAccount) {
+option (google.api.http) = {
+patch: "/v1/{name=billingAccounts/*}"
+body: "account"
+};
+option (google.api.method_signature) = "name,account";
+}
+rpc CreateBillingAccount(CreateBillingAccountRequest)
+returns (BillingAccount) {
+option (google.api.http) = {
+post: "/v1/billingAccounts"
+body: "billing_account"
+additional_bindings {
+post: "/v1/{parent=organizations/*}/billingAccounts"
+body: "billing_account"
+}
+additional_bindings {
+post: "/v1/{parent=billingAccounts/*}/subAccounts"
+body: "billing_account"
+}
+};
+option (google.api.method_signature) = "billing_account";
+option (google.api.method_signature) = "billing_account,parent";
+}
+rpc ListProjectBillingInfo(ListProjectBillingInfoRequest)
+returns (ListProjectBillingInfoResponse) {
+option (google.api.http) = {
+get: "/v1/{name=billingAccounts/*}/projects"
+};
+option (google.api.method_signature) = "name";
+}
+rpc GetProjectBillingInfo(GetProjectBillingInfoRequest)
+returns (ProjectBillingInfo) {
+option (google.api.http) = {
+get: "/v1/{name=projects/*}/billingInfo"
+};
+option (google.api.method_signature) = "name";
+}
+rpc UpdateProjectBillingInfo(UpdateProjectBillingInfoRequest)
+returns (ProjectBillingInfo) {
+option (google.api.http) = {
+put: "/v1/{name=projects/*}/billingInfo"
+body: "project_billing_info"
+};
+option (google.api.method_signature) = "name,project_billing_info";
+}
+rpc GetIamPolicy(google.iam.v1.GetIamPolicyRequest)
+returns (google.iam.v1.Policy) {
+option (google.api.http) = {
+get: "/v1/{resource=billingAccounts/*}:getIamPolicy"
+};
+option (google.api.method_signature) = "resource";
+}
+rpc SetIamPolicy(google.iam.v1.SetIamPolicyRequest)
+returns (google.iam.v1.Policy) {
+option (google.api.http) = {
+post: "/v1/{resource=billingAccounts/*}:setIamPolicy"
+body: "*"
+};
+option (google.api.method_signature) = "resource,policy";
+}
+rpc TestIamPermissions(google.iam.v1.TestIamPermissionsRequest)
+returns (google.iam.v1.TestIamPermissionsResponse) {
+option (google.api.http) = {
+post: "/v1/{resource=billingAccounts/*}:testIamPermissions"
+body: "*"
+};
+option (google.api.method_signature) = "resource,permissions";
+}
+rpc MoveBillingAccount(MoveBillingAccountRequest) returns (BillingAccount) {
+option (google.api.http) = {
+post: "/v1/{name=billingAccounts/*}:move"
+body: "*"
+additional_bindings {
+get: "/v1/{destination_parent=organizations/*}/{name=billingAccounts/*}:move"
+}
+};
+}
+}
+message BillingAccount {
+option (google.api.resource) = {
+type: "cloudbilling.googleapis.com/BillingAccount"
+pattern: "billingAccounts/{billing_account}"
+pattern: "organizations/{organization}/billingAccounts/{billing_account}"
+plural: "billingAccounts"
+singular: "billingAccount"
+};
+string name = 1 [
+(google.api.field_behavior) = OUTPUT_ONLY,
+(google.api.resource_reference) = {
+type: "cloudbilling.googleapis.com/BillingAccount"
+}
+];
+bool open = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+string display_name = 3;
+string master_billing_account = 4;
+string parent = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+string currency_code = 7 [(google.api.field_behavior) = OPTIONAL];
+}
+message ProjectBillingInfo {
+option (google.api.resource) = {
+type: "cloudbilling.googleapis.com/ProjectBillingInfo"
+pattern: "projects/{project}/billingInfo"
+};
+string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+string project_id = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+string billing_account_name = 3;
+bool billing_enabled = 4 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
+message GetBillingAccountRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "cloudbilling.googleapis.com/BillingAccount"
+}
+];
+}
+message ListBillingAccountsRequest {
+int32 page_size = 1;
+string page_token = 2;
+string filter = 3;
+string parent = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+message ListBillingAccountsResponse {
+repeated BillingAccount billing_accounts = 1;
+string next_page_token = 2;
+}
+message CreateBillingAccountRequest {
+BillingAccount billing_account = 1 [(google.api.field_behavior) = REQUIRED];
+string parent = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+message UpdateBillingAccountRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "cloudbilling.googleapis.com/BillingAccount"
+}
+];
+BillingAccount account = 2 [(google.api.field_behavior) = REQUIRED];
+google.protobuf.FieldMask update_mask = 3;
+}
+message ListProjectBillingInfoRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "cloudbilling.googleapis.com/BillingAccount"
+}
+];
+int32 page_size = 2;
+string page_token = 3;
+}
+message ListProjectBillingInfoResponse {
+repeated ProjectBillingInfo project_billing_info = 1;
+string next_page_token = 2;
+}
+message GetProjectBillingInfoRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "cloudresourcemanager.googleapis.com/Project"
+}
+];
+}
+message UpdateProjectBillingInfoRequest {
+string name = 1 [(google.api.field_behavior) = REQUIRED];
+ProjectBillingInfo project_billing_info = 2;
+}
+message MoveBillingAccountRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "cloudbilling.googleapis.com/BillingAccount"
+}
+];
+string destination_parent = 2 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "cloudresourcemanager.googleapis.com/Organization"
+}
+];
+}

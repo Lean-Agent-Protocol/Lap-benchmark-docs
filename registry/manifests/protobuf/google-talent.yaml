@@ -1,0 +1,32 @@
+spec_id: google-talent
+tasks:
+  - id: t1
+    description: "Publish a new job listing for a company within the recruitment platform, then browse all available job listings with optional filtering criteria and pagination"
+    target_endpoints:
+      - RPC CreateJob
+      - RPC ListJobs
+    expected_params:
+      RPC CreateJob:
+        - parent
+        - job
+      RPC ListJobs:
+        - parent
+        - filter
+        - page_size
+        - page_token
+        - job_view
+  - id: t2
+    description: "Find open positions that match a candidate's skills, location, and preferences using relevance-based ranking, then look up the full details of a specific position by its unique identifier"
+    target_endpoints:
+      - RPC SearchJobs
+      - RPC GetJob
+    expected_params:
+      RPC SearchJobs:
+        - parent
+        - request_metadata
+        - job_query
+        - search_mode
+        - max_page_size
+        - order_by
+      RPC GetJob:
+        - name

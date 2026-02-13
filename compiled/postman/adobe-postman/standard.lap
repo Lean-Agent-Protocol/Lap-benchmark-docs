@@ -1,0 +1,50 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Data Ingestion API
+@base https://platform.adobe.io
+@endpoints 9
+@toc data(9)
+
+@endpoint POST /data/foundation/import/collection/{CONNECTION_ID}
+@desc Send messages to Adobe Experience Platform
+@required {syncValidation: str, synchronousValidation: str}
+@optional {Cache-Control: str, x-sandbox-name: str # Identifies the Adobe Experience Platform sandbox to use. Default sandbox is 'prod'}
+
+@endpoint POST /data/foundation/import/collection/batch/{CONNECTION_ID}
+@desc Send multiple messages to Adobe Experience Platform
+@required {synchronousValidation: str}
+@optional {x-sandbox-name: str # Identifies the Adobe Experience Platform sandbox to use. Default sandbox is 'prod'}
+
+@endpoint POST /data/foundation/import/batches
+@desc Create a new batch
+@optional {x-api-key: str # The API key which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-gw-ims-org-id: str # The Organization ID which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-sandbox-name: str # The name of the sandbox in which the operation will take place. See the [sandboxes overview documentation](https://adobe.com/go/sandbox-overview-en) for more information.}
+
+@endpoint PUT /data/foundation/import/batches/{batchId}/datasets/{datasetId}/files/{filePath}
+@desc Upload a small file to a dataset
+@optional {x-api-key: str # The API key which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-gw-ims-org-id: str # The Organization ID which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-sandbox-name: str # The name of the sandbox in which the operation will take place. See the [sandboxes overview documentation](https://adobe.com/go/sandbox-overview-en) for more information.}
+
+@endpoint POST /data/foundation/import/batches/{batchId}/datasets/{datasetId}/files/{filePath}
+@desc Either initialize or finish uploading a large file
+@required {action: str}
+@optional {x-api-key: str # The API key which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-gw-ims-org-id: str # The Organization ID which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-sandbox-name: str # The name of the sandbox in which the operation will take place. See the [sandboxes overview documentation](https://adobe.com/go/sandbox-overview-en) for more information.}
+
+@endpoint PATCH /data/foundation/import/batches/{batchId}/datasets/{datasetId}/files/{filePath}
+@desc Upload part of a large file to a batch
+@required {file: str # The content bytes for the file or file part being uploaded.}
+@optional {x-api-key: str # The API key which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-gw-ims-org-id: str # The Organization ID which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-sandbox-name: str # The name of the sandbox in which the operation will take place. See the [sandboxes overview documentation](https://adobe.com/go/sandbox-overview-en) for more information., Content-Range: str # The range of bytes of the file being uploaded with this request.}
+
+@endpoint HEAD /data/foundation/import/batches/{batchId}/datasets/{datasetId}/files/{filePath}
+@desc Get the current status of the large file
+@optional {x-api-key: str # The API key which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-gw-ims-org-id: str # The Organization ID which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-sandbox-name: str # The name of the sandbox in which the operation will take place. See the [sandboxes overview documentation](https://adobe.com/go/sandbox-overview-en) for more information.}
+
+@endpoint GET /data/foundation/import/batches/{batchId}/datasets/{datasetId}/preview
+@desc Retrieve a preview for a batch
+@required {format: str, delimiter: str, quote: str, escape: str, charset: str, header: str, nrow: str}
+@optional {x-api-key: str # The API key which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-gw-ims-org-id: str # The Organization ID which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-sandbox-name: str # The name of the sandbox in which the operation will take place. See the [sandboxes overview documentation](https://adobe.com/go/sandbox-overview-en) for more information.}
+
+@endpoint POST /data/foundation/import/batches/{batchId}
+@desc Finish uploading a file
+@required {action: str}
+@optional {x-api-key: str # The API key which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-gw-ims-org-id: str # The Organization ID which can be copied from your Experience Platform integration. For more information on how to obtain this value, visit the [authentication tutorial](http://www.adobe.com/go/platform-api-authentication-en)., x-sandbox-name: str # The name of the sandbox in which the operation will take place. See the [sandboxes overview documentation](https://adobe.com/go/sandbox-overview-en) for more information.}
+
+@end

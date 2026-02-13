@@ -1,0 +1,314 @@
+syntax = "proto3";
+package google.spanner.v1;
+import public "google/spanner/v1/commit_response.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/rpc/status.proto";
+import "google/spanner/v1/keys.proto";
+import "google/spanner/v1/location.proto";
+import "google/spanner/v1/mutation.proto";
+import "google/spanner/v1/result_set.proto";
+import "google/spanner/v1/transaction.proto";
+import "google/spanner/v1/type.proto";
+option csharp_namespace = "Google.Cloud.Spanner.V1";
+option go_package = "cloud.google.com/go/spanner/apiv1/spannerpb;spannerpb";
+option java_multiple_files = true;
+option java_outer_classname = "SpannerProto";
+option java_package = "com.google.spanner.v1";
+option php_namespace = "Google\\Cloud\\Spanner\\V1";
+option ruby_package = "Google::Cloud::Spanner::V1";
+option (google.api.resource_definition) = {
+type: "spanner.googleapis.com/Database"
+pattern: "projects/{project}/instances/{instance}/databases/{database}"
+};
+service Spanner {
+option (google.api.default_host) = "spanner.googleapis.com";
+option (google.api.oauth_scopes) =
+"https://www.googleapis.com/auth/cloud-platform,"
+"https://www.googleapis.com/auth/spanner.data";
+rpc CreateSession(CreateSessionRequest) returns (Session) {
+option (google.api.http) = {
+post: "/v1/{database=projectsdatabasesinstancesinstancessessionsinstancesinstancessessionsinstancessessionsinstancessessionsinstancessessionsinstancessessionsinstancessessionsinstancessessionsinstancessessionsinstancessessionsinstancessessionsinstancessessionsinstancessessions/*}:batchWrite"
+body: "*"
+};
+option (google.api.method_signature) = "session,mutation_groups";
+}
+}
+message CreateSessionRequest {
+string database = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "spanner.googleapis.com/Database"
+}
+];
+Session session = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message BatchCreateSessionsRequest {
+string database = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "spanner.googleapis.com/Database"
+}
+];
+Session session_template = 2;
+int32 session_count = 3 [(google.api.field_behavior) = REQUIRED];
+}
+message BatchCreateSessionsResponse {
+repeated Session session = 1;
+}
+message Session {
+option (google.api.resource) = {
+type: "spanner.googleapis.com/Session"
+pattern: "projects/{project}/instances/{instance}/databases/{database}/sessions/{session}"
+plural: "sessions"
+singular: "session"
+};
+string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+map<string, string> labels = 2;
+google.protobuf.Timestamp create_time = 3
+[(google.api.field_behavior) = OUTPUT_ONLY];
+google.protobuf.Timestamp approximate_last_use_time = 4
+[(google.api.field_behavior) = OUTPUT_ONLY];
+string creator_role = 5;
+bool multiplexed = 6 [(google.api.field_behavior) = OPTIONAL];
+}
+message GetSessionRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+}
+message ListSessionsRequest {
+string database = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "spanner.googleapis.com/Database"
+}
+];
+int32 page_size = 2;
+string page_token = 3;
+string filter = 4;
+}
+message ListSessionsResponse {
+repeated Session sessions = 1;
+string next_page_token = 2;
+}
+message DeleteSessionRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+}
+message RequestOptions {
+enum Priority {
+PRIORITY_UNSPECIFIED = 0;
+PRIORITY_LOW = 1;
+PRIORITY_MEDIUM = 2;
+PRIORITY_HIGH = 3;
+}
+message ClientContext {
+map<string, google.protobuf.Value> secure_context = 1
+[(google.api.field_behavior) = OPTIONAL];
+}
+Priority priority = 1;
+string request_tag = 2;
+string transaction_tag = 3;
+ClientContext client_context = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+message DirectedReadOptions {
+message ReplicaSelection {
+enum Type {
+TYPE_UNSPECIFIED = 0;
+READ_WRITE = 1;
+READ_ONLY = 2;
+}
+string location = 1;
+Type type = 2;
+}
+message IncludeReplicas {
+repeated ReplicaSelection replica_selections = 1;
+bool auto_failover_disabled = 2;
+}
+message ExcludeReplicas {
+repeated ReplicaSelection replica_selections = 1;
+}
+oneof replicas {
+IncludeReplicas include_replicas = 1;
+ExcludeReplicas exclude_replicas = 2;
+}
+}
+message ExecuteSqlRequest {
+enum QueryMode {
+NORMAL = 0;
+PLAN = 1;
+PROFILE = 2;
+WITH_STATS = 3;
+WITH_PLAN_AND_STATS = 4;
+}
+message QueryOptions {
+string optimizer_version = 1;
+string optimizer_statistics_package = 2;
+}
+string session = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+TransactionSelector transaction = 2;
+string sql = 3 [(google.api.field_behavior) = REQUIRED];
+google.protobuf.Struct params = 4;
+map<string, Type> param_types = 5;
+bytes resume_token = 6;
+QueryMode query_mode = 7;
+bytes partition_token = 8;
+int64 seqno = 9;
+QueryOptions query_options = 10;
+RequestOptions request_options = 11;
+DirectedReadOptions directed_read_options = 15;
+bool data_boost_enabled = 16;
+bool last_statement = 17 [(google.api.field_behavior) = OPTIONAL];
+RoutingHint routing_hint = 18 [(google.api.field_behavior) = OPTIONAL];
+}
+message ExecuteBatchDmlRequest {
+message Statement {
+string sql = 1 [(google.api.field_behavior) = REQUIRED];
+google.protobuf.Struct params = 2;
+map<string, Type> param_types = 3;
+}
+string session = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+TransactionSelector transaction = 2 [(google.api.field_behavior) = REQUIRED];
+repeated Statement statements = 3 [(google.api.field_behavior) = REQUIRED];
+int64 seqno = 4 [(google.api.field_behavior) = REQUIRED];
+RequestOptions request_options = 5;
+bool last_statements = 6 [(google.api.field_behavior) = OPTIONAL];
+}
+message ExecuteBatchDmlResponse {
+repeated ResultSet result_sets = 1;
+google.rpc.Status status = 2;
+MultiplexedSessionPrecommitToken precommit_token = 3
+[(google.api.field_behavior) = OPTIONAL];
+}
+message PartitionOptions {
+int64 partition_size_bytes = 1;
+int64 max_partitions = 2;
+}
+message PartitionQueryRequest {
+string session = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+TransactionSelector transaction = 2;
+string sql = 3 [(google.api.field_behavior) = REQUIRED];
+google.protobuf.Struct params = 4 [(google.api.field_behavior) = OPTIONAL];
+map<string, Type> param_types = 5 [(google.api.field_behavior) = OPTIONAL];
+PartitionOptions partition_options = 6;
+}
+message PartitionReadRequest {
+string session = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+TransactionSelector transaction = 2;
+string table = 3 [(google.api.field_behavior) = REQUIRED];
+string index = 4;
+repeated string columns = 5;
+KeySet key_set = 6 [(google.api.field_behavior) = REQUIRED];
+PartitionOptions partition_options = 9;
+}
+message Partition {
+bytes partition_token = 1;
+}
+message PartitionResponse {
+repeated Partition partitions = 1;
+Transaction transaction = 2;
+}
+message ReadRequest {
+enum OrderBy {
+ORDER_BY_UNSPECIFIED = 0;
+ORDER_BY_PRIMARY_KEY = 1;
+ORDER_BY_NO_ORDER = 2;
+}
+enum LockHint {
+LOCK_HINT_UNSPECIFIED = 0;
+LOCK_HINT_SHARED = 1;
+LOCK_HINT_EXCLUSIVE = 2;
+}
+string session = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+TransactionSelector transaction = 2;
+string table = 3 [(google.api.field_behavior) = REQUIRED];
+string index = 4;
+repeated string columns = 5 [(google.api.field_behavior) = REQUIRED];
+KeySet key_set = 6 [(google.api.field_behavior) = REQUIRED];
+int64 limit = 8;
+bytes resume_token = 9;
+bytes partition_token = 10;
+RequestOptions request_options = 11;
+DirectedReadOptions directed_read_options = 14;
+bool data_boost_enabled = 15;
+OrderBy order_by = 16 [(google.api.field_behavior) = OPTIONAL];
+LockHint lock_hint = 17 [(google.api.field_behavior) = OPTIONAL];
+RoutingHint routing_hint = 18 [(google.api.field_behavior) = OPTIONAL];
+}
+message BeginTransactionRequest {
+string session = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+TransactionOptions options = 2 [(google.api.field_behavior) = REQUIRED];
+RequestOptions request_options = 3;
+Mutation mutation_key = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+message CommitRequest {
+string session = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+oneof transaction {
+bytes transaction_id = 2;
+TransactionOptions single_use_transaction = 3;
+}
+repeated Mutation mutations = 4;
+bool return_commit_stats = 5;
+google.protobuf.Duration max_commit_delay = 8
+[(google.api.field_behavior) = OPTIONAL];
+RequestOptions request_options = 6;
+MultiplexedSessionPrecommitToken precommit_token = 9
+[(google.api.field_behavior) = OPTIONAL];
+}
+message RollbackRequest {
+string session = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+bytes transaction_id = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message BatchWriteRequest {
+message MutationGroup {
+repeated Mutation mutations = 1 [(google.api.field_behavior) = REQUIRED];
+}
+string session = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "spanner.googleapis.com/Session" }
+];
+RequestOptions request_options = 3;
+repeated MutationGroup mutation_groups = 4
+[(google.api.field_behavior) = REQUIRED];
+bool exclude_txn_from_change_streams = 5
+[(google.api.field_behavior) = OPTIONAL];
+}
+message BatchWriteResponse {
+repeated int32 indexes = 1;
+google.rpc.Status status = 2;
+google.protobuf.Timestamp commit_timestamp = 3;
+}

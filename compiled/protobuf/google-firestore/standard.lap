@@ -1,0 +1,75 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api google.firestore.v1
+@base grpc://google.firestore.v1
+@version proto3
+@endpoints 17
+@toc Firestore(17)
+
+@type Timestamp {seconds: int(i64), nanos: int}
+
+@endpoint UNARY /Firestore/GetDocument
+@optional {mask: DocumentMask, transaction: bytes, read_time: str(timestamp)}
+
+@endpoint UNARY /Firestore/ListDocuments
+@optional {transaction: bytes, read_time: str(timestamp), show_missing: bool}
+@returns(OK) {documents: [Document], next_page_token: str} # ListDocumentsResponse
+
+@endpoint UNARY /Firestore/UpdateDocument
+@optional {update_mask: DocumentMask, mask: DocumentMask, current_document: Precondition}
+
+@endpoint UNARY /Firestore/DeleteDocument
+@optional {current_document: Precondition}
+@returns(OK) Empty response
+
+@endpoint SERVER-STREAM /Firestore/BatchGetDocuments
+@optional {documents: [str], mask: DocumentMask, transaction: bytes, new_transaction: TransactionOptions, read_time: str(timestamp)}
+@returns(OK) {found: Document?, missing: str?, transaction: bytes, read_time: str(timestamp)} # BatchGetDocumentsResponse
+
+@endpoint UNARY /Firestore/BeginTransaction
+@optional {options: TransactionOptions}
+@returns(OK) {transaction: bytes} # BeginTransactionResponse
+
+@endpoint UNARY /Firestore/Commit
+@optional {writes: [Write], transaction: bytes}
+@returns(OK) {write_results: [WriteResult], commit_time: str(timestamp)} # CommitResponse
+
+@endpoint UNARY /Firestore/Rollback
+@returns(OK) Empty response
+
+@endpoint SERVER-STREAM /Firestore/RunQuery
+@optional {structured_query: StructuredQuery, transaction: bytes, new_transaction: TransactionOptions, read_time: str(timestamp)}
+@returns(OK) {transaction: bytes, document: Document, read_time: str(timestamp), skipped_results: int, done: bool?, explain_metrics: ExplainMetrics} # RunQueryResponse
+
+@endpoint SERVER-STREAM /Firestore/ExecutePipeline
+@optional {structured_pipeline: StructuredPipeline, transaction: bytes, new_transaction: TransactionOptions, read_time: str(timestamp)}
+@returns(OK) {transaction: bytes, results: [Document], execution_time: str(timestamp), explain_stats: ExplainStats} # ExecutePipelineResponse
+
+@endpoint SERVER-STREAM /Firestore/RunAggregationQuery
+@optional {structured_aggregation_query: StructuredAggregationQuery, transaction: bytes, new_transaction: TransactionOptions, read_time: str(timestamp)}
+@returns(OK) {result: AggregationResult, transaction: bytes, read_time: str(timestamp), explain_metrics: ExplainMetrics} # RunAggregationQueryResponse
+
+@endpoint UNARY /Firestore/PartitionQuery
+@optional {structured_query: StructuredQuery, partition_count: int(i64), page_token: str, page_size: int, read_time: str(timestamp)}
+@returns(OK) {partitions: [Cursor], next_page_token: str} # PartitionQueryResponse
+
+@endpoint BIDI-STREAM /Firestore/Write
+@optional {stream_id: str, writes: [Write], stream_token: bytes, labels: map<str,str>}
+@returns(OK) {stream_id: str, stream_token: bytes, write_results: [WriteResult], commit_time: str(timestamp)} # WriteResponse
+
+@endpoint BIDI-STREAM /Firestore/Listen
+@optional {add_target: Target, remove_target: int, labels: map<str,str>}
+@returns(OK) {target_change: TargetChange?{target_change_type: enum(ADD/REMOVE/CURRENT/RESET), target_ids: [int], cause: google.rpc.Status, resume_token: bytes, read_time: str(timestamp)}, document_change: DocumentChange?, document_delete: DocumentDelete?, document_remove: DocumentRemove?, filter: ExistenceFilter?} # ListenResponse
+
+@endpoint UNARY /Firestore/ListCollectionIds
+@optional {page_size: int, page_token: str, read_time: str(timestamp)}
+@returns(OK) {collection_ids: [str], next_page_token: str} # ListCollectionIdsResponse
+
+@endpoint UNARY /Firestore/BatchWrite
+@optional {writes: [Write], labels: map<str,str>}
+@returns(OK) {write_results: [WriteResult], status: [google.rpc.Status]} # BatchWriteResponse
+
+@endpoint UNARY /Firestore/CreateDocument
+@optional {document_id: str, mask: DocumentMask}
+
+@end

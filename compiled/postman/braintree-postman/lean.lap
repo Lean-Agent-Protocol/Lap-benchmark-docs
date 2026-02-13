@@ -1,0 +1,213 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Braintree GraphQL
+@endpoints 43
+@hint download_for_search
+@toc {{endpoint}}(42), {{host}}(1)
+
+@group {{endpoint}}
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endgroup
+
+@group {{host}}
+@endpoint POST /{{host}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endgroup
+
+@group {{endpoint}}
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+
+@endpoint POST /{{endpoint}}/graphql
+@auth Basic username:password
+@optional {Braintree-Version: str}
+@returns(200)
+@returns(200)
+
+@endgroup
+
+@end

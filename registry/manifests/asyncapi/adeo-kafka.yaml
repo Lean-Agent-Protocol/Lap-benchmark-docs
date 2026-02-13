@@ -1,0 +1,30 @@
+spec_id: adeo-kafka
+tasks:
+  - id: t1
+    description: "Submit a pricing calculation request with the necessary requester credentials and routing metadata, then listen for the computed pricing result to come back asynchronously"
+    target_endpoints:
+      - PUBLISH adeo-{env}-case-study-COSTING-REQUEST-{version}
+      - SUBSCRIBE costingResponseChannel
+    expected_params:
+      PUBLISH adeo-{env}-case-study-COSTING-REQUEST-{version}:
+        - REQUEST_ID
+        - REPLY_TOPIC
+        - REQUESTER_ID
+        - REQUESTER_CODE
+      SUBSCRIBE costingResponseChannel:
+        - CALCULATION_ID
+        - CORRELATION_ID
+  - id: t2
+    description: "Act as the pricing engine: pick up an incoming calculation request, process it, and return the result along with processing timestamps back to the original requester"
+    target_endpoints:
+      - SUBSCRIBE adeo-{env}-case-study-COSTING-REQUEST-{version}
+      - PUBLISH costingResponseChannel
+    expected_params:
+      SUBSCRIBE adeo-{env}-case-study-COSTING-REQUEST-{version}:
+        - REQUESTER_ID
+        - REQUESTER_CODE
+      PUBLISH costingResponseChannel:
+        - CALCULATION_ID
+        - CORRELATION_ID
+        - REQUEST_TIMESTAMP
+        - CALCULATION_TIMESTAMP

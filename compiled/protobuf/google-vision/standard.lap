@@ -1,0 +1,23 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api google.cloud.vision.v1
+@base grpc://google.cloud.vision.v1
+@version proto3
+@endpoints 4
+@toc ImageAnnotator(4)
+
+@endpoint UNARY /ImageAnnotator/BatchAnnotateImages
+@optional {parent: str}
+@returns(OK) {responses: [AnnotateImageResponse]{face_annotations: [FaceAnnotation]{bounding_poly: BoundingPoly, fd_bounding_poly: BoundingPoly, landmarks: [Landmark], roll_angle: num(f32), pan_angle: num(f32), tilt_angle: num(f32), detection_confidence: num(f32), landmarking_confidence: num(f32), joy_likelihood: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), sorrow_likelihood: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), anger_likelihood: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), surprise_likelihood: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), under_exposed_likelihood: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), blurred_likelihood: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), headwear_likelihood: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY)}, landmark_annotations: [EntityAnnotation]{mid: str, locale: str, description: str, score: num(f32), topicality: num(f32), bounding_poly: BoundingPoly, locations: [LocationInfo], properties: [Property]}, logo_annotations: [EntityAnnotation]{mid: str, locale: str, description: str, score: num(f32), topicality: num(f32), bounding_poly: BoundingPoly, locations: [LocationInfo], properties: [Property]}, label_annotations: [EntityAnnotation]{mid: str, locale: str, description: str, score: num(f32), topicality: num(f32), bounding_poly: BoundingPoly, locations: [LocationInfo], properties: [Property]}, localized_object_annotations: [LocalizedObjectAnnotation]{mid: str, language_code: str, name: str, score: num(f32), bounding_poly: BoundingPoly}, text_annotations: [EntityAnnotation]{mid: str, locale: str, description: str, score: num(f32), topicality: num(f32), bounding_poly: BoundingPoly, locations: [LocationInfo], properties: [Property]}, full_text_annotation: TextAnnotation, safe_search_annotation: SafeSearchAnnotation{adult: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), spoof: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), medical: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), violence: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY), racy: enum(VERY_UNLIKELY/UNLIKELY/POSSIBLE/LIKELY/VERY_LIKELY)}, image_properties_annotation: ImageProperties{dominant_colors: DominantColorsAnnotation}, crop_hints_annotation: CropHintsAnnotation{crop_hints: [CropHint]}, web_detection: WebDetection, product_search_results: ProductSearchResults, error: google.rpc.Status, context: ImageAnnotationContext{uri: str, page_number: int}}} # BatchAnnotateImagesResponse
+
+@endpoint UNARY /ImageAnnotator/BatchAnnotateFiles
+@optional {parent: str}
+@returns(OK) {responses: [AnnotateFileResponse]{input_config: InputConfig{gcs_source: GcsSource, content: bytes, mime_type: str}, responses: [AnnotateImageResponse]{face_annotations: [FaceAnnotation], landmark_annotations: [EntityAnnotation], logo_annotations: [EntityAnnotation], label_annotations: [EntityAnnotation], localized_object_annotations: [LocalizedObjectAnnotation], text_annotations: [EntityAnnotation], full_text_annotation: TextAnnotation, safe_search_annotation: SafeSearchAnnotation, image_properties_annotation: ImageProperties, crop_hints_annotation: CropHintsAnnotation, web_detection: WebDetection, product_search_results: ProductSearchResults, error: google.rpc.Status, context: ImageAnnotationContext}, total_pages: int, error: google.rpc.Status}} # BatchAnnotateFilesResponse
+
+@endpoint UNARY /ImageAnnotator/AsyncBatchAnnotateImages
+@optional {parent: str}
+
+@endpoint UNARY /ImageAnnotator/AsyncBatchAnnotateFiles
+@optional {parent: str}
+
+@end
