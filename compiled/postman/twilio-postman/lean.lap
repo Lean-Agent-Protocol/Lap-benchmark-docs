@@ -1,0 +1,42 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Twilio Programmable Wireless
+@base https://wireless.twilio.com
+@endpoints 9
+@toc Commands(4), Sims(1), RatePlans(4)
+
+@group Commands
+@endpoint POST /v1/Commands
+@required {Sim: str, Command: str, CommandMode: str}
+
+@endpoint POST /v1/Commands
+@required {Sim: str, Command: str}
+
+@endpoint GET /v1/Commands/{Command_Sid}
+@required {Sid: str}
+
+@endpoint GET /v1/Commands
+@required {Sid: str}
+
+@endgroup
+
+@group Sims
+@endpoint GET /v1/Sims/{SimSid}/UsageRecords
+@required {Sid: str}
+
+@endgroup
+
+@group RatePlans
+@endpoint GET /v1/RatePlans/{RatePlanSid}/
+@required {Sid: str}
+
+@endpoint GET /v1/RatePlans/
+@required {Sid: str}
+
+@endpoint DELETE /v1/RatePlans/{RatePlan_Sid}
+
+@endpoint POST /v1/RatePlans
+
+@endgroup
+
+@end

@@ -1,0 +1,28 @@
+spec_id: gitter-streaming
+tasks:
+  - id: t1
+    description: "Open a persistent streaming connection to a chat room and extract the author details and message body from each incoming real-time update, while also handling connection keep-alive signals"
+    target_endpoints:
+      - PUBLISH /rooms/{roomId}/{resource} chatMessage
+      - PUBLISH /rooms/{roomId}/{resource} heartbeat
+    expected_params:
+      PUBLISH /rooms/{roomId}/{resource} chatMessage:
+        - id
+        - text
+        - html
+        - sent
+        - fromUser
+      PUBLISH /rooms/{roomId}/{resource} heartbeat: []
+  - id: t2
+    description: "From the same chat room stream, extract read receipts, tagged user references, and linked issue references from each conversation item, while monitoring the periodic keep-alive signals"
+    target_endpoints:
+      - PUBLISH /rooms/{roomId}/{resource} chatMessage
+      - PUBLISH /rooms/{roomId}/{resource} heartbeat
+    expected_params:
+      PUBLISH /rooms/{roomId}/{resource} chatMessage:
+        - unread
+        - readBy
+        - urls
+        - mentions
+        - issues
+      PUBLISH /rooms/{roomId}/{resource} heartbeat: []

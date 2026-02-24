@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAP Benchmark v2 - Spec Registry</title>
+<style>
+  :root { --bg: #0d1117; --fg: #c9d1d9; --accent: #58a6ff; --border: #30363d; --card: #161b22; --green: #3fb950; --yellow: #d29922; --red: #f85149; --muted: #8b949e; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--fg); padding: 24px; line-height: 1.5; }
+  h1 { color: #fff; margin-bottom: 8px; font-size: 28px; }
+  h2 { color: var(--accent); margin: 32px 0 16px; font-size: 22px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  h3 { color: #fff; margin: 24px 0 12px; font-size: 18px; }
+  .subtitle { color: var(--muted); margin-bottom: 24px; }
+  .totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .stat .num { font-size: 28px; font-weight: 700; color: var(--accent); }
+  .stat .label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px; }
+  th { background: var(--card); color: var(--accent); text-align: left; padding: 10px 12px; border: 1px solid var(--border); font-weight: 600; position: sticky; top: 0; z-index: 1; }
+  td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(88,166,255,0.05); }
+  .kb { text-align: right; font-variant-numeric: tabular-nums; }
+  .ratio { text-align: right; font-weight: 600; color: var(--green); }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+  .tag-small { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag-medium { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .tag-large { background: rgba(248,81,73,0.15); color: var(--red); }
+  .task { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin: 8px 0; }
+  .task-id { font-weight: 700; color: var(--accent); margin-right: 8px; }
+  .task-desc { color: var(--fg); }
+  .endpoints { margin-top: 8px; }
+  .ep { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 13px; color: var(--green); background: rgba(63,185,80,0.08); padding: 2px 6px; border-radius: 3px; display: inline-block; margin: 2px 4px 2px 0; }
+  .params { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .param { font-family: monospace; color: var(--yellow); }
+  .verdict { font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+  .verdict-ok { background: rgba(63,185,80,0.15); color: var(--green); }
+  .verdict-warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .verdict-problem { background: rgba(248,81,73,0.15); color: var(--red); }
+  .verdict-note { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .files { font-size: 12px; white-space: nowrap; }
+  .files a { color: var(--muted); }
+  .files a:hover { color: var(--accent); }
+  .format-section { margin-bottom: 48px; }
+  .na { color: var(--muted); font-style: italic; }
+  details { margin: 8px 0; }
+  summary { cursor: pointer; color: var(--accent); font-weight: 500; padding: 4px 0; }
+  summary:hover { text-decoration: underline; }
+  .review-note { background: rgba(88,166,255,0.08); border-left: 3px solid var(--accent); padding: 8px 12px; margin: 8px 0; font-size: 13px; color: var(--accent); border-radius: 0 4px 4px 0; }
+  .review-warn { background: rgba(210,153,34,0.1); border-left: 3px solid var(--yellow); padding: 8px 12px; margin: 8px 0; font-size: 13px; color: var(--yellow); border-radius: 0 4px 4px 0; }
+  .review-problem { background: rgba(248,81,73,0.1); border-left: 3px solid var(--red); padding: 8px 12px; margin: 8px 0; font-size: 13px; color: var(--red); border-radius: 0 4px 4px 0; }
+</style>
+</head>
+<body>
+<h1>LAP Benchmark v2 - Spec Registry</h1>
+<p class="subtitle">50 real-world API specs across 5 formats, compiled into 194 variants for benchmarking</p>
+
+<div class="totals">
+<div class="stat"><div class="num">50</div><div class="label">Total Specs</div></div>
+<div class="stat"><div class="num">5</div><div class="label">Formats</div></div>
+<div class="stat"><div class="num">100</div><div class="label">Tasks</div></div>
+<div class="stat"><div class="num">194</div><div class="label">Compiled Variants</div></div>
+<div class="stat"><div class="num">388</div><div class="label">Full Runs</div></div>
+<div class="stat"><div class="num">48</div><div class="label">Pilot Runs</div></div>
+</div>
+<h2>Size Totals by Format</h2>
+<table><tr><th>Format</th><th>Count</th><th class="kb">Source KB</th><th class="kb">Minified KB</th><th class="kb">Std LAP KB</th><th class="kb">Lean LAP KB</th><th class="kb">Lean Ratio</th></tr>
+<tr><td>OpenAPI</td><td>10</td>
+<td class="kb">23,021.9</td>
+<td class="kb">21,705.8</td>
+<td class="kb">2,905.0</td>
+<td class="kb">1,495.6</td>
+<td class="ratio">15.4x</td></tr>
+<tr><td>AsyncAPI</td><td>10</td>
+<td class="kb">81.2</td>
+<td class="kb">81.5</td>
+<td class="kb">17.0</td>
+<td class="kb">11.6</td>
+<td class="ratio">7.0x</td></tr>
+<tr><td>GraphQL</td><td>10</td>
+<td class="kb">4,857.5</td>
+<td class="kb">4,119.6</td>
+<td class="kb">1,033.6</td>
+<td class="kb">850.8</td>
+<td class="ratio">5.7x</td></tr>
+<tr><td>Postman</td><td>10</td>
+<td class="kb">1,711.5</td>
+<td class="kb">1,236.7</td>
+<td class="kb">202.3</td>
+<td class="kb">127.7</td>
+<td class="ratio">13.4x</td></tr>
+<tr><td>Protobuf</td><td>10</td>
+<td class="kb">644.4</td>
+<td class="kb">132.2</td>
+<td class="kb">35.6</td>
+<td class="kb">33.7</td>
+<td class="ratio">19.1x</td></tr>
+<tr style="font-weight:700;background:var(--card)"><td>TOTAL</td><td>50</td>
+<td class="kb">30,316.5</td>
+<td class="kb">27,275.8</td>
+<td class="kb">4,193.5</td>
+<td class="kb">2,519.4</td>
+<td class="ratio">12.0x</td></tr></table>
+<div class="format-section">
+<h2>OpenAPI (10 specs)</h2>
+<table><tr><th>#</th><th>Spec</th><th>Domain</th><th>Size</th><th class="kb">Source</th><th class="kb">Mini</th><th class="kb">Std LAP</th><th class="kb">Lean LAP</th><th class="kb">Ratio</th><th>Files</th></tr>
+<tr><td>1</td><td><strong>figma</strong></td><td>design</td><td><span class="tag tag-medium">medium</span></td><td class="kb">354.2</td>
+<td class="kb">347.3</td>
+<td class="kb">59.1</td>
+<td class="kb">13.1</td>
+<td class="ratio">27.0x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/figma/rest-api-spec/main/openapi/openapi.yaml" target="_blank">source</a> | <a href="compiled/openapi/figma/pretty.yaml">pret</a> | <a href="compiled/openapi/figma/minified.yaml">mini</a> | <a href="compiled/openapi/figma/standard.lap">stan</a> | <a href="compiled/openapi/figma/lean.lap">lean</a></td></tr>
+<tr><td>2</td><td><strong>stripe</strong></td><td>payments</td><td><span class="tag tag-large">large</span></td><td class="kb">5,910.1</td>
+<td class="kb">5,623.5</td>
+<td class="kb">586.4</td>
+<td class="kb">422.6</td>
+<td class="ratio">14.0x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.yaml" target="_blank">source</a> | <a href="compiled/openapi/stripe/pretty.yaml">pret</a> | <a href="compiled/openapi/stripe/minified.yaml">mini</a> | <a href="compiled/openapi/stripe/standard.lap">stan</a> | <a href="compiled/openapi/stripe/lean.lap">lean</a></td></tr>
+<tr><td>3</td><td><strong>twilio</strong></td><td>comms</td><td><span class="tag tag-large">large</span></td><td class="kb">1,823.0</td>
+<td class="kb">1,455.1</td>
+<td class="kb">159.1</td>
+<td class="kb">72.9</td>
+<td class="ratio">25.0x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/twilio/twilio-oai/main/spec/json/twilio_api_v2010.json" target="_blank">source</a> | <a href="compiled/openapi/twilio/pretty.yaml">pret</a> | <a href="compiled/openapi/twilio/minified.yaml">mini</a> | <a href="compiled/openapi/twilio/standard.lap">stan</a> | <a href="compiled/openapi/twilio/lean.lap">lean</a></td></tr>
+<tr><td>4</td><td><strong>github-rest</strong></td><td>devtools</td><td><span class="tag tag-large">large</span></td><td class="kb">8,749.6</td>
+<td class="kb">8,890.4</td>
+<td class="kb">1,278.7</td>
+<td class="kb">699.5</td>
+<td class="ratio">12.5x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.yaml" target="_blank">source</a> | <a href="compiled/openapi/github-rest/pretty.yaml">pret</a> | <a href="compiled/openapi/github-rest/minified.yaml">mini</a> | <a href="compiled/openapi/github-rest/standard.lap">stan</a> | <a href="compiled/openapi/github-rest/lean.lap">lean</a></td></tr>
+<tr><td>5</td><td><strong>digitalocean</strong></td><td>cloud</td><td><span class="tag tag-medium">medium</span></td><td class="kb">88.9</td>
+<td class="kb">88.6</td>
+<td class="kb">32.7</td>
+<td class="kb">32.7</td>
+<td class="ratio">2.7x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml" target="_blank">source</a> | <a href="compiled/openapi/digitalocean/pretty.yaml">pret</a> | <a href="compiled/openapi/digitalocean/minified.yaml">mini</a> | <a href="compiled/openapi/digitalocean/standard.lap">stan</a> | <a href="compiled/openapi/digitalocean/lean.lap">lean</a></td></tr>
+<tr><td>6</td><td><strong>slack</strong></td><td>messaging</td><td><span class="tag tag-large">large</span></td><td class="kb">1,208.3</td>
+<td class="kb">631.5</td>
+<td class="kb">82.4</td>
+<td class="kb">30.5</td>
+<td class="ratio">39.6x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/slackapi/slack-api-specs/master/web-api/slack_web_openapi_v2.json" target="_blank">source</a> | <a href="compiled/openapi/slack/pretty.yaml">pret</a> | <a href="compiled/openapi/slack/minified.yaml">mini</a> | <a href="compiled/openapi/slack/standard.lap">stan</a> | <a href="compiled/openapi/slack/lean.lap">lean</a></td></tr>
+<tr><td>7</td><td><strong>spotify</strong></td><td>media</td><td><span class="tag tag-medium">medium</span></td><td class="kb">278.9</td>
+<td class="kb">286.9</td>
+<td class="kb">64.7</td>
+<td class="kb">17.7</td>
+<td class="ratio">15.8x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/sonallux/spotify-web-api/main/fixed-spotify-open-api.yml" target="_blank">source</a> | <a href="compiled/openapi/spotify/pretty.yaml">pret</a> | <a href="compiled/openapi/spotify/minified.yaml">mini</a> | <a href="compiled/openapi/spotify/standard.lap">stan</a> | <a href="compiled/openapi/spotify/lean.lap">lean</a></td></tr>
+<tr><td>8</td><td><strong>box</strong></td><td>storage</td><td><span class="tag tag-large">large</span></td><td class="kb">1,700.4</td>
+<td class="kb">1,409.9</td>
+<td class="kb">299.8</td>
+<td class="kb">70.1</td>
+<td class="ratio">24.3x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/box/box-openapi/main/openapi.json" target="_blank">source</a> | <a href="compiled/openapi/box/pretty.yaml">pret</a> | <a href="compiled/openapi/box/minified.yaml">mini</a> | <a href="compiled/openapi/box/standard.lap">stan</a> | <a href="compiled/openapi/box/lean.lap">lean</a></td></tr>
+<tr><td>9</td><td><strong>plaid</strong></td><td>fintech</td><td><span class="tag tag-large">large</span></td><td class="kb">2,803.3</td>
+<td class="kb">2,865.0</td>
+<td class="kb">320.2</td>
+<td class="kb">124.2</td>
+<td class="ratio">22.6x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/plaid/plaid-openapi/master/2020-09-14.yml" target="_blank">source</a> | <a href="compiled/openapi/plaid/pretty.yaml">pret</a> | <a href="compiled/openapi/plaid/minified.yaml">mini</a> | <a href="compiled/openapi/plaid/standard.lap">stan</a> | <a href="compiled/openapi/plaid/lean.lap">lean</a></td></tr>
+<tr><td>10</td><td><strong>resend</strong></td><td>email</td><td><span class="tag tag-medium">medium</span></td><td class="kb">105.2</td>
+<td class="kb">107.6</td>
+<td class="kb">21.9</td>
+<td class="kb">12.3</td>
+<td class="ratio">8.6x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml" target="_blank">source</a> | <a href="compiled/openapi/resend/pretty.yaml">pret</a> | <a href="compiled/openapi/resend/minified.yaml">mini</a> | <a href="compiled/openapi/resend/standard.lap">stan</a> | <a href="compiled/openapi/resend/lean.lap">lean</a></td></tr>
+</table>
+<h3>Tasks</h3>
+<details><summary><strong>figma</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Export specific design nodes as scaled PNG images from a Figma file and post a comment on the file tagging the exported frames</span>
+<div class="endpoints">
+<span class="ep">GET /v1/images/{file_key}</span>
+<span class="ep">POST /v1/files/{file_key}/comments</span>
+</div>
+<div class="params">GET /v1/images/{file_key}: <span class="param">file_key</span>, <span class="param">ids</span>, <span class="param">scale</span>, <span class="param">format</span>, <span class="param">contents_only</span>, <span class="param">use_absolute_bounds</span></div>
+<div class="params">POST /v1/files/{file_key}/comments: <span class="param">file_key</span>, <span class="param">message</span>, <span class="param">comment_id</span>, <span class="param">client_meta</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Register a webhook to receive file update notifications for a team and query the organization activity logs to audit recent events</span>
+<div class="endpoints">
+<span class="ep">POST /v2/webhooks</span>
+<span class="ep">GET /v1/activity_logs</span>
+</div>
+<div class="params">POST /v2/webhooks: <span class="param">event_type</span>, <span class="param">context</span>, <span class="param">context_id</span>, <span class="param">endpoint</span>, <span class="param">passcode</span>, <span class="param">description</span></div>
+<div class="params">GET /v1/activity_logs: <span class="param">events</span>, <span class="param">start_time</span>, <span class="param">end_time</span>, <span class="param">limit</span>, <span class="param">order</span></div>
+</div>
+</details>
+<details><summary><strong>stripe</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new customer and then list all charges filtered by that customer</span>
+<div class="endpoints">
+<span class="ep">POST /v1/customers</span>
+<span class="ep">GET /v1/charges</span>
+</div>
+<div class="params">POST /v1/customers: <span class="param">email</span>, <span class="param">name</span>, <span class="param">description</span>, <span class="param">metadata</span>, <span class="param">address</span></div>
+<div class="params">GET /v1/charges: <span class="param">customer</span>, <span class="param">limit</span>, <span class="param">created</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new product in the catalog and then search for products matching specific criteria</span>
+<div class="endpoints">
+<span class="ep">POST /v1/products</span>
+<span class="ep">GET /v1/products/search</span>
+</div>
+<div class="params">POST /v1/products: <span class="param">name</span>, <span class="param">description</span>, <span class="param">active</span>, <span class="param">metadata</span></div>
+<div class="params">GET /v1/products/search: <span class="param">query</span>, <span class="param">limit</span></div>
+</div>
+</details>
+<details><summary><strong>twilio</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Send an SMS message and then retrieve the details of that message by its SID</span>
+<div class="endpoints">
+<span class="ep">POST /2010-04-01/Accounts/{AccountSid}/Messages.json</span>
+<span class="ep">GET /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json</span>
+</div>
+<div class="params">POST /2010-04-01/Accounts/{AccountSid}/Messages.json: <span class="param">AccountSid</span>, <span class="param">To</span>, <span class="param">From</span>, <span class="param">Body</span>, <span class="param">StatusCallback</span></div>
+<div class="params">GET /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json: <span class="param">AccountSid</span>, <span class="param">Sid</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create an outgoing phone call and then list recordings for that call</span>
+<div class="endpoints">
+<span class="ep">POST /2010-04-01/Accounts/{AccountSid}/Calls.json</span>
+<span class="ep">GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings.json</span>
+</div>
+<div class="params">POST /2010-04-01/Accounts/{AccountSid}/Calls.json: <span class="param">AccountSid</span>, <span class="param">To</span>, <span class="param">From</span>, <span class="param">Url</span>, <span class="param">Method</span></div>
+<div class="params">GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Rec...: <span class="param">AccountSid</span>, <span class="param">CallSid</span></div>
+</div>
+</details>
+<details><summary><strong>github-rest</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">List issues for a repository and then create a new issue with labels</span>
+<div class="endpoints">
+<span class="ep">GET /repos/{owner}/{repo}/issues</span>
+<span class="ep">POST /repos/{owner}/{repo}/issues</span>
+</div>
+<div class="params">GET /repos/{owner}/{repo}/issues: <span class="param">owner</span>, <span class="param">repo</span>, <span class="param">state</span>, <span class="param">labels</span>, <span class="param">sort</span>, <span class="param">per_page</span></div>
+<div class="params">POST /repos/{owner}/{repo}/issues: <span class="param">owner</span>, <span class="param">repo</span>, <span class="param">title</span>, <span class="param">body</span>, <span class="param">labels</span>, <span class="param">assignees</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Get a specific repository's details and then list pull requests for that repository</span>
+<div class="endpoints">
+<span class="ep">GET /repos/{owner}/{repo}</span>
+<span class="ep">GET /repos/{owner}/{repo}/pulls</span>
+</div>
+<div class="params">GET /repos/{owner}/{repo}: <span class="param">owner</span>, <span class="param">repo</span></div>
+<div class="params">GET /repos/{owner}/{repo}/pulls: <span class="param">owner</span>, <span class="param">repo</span>, <span class="param">state</span>, <span class="param">sort</span>, <span class="param">direction</span>, <span class="param">per_page</span></div>
+</div>
+</details>
+<details><summary><strong>digitalocean</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new droplet and then retrieve its details by ID</span>
+<div class="endpoints">
+<span class="ep">POST /v2/droplets</span>
+<span class="ep">GET /v2/droplets/{droplet_id}</span>
+</div>
+<div class="params">POST /v2/droplets: <span class="param">name</span>, <span class="param">region</span>, <span class="param">size</span>, <span class="param">image</span>, <span class="param">ssh_keys</span>, <span class="param">tags</span></div>
+<div class="params">GET /v2/droplets/{droplet_id}: <span class="param">droplet_id</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new domain record and then list all records for that domain</span>
+<div class="endpoints">
+<span class="ep">POST /v2/domains/{domain_name}/records</span>
+<span class="ep">GET /v2/domains/{domain_name}/records</span>
+</div>
+<div class="params">POST /v2/domains/{domain_name}/records: <span class="param">domain_name</span>, <span class="param">type</span>, <span class="param">name</span>, <span class="param">data</span>, <span class="param">ttl</span></div>
+<div class="params">GET /v2/domains/{domain_name}/records: <span class="param">domain_name</span></div>
+</div>
+</details>
+<details><summary><strong>slack</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Post a message to a Slack channel and then retrieve the conversation history for that channel</span>
+<div class="endpoints">
+<span class="ep">POST /chat.postMessage</span>
+<span class="ep">GET /conversations.history</span>
+</div>
+<div class="params">POST /chat.postMessage: <span class="param">token</span>, <span class="param">channel</span>, <span class="param">text</span>, <span class="param">blocks</span>, <span class="param">thread_ts</span></div>
+<div class="params">GET /conversations.history: <span class="param">token</span>, <span class="param">channel</span>, <span class="param">limit</span>, <span class="param">oldest</span>, <span class="param">latest</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new channel conversation and then list all available conversations</span>
+<div class="endpoints">
+<span class="ep">POST /conversations.create</span>
+<span class="ep">GET /conversations.list</span>
+</div>
+<div class="params">POST /conversations.create: <span class="param">token</span>, <span class="param">name</span>, <span class="param">is_private</span></div>
+<div class="params">GET /conversations.list: <span class="param">token</span>, <span class="param">types</span>, <span class="param">exclude_archived</span>, <span class="param">limit</span>, <span class="param">cursor</span></div>
+</div>
+</details>
+<details><summary><strong>spotify</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Get details of a specific album and then list the tracks in that album</span>
+<div class="endpoints">
+<span class="ep">GET /albums/{id}</span>
+<span class="ep">GET /albums/{id}/tracks</span>
+</div>
+<div class="params">GET /albums/{id}: <span class="param">id</span>, <span class="param">market</span></div>
+<div class="params">GET /albums/{id}/tracks: <span class="param">id</span>, <span class="param">market</span>, <span class="param">limit</span>, <span class="param">offset</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Get an artist's profile and then retrieve their top tracks</span>
+<div class="endpoints">
+<span class="ep">GET /artists/{id}</span>
+<span class="ep">GET /artists/{id}/top-tracks</span>
+</div>
+<div class="params">GET /artists/{id}: <span class="param">id</span></div>
+<div class="params">GET /artists/{id}/top-tracks: <span class="param">id</span>, <span class="param">market</span></div>
+</div>
+</details>
+<details><summary><strong>box</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Get file information by ID and then list the collaborations on that file</span>
+<div class="endpoints">
+<span class="ep">GET /files/{file_id}</span>
+<span class="ep">GET /files/{file_id}/collaborations</span>
+</div>
+<div class="params">GET /files/{file_id}: <span class="param">file_id</span>, <span class="param">fields</span></div>
+<div class="params">GET /files/{file_id}/collaborations: <span class="param">file_id</span>, <span class="param">fields</span>, <span class="param">limit</span>, <span class="param">marker</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Get folder details and then list items contained within that folder</span>
+<div class="endpoints">
+<span class="ep">GET /folders/{folder_id}</span>
+<span class="ep">GET /folders/{folder_id}/items</span>
+</div>
+<div class="params">GET /folders/{folder_id}: <span class="param">folder_id</span>, <span class="param">fields</span></div>
+<div class="params">GET /folders/{folder_id}/items: <span class="param">folder_id</span>, <span class="param">fields</span>, <span class="param">limit</span>, <span class="param">offset</span>, <span class="param">sort</span>, <span class="param">direction</span></div>
+</div>
+</details>
+<details><summary><strong>plaid</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Retrieve linked accounts and then get transaction data for a date range</span>
+<div class="endpoints">
+<span class="ep">POST /accounts/get</span>
+<span class="ep">POST /transactions/get</span>
+</div>
+<div class="params">POST /accounts/get: <span class="param">access_token</span>, <span class="param">client_id</span>, <span class="param">secret</span></div>
+<div class="params">POST /transactions/get: <span class="param">access_token</span>, <span class="param">start_date</span>, <span class="param">end_date</span>, <span class="param">client_id</span>, <span class="param">secret</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a link token for initializing Plaid Link and then list financial institutions</span>
+<div class="endpoints">
+<span class="ep">POST /link/token/create</span>
+<span class="ep">POST /institutions/get</span>
+</div>
+<div class="params">POST /link/token/create: <span class="param">client_name</span>, <span class="param">language</span>, <span class="param">country_codes</span>, <span class="param">user</span>, <span class="param">products</span>, <span class="param">client_id</span>, <span class="param">secret</span></div>
+<div class="params">POST /institutions/get: <span class="param">count</span>, <span class="param">offset</span>, <span class="param">country_codes</span>, <span class="param">client_id</span>, <span class="param">secret</span></div>
+</div>
+</details>
+<details><summary><strong>resend</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Send an email and then retrieve the email details by its ID</span>
+<div class="endpoints">
+<span class="ep">POST /emails</span>
+<span class="ep">GET /emails/{email_id}</span>
+</div>
+<div class="params">POST /emails: <span class="param">from</span>, <span class="param">to</span>, <span class="param">subject</span>, <span class="param">html</span>, <span class="param">text</span>, <span class="param">reply_to</span></div>
+<div class="params">GET /emails/{email_id}: <span class="param">email_id</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new sending domain and then verify the domain DNS records</span>
+<div class="endpoints">
+<span class="ep">POST /domains</span>
+<span class="ep">POST /domains/{domain_id}/verify</span>
+</div>
+<div class="params">POST /domains: <span class="param">name</span>, <span class="param">region</span></div>
+<div class="params">POST /domains/{domain_id}/verify: <span class="param">domain_id</span></div>
+</div>
+</details>
+</div>
+<div class="format-section">
+<h2>AsyncAPI (10 specs)</h2>
+<table><tr><th>#</th><th>Spec</th><th>Domain</th><th>Size</th><th class="kb">Source</th><th class="kb">Mini</th><th class="kb">Std LAP</th><th class="kb">Lean LAP</th><th class="kb">Ratio</th><th>Files</th></tr>
+<tr><td>1</td><td><strong>streetlights</strong></td><td>iot</td><td><span class="tag tag-small">small</span></td><td class="kb">6.2</td>
+<td class="kb">6.3</td>
+<td class="kb">2.2</td>
+<td class="kb">1.5</td>
+<td class="ratio">4.1x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/streetlights-kafka-asyncapi.yml" target="_blank">source</a> | <a href="compiled/asyncapi/streetlights/pretty.yaml">pret</a> | <a href="compiled/asyncapi/streetlights/minified.yaml">mini</a> | <a href="compiled/asyncapi/streetlights/standard.lap">stan</a> | <a href="compiled/asyncapi/streetlights/lean.lap">lean</a></td></tr>
+<tr><td>2</td><td><strong>slack-rtm</strong></td><td>messaging</td><td><span class="tag tag-small">small</span></td><td class="kb">24.6</td>
+<td class="kb">25.4</td>
+<td class="kb">8.9</td>
+<td class="kb">6.3</td>
+<td class="ratio">3.9x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/slack-rtm-asyncapi.yml" target="_blank">source</a> | <a href="compiled/asyncapi/slack-rtm/pretty.yaml">pret</a> | <a href="compiled/asyncapi/slack-rtm/minified.yaml">mini</a> | <a href="compiled/asyncapi/slack-rtm/standard.lap">stan</a> | <a href="compiled/asyncapi/slack-rtm/lean.lap">lean</a></td></tr>
+<tr><td>3</td><td><strong>adeo-kafka</strong></td><td>ecommerce</td><td><span class="tag tag-small">small</span></td><td class="kb">10.1</td>
+<td class="kb">9.9</td>
+<td class="kb">1.1</td>
+<td class="kb">0.4</td>
+<td class="ratio">25.2x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/adeo-kafka-request-reply-asyncapi.yml" target="_blank">source</a> | <a href="compiled/asyncapi/adeo-kafka/pretty.yaml">pret</a> | <a href="compiled/asyncapi/adeo-kafka/minified.yaml">mini</a> | <a href="compiled/asyncapi/adeo-kafka/standard.lap">stan</a> | <a href="compiled/asyncapi/adeo-kafka/lean.lap">lean</a></td></tr>
+<tr><td>4</td><td><strong>social-media</strong></td><td>social</td><td><span class="tag tag-small">small</span></td><td class="kb">2.5</td>
+<td class="kb">2.5</td>
+<td class="kb">0.4</td>
+<td class="kb">0.4</td>
+<td class="ratio">6.2x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/social-media/backend/asyncapi.yaml" target="_blank">source</a> | <a href="compiled/asyncapi/social-media/pretty.yaml">pret</a> | <a href="compiled/asyncapi/social-media/minified.yaml">mini</a> | <a href="compiled/asyncapi/social-media/standard.lap">stan</a> | <a href="compiled/asyncapi/social-media/lean.lap">lean</a></td></tr>
+<tr><td>5</td><td><strong>gitter-streaming</strong></td><td>chat</td><td><span class="tag tag-small">small</span></td><td class="kb">5.2</td>
+<td class="kb">5.3</td>
+<td class="kb">0.4</td>
+<td class="kb">0.3</td>
+<td class="ratio">17.3x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/gitter-streaming-asyncapi.yml" target="_blank">source</a> | <a href="compiled/asyncapi/gitter-streaming/pretty.yaml">pret</a> | <a href="compiled/asyncapi/gitter-streaming/minified.yaml">mini</a> | <a href="compiled/asyncapi/gitter-streaming/standard.lap">stan</a> | <a href="compiled/asyncapi/gitter-streaming/lean.lap">lean</a></td></tr>
+<tr><td>6</td><td><strong>websocket-gemini</strong></td><td>crypto</td><td><span class="tag tag-small">small</span></td><td class="kb">8.7</td>
+<td class="kb">8.2</td>
+<td class="kb">0.3</td>
+<td class="kb">0.2</td>
+<td class="ratio">43.5x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/websocket-gemini-asyncapi.yml" target="_blank">source</a> | <a href="compiled/asyncapi/websocket-gemini/pretty.yaml">pret</a> | <a href="compiled/asyncapi/websocket-gemini/minified.yaml">mini</a> | <a href="compiled/asyncapi/websocket-gemini/standard.lap">stan</a> | <a href="compiled/asyncapi/websocket-gemini/lean.lap">lean</a></td></tr>
+<tr><td>7</td><td><strong>kraken-websocket</strong></td><td>crypto</td><td><span class="tag tag-small">small</span></td><td class="kb">12.8</td>
+<td class="kb">12.8</td>
+<td class="kb">1.7</td>
+<td class="kb">1.0</td>
+<td class="ratio">12.8x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/kraken-websocket-request-reply-message-filter-in-reply-asyncapi.yml" target="_blank">source</a> | <a href="compiled/asyncapi/kraken-websocket/pretty.yaml">pret</a> | <a href="compiled/asyncapi/kraken-websocket/minified.yaml">mini</a> | <a href="compiled/asyncapi/kraken-websocket/standard.lap">stan</a> | <a href="compiled/asyncapi/kraken-websocket/lean.lap">lean</a></td></tr>
+<tr><td>8</td><td><strong>correlation-id</strong></td><td>patterns</td><td><span class="tag tag-small">small</span></td><td class="kb">6.2</td>
+<td class="kb">6.2</td>
+<td class="kb">0.9</td>
+<td class="kb">0.5</td>
+<td class="ratio">12.4x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/correlation-id-asyncapi.yml" target="_blank">source</a> | <a href="compiled/asyncapi/correlation-id/pretty.yaml">pret</a> | <a href="compiled/asyncapi/correlation-id/minified.yaml">mini</a> | <a href="compiled/asyncapi/correlation-id/standard.lap">stan</a> | <a href="compiled/asyncapi/correlation-id/lean.lap">lean</a></td></tr>
+<tr><td>9</td><td><strong>operation-security</strong></td><td>security</td><td><span class="tag tag-small">small</span></td><td class="kb">3.4</td>
+<td class="kb">3.4</td>
+<td class="kb">0.6</td>
+<td class="kb">0.6</td>
+<td class="ratio">5.7x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/operation-security-asyncapi.yml" target="_blank">source</a> | <a href="compiled/asyncapi/operation-security/pretty.yaml">pret</a> | <a href="compiled/asyncapi/operation-security/minified.yaml">mini</a> | <a href="compiled/asyncapi/operation-security/standard.lap">stan</a> | <a href="compiled/asyncapi/operation-security/lean.lap">lean</a></td></tr>
+<tr><td>10</td><td><strong>rpc-server</strong></td><td>microservices</td><td><span class="tag tag-small">small</span></td><td class="kb">1.5</td>
+<td class="kb">1.5</td>
+<td class="kb">0.5</td>
+<td class="kb">0.4</td>
+<td class="ratio">3.8x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/asyncapi/spec/master/examples/rpc-server-asyncapi.yml" target="_blank">source</a> | <a href="compiled/asyncapi/rpc-server/pretty.yaml">pret</a> | <a href="compiled/asyncapi/rpc-server/minified.yaml">mini</a> | <a href="compiled/asyncapi/rpc-server/standard.lap">stan</a> | <a href="compiled/asyncapi/rpc-server/lean.lap">lean</a></td></tr>
+</table>
+<h3>Tasks</h3>
+<details><summary><strong>streetlights</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Monitor environmental lighting conditions from a streetlight sensor and send a command to turn the light on</span>
+<div class="endpoints">
+<span class="ep">SUBSCRIBE smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured</span>
+<span class="ep">PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.turn.on</span>
+</div>
+<div class="params">SUBSCRIBE smartylighting.streetlights.1.0.event.{streetli...: <span class="param">lumens</span>, <span class="param">sentAt</span></div>
+<div class="params">PUBLISH smartylighting.streetlights.1.0.action.{streetlig...: <span class="param">command</span>, <span class="param">sentAt</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Send a command to turn off a streetlight and then dim another streetlight to a specific brightness level</span>
+<div class="endpoints">
+<span class="ep">PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.turn.off</span>
+<span class="ep">PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.dim</span>
+</div>
+<div class="params">PUBLISH smartylighting.streetlights.1.0.action.{streetlig...: <span class="param">command</span>, <span class="param">sentAt</span></div>
+<div class="params">PUBLISH smartylighting.streetlights.1.0.action.{streetlig...: <span class="param">percentage</span>, <span class="param">sentAt</span></div>
+</div>
+</details>
+<details><summary><strong>slack-rtm</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Send an outgoing chat message to a Slack channel and receive incoming message events via the RTM websocket connection</span>
+<div class="endpoints">
+<span class="ep">PUBLISH / outgoingMessage</span>
+<span class="ep">SUBSCRIBE / message</span>
+</div>
+<div class="params">PUBLISH / outgoingMessage: <span class="param">id</span>, <span class="param">type</span>, <span class="param">channel</span>, <span class="param">text</span></div>
+<div class="params">SUBSCRIBE / message: <span class="param">type</span>, <span class="param">user</span>, <span class="param">channel</span>, <span class="param">text</span>, <span class="param">ts</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Receive a member-joined-channel event and receive a channel-created notification on the RTM websocket</span>
+<div class="endpoints">
+<span class="ep">SUBSCRIBE / memberJoinedChannel</span>
+<span class="ep">SUBSCRIBE / channelCreated</span>
+</div>
+<div class="params">SUBSCRIBE / memberJoinedChannel: <span class="param">type</span>, <span class="param">user</span>, <span class="param">channel</span>, <span class="param">channel_type</span>, <span class="param">inviter</span></div>
+<div class="params">SUBSCRIBE / channelCreated: <span class="param">type</span>, <span class="param">channel</span></div>
+</div>
+</details>
+<details><summary><strong>adeo-kafka</strong> <span class="verdict verdict-note">NOTE</span></summary>
+<div class="review-note">Request-reply pattern. t1 focuses on request headers, t2 focuses on response timing metadata.</div>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Submit a costing request to the Kafka costing topic with required headers and receive the costing response on the reply topic</span>
+<div class="endpoints">
+<span class="ep">PUBLISH adeo-{env}-case-study-COSTING-REQUEST-{version}</span>
+<span class="ep">SUBSCRIBE costingResponseChannel</span>
+</div>
+<div class="params">PUBLISH adeo-{env}-case-study-COSTING-REQUEST-{version}: <span class="param">REQUEST_ID</span>, <span class="param">REPLY_TOPIC</span>, <span class="param">REQUESTER_ID</span>, <span class="param">REQUESTER_CODE</span></div>
+<div class="params">SUBSCRIBE costingResponseChannel: <span class="param">CALCULATION_ID</span>, <span class="param">CORRELATION_ID</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Consume an incoming costing request from the request topic and publish the calculated costing response back with timing metadata</span>
+<div class="endpoints">
+<span class="ep">SUBSCRIBE adeo-{env}-case-study-COSTING-REQUEST-{version}</span>
+<span class="ep">PUBLISH costingResponseChannel</span>
+</div>
+<div class="params">SUBSCRIBE adeo-{env}-case-study-COSTING-REQUEST-{version}: <span class="param">REQUESTER_ID</span>, <span class="param">REQUESTER_CODE</span></div>
+<div class="params">PUBLISH costingResponseChannel: <span class="param">CALCULATION_ID</span>, <span class="param">CORRELATION_ID</span>, <span class="param">REQUEST_TIMESTAMP</span>, <span class="param">CALCULATION_TIMESTAMP</span></div>
+</div>
+</details>
+<details><summary><strong>social-media</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Receive a new comment like from the frontend websocket and publish a comment-liked notification to all backend services via MQTT</span>
+<div class="endpoints">
+<span class="ep">SUBSCRIBE like/comment</span>
+<span class="ep">PUBLISH comment/liked</span>
+</div>
+<div class="params">SUBSCRIBE like/comment: <span class="param">commentId</span></div>
+<div class="params">PUBLISH comment/liked: <span class="param">commentId</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Receive a comment change event from the MQTT broker and send an updated likes count to the frontend via websocket</span>
+<div class="endpoints">
+<span class="ep">SUBSCRIBE comment/{commentId}/changed</span>
+<span class="ep">PUBLISH update/comment/likes</span>
+</div>
+<div class="params">SUBSCRIBE comment/{commentId}/changed: <span class="param">commentId</span></div>
+<div class="params">PUBLISH update/comment/likes: <span class="param">commentId</span>, <span class="param">likes</span></div>
+</div>
+</details>
+<details><summary><strong>gitter-streaming</strong> <span class="verdict verdict-note">NOTE</span></summary>
+<div class="review-note">Spec has 1 channel with 2 message types. t1/t2 share endpoints but test different payload fields.</div>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Stream chat messages from a Gitter room and parse the sender identity and message content from the chunked HTTP response</span>
+<div class="endpoints">
+<span class="ep">PUBLISH /rooms/{roomId}/{resource} chatMessage</span>
+<span class="ep">PUBLISH /rooms/{roomId}/{resource} heartbeat</span>
+</div>
+<div class="params">PUBLISH /rooms/{roomId}/{resource} chatMessage: <span class="param">id</span>, <span class="param">text</span>, <span class="param">html</span>, <span class="param">sent</span>, <span class="param">fromUser</span></div>
+<div class="params">PUBLISH /rooms/{roomId}/{resource} heartbeat: <em>(no params)</em></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Track read status, user mentions, and issue references in Gitter chat messages and monitor heartbeat keep-alive signals</span>
+<div class="endpoints">
+<span class="ep">PUBLISH /rooms/{roomId}/{resource} chatMessage</span>
+<span class="ep">PUBLISH /rooms/{roomId}/{resource} heartbeat</span>
+</div>
+<div class="params">PUBLISH /rooms/{roomId}/{resource} chatMessage: <span class="param">unread</span>, <span class="param">readBy</span>, <span class="param">urls</span>, <span class="param">mentions</span>, <span class="param">issues</span></div>
+<div class="params">PUBLISH /rooms/{roomId}/{resource} heartbeat: <em>(no params)</em></div>
+</div>
+</details>
+<details><summary><strong>websocket-gemini</strong> <span class="verdict verdict-note">NOTE</span></summary>
+<div class="review-note">Spec has 1 channel. t1 tests update payload fields, t2 tests WebSocket binding query params.</div>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Subscribe to real-time market data updates for a trading pair and parse the update event payload including trade events and order book changes</span>
+<div class="endpoints">
+<span class="ep">PUBLISH /v1/marketdata/{symbol} marketData</span>
+<span class="ep">SUBSCRIBE /v1/marketdata/{symbol} marketData</span>
+</div>
+<div class="params">PUBLISH /v1/marketdata/{symbol} marketData: <span class="param">type</span>, <span class="param">eventId</span>, <span class="param">timestamp</span>, <span class="param">timestampms</span>, <span class="param">socket_sequence</span></div>
+<div class="params">SUBSCRIBE /v1/marketdata/{symbol} marketData: <span class="param">events</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Configure the websocket connection query parameters to filter market data streams by event type and control heartbeat monitoring</span>
+<div class="endpoints">
+<span class="ep">PUBLISH /v1/marketdata/{symbol} marketData</span>
+<span class="ep">SUBSCRIBE /v1/marketdata/{symbol} marketData</span>
+</div>
+<div class="params">PUBLISH /v1/marketdata/{symbol} marketData: <span class="param">heartbeat</span>, <span class="param">top_of_book</span>, <span class="param">bids</span>, <span class="param">offers</span></div>
+<div class="params">SUBSCRIBE /v1/marketdata/{symbol} marketData: <span class="param">trades</span>, <span class="param">auctions</span></div>
+</div>
+</details>
+<details><summary><strong>kraken-websocket</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Send a ping to the Kraken websocket server and subscribe to a market data channel for specific currency pairs</span>
+<div class="endpoints">
+<span class="ep">SUBSCRIBE / ping</span>
+<span class="ep">SUBSCRIBE / subscribe</span>
+</div>
+<div class="params">SUBSCRIBE / ping: <span class="param">event</span>, <span class="param">reqid</span></div>
+<div class="params">SUBSCRIBE / subscribe: <span class="param">event</span>, <span class="param">reqid</span>, <span class="param">pair</span>, <span class="param">subscription</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Receive system status updates from the Kraken websocket and process subscription status responses including channel assignment</span>
+<div class="endpoints">
+<span class="ep">PUBLISH / systemStatus</span>
+<span class="ep">PUBLISH / subscriptionStatus</span>
+</div>
+<div class="params">PUBLISH / systemStatus: <span class="param">event</span>, <span class="param">connectionID</span>, <span class="param">status</span>, <span class="param">version</span></div>
+<div class="params">PUBLISH / subscriptionStatus: <span class="param">event</span>, <span class="param">channelID</span>, <span class="param">channelName</span>, <span class="param">status</span>, <span class="param">pair</span></div>
+</div>
+</details>
+<details><summary><strong>correlation-id</strong> <span class="verdict verdict-note">NOTE</span></summary>
+<div class="review-note">Subset of streetlights with correlation ID focus. t1 tests payload, t2 tests channel params.</div>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Receive a lighting measurement event from a streetlight sensor and send a dim light command to adjust brightness using correlation IDs</span>
+<div class="endpoints">
+<span class="ep">SUBSCRIBE smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured</span>
+<span class="ep">PUBLISH smartylighting/streetlights/1/0/action/{streetlightId}/dim</span>
+</div>
+<div class="params">SUBSCRIBE smartylighting/streetlights/1/0/event/{streetli...: <span class="param">lumens</span>, <span class="param">sentAt</span></div>
+<div class="params">PUBLISH smartylighting/streetlights/1/0/action/{streetlig...: <span class="param">percentage</span>, <span class="param">sentAt</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Identify the MQTT server connection with port variable and security, and the correlation ID mechanism used for request-response tracking</span>
+<div class="endpoints">
+<span class="ep">SUBSCRIBE smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured</span>
+<span class="ep">PUBLISH smartylighting/streetlights/1/0/action/{streetlightId}/dim</span>
+</div>
+<div class="params">SUBSCRIBE smartylighting/streetlights/1/0/event/{streetli...: <span class="param">streetlightId</span>, <span class="param">correlationId</span></div>
+<div class="params">PUBLISH smartylighting/streetlights/1/0/action/{streetlig...: <span class="param">streetlightId</span>, <span class="param">correlationId</span></div>
+</div>
+</details>
+<details><summary><strong>operation-security</strong> <span class="verdict verdict-note">NOTE</span></summary>
+<div class="review-note">Spec has 1 channel. t1 tests message structure, t2 tests nested payload schemas.</div>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Send an authorization revocation notification via HTTP Push with OAuth2 security and include event metadata for topic routing</span>
+<div class="endpoints">
+<span class="ep">PUBLISH AUTHORIZATION_REVOCATION message</span>
+<span class="ep">SECURITY oauth2 sendAuthRevoke</span>
+</div>
+<div class="params">PUBLISH AUTHORIZATION_REVOCATION message: <span class="param">metadata</span>, <span class="param">notification</span>, <span class="param">X-SIGNATURE</span>, <span class="param">Content-Type</span></div>
+<div class="params">SECURITY oauth2 sendAuthRevoke: <span class="param">subscribe:auth_revocations</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Process an authorization revocation event including user identity data, revocation reason, and event tracking metadata</span>
+<div class="endpoints">
+<span class="ep">PUBLISH AUTHORIZATION_REVOCATION message</span>
+<span class="ep">SCHEMA Notification</span>
+</div>
+<div class="params">PUBLISH AUTHORIZATION_REVOCATION message: <span class="param">username</span>, <span class="param">userId</span>, <span class="param">revokeReason</span>, <span class="param">revocationDate</span></div>
+<div class="params">SCHEMA Notification: <span class="param">notificationId</span>, <span class="param">eventDate</span>, <span class="param">publishDate</span>, <span class="param">publishAttemptCount</span></div>
+</div>
+</details>
+<details><summary><strong>rpc-server</strong> <span class="verdict verdict-note">NOTE</span></summary>
+<div class="review-note">t1/t2 swap PUBLISH/SUBSCRIBE roles (server vs client perspective). Same endpoints.</div>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Receive an RPC sum request on the rpc_queue and send the computed result back to the client reply queue</span>
+<div class="endpoints">
+<span class="ep">SUBSCRIBE rpc_queue sum</span>
+<span class="ep">PUBLISH {queue} sendSumResult</span>
+</div>
+<div class="params">SUBSCRIBE rpc_queue sum: <span class="param">numbers</span>, <span class="param">correlation_id</span></div>
+<div class="params">PUBLISH {queue} sendSumResult: <span class="param">result</span>, <span class="param">correlation_id</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Submit numbers for summation to the RPC queue and consume the calculated result from the dynamic reply queue</span>
+<div class="endpoints">
+<span class="ep">PUBLISH rpc_queue sum</span>
+<span class="ep">SUBSCRIBE {queue} sendSumResult</span>
+</div>
+<div class="params">PUBLISH rpc_queue sum: <span class="param">numbers</span>, <span class="param">correlation_id</span></div>
+<div class="params">SUBSCRIBE {queue} sendSumResult: <span class="param">result</span>, <span class="param">correlation_id</span></div>
+</div>
+</details>
+</div>
+<div class="format-section">
+<h2>GraphQL (10 specs)</h2>
+<table><tr><th>#</th><th>Spec</th><th>Domain</th><th>Size</th><th class="kb">Source</th><th class="kb">Mini</th><th class="kb">Std LAP</th><th class="kb">Lean LAP</th><th class="kb">Ratio</th><th>Files</th></tr>
+<tr><td>1</td><td><strong>github-gql</strong></td><td>devtools</td><td><span class="tag tag-large">large</span></td><td class="kb">1,195.2</td>
+<td class="kb">1,142.5</td>
+<td class="kb na">--</td>
+<td class="kb na">--</td>
+<td class="ratio"><span class="na">N/A</span></td>
+<td class="files"><a href="https://raw.githubusercontent.com/octokit/graphql-schema/master/schema.graphql" target="_blank">source</a> | <a href="compiled/graphql/github-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/github-gql/minified.graphql">mini</a></td></tr>
+<tr><td>2</td><td><strong>swapi-gql</strong></td><td>demo</td><td><span class="tag tag-small">small</span></td><td class="kb">35.0</td>
+<td class="kb">34.1</td>
+<td class="kb">6.5</td>
+<td class="kb">4.9</td>
+<td class="ratio">7.1x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/graphql/swapi-graphql/master/schema.graphql" target="_blank">source</a> | <a href="compiled/graphql/swapi-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/swapi-gql/minified.graphql">mini</a> | <a href="compiled/graphql/swapi-gql/standard.lap">stan</a> | <a href="compiled/graphql/swapi-gql/lean.lap">lean</a></td></tr>
+<tr><td>3</td><td><strong>yelp-gql</strong></td><td>local</td><td><span class="tag tag-small">small</span></td><td class="kb">97.8</td>
+<td class="kb">51.9</td>
+<td class="kb na">--</td>
+<td class="kb na">--</td>
+<td class="ratio"><span class="na">N/A</span></td>
+<td class="files"><a href="https://raw.githubusercontent.com/pranayairan/YelpQL/master/app/src/main/graphql/yelp/schema.json" target="_blank">source</a> | <a href="compiled/graphql/yelp-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/yelp-gql/minified.graphql">mini</a></td></tr>
+<tr><td>4</td><td><strong>shopify-gql</strong></td><td>ecommerce</td><td><span class="tag tag-medium">medium</span></td><td class="kb">399.1</td>
+<td class="kb">199.7</td>
+<td class="kb na">--</td>
+<td class="kb na">--</td>
+<td class="ratio"><span class="na">N/A</span></td>
+<td class="files"><a href="https://raw.githubusercontent.com/graphql-kit/graphql-voyager/main/demo/presets/shopify_introspection.json" target="_blank">source</a> | <a href="compiled/graphql/shopify-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/shopify-gql/minified.graphql">mini</a></td></tr>
+<tr><td>5</td><td><strong>artsy-gql</strong></td><td>art</td><td><span class="tag tag-large">large</span></td><td class="kb">688.8</td>
+<td class="kb">384.3</td>
+<td class="kb">337.6</td>
+<td class="kb">309.0</td>
+<td class="ratio">2.2x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/artsy/metaphysics/main/_schemaV2.graphql" target="_blank">source</a> | <a href="compiled/graphql/artsy-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/artsy-gql/minified.graphql">mini</a> | <a href="compiled/graphql/artsy-gql/standard.lap">stan</a> | <a href="compiled/graphql/artsy-gql/lean.lap">lean</a></td></tr>
+<tr><td>6</td><td><strong>linear-gql</strong></td><td>project-mgmt</td><td><span class="tag tag-large">large</span></td><td class="kb">864.3</td>
+<td class="kb">822.9</td>
+<td class="kb">240.3</td>
+<td class="kb">196.8</td>
+<td class="ratio">4.4x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/linear/linear/master/packages/sdk/src/schema.graphql" target="_blank">source</a> | <a href="compiled/graphql/linear-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/linear-gql/minified.graphql">mini</a> | <a href="compiled/graphql/linear-gql/standard.lap">stan</a> | <a href="compiled/graphql/linear-gql/lean.lap">lean</a></td></tr>
+<tr><td>7</td><td><strong>saleor-gql</strong></td><td>ecommerce</td><td><span class="tag tag-large">large</span></td><td class="kb">941.9</td>
+<td class="kb">899.2</td>
+<td class="kb">296.2</td>
+<td class="kb">203.1</td>
+<td class="ratio">4.6x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/saleor/saleor/main/saleor/graphql/schema.graphql" target="_blank">source</a> | <a href="compiled/graphql/saleor-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/saleor-gql/minified.graphql">mini</a> | <a href="compiled/graphql/saleor-gql/standard.lap">stan</a> | <a href="compiled/graphql/saleor-gql/lean.lap">lean</a></td></tr>
+<tr><td>8</td><td><strong>elastic-gql</strong></td><td>search</td><td><span class="tag tag-medium">medium</span></td><td class="kb">326.4</td>
+<td class="kb">300.8</td>
+<td class="kb">56.5</td>
+<td class="kb">56.5</td>
+<td class="ratio">5.8x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/graphql-compose/graphql-compose-examples/master/examples/elasticsearch/data/schema.graphql" target="_blank">source</a> | <a href="compiled/graphql/elastic-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/elastic-gql/minified.graphql">mini</a> | <a href="compiled/graphql/elastic-gql/standard.lap">stan</a> | <a href="compiled/graphql/elastic-gql/lean.lap">lean</a></td></tr>
+<tr><td>9</td><td><strong>coral-gql</strong></td><td>social</td><td><span class="tag tag-medium">medium</span></td><td class="kb">249.1</td>
+<td class="kb">228.1</td>
+<td class="kb">69.9</td>
+<td class="kb">56.0</td>
+<td class="ratio">4.4x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/coralproject/talk/main/server/src/core/server/graph/schema/schema.graphql" target="_blank">source</a> | <a href="compiled/graphql/coral-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/coral-gql/minified.graphql">mini</a> | <a href="compiled/graphql/coral-gql/standard.lap">stan</a> | <a href="compiled/graphql/coral-gql/lean.lap">lean</a></td></tr>
+<tr><td>10</td><td><strong>unraid-gql</strong></td><td>infra</td><td><span class="tag tag-small">small</span></td><td class="kb">59.9</td>
+<td class="kb">56.1</td>
+<td class="kb">26.6</td>
+<td class="kb">24.5</td>
+<td class="ratio">2.4x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/unraid/api/main/api/generated-schema.graphql" target="_blank">source</a> | <a href="compiled/graphql/unraid-gql/pretty.graphql">pret</a> | <a href="compiled/graphql/unraid-gql/minified.graphql">mini</a> | <a href="compiled/graphql/unraid-gql/standard.lap">stan</a> | <a href="compiled/graphql/unraid-gql/lean.lap">lean</a></td></tr>
+</table>
+<h3>Tasks</h3>
+<details><summary><strong>github-gql</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Look up a repository by owner and name, then create a new issue in that repository</span>
+<div class="endpoints">
+<span class="ep">QUERY repository</span>
+<span class="ep">MUTATION createIssue</span>
+</div>
+<div class="params">QUERY repository: <span class="param">followRenames</span>, <span class="param">name</span>, <span class="param">owner</span></div>
+<div class="params">MUTATION createIssue: <span class="param">input</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Search for users or repositories on GitHub and look up a specific user profile by login</span>
+<div class="endpoints">
+<span class="ep">QUERY search</span>
+<span class="ep">QUERY user</span>
+</div>
+<div class="params">QUERY search: <span class="param">after</span>, <span class="param">before</span>, <span class="param">first</span>, <span class="param">last</span>, <span class="param">query</span>, <span class="param">type</span></div>
+<div class="params">QUERY user: <span class="param">login</span></div>
+</div>
+</details>
+<details><summary><strong>swapi-gql</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Browse all Star Wars films and look up a specific person by ID</span>
+<div class="endpoints">
+<span class="ep">QUERY allFilms</span>
+<span class="ep">QUERY person</span>
+</div>
+<div class="params">QUERY allFilms: <span class="param">after</span>, <span class="param">first</span>, <span class="param">before</span>, <span class="param">last</span></div>
+<div class="params">QUERY person: <span class="param">id</span>, <span class="param">personID</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">List all planets in the Star Wars universe and look up a specific starship by ID</span>
+<div class="endpoints">
+<span class="ep">QUERY allPlanets</span>
+<span class="ep">QUERY starship</span>
+</div>
+<div class="params">QUERY allPlanets: <span class="param">after</span>, <span class="param">first</span>, <span class="param">before</span>, <span class="param">last</span></div>
+<div class="params">QUERY starship: <span class="param">id</span>, <span class="param">starshipID</span></div>
+</div>
+</details>
+<details><summary><strong>yelp-gql</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Search for businesses by location and term, then load reviews for a specific business</span>
+<div class="endpoints">
+<span class="ep">QUERY search</span>
+<span class="ep">QUERY reviews</span>
+</div>
+<div class="params">QUERY search: <span class="param">term</span>, <span class="param">location</span>, <span class="param">country</span>, <span class="param">offset</span>, <span class="param">limit</span>, <span class="param">sort_by</span>, <span class="param">locale</span>, <span class="param">longitude</span>, <span class="param">latitude</span>, <span class="param">categories</span>, <span class="param">open_now</span>, <span class="param">open_at</span>, <span class="param">price</span>, <span class="param">attributes</span>, <span class="param">radius</span></div>
+<div class="params">QUERY reviews: <span class="param">business</span>, <span class="param">locale</span>, <span class="param">limit</span>, <span class="param">offset</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Look up a specific business by its Yelp ID and search for local events</span>
+<div class="endpoints">
+<span class="ep">QUERY business</span>
+<span class="ep">QUERY event_search</span>
+</div>
+<div class="params">QUERY business: <span class="param">id</span></div>
+<div class="params">QUERY event_search: <span class="param">locale</span>, <span class="param">offset</span>, <span class="param">limit</span>, <span class="param">sort_by</span>, <span class="param">sort_on</span>, <span class="param">start_date</span>, <span class="param">end_date</span>, <span class="param">categories</span>, <span class="param">is_free</span>, <span class="param">location</span>, <span class="param">latitude</span>, <span class="param">longitude</span></div>
+</div>
+</details>
+<details><summary><strong>shopify-gql</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new customer account and generate an access token to authenticate that customer</span>
+<div class="endpoints">
+<span class="ep">MUTATION customerCreate</span>
+<span class="ep">MUTATION customerAccessTokenCreate</span>
+</div>
+<div class="params">MUTATION customerCreate: <span class="param">input</span></div>
+<div class="params">MUTATION customerAccessTokenCreate: <span class="param">input</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Look up the authenticated customer profile and create a new checkout with line items</span>
+<div class="endpoints">
+<span class="ep">QUERY customer</span>
+<span class="ep">MUTATION checkoutCreate</span>
+</div>
+<div class="params">QUERY customer: <span class="param">customerAccessToken</span></div>
+<div class="params">MUTATION checkoutCreate: <span class="param">input</span></div>
+</div>
+</details>
+<details><summary><strong>artsy-gql</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Look up a specific artist by slug or ID and retrieve auction lot results filtered by those artist IDs</span>
+<div class="endpoints">
+<span class="ep">QUERY artist</span>
+<span class="ep">QUERY auctionResultsByArtistsConnection</span>
+</div>
+<div class="params">QUERY artist: <span class="param">id</span></div>
+<div class="params">QUERY auctionResultsByArtistsConnection: <span class="param">after</span>, <span class="param">artistIds</span>, <span class="param">before</span>, <span class="param">first</span>, <span class="param">last</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Search for artworks using filter criteria and create a new order for a selected artwork</span>
+<div class="endpoints">
+<span class="ep">QUERY artworksConnection</span>
+<span class="ep">MUTATION commerceCreateOrderWithArtwork</span>
+</div>
+<div class="params">QUERY artworksConnection: <span class="param">after</span>, <span class="param">artistID</span>, <span class="param">first</span>, <span class="param">forSale</span>, <span class="param">priceRange</span>, <span class="param">sort</span></div>
+<div class="params">MUTATION commerceCreateOrderWithArtwork: <span class="param">input</span></div>
+</div>
+</details>
+<details><summary><strong>linear-gql</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Retrieve a specific issue by ID and update it with new data</span>
+<div class="endpoints">
+<span class="ep">QUERY issue</span>
+<span class="ep">MUTATION issueUpdate</span>
+</div>
+<div class="params">QUERY issue: <span class="param">id</span></div>
+<div class="params">MUTATION issueUpdate: <span class="param">id</span>, <span class="param">input</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Look up a specific project by ID and create a new project with optional Slack channel</span>
+<div class="endpoints">
+<span class="ep">QUERY project</span>
+<span class="ep">MUTATION projectCreate</span>
+</div>
+<div class="params">QUERY project: <span class="param">id</span></div>
+<div class="params">MUTATION projectCreate: <span class="param">input</span>, <span class="param">slackChannelName</span></div>
+</div>
+</details>
+<details><summary><strong>saleor-gql</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Look up a product by ID or slug and retrieve an order by ID or external reference</span>
+<div class="endpoints">
+<span class="ep">QUERY product</span>
+<span class="ep">QUERY order</span>
+</div>
+<div class="params">QUERY product: <span class="param">id</span>, <span class="param">slug</span>, <span class="param">slugLanguageCode</span>, <span class="param">externalReference</span>, <span class="param">channel</span></div>
+<div class="params">QUERY order: <span class="param">id</span>, <span class="param">externalReference</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new product in the catalog and update a warehouse with new details</span>
+<div class="endpoints">
+<span class="ep">MUTATION productCreate</span>
+<span class="ep">MUTATION updateWarehouse</span>
+</div>
+<div class="params">MUTATION productCreate: <span class="param">input</span></div>
+<div class="params">MUTATION updateWarehouse: <span class="param">externalReference</span>, <span class="param">id</span>, <span class="param">input</span></div>
+</div>
+</details>
+<details><summary><strong>elastic-gql</strong> <span class="verdict verdict-note">NOTE</span></summary>
+<div class="review-note">Schema has only 3 root queries, each with single host param. Trivially simple but valid.</div>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Connect to an Elasticsearch 7.7 cluster and an Elasticsearch 6.8 cluster to perform cross-version querying</span>
+<div class="endpoints">
+<span class="ep">QUERY elastic77</span>
+<span class="ep">QUERY elastic68</span>
+</div>
+<div class="params">QUERY elastic77: <span class="param">host</span></div>
+<div class="params">QUERY elastic68: <span class="param">host</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Connect to an Elasticsearch 5.6 cluster for legacy data access and a 7.7 cluster for current data</span>
+<div class="endpoints">
+<span class="ep">QUERY elastic56</span>
+<span class="ep">QUERY elastic77</span>
+</div>
+<div class="params">QUERY elastic56: <span class="param">host</span></div>
+<div class="params">QUERY elastic77: <span class="param">host</span></div>
+</div>
+</details>
+<details><summary><strong>coral-gql</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Search and filter comments across stories and retrieve a list of stories with pagination</span>
+<div class="endpoints">
+<span class="ep">QUERY comments</span>
+<span class="ep">QUERY stories</span>
+</div>
+<div class="params">QUERY comments: <span class="param">first</span>, <span class="param">after</span>, <span class="param">storyID</span>, <span class="param">status</span>, <span class="param">query</span>, <span class="param">orderBy</span></div>
+<div class="params">QUERY stories: <span class="param">first</span>, <span class="param">after</span>, <span class="param">status</span>, <span class="param">query</span>, <span class="param">siteIDs</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new comment on a story and flag a comment for moderation</span>
+<div class="endpoints">
+<span class="ep">MUTATION createComment</span>
+<span class="ep">MUTATION createCommentFlag</span>
+</div>
+<div class="params">MUTATION createComment: <span class="param">input</span></div>
+<div class="params">MUTATION createCommentFlag: <span class="param">input</span></div>
+</div>
+</details>
+<details><summary><strong>unraid-gql</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Retrieve a specific API key by ID and look up system log file contents by path</span>
+<div class="endpoints">
+<span class="ep">QUERY apiKey</span>
+<span class="ep">QUERY logFile</span>
+</div>
+<div class="params">QUERY apiKey: <span class="param">id</span></div>
+<div class="params">QUERY logFile: <span class="param">path</span>, <span class="param">lines</span>, <span class="param">startLine</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new notification record and rename an existing Docker folder</span>
+<div class="endpoints">
+<span class="ep">MUTATION createNotification</span>
+<span class="ep">MUTATION renameDockerFolder</span>
+</div>
+<div class="params">MUTATION createNotification: <span class="param">input</span></div>
+<div class="params">MUTATION renameDockerFolder: <span class="param">folderId</span>, <span class="param">newName</span></div>
+</div>
+</details>
+</div>
+<div class="format-section">
+<h2>Postman (10 specs)</h2>
+<table><tr><th>#</th><th>Spec</th><th>Domain</th><th>Size</th><th class="kb">Source</th><th class="kb">Mini</th><th class="kb">Std LAP</th><th class="kb">Lean LAP</th><th class="kb">Ratio</th><th>Files</th></tr>
+<tr><td>1</td><td><strong>twilio-postman</strong></td><td>comms</td><td><span class="tag tag-small">small</span></td><td class="kb">10.8</td>
+<td class="kb">8.4</td>
+<td class="kb">1.1</td>
+<td class="kb">0.8</td>
+<td class="ratio">13.5x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/twilio/wireless-postman-collection/master/Twilio%20Programmable%20Wireless.postman_collection.json" target="_blank">source</a> | <a href="compiled/postman/twilio-postman/pretty.json">pret</a> | <a href="compiled/postman/twilio-postman/minified.json">mini</a> | <a href="compiled/postman/twilio-postman/standard.lap">stan</a> | <a href="compiled/postman/twilio-postman/lean.lap">lean</a></td></tr>
+<tr><td>2</td><td><strong>postman-echo</strong></td><td>demo</td><td><span class="tag tag-small">small</span></td><td class="kb">15.5</td>
+<td class="kb">5.9</td>
+<td class="kb">0.9</td>
+<td class="kb">0.6</td>
+<td class="ratio">25.8x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/postmanlabs/postman-collection/develop/examples/collection-v2.json" target="_blank">source</a> | <a href="compiled/postman/postman-echo/pretty.json">pret</a> | <a href="compiled/postman/postman-echo/minified.json">mini</a> | <a href="compiled/postman/postman-echo/standard.lap">stan</a> | <a href="compiled/postman/postman-echo/lean.lap">lean</a></td></tr>
+<tr><td>3</td><td><strong>adobe-postman</strong></td><td>marketing</td><td><span class="tag tag-small">small</span></td><td class="kb">36.6</td>
+<td class="kb">27.9</td>
+<td class="kb">6.7</td>
+<td class="kb">1.7</td>
+<td class="ratio">21.5x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/adobe/experience-platform-postman-samples/master/apis/experience-platform/Data%20Ingestion%20API.postman_collection.json" target="_blank">source</a> | <a href="compiled/postman/adobe-postman/pretty.json">pret</a> | <a href="compiled/postman/adobe-postman/minified.json">mini</a> | <a href="compiled/postman/adobe-postman/standard.lap">stan</a> | <a href="compiled/postman/adobe-postman/lean.lap">lean</a></td></tr>
+<tr><td>4</td><td><strong>sap-postman</strong></td><td>enterprise</td><td><span class="tag tag-medium">medium</span></td><td class="kb">436.7</td>
+<td class="kb">329.2</td>
+<td class="kb">37.2</td>
+<td class="kb">30.0</td>
+<td class="ratio">14.6x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/SAP-samples/byd-api-samples/main/Postman/Reference%20Scenarios.postman_collection.json" target="_blank">source</a> | <a href="compiled/postman/sap-postman/pretty.json">pret</a> | <a href="compiled/postman/sap-postman/minified.json">mini</a> | <a href="compiled/postman/sap-postman/standard.lap">stan</a> | <a href="compiled/postman/sap-postman/lean.lap">lean</a></td></tr>
+<tr><td>5</td><td><strong>stripe-postman</strong></td><td>payments</td><td><span class="tag tag-medium">medium</span></td><td class="kb">170.7</td>
+<td class="kb">92.4</td>
+<td class="kb">26.4</td>
+<td class="kb">20.2</td>
+<td class="ratio">8.5x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/mattmitchell6/stripe-api-postman-collection/master/stripe-api-postman-collection.json" target="_blank">source</a> | <a href="compiled/postman/stripe-postman/pretty.json">pret</a> | <a href="compiled/postman/stripe-postman/minified.json">mini</a> | <a href="compiled/postman/stripe-postman/standard.lap">stan</a> | <a href="compiled/postman/stripe-postman/lean.lap">lean</a></td></tr>
+<tr><td>6</td><td><strong>azure-devops-postman</strong></td><td>devops</td><td><span class="tag tag-large">large</span></td><td class="kb">386.5</td>
+<td class="kb">277.4</td>
+<td class="kb">51.9</td>
+<td class="kb">30.3</td>
+<td class="ratio">12.8x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/hkamel/azuredevops-postman-collections/master/Azure%20DevOps%20v5.0.postman_collection.json" target="_blank">source</a> | <a href="compiled/postman/azure-devops-postman/pretty.json">pret</a> | <a href="compiled/postman/azure-devops-postman/minified.json">mini</a> | <a href="compiled/postman/azure-devops-postman/standard.lap">stan</a> | <a href="compiled/postman/azure-devops-postman/lean.lap">lean</a></td></tr>
+<tr><td>7</td><td><strong>auth0-postman</strong></td><td>auth</td><td><span class="tag tag-medium">medium</span></td><td class="kb">70.6</td>
+<td class="kb">50.9</td>
+<td class="kb">9.0</td>
+<td class="kb">6.9</td>
+<td class="ratio">10.2x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/auth0/postman-collections/master/Auth0%20Management%20API%20v2.postman_collection.json" target="_blank">source</a> | <a href="compiled/postman/auth0-postman/pretty.json">pret</a> | <a href="compiled/postman/auth0-postman/minified.json">mini</a> | <a href="compiled/postman/auth0-postman/standard.lap">stan</a> | <a href="compiled/postman/auth0-postman/lean.lap">lean</a></td></tr>
+<tr><td>8</td><td><strong>braintree-postman</strong></td><td>payments</td><td><span class="tag tag-medium">medium</span></td><td class="kb">123.7</td>
+<td class="kb">89.7</td>
+<td class="kb">7.3</td>
+<td class="kb">5.1</td>
+<td class="ratio">24.3x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/paypal/integration-packs/main/postman-collections/Braintree-GraphQL.postman_collection.json" target="_blank">source</a> | <a href="compiled/postman/braintree-postman/pretty.json">pret</a> | <a href="compiled/postman/braintree-postman/minified.json">mini</a> | <a href="compiled/postman/braintree-postman/standard.lap">stan</a> | <a href="compiled/postman/braintree-postman/lean.lap">lean</a></td></tr>
+<tr><td>9</td><td><strong>influxdb-postman</strong></td><td>monitoring</td><td><span class="tag tag-medium">medium</span></td><td class="kb">230.1</td>
+<td class="kb">174.4</td>
+<td class="kb">21.0</td>
+<td class="kb">15.3</td>
+<td class="ratio">15.0x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/InfluxCommunity/postman_influx_v2_api/main/InfluxDB_API_2.0.postman_collection.json" target="_blank">source</a> | <a href="compiled/postman/influxdb-postman/pretty.json">pret</a> | <a href="compiled/postman/influxdb-postman/minified.json">mini</a> | <a href="compiled/postman/influxdb-postman/standard.lap">stan</a> | <a href="compiled/postman/influxdb-postman/lean.lap">lean</a></td></tr>
+<tr><td>10</td><td><strong>akeneo-postman</strong></td><td>ecommerce</td><td><span class="tag tag-medium">medium</span></td><td class="kb">230.3</td>
+<td class="kb">180.5</td>
+<td class="kb">40.8</td>
+<td class="kb">16.8</td>
+<td class="ratio">13.7x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/akeneo/pim-api-docs/master/content/files/Akeneo%20PIM%20API.postman_collection.json" target="_blank">source</a> | <a href="compiled/postman/akeneo-postman/pretty.json">pret</a> | <a href="compiled/postman/akeneo-postman/minified.json">mini</a> | <a href="compiled/postman/akeneo-postman/standard.lap">stan</a> | <a href="compiled/postman/akeneo-postman/lean.lap">lean</a></td></tr>
+</table>
+<h3>Tasks</h3>
+<details><summary><strong>twilio-postman</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Send a binary command to a SIM device and then retrieve that command by its SID to verify delivery status</span>
+<div class="endpoints">
+<span class="ep">POST /v1/Commands</span>
+<span class="ep">GET /v1/Commands/{Command_Sid}</span>
+</div>
+<div class="params">POST /v1/Commands: <span class="param">Sim</span>, <span class="param">Command</span>, <span class="param">CommandMode</span></div>
+<div class="params">GET /v1/Commands/{Command_Sid}: <span class="param">Sid</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Retrieve usage records for a specific SIM device and look up a specific rate plan by its SID</span>
+<div class="endpoints">
+<span class="ep">GET /v1/Sims/{SimSid}/UsageRecords</span>
+<span class="ep">GET /v1/RatePlans/{RatePlanSid}</span>
+</div>
+<div class="params">GET /v1/Sims/{SimSid}/UsageRecords: <span class="param">Sid</span></div>
+<div class="params">GET /v1/RatePlans/{RatePlanSid}: <span class="param">Sid</span></div>
+</div>
+</details>
+<details><summary><strong>postman-echo</strong> <span class="verdict verdict-note">NOTE</span></summary>
+<div class="review-note">Demo/echo API with minimal params. Serves as easy baseline.</div>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Send a POST request with form-encoded data to the echo service and verify the response reflects the submitted payload</span>
+<div class="endpoints">
+<span class="ep">POST /post</span>
+<span class="ep">GET /status/200</span>
+</div>
+<div class="params">POST /post: <span class="param">yo</span></div>
+<div class="params">GET /status/200: <em>(no params)</em></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Send a PUT request to update a resource status and then request a document path with custom headers</span>
+<div class="endpoints">
+<span class="ep">PUT /status/201</span>
+<span class="ep">GET /path/to/document</span>
+</div>
+<div class="params">PUT /status/201: <span class="param">yo</span></div>
+<div class="params">GET /path/to/document: <em>(no params)</em></div>
+</div>
+</details>
+<details><summary><strong>adobe-postman</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new batch for data ingestion and then upload a small file to a dataset within that batch</span>
+<div class="endpoints">
+<span class="ep">POST /data/foundation/import/batches</span>
+<span class="ep">PUT /data/foundation/import/batches/:batchId/datasets/:datasetId/files/:filePath</span>
+</div>
+<div class="params">POST /data/foundation/import/batches: <span class="param">body</span></div>
+<div class="params">PUT /data/foundation/import/batches/:batchId/datasets/:da...: <span class="param">batchId</span>, <span class="param">datasetId</span>, <span class="param">filePath</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Stream messages to Adobe Experience Platform via a connection and then retrieve a preview of batch data to verify ingestion</span>
+<div class="endpoints">
+<span class="ep">POST /data/foundation/import/collection/:CONNECTION_ID</span>
+<span class="ep">GET /data/foundation/import/batches/:batchId/datasets/:datasetId/preview</span>
+</div>
+<div class="params">POST /data/foundation/import/collection/:CONNECTION_ID: <span class="param">CONNECTION_ID</span>, <span class="param">syncValidation</span>, <span class="param">synchronousValidation</span>, <span class="param">body</span></div>
+<div class="params">GET /data/foundation/import/batches/:batchId/datasets/:da...: <span class="param">batchId</span>, <span class="param">datasetId</span>, <span class="param">format</span>, <span class="param">delimiter</span>, <span class="param">charset</span>, <span class="param">header</span>, <span class="param">nrow</span></div>
+</div>
+</details>
+<details><summary><strong>sap-postman</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new sales lead in SAP ByDesign and then retrieve the lead with expanded party details to verify creation</span>
+<div class="endpoints">
+<span class="ep">POST /sap/byd/odata/cust/v1/khlead/LeadCollection</span>
+<span class="ep">GET /sap/byd/odata/cust/v1/khlead/LeadCollection</span>
+</div>
+<div class="params">POST /sap/byd/odata/cust/v1/khlead/LeadCollection: <span class="param">Description</span>, <span class="param">StartDate</span>, <span class="param">EndDate</span>, <span class="param">QualificationLevelCode</span>, <span class="param">ClassificationCategoryCode</span>, <span class="param">SourceCode</span>, <span class="param">ProspectParty</span>, <span class="param">EmployeeResponsibleMarketingParty</span>, <span class="param">EmployeeResponsibleSalesParty</span></div>
+<div class="params">GET /sap/byd/odata/cust/v1/khlead/LeadCollection: <span class="param">$format</span>, <span class="param">$expand</span>, <span class="param">$filter</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a sales order with service line items and then retrieve the order with expanded item and pricing details</span>
+<div class="endpoints">
+<span class="ep">POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection</span>
+<span class="ep">GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection</span>
+</div>
+<div class="params">POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollec...: <span class="param">ExternalReference</span>, <span class="param">Name</span>, <span class="param">DataOriginTypeCode</span>, <span class="param">SalesUnitParty</span>, <span class="param">BuyerParty</span>, <span class="param">PricingTerms</span>, <span class="param">Item</span></div>
+<div class="params">GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollect...: <span class="param">$format</span>, <span class="param">$expand</span>, <span class="param">$filter</span></div>
+</div>
+</details>
+<details><summary><strong>stripe-postman</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new charge with a specific amount and currency, then create a customer with personal details and a payment source</span>
+<div class="endpoints">
+<span class="ep">POST /v1/charges</span>
+<span class="ep">POST /v1/customers</span>
+</div>
+<div class="params">POST /v1/charges: <span class="param">amount</span>, <span class="param">currency</span>, <span class="param">source</span></div>
+<div class="params">POST /v1/customers: <span class="param">source</span>, <span class="param">name</span>, <span class="param">email</span>, <span class="param">description</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a payment intent with capture and confirmation settings, then create a refund for a previously completed charge</span>
+<div class="endpoints">
+<span class="ep">POST /v1/payment_intents</span>
+<span class="ep">POST /v1/refunds</span>
+</div>
+<div class="params">POST /v1/payment_intents: <span class="param">amount</span>, <span class="param">currency</span>, <span class="param">capture_method</span>, <span class="param">confirm</span>, <span class="param">customer</span>, <span class="param">payment_method</span></div>
+<div class="params">POST /v1/refunds: <span class="param">charge</span></div>
+</div>
+</details>
+<details><summary><strong>azure-devops-postman</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new artifact feed for package management, then retrieve the list of all builds for a project</span>
+<div class="endpoints">
+<span class="ep">POST /{organization}/_apis/packaging/feeds</span>
+<span class="ep">GET /{organization}/{project}/_apis/build/builds</span>
+</div>
+<div class="params">POST /{organization}/_apis/packaging/feeds: <span class="param">description</span>, <span class="param">name</span>, <span class="param">hideDeletedPackageVersions</span>, <span class="param">badgesEnabled</span>, <span class="param">upstreamEnabled</span>, <span class="param">api-version</span></div>
+<div class="params">GET /{organization}/{project}/_apis/build/builds: <span class="param">api-version</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Queue a new build for a project definition, then retrieve a specific build definition by its ID</span>
+<div class="endpoints">
+<span class="ep">POST /{organization}/{project}/_apis/build/builds</span>
+<span class="ep">GET /{organization}/{project}/_apis/build/definitions/{definitionId}</span>
+</div>
+<div class="params">POST /{organization}/{project}/_apis/build/builds: <span class="param">definition</span>, <span class="param">sourceBranch</span>, <span class="param">reason</span>, <span class="param">api-version</span></div>
+<div class="params">GET /{organization}/{project}/_apis/build/definitions/{de...: <span class="param">api-version</span></div>
+</div>
+</details>
+<details><summary><strong>auth0-postman</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new connection with a specified strategy and options, then create a new rule with a name and script</span>
+<div class="endpoints">
+<span class="ep">POST /api/v2/connections</span>
+<span class="ep">POST /api/v2/rules</span>
+</div>
+<div class="params">POST /api/v2/connections: <span class="param">name</span>, <span class="param">strategy</span>, <span class="param">options</span>, <span class="param">enabled_clients</span></div>
+<div class="params">POST /api/v2/rules: <span class="param">name</span>, <span class="param">script</span>, <span class="param">order</span>, <span class="param">enabled</span>, <span class="param">stage</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new user with connection and credentials, then create a client grant linking a client to an audience with scopes</span>
+<div class="endpoints">
+<span class="ep">POST /api/v2/users</span>
+<span class="ep">POST /api/v2/client-grants</span>
+</div>
+<div class="params">POST /api/v2/users: <span class="param">connection</span>, <span class="param">email</span>, <span class="param">username</span>, <span class="param">password</span>, <span class="param">phone_number</span>, <span class="param">user_metadata</span>, <span class="param">email_verified</span>, <span class="param">app_metadata</span></div>
+<div class="params">POST /api/v2/client-grants: <span class="param">client_id</span>, <span class="param">audience</span>, <span class="param">scope</span></div>
+</div>
+</details>
+<details><summary><strong>braintree-postman</strong> <span class="verdict verdict-note">NOTE</span></summary>
+<div class="review-note">All endpoints are POST /graphql (GraphQL-over-REST). Scorer distinguishes by operation name in brackets.</div>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a customer via GraphQL mutation and then charge a payment method with transaction details including shipping and risk data</span>
+<div class="endpoints">
+<span class="ep">POST /graphql [CreateCustomer]</span>
+<span class="ep">POST /graphql [ChargePaymentMethod]</span>
+</div>
+<div class="params">POST /graphql [CreateCustomer]: <span class="param">query</span>, <span class="param">variables</span></div>
+<div class="params">POST /graphql [ChargePaymentMethod]: <span class="param">query</span>, <span class="param">variables</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Authorize a payment method for a transaction and then capture the authorized transaction to complete the payment</span>
+<div class="endpoints">
+<span class="ep">POST /graphql [AuthorizePaymentMethod]</span>
+<span class="ep">POST /graphql [CaptureTransaction]</span>
+</div>
+<div class="params">POST /graphql [AuthorizePaymentMethod]: <span class="param">query</span>, <span class="param">variables</span></div>
+<div class="params">POST /graphql [CaptureTransaction]: <span class="param">query</span>, <span class="param">variables</span></div>
+</div>
+</details>
+<details><summary><strong>influxdb-postman</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Write time series data points into a bucket, then query and analyze the data using a Flux query</span>
+<div class="endpoints">
+<span class="ep">POST /api/v2/write</span>
+<span class="ep">POST /api/v2/query/analyze</span>
+</div>
+<div class="params">POST /api/v2/write: <span class="param">bucket</span>, <span class="param">precision</span>, <span class="param">org</span></div>
+<div class="params">POST /api/v2/query/analyze: <span class="param">orgID</span>, <span class="param">query</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Set up the initial user, organization, and bucket for a new InfluxDB instance, then list all available buckets</span>
+<div class="endpoints">
+<span class="ep">POST /api/v2/setup</span>
+<span class="ep">GET /api/v2/buckets</span>
+</div>
+<div class="params">POST /api/v2/setup: <span class="param">bucket</span>, <span class="param">org</span>, <span class="param">password</span>, <span class="param">retentionPeriodHrs</span>, <span class="param">retentionPeriodSeconds</span>, <span class="param">token</span>, <span class="param">username</span></div>
+<div class="params">GET /api/v2/buckets: <em>(no params)</em></div>
+</div>
+</details>
+<details><summary><strong>akeneo-postman</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new product family with attributes and label translations, then create a new product assigned to that family with values and associations</span>
+<div class="endpoints">
+<span class="ep">POST /api/rest/v1/families</span>
+<span class="ep">POST /api/rest/v1/products</span>
+</div>
+<div class="params">POST /api/rest/v1/families: <span class="param">code</span>, <span class="param">attributes</span>, <span class="param">attribute_as_label</span>, <span class="param">attribute_as_image</span>, <span class="param">attribute_requirements</span>, <span class="param">labels</span></div>
+<div class="params">POST /api/rest/v1/products: <span class="param">identifier</span>, <span class="param">family</span>, <span class="param">categories</span>, <span class="param">enabled</span>, <span class="param">values</span>, <span class="param">associations</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new catalog for an app, then list all available catalogs to verify it was added</span>
+<div class="endpoints">
+<span class="ep">POST /api/rest/v1/catalogs</span>
+<span class="ep">GET /api/rest/v1/catalogs</span>
+</div>
+<div class="params">POST /api/rest/v1/catalogs: <span class="param">name</span></div>
+<div class="params">GET /api/rest/v1/catalogs: <em>(no params)</em></div>
+</div>
+</details>
+</div>
+<div class="format-section">
+<h2>Protobuf (10 specs)</h2>
+<table><tr><th>#</th><th>Spec</th><th>Domain</th><th>Size</th><th class="kb">Source</th><th class="kb">Mini</th><th class="kb">Std LAP</th><th class="kb">Lean LAP</th><th class="kb">Ratio</th><th>Files</th></tr>
+<tr><td>1</td><td><strong>google-storage</strong></td><td>cloud</td><td><span class="tag tag-medium">medium</span></td><td class="kb">136.7</td>
+<td class="kb">33.0</td>
+<td class="kb">4.8</td>
+<td class="kb">4.5</td>
+<td class="ratio">30.4x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/storage/v2/storage.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-storage/pretty.proto">pret</a> | <a href="compiled/protobuf/google-storage/minified.proto">mini</a> | <a href="compiled/protobuf/google-storage/standard.lap">stan</a> | <a href="compiled/protobuf/google-storage/lean.lap">lean</a></td></tr>
+<tr><td>2</td><td><strong>google-pubsub</strong></td><td>messaging</td><td><span class="tag tag-medium">medium</span></td><td class="kb">107.2</td>
+<td class="kb">15.6</td>
+<td class="kb">2.2</td>
+<td class="kb">1.8</td>
+<td class="ratio">59.6x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/pubsub/v1/pubsub.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-pubsub/pretty.proto">pret</a> | <a href="compiled/protobuf/google-pubsub/minified.proto">mini</a> | <a href="compiled/protobuf/google-pubsub/standard.lap">stan</a> | <a href="compiled/protobuf/google-pubsub/lean.lap">lean</a></td></tr>
+<tr><td>3</td><td><strong>google-vision</strong></td><td>ai</td><td><span class="tag tag-medium">medium</span></td><td class="kb">36.6</td>
+<td class="kb">8.8</td>
+<td class="kb">3.8</td>
+<td class="kb">3.7</td>
+<td class="ratio">9.9x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/vision/v1/image_annotator.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-vision/pretty.proto">pret</a> | <a href="compiled/protobuf/google-vision/minified.proto">mini</a> | <a href="compiled/protobuf/google-vision/standard.lap">stan</a> | <a href="compiled/protobuf/google-vision/lean.lap">lean</a></td></tr>
+<tr><td>4</td><td><strong>google-datacatalog</strong></td><td>data</td><td><span class="tag tag-medium">medium</span></td><td class="kb">84.9</td>
+<td class="kb">18.8</td>
+<td class="kb">6.7</td>
+<td class="kb">6.5</td>
+<td class="ratio">13.1x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/datacatalog/v1/datacatalog.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-datacatalog/pretty.proto">pret</a> | <a href="compiled/protobuf/google-datacatalog/minified.proto">mini</a> | <a href="compiled/protobuf/google-datacatalog/standard.lap">stan</a> | <a href="compiled/protobuf/google-datacatalog/lean.lap">lean</a></td></tr>
+<tr><td>5</td><td><strong>google-translate</strong></td><td>ai</td><td><span class="tag tag-medium">medium</span></td><td class="kb">76.8</td>
+<td class="kb">14.5</td>
+<td class="kb">3.7</td>
+<td class="kb">3.5</td>
+<td class="ratio">21.9x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/translate/v3/translation_service.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-translate/pretty.proto">pret</a> | <a href="compiled/protobuf/google-translate/minified.proto">mini</a> | <a href="compiled/protobuf/google-translate/standard.lap">stan</a> | <a href="compiled/protobuf/google-translate/lean.lap">lean</a></td></tr>
+<tr><td>6</td><td><strong>google-spanner</strong></td><td>database</td><td><span class="tag tag-medium">medium</span></td><td class="kb">61.3</td>
+<td class="kb">10.2</td>
+<td class="kb">3.4</td>
+<td class="kb">3.3</td>
+<td class="ratio">18.6x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/spanner/v1/spanner.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-spanner/pretty.proto">pret</a> | <a href="compiled/protobuf/google-spanner/minified.proto">mini</a> | <a href="compiled/protobuf/google-spanner/standard.lap">stan</a> | <a href="compiled/protobuf/google-spanner/lean.lap">lean</a></td></tr>
+<tr><td>7</td><td><strong>google-firestore</strong></td><td>database</td><td><span class="tag tag-medium">medium</span></td><td class="kb">45.7</td>
+<td class="kb">9.4</td>
+<td class="kb">4.0</td>
+<td class="kb">3.7</td>
+<td class="ratio">12.4x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/firestore/v1/firestore.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-firestore/pretty.proto">pret</a> | <a href="compiled/protobuf/google-firestore/minified.proto">mini</a> | <a href="compiled/protobuf/google-firestore/standard.lap">stan</a> | <a href="compiled/protobuf/google-firestore/lean.lap">lean</a></td></tr>
+<tr><td>8</td><td><strong>google-talent</strong></td><td>hr</td><td><span class="tag tag-medium">medium</span></td><td class="kb">43.8</td>
+<td class="kb">5.8</td>
+<td class="kb">2.0</td>
+<td class="kb">2.0</td>
+<td class="ratio">21.9x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/talent/v4/job_service.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-talent/pretty.proto">pret</a> | <a href="compiled/protobuf/google-talent/minified.proto">mini</a> | <a href="compiled/protobuf/google-talent/standard.lap">stan</a> | <a href="compiled/protobuf/google-talent/lean.lap">lean</a></td></tr>
+<tr><td>9</td><td><strong>google-language</strong></td><td>ai</td><td><span class="tag tag-medium">medium</span></td><td class="kb">31.0</td>
+<td class="kb">8.9</td>
+<td class="kb">3.5</td>
+<td class="kb">3.3</td>
+<td class="ratio">9.4x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/language/v1/language_service.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-language/pretty.proto">pret</a> | <a href="compiled/protobuf/google-language/minified.proto">mini</a> | <a href="compiled/protobuf/google-language/standard.lap">stan</a> | <a href="compiled/protobuf/google-language/lean.lap">lean</a></td></tr>
+<tr><td>10</td><td><strong>google-billing</strong></td><td>billing</td><td><span class="tag tag-small">small</span></td><td class="kb">20.4</td>
+<td class="kb">7.2</td>
+<td class="kb">1.5</td>
+<td class="kb">1.4</td>
+<td class="ratio">14.6x</td>
+<td class="files"><a href="https://raw.githubusercontent.com/googleapis/googleapis/master/google/cloud/billing/v1/cloud_billing.proto" target="_blank">source</a> | <a href="compiled/protobuf/google-billing/pretty.proto">pret</a> | <a href="compiled/protobuf/google-billing/minified.proto">mini</a> | <a href="compiled/protobuf/google-billing/standard.lap">stan</a> | <a href="compiled/protobuf/google-billing/lean.lap">lean</a></td></tr>
+</table>
+<h3>Tasks</h3>
+<details><summary><strong>google-storage</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new storage bucket in a project and then upload objects by listing existing objects in the bucket</span>
+<div class="endpoints">
+<span class="ep">RPC CreateBucket</span>
+<span class="ep">RPC ListObjects</span>
+</div>
+<div class="params">RPC CreateBucket: <span class="param">parent</span>, <span class="param">bucket</span>, <span class="param">bucket_id</span>, <span class="param">predefined_acl</span>, <span class="param">predefined_default_object_acl</span></div>
+<div class="params">RPC ListObjects: <span class="param">parent</span>, <span class="param">page_size</span>, <span class="param">page_token</span>, <span class="param">delimiter</span>, <span class="param">prefix</span>, <span class="param">versions</span>, <span class="param">read_mask</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Retrieve a specific object from a bucket and then update its metadata</span>
+<div class="endpoints">
+<span class="ep">RPC GetObject</span>
+<span class="ep">RPC UpdateObject</span>
+</div>
+<div class="params">RPC GetObject: <span class="param">bucket</span>, <span class="param">object</span>, <span class="param">generation</span>, <span class="param">soft_deleted</span>, <span class="param">if_generation_match</span>, <span class="param">if_metageneration_match</span>, <span class="param">read_mask</span></div>
+<div class="params">RPC UpdateObject: <span class="param">object</span>, <span class="param">if_generation_match</span>, <span class="param">if_metageneration_match</span>, <span class="param">update_mask</span>, <span class="param">predefined_acl</span></div>
+</div>
+</details>
+<details><summary><strong>google-pubsub</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Publish messages to a topic and then list all available topics in the project</span>
+<div class="endpoints">
+<span class="ep">RPC Publish</span>
+<span class="ep">RPC ListTopics</span>
+</div>
+<div class="params">RPC Publish: <span class="param">topic</span>, <span class="param">messages</span></div>
+<div class="params">RPC ListTopics: <span class="param">project</span>, <span class="param">page_size</span>, <span class="param">page_token</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Pull messages from a subscription and acknowledge their receipt</span>
+<div class="endpoints">
+<span class="ep">RPC Pull</span>
+<span class="ep">RPC Acknowledge</span>
+</div>
+<div class="params">RPC Pull: <span class="param">subscription</span>, <span class="param">max_messages</span>, <span class="param">return_immediately</span></div>
+<div class="params">RPC Acknowledge: <span class="param">subscription</span>, <span class="param">ack_ids</span></div>
+</div>
+</details>
+<details><summary><strong>google-vision</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Annotate a batch of images synchronously and annotate a batch of files such as PDFs with vision features</span>
+<div class="endpoints">
+<span class="ep">RPC BatchAnnotateImages</span>
+<span class="ep">RPC BatchAnnotateFiles</span>
+</div>
+<div class="params">RPC BatchAnnotateImages: <span class="param">requests</span>, <span class="param">parent</span>, <span class="param">labels</span></div>
+<div class="params">RPC BatchAnnotateFiles: <span class="param">requests</span>, <span class="param">parent</span>, <span class="param">labels</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Run async batch image annotation with output to cloud storage and run async batch file annotation for large-scale processing</span>
+<div class="endpoints">
+<span class="ep">RPC AsyncBatchAnnotateImages</span>
+<span class="ep">RPC AsyncBatchAnnotateFiles</span>
+</div>
+<div class="params">RPC AsyncBatchAnnotateImages: <span class="param">requests</span>, <span class="param">output_config</span>, <span class="param">parent</span>, <span class="param">labels</span></div>
+<div class="params">RPC AsyncBatchAnnotateFiles: <span class="param">requests</span>, <span class="param">parent</span>, <span class="param">labels</span></div>
+</div>
+</details>
+<details><summary><strong>google-datacatalog</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Search the data catalog for assets and then create a new entry group to organize discovered entries</span>
+<div class="endpoints">
+<span class="ep">RPC SearchCatalog</span>
+<span class="ep">RPC CreateEntryGroup</span>
+</div>
+<div class="params">RPC SearchCatalog: <span class="param">scope</span>, <span class="param">query</span>, <span class="param">page_size</span>, <span class="param">page_token</span>, <span class="param">order_by</span></div>
+<div class="params">RPC CreateEntryGroup: <span class="param">parent</span>, <span class="param">entry_group_id</span>, <span class="param">entry_group</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a tag template to define metadata schema and then attach a tag to a catalog entry using that template</span>
+<div class="endpoints">
+<span class="ep">RPC CreateTagTemplate</span>
+<span class="ep">RPC CreateTag</span>
+</div>
+<div class="params">RPC CreateTagTemplate: <span class="param">parent</span>, <span class="param">tag_template_id</span>, <span class="param">tag_template</span></div>
+<div class="params">RPC CreateTag: <span class="param">parent</span>, <span class="param">tag</span></div>
+</div>
+</details>
+<details><summary><strong>google-translate</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Translate input text to a target language and detect the language of unknown text</span>
+<div class="endpoints">
+<span class="ep">RPC TranslateText</span>
+<span class="ep">RPC DetectLanguage</span>
+</div>
+<div class="params">RPC TranslateText: <span class="param">parent</span>, <span class="param">contents</span>, <span class="param">target_language_code</span>, <span class="param">source_language_code</span>, <span class="param">mime_type</span>, <span class="param">model</span></div>
+<div class="params">RPC DetectLanguage: <span class="param">parent</span>, <span class="param">content</span>, <span class="param">mime_type</span>, <span class="param">model</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a glossary resource and list all glossaries in the project</span>
+<div class="endpoints">
+<span class="ep">RPC CreateGlossary</span>
+<span class="ep">RPC ListGlossaries</span>
+</div>
+<div class="params">RPC CreateGlossary: <span class="param">parent</span>, <span class="param">glossary</span></div>
+<div class="params">RPC ListGlossaries: <span class="param">parent</span>, <span class="param">page_size</span>, <span class="param">page_token</span>, <span class="param">filter</span></div>
+</div>
+</details>
+<details><summary><strong>google-spanner</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Execute a SQL statement within a session and commit the transaction</span>
+<div class="endpoints">
+<span class="ep">RPC ExecuteSql</span>
+<span class="ep">RPC Commit</span>
+</div>
+<div class="params">RPC ExecuteSql: <span class="param">session</span>, <span class="param">sql</span>, <span class="param">transaction</span>, <span class="param">params</span>, <span class="param">param_types</span>, <span class="param">query_mode</span></div>
+<div class="params">RPC Commit: <span class="param">session</span>, <span class="param">transaction_id</span>, <span class="param">mutations</span>, <span class="param">return_commit_stats</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new session on a database and read rows using key lookups</span>
+<div class="endpoints">
+<span class="ep">RPC CreateSession</span>
+<span class="ep">RPC Read</span>
+</div>
+<div class="params">RPC CreateSession: <span class="param">database</span>, <span class="param">session</span></div>
+<div class="params">RPC Read: <span class="param">session</span>, <span class="param">table</span>, <span class="param">columns</span>, <span class="param">key_set</span>, <span class="param">transaction</span>, <span class="param">index</span>, <span class="param">limit</span></div>
+</div>
+</details>
+<details><summary><strong>google-firestore</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Run a structured query against a Firestore database and retrieve multiple documents in a batch</span>
+<div class="endpoints">
+<span class="ep">RPC RunQuery</span>
+<span class="ep">RPC BatchGetDocuments</span>
+</div>
+<div class="params">RPC RunQuery: <span class="param">parent</span>, <span class="param">structured_query</span>, <span class="param">transaction</span>, <span class="param">new_transaction</span>, <span class="param">read_time</span></div>
+<div class="params">RPC BatchGetDocuments: <span class="param">database</span>, <span class="param">documents</span>, <span class="param">mask</span>, <span class="param">transaction</span>, <span class="param">new_transaction</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Create a new document in a collection and commit writes within a transaction</span>
+<div class="endpoints">
+<span class="ep">RPC CreateDocument</span>
+<span class="ep">RPC Commit</span>
+</div>
+<div class="params">RPC CreateDocument: <span class="param">parent</span>, <span class="param">collection_id</span>, <span class="param">document_id</span>, <span class="param">document</span>, <span class="param">mask</span></div>
+<div class="params">RPC Commit: <span class="param">database</span>, <span class="param">writes</span>, <span class="param">transaction</span></div>
+</div>
+</details>
+<details><summary><strong>google-talent</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new job posting under a tenant and list all jobs with a filter</span>
+<div class="endpoints">
+<span class="ep">RPC CreateJob</span>
+<span class="ep">RPC ListJobs</span>
+</div>
+<div class="params">RPC CreateJob: <span class="param">parent</span>, <span class="param">job</span></div>
+<div class="params">RPC ListJobs: <span class="param">parent</span>, <span class="param">filter</span>, <span class="param">page_size</span>, <span class="param">page_token</span>, <span class="param">job_view</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Search for jobs matching query criteria and retrieve a specific job by name</span>
+<div class="endpoints">
+<span class="ep">RPC SearchJobs</span>
+<span class="ep">RPC GetJob</span>
+</div>
+<div class="params">RPC SearchJobs: <span class="param">parent</span>, <span class="param">request_metadata</span>, <span class="param">job_query</span>, <span class="param">search_mode</span>, <span class="param">max_page_size</span>, <span class="param">order_by</span></div>
+<div class="params">RPC GetJob: <span class="param">name</span></div>
+</div>
+</details>
+<details><summary><strong>google-language</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Analyze the sentiment of a document and extract named entities from the text</span>
+<div class="endpoints">
+<span class="ep">RPC AnalyzeSentiment</span>
+<span class="ep">RPC AnalyzeEntities</span>
+</div>
+<div class="params">RPC AnalyzeSentiment: <span class="param">document</span>, <span class="param">encoding_type</span></div>
+<div class="params">RPC AnalyzeEntities: <span class="param">document</span>, <span class="param">encoding_type</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Classify a document into categories and run a combined annotation analysis</span>
+<div class="endpoints">
+<span class="ep">RPC ClassifyText</span>
+<span class="ep">RPC AnnotateText</span>
+</div>
+<div class="params">RPC ClassifyText: <span class="param">document</span>, <span class="param">classification_model_options</span></div>
+<div class="params">RPC AnnotateText: <span class="param">document</span>, <span class="param">features</span>, <span class="param">encoding_type</span></div>
+</div>
+</details>
+<details><summary><strong>google-billing</strong></summary>
+<div class="task">
+<span class="task-id">t1</span><span class="task-desc">Create a new billing subaccount and list all billing accounts for the caller</span>
+<div class="endpoints">
+<span class="ep">RPC CreateBillingAccount</span>
+<span class="ep">RPC ListBillingAccounts</span>
+</div>
+<div class="params">RPC CreateBillingAccount: <span class="param">billing_account</span>, <span class="param">parent</span></div>
+<div class="params">RPC ListBillingAccounts: <span class="param">page_size</span>, <span class="param">page_token</span>, <span class="param">filter</span>, <span class="param">parent</span></div>
+</div>
+<div class="task">
+<span class="task-id">t2</span><span class="task-desc">Get the billing information for a project and update its associated billing account</span>
+<div class="endpoints">
+<span class="ep">RPC GetProjectBillingInfo</span>
+<span class="ep">RPC UpdateProjectBillingInfo</span>
+</div>
+<div class="params">RPC GetProjectBillingInfo: <span class="param">name</span></div>
+<div class="params">RPC UpdateProjectBillingInfo: <span class="param">name</span>, <span class="param">project_billing_info</span></div>
+</div>
+</details>
+</div>
+<h2>Notes</h2>
+<table><tr><th>Spec</th><th>Status</th><th>Note</th></tr>
+<tr><td><strong>adeo-kafka</strong></td><td><span class="verdict verdict-note">NOTE</span></td><td>Request-reply pattern. t1 focuses on request headers, t2 focuses on response timing metadata.</td></tr>
+<tr><td><strong>braintree-postman</strong></td><td><span class="verdict verdict-note">NOTE</span></td><td>All endpoints are POST /graphql (GraphQL-over-REST). Scorer distinguishes by operation name in brackets.</td></tr>
+<tr><td><strong>correlation-id</strong></td><td><span class="verdict verdict-note">NOTE</span></td><td>Subset of streetlights with correlation ID focus. t1 tests payload, t2 tests channel params.</td></tr>
+<tr><td><strong>elastic-gql</strong></td><td><span class="verdict verdict-note">NOTE</span></td><td>Schema has only 3 root queries, each with single host param. Trivially simple but valid.</td></tr>
+<tr><td><strong>gitter-streaming</strong></td><td><span class="verdict verdict-note">NOTE</span></td><td>Spec has 1 channel with 2 message types. t1/t2 share endpoints but test different payload fields.</td></tr>
+<tr><td><strong>operation-security</strong></td><td><span class="verdict verdict-note">NOTE</span></td><td>Spec has 1 channel. t1 tests message structure, t2 tests nested payload schemas.</td></tr>
+<tr><td><strong>postman-echo</strong></td><td><span class="verdict verdict-note">NOTE</span></td><td>Demo/echo API with minimal params. Serves as easy baseline.</td></tr>
+<tr><td><strong>rpc-server</strong></td><td><span class="verdict verdict-note">NOTE</span></td><td>t1/t2 swap PUBLISH/SUBSCRIBE roles (server vs client perspective). Same endpoints.</td></tr>
+<tr><td><strong>websocket-gemini</strong></td><td><span class="verdict verdict-note">NOTE</span></td><td>Spec has 1 channel. t1 tests update payload fields, t2 tests WebSocket binding query params.</td></tr>
+</table>
+<p style="margin-top:32px;color:var(--muted);font-size:13px">Generated from registry/registry.yaml + registry/manifests/</p>
+</body></html>

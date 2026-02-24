@@ -1,0 +1,29 @@
+spec_id: saleor-gql
+tasks:
+  - id: t1
+    description: "Look up the details of a specific item in the store catalog using its identifier or URL-friendly name, and pull up a customer's past purchase by its reference number"
+    target_endpoints:
+      - QUERY product
+      - QUERY order
+    expected_params:
+      QUERY product:
+        - id
+        - slug
+        - slugLanguageCode
+        - externalReference
+        - channel
+      QUERY order:
+        - id
+        - externalReference
+  - id: t2
+    description: "Add a brand new item to the store catalog with its details, and modify an existing fulfillment center's configuration such as address or capacity"
+    target_endpoints:
+      - MUTATION productCreate
+      - MUTATION updateWarehouse
+    expected_params:
+      MUTATION productCreate:
+        - input
+      MUTATION updateWarehouse:
+        - externalReference
+        - id
+        - input

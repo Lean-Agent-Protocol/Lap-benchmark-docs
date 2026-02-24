@@ -1,0 +1,336 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Figma API
+@base https://api.figma.com
+@version 0.36.0
+@auth ApiKey X-Figma-Token in header | OAuth2 | OAuth2
+@endpoints 46
+@hint download_for_search
+@toc files(19), images(1), teams(5), projects(1), me(1), components(1), component_sets(1), styles(1), webhooks(6), activity_logs(1), payments(1), dev_resources(2), analytics(6)
+
+@group files
+@endpoint GET /v1/files/{file_key}
+@required {file_key: str}
+@optional {version: str, ids: str, depth: num, geometry: str, plugin_data: str, branch_data: bool=False}
+@returns(200) {name: str, role: str, lastModified: str(date-time), editorType: str, thumbnailUrl: str, version: str, document: any, components: map, componentSets: map, schemaVersion: num, styles: map, linkAccess: str, mainFileKey: str, branches: [map]}
+@errors {400, 403, 404, 429, 500}
+
+@endpoint GET /v1/files/{file_key}/nodes
+@required {file_key: str, ids: str}
+@optional {version: str, depth: num, geometry: str, plugin_data: str}
+@returns(200) {name: str, role: str, lastModified: str(date-time), editorType: str, thumbnailUrl: str, version: str, nodes: map}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group images
+@endpoint GET /v1/images/{file_key}
+@required {file_key: str, ids: str}
+@optional {version: str, scale: num, format: str(jpg/png/svg/pdf)=png, svg_outline_text: bool=True, svg_include_id: bool=False, svg_include_node_id: bool=False, svg_simplify_stroke: bool=True, contents_only: bool=True, use_absolute_bounds: bool=False}
+@returns(200) {err: null?, images: map}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/images
+@required {file_key: str}
+@returns(200) {error: bool, status: num, meta: map{images: map}}
+@errors {400, 403, 404, 429, 500}
+
+@endpoint GET /v1/files/{file_key}/meta
+@required {file_key: str}
+@returns(200) {name: str, folder_name: str, last_touched_at: str(date-time), creator: map{id: str, handle: str, img_url: str}, last_touched_by: map{id: str, handle: str, img_url: str}, thumbnail_url: str, editorType: str, role: str, link_access: str, url: str, version: str}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group teams
+@endpoint GET /v1/teams/{team_id}/projects
+@required {team_id: str}
+@returns(200) {name: str, projects: [map]}
+@errors {400, 403, 429, 500}
+
+@endgroup
+
+@group projects
+@endpoint GET /v1/projects/{project_id}/files
+@required {project_id: str}
+@optional {branch_data: bool=False}
+@returns(200) {name: str, files: [map]}
+@errors {400, 403, 429, 500}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/versions
+@required {file_key: str}
+@optional {page_size: num, before: num, after: num}
+@returns(200) {versions: [map], pagination: map{prev_page: str, next_page: str}}
+@errors {403, 404, 429, 500}
+
+@endpoint GET /v1/files/{file_key}/comments
+@required {file_key: str}
+@optional {as_md: bool}
+@returns(200) {comments: [map]}
+@errors {403, 404, 429, 500}
+
+@endpoint POST /v1/files/{file_key}/comments
+@required {file_key: str, message: str}
+@optional {comment_id: str, client_meta: any}
+@returns(200) {id: str, client_meta: any, file_key: str, parent_id: str, user: map{id: str, handle: str, img_url: str}, created_at: str(date-time), resolved_at: str(date-time)?, message: str, order_id: str?, reactions: [map]}
+@errors {400, 403, 404, 429, 500}
+
+@endpoint DELETE /v1/files/{file_key}/comments/{comment_id}
+@required {file_key: str, comment_id: str}
+@returns(200) {status: num, error: bool}
+@errors {403, 404, 429, 500}
+
+@endpoint GET /v1/files/{file_key}/comments/{comment_id}/reactions
+@required {file_key: str, comment_id: str}
+@optional {cursor: str}
+@returns(200) {reactions: [map], pagination: map{prev_page: str, next_page: str}}
+@errors {403, 404, 429, 500}
+
+@endpoint POST /v1/files/{file_key}/comments/{comment_id}/reactions
+@required {file_key: str, comment_id: str, emoji: str}
+@returns(200) {status: num, error: bool}
+@errors {400, 403, 404, 429, 500}
+
+@endpoint DELETE /v1/files/{file_key}/comments/{comment_id}/reactions
+@required {file_key: str, comment_id: str, emoji: str}
+@returns(200) {status: num, error: bool}
+@errors {403, 404, 429, 500}
+
+@endgroup
+
+@group me
+@endpoint GET /v1/me
+@returns(200)
+@errors {403, 429, 500}
+
+@endgroup
+
+@group teams
+@endpoint GET /v1/teams/{team_id}/components
+@required {team_id: str}
+@optional {page_size: num=30, after: num, before: num}
+@returns(200) {status: num, error: bool, meta: map{components: [map], cursor: map{before: num, after: num}}}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/components
+@required {file_key: str}
+@returns(200) {status: num, error: bool, meta: map{components: [map]}}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group components
+@endpoint GET /v1/components/{key}
+@required {key: str}
+@returns(200) {status: num, error: bool, meta: map{key: str, file_key: str, node_id: str, thumbnail_url: str, name: str, description: str, created_at: str(date-time), updated_at: str(date-time), user: map{id: str, handle: str, img_url: str}, containing_frame: map{nodeId: str, name: str, backgroundColor: str, pageId: str, pageName: str, containingStateGroup: any, containingComponentSet: any}}}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group teams
+@endpoint GET /v1/teams/{team_id}/component_sets
+@required {team_id: str}
+@optional {page_size: num=30, after: num, before: num}
+@returns(200) {status: num, error: bool, meta: map{component_sets: [map], cursor: map{before: num, after: num}}}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/component_sets
+@required {file_key: str}
+@returns(200) {status: num, error: bool, meta: map{component_sets: [map]}}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group component_sets
+@endpoint GET /v1/component_sets/{key}
+@required {key: str}
+@returns(200) {status: num, error: bool, meta: map{key: str, file_key: str, node_id: str, thumbnail_url: str, name: str, description: str, created_at: str(date-time), updated_at: str(date-time), user: map{id: str, handle: str, img_url: str}, containing_frame: map{nodeId: str, name: str, backgroundColor: str, pageId: str, pageName: str, containingStateGroup: any, containingComponentSet: any}}}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group teams
+@endpoint GET /v1/teams/{team_id}/styles
+@required {team_id: str}
+@optional {page_size: num=30, after: num, before: num}
+@returns(200) {status: num, error: bool, meta: map{styles: [map], cursor: map{before: num, after: num}}}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/styles
+@required {file_key: str}
+@returns(200) {status: num, error: bool, meta: map{styles: [map]}}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group styles
+@endpoint GET /v1/styles/{key}
+@required {key: str}
+@returns(200) {status: num, error: bool, meta: map{key: str, file_key: str, node_id: str, style_type: str, thumbnail_url: str, name: str, description: str, created_at: str(date-time), updated_at: str(date-time), user: map{id: str, handle: str, img_url: str}, sort_position: str}}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group webhooks
+@endpoint GET /v2/webhooks
+@optional {context: str, context_id: str, plan_api_id: str, cursor: str}
+@returns(200) {webhooks: [map], pagination: map{prev_page: str, next_page: str}}
+@errors {400, 403}
+
+@endpoint POST /v2/webhooks
+@required {event_type: str(PING/FILE_UPDATE/FILE_VERSION_UPDATE/FILE_DELETE/LIBRARY_PUBLISH/FILE_COMMENT/DEV_MODE_STATUS_UPDATE), context: str, context_id: str, endpoint: str, passcode: str}
+@optional {team_id: str, status: str(ACTIVE/PAUSED), description: str}
+@returns(200) {id: str, event_type: str, team_id: str, context: str, context_id: str, plan_api_id: str, status: str, client_id: str?, passcode: str, endpoint: str, description: str?}
+@errors {400, 403, 429, 500}
+
+@endpoint GET /v2/webhooks/{webhook_id}
+@required {webhook_id: str}
+@returns(200) {id: str, event_type: str, team_id: str, context: str, context_id: str, plan_api_id: str, status: str, client_id: str?, passcode: str, endpoint: str, description: str?}
+@errors {400, 403, 404, 429, 500}
+
+@endpoint PUT /v2/webhooks/{webhook_id}
+@required {webhook_id: str, event_type: str(PING/FILE_UPDATE/FILE_VERSION_UPDATE/FILE_DELETE/LIBRARY_PUBLISH/FILE_COMMENT/DEV_MODE_STATUS_UPDATE), endpoint: str, passcode: str}
+@optional {status: str(ACTIVE/PAUSED), description: str}
+@returns(200) {id: str, event_type: str, team_id: str, context: str, context_id: str, plan_api_id: str, status: str, client_id: str?, passcode: str, endpoint: str, description: str?}
+@errors {400, 403, 404, 429, 500}
+
+@endpoint DELETE /v2/webhooks/{webhook_id}
+@required {webhook_id: str}
+@returns(200) {id: str, event_type: str, team_id: str, context: str, context_id: str, plan_api_id: str, status: str, client_id: str?, passcode: str, endpoint: str, description: str?}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group teams
+@endpoint GET /v2/teams/{team_id}/webhooks
+@required {team_id: str}
+@returns(200) {webhooks: [map]}
+@errors {403, 404, 429, 500}
+
+@endgroup
+
+@group webhooks
+@endpoint GET /v2/webhooks/{webhook_id}/requests
+@required {webhook_id: str}
+@returns(200) {requests: [map]}
+@errors {400, 403, 404, 429, 500}
+
+@endgroup
+
+@group activity_logs
+@endpoint GET /v1/activity_logs
+@optional {events: str, start_time: num, end_time: num, limit: num, order: str(asc/desc)=asc}
+@returns(200) {status: num, error: bool, meta: map{activity_logs: [map], cursor: str, next_page: bool}}
+@errors {400, 401, 403, 429, 500}
+
+@endgroup
+
+@group payments
+@endpoint GET /v1/payments
+@optional {plugin_payment_token: str, user_id: str, community_file_id: str, plugin_id: str, widget_id: str}
+@returns(200) {status: num, error: bool, meta: map{user_id: str, resource_id: str, resource_type: str, payment_status: map{type: str}, date_of_purchase: str(date-time)}}
+@errors {401, 429, 500}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/variables/local
+@required {file_key: str}
+@returns(200) {status: num, error: bool, meta: map{variables: map, variableCollections: map}}
+@errors {401, 403, 404, 429, 500}
+
+@endpoint GET /v1/files/{file_key}/variables/published
+@required {file_key: str}
+@returns(200) {status: num, error: bool, meta: map{variables: map, variableCollections: map}}
+@errors {401, 403, 404, 429, 500}
+
+@endpoint POST /v1/files/{file_key}/variables
+@required {file_key: str}
+@optional {variableCollections: [any], variableModes: [any], variables: [any], variableModeValues: [map{variableId!: str, modeId!: str, value!: any}]}
+@returns(200) {status: num, error: bool, meta: map{tempIdToRealId: map}}
+@errors {400, 401, 403, 404, 429, 500}
+
+@endpoint GET /v1/files/{file_key}/dev_resources
+@required {file_key: str}
+@optional {node_ids: str}
+@returns(200) {dev_resources: [map]}
+@errors {400, 401, 403, 404, 429, 500}
+
+@endgroup
+
+@group dev_resources
+@endpoint POST /v1/dev_resources
+@required {dev_resources: [map{name!: str, url!: str, file_key!: str, node_id!: str}]}
+@returns(200) {links_created: [map], errors: [map]}
+@errors {400, 401, 403, 429, 500}
+
+@endpoint PUT /v1/dev_resources
+@required {dev_resources: [map{id!: str, name: str, url: str}]}
+@returns(200) {links_updated: [map], errors: [map]}
+@errors {400, 401, 403, 429, 500}
+
+@endgroup
+
+@group files
+@endpoint DELETE /v1/files/{file_key}/dev_resources/{dev_resource_id}
+@required {file_key: str, dev_resource_id: str}
+@returns(200)
+@errors {401, 403, 404, 429, 500}
+
+@endgroup
+
+@group analytics
+@endpoint GET /v1/analytics/libraries/{file_key}/component/actions
+@required {file_key: str, group_by: str(component/team)}
+@optional {cursor: str, start_date: str, end_date: str}
+@returns(200) {rows: any, next_page: bool, cursor: str}
+@errors {400, 401, 403, 429, 500}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/component/usages
+@required {file_key: str, group_by: str(component/file)}
+@optional {cursor: str}
+@returns(200) {rows: any, next_page: bool, cursor: str}
+@errors {400, 401, 403, 429, 500}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/style/actions
+@required {file_key: str, group_by: str(style/team)}
+@optional {cursor: str, start_date: str, end_date: str}
+@returns(200) {rows: any, next_page: bool, cursor: str}
+@errors {400, 401, 403, 429, 500}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/style/usages
+@required {file_key: str, group_by: str(style/file)}
+@optional {cursor: str}
+@returns(200) {rows: any, next_page: bool, cursor: str}
+@errors {400, 401, 403, 429, 500}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/variable/actions
+@required {file_key: str, group_by: str(variable/team)}
+@optional {cursor: str, start_date: str, end_date: str}
+@returns(200) {rows: any, next_page: bool, cursor: str}
+@errors {400, 401, 403, 429, 500}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/variable/usages
+@required {file_key: str, group_by: str(variable/file)}
+@optional {cursor: str}
+@returns(200) {rows: any, next_page: bool, cursor: str}
+@errors {400, 401, 403, 429, 500}
+
+@endgroup
+
+@end

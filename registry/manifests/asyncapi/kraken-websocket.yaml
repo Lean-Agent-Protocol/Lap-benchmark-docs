@@ -1,0 +1,33 @@
+spec_id: kraken-websocket
+tasks:
+  - id: t1
+    description: "Verify the exchange connection is alive using a health check, then register to receive live market data for one or more specific currency pairs"
+    target_endpoints:
+      - SUBSCRIBE / ping
+      - SUBSCRIBE / subscribe
+    expected_params:
+      SUBSCRIBE / ping:
+        - event
+        - reqid
+      SUBSCRIBE / subscribe:
+        - event
+        - reqid
+        - pair
+        - subscription
+  - id: t2
+    description: "Handle incoming platform-level health status broadcasts and process confirmation responses that indicate whether your data feed registrations were accepted, including the assigned feed identifiers"
+    target_endpoints:
+      - PUBLISH / systemStatus
+      - PUBLISH / subscriptionStatus
+    expected_params:
+      PUBLISH / systemStatus:
+        - event
+        - connectionID
+        - status
+        - version
+      PUBLISH / subscriptionStatus:
+        - event
+        - channelID
+        - channelName
+        - status
+        - pair

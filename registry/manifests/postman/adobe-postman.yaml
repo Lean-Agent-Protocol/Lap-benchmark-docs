@@ -1,0 +1,33 @@
+spec_id: adobe-postman
+tasks:
+  - id: t1
+    description: "Start a new data ingestion job on the experience platform, then attach a file payload to a specific dataset within that job so the data can be processed"
+    target_endpoints:
+      - POST /data/foundation/import/batches
+      - PUT /data/foundation/import/batches/:batchId/datasets/:datasetId/files/:filePath
+    expected_params:
+      POST /data/foundation/import/batches:
+        - body
+      PUT /data/foundation/import/batches/:batchId/datasets/:datasetId/files/:filePath:
+        - batchId
+        - datasetId
+        - filePath
+  - id: t2
+    description: "Push real-time event messages through an established streaming pipeline into the platform, then sample a portion of the ingested records to verify the data landed correctly and inspect its format"
+    target_endpoints:
+      - POST /data/foundation/import/collection/:CONNECTION_ID
+      - GET /data/foundation/import/batches/:batchId/datasets/:datasetId/preview
+    expected_params:
+      POST /data/foundation/import/collection/:CONNECTION_ID:
+        - CONNECTION_ID
+        - syncValidation
+        - synchronousValidation
+        - body
+      GET /data/foundation/import/batches/:batchId/datasets/:datasetId/preview:
+        - batchId
+        - datasetId
+        - format
+        - delimiter
+        - charset
+        - header
+        - nrow

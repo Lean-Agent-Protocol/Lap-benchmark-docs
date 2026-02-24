@@ -1,0 +1,862 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Reference Scenarios
+@base https://{{TenantHostname}}
+@auth Basic username:password
+@endpoints 173
+@hint download_for_search
+@toc sap(173)
+
+@endpoint GET /sap/byd/odata/cust/v1/khlead/
+@desc Get entity sets and CSRF-token
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khlead/LeadCollection
+@desc Create lead
+@required {Description: str, StartDate: str, EndDate: str, QualificationLevelCode: str, ClassificationCategoryCode: str, SourceCode: str, ProspectParty: map, EmployeeResponsibleMarketingParty: map, EmployeeResponsibleSalesParty: map}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khlead/HandOver
+@desc Hand over lead to sales
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khlead/Accept
+@desc Accept lead
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/khlead/LeadCollection('{{LeadObjectID}}')
+@desc Update lead reason for status
+@required {ObjectID: str, ResultReasonCode: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khlead/LeadCollection
+@desc Get lead
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khopportunity/OpportunityCollection
+@desc Create opportunity
+@required {Description: str, ClassificationCategoryCode: str, SourceCode: str, PriorityCode: str, SalesCycleCode: str, SalesPhaseCode: str, ChanceOfSuccessPercent: str, ExpectedRevenueAmount: str, ExpectedRevenueAmountCurrencyCode: str, SalesRevenueForecastRelevanceIndicator: bool, EmployeeResponsible: map, ProspectParty: map}
+@optional {x-csrf-token: str, ResultReasonCode: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khopportunity/AddReference
+@desc Add reference to lead
+@required {ObjectID: str, TypeCode: str, ID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khopportunity/Process
+@desc Process opportunity
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khopportunity/ItemCollection
+@desc Add opportunity item
+@required {ParentObjectID: str, ProductID: str, Quantity: str, UnitCode: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khopportunity/Win
+@desc Win opportunity
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/khopportunity/OpportunityCollection('{{OpportunityObjectID}}')
+@desc Update won opportunity
+@required {ObjectID: str, SalesPhaseCode: str, ExpectedRevenueAmount: str, ResultReasonCode: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khopportunity/OpportunityCollection
+@desc Get opportunity
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerquote/CustomerQuoteCollection
+@desc Create sales quote (empty)
+@required {ExternalReference: str}
+@optional {x-csrf-token: str, Accept-Language: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerquote/AddReferenceWithDataProvision
+@desc Add reference with data provisioning
+@required {ObjectID: str, BusinessTransactionDocumentKey_BusinessTransactionDocumentTypeCode: str, BusinessTransactionDocumentKey_BusinessTransactionDocumentID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerquote/CustomerQuoteCollection
+@desc Get sales quote
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/
+@desc Get entity sets and CSRF-token
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+@desc Create sales order (nested create)
+@required {ExternalReference: str, Name: str, DataOriginTypeCode: str, SalesUnitParty: map, BuyerParty: map, PricingTerms: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+@desc Get sales order and expand
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderRelease3
+@desc Release sales order
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/ReleaseAllItemsToExecution
+@desc Release sales order to execution
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/ItemCompleteExecution
+@desc Complete execution of sales order item 1
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/ItemCompleteExecution
+@desc Complete execution of sales order item 2
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CustomerInvoiceRequestCollection
+@desc Get customer invoice request
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CreateCustomerInvoices
+@desc Release customer invoice request
+@required {ObjectID: str, AutomaticReleaseAllowedIndicator: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CustomerInvoiceRequestCollection
+@desc Get customer invoice request and check result
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoice/CustomerInvoiceQueryByElements2
+@desc Query customer invoice
+@required {NumberOfRows: str, ItemBusinessTransactionDocumentReference_ID: str, ItemBusinessTransactionDocumentReference_TypeCode: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerinvoice/Release
+@desc Release customer invoice
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoice/CustomerInvoiceCollection('{{CustomerInvoiceObjectID}}')
+@desc Get customer invoice (key access) and check result
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/
+@desc Get entity sets and CSRF-token
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Create purchase order
+@required {IncotermsCode: str, IncotermsLocationName: str, CurrencyCode: str, Supplier: map, PurchasingUnit: map, PaymentTerms: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Get purchase order involved parties
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/khpurchaseorder/BuyerPartyCollection('{{BuyerPartyObjectID}}')
+@desc Update purchase order buyer party
+@required {ObjectID: str, ParentObjectID: str, PartyID: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/khpurchaseorder/BillToPartyCollection('{{BillToPartyObjectID}}')
+@desc Update purchase order bill-to party
+@required {ObjectID: str, ParentObjectID: str, PartyID: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/khpurchaseorder/EmployeeResponsibleCollection('{{EmployeeResponsibleObjectID}}')
+@desc Update purchase order employee responsible
+@required {ObjectID: str, ParentObjectID: str, PartyID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Get purchase order and expand
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khpurchaseorder/SubmitForOrder
+@desc Submit purchase order
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khpurchaseorder/ConfirmBySupplier
+@desc Confirm purchase order by supplier
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khgoodsandserviceacknowledgement/GoodsAndServiceAcknowledgementCollection
+@desc Create goods and services receipt
+@required {Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khgoodsandserviceacknowledgement/GoodsAndServiceAcknowledgementCollection
+@desc Get goods and services receipt
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khgoodsandserviceacknowledgement/SubmitForRelease
+@desc Post goods and services receipt
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/SupplierInvoiceCollection
+@desc Create supplier invoice
+@required {TypeCode: str, DataOriginTypeCode: str, ItemsGrossAmountIndicator: bool, InvoiceDescription: str, InvoiceDate: str, ExternalReference: map, SellerParty: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/CalculateGrossAmount
+@desc Calculate supplier invoice total gross amount
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/CalculateTaxAmount
+@desc Calculate supplier invoice total tax amount
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsupplierinvoice/SupplierInvoiceCollection('{{SupplierInvoiceObjectID}}')
+@desc Get supplier invoice exceptions (key access)
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/FinishDataEntryProcessing
+@desc Post supplier invoice
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsupplierinvoice/SupplierInvoiceCollection
+@desc Get supplier invoice
+@required {$format: str, $filter: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Get purchase order and check status
+@required {$format: str, $filter: str}
+@optional {$expand: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/tmservicerequest/
+@desc Get entity sets and CSRF-token
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/tmservicerequest/ServiceRequestCollection
+@desc Create service request
+@required {Name: str, IncidentServiceIssueCategory: [map], Buyer: map, ServiceSupportTeam: map, ReferenceObject: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/tmservicerequest/ServiceRequestCollection('{{ServiceRequestObjectID}}')
+@desc Get service request
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/tmservicerequest/ProcessorCollection('{{ServiceRequestProcessorObjectID}}')
+@desc Update service request
+@required {ObjectID: str, ParentObjectID: str, PartyID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/tmserviceorder/ServiceOrderCollection
+@desc Create empty service order
+@required {BuyerID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/tmserviceorder/AddReferenceWithDataProvision
+@desc Add reference with data provisioning
+@required {ObjectID: str, BusinessTransactionDocumentKey_BusinessTransactionDocumentID: str, BusinessTransactionDocumentKey_BusinessTransactionDocumentTypeCode: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/tmserviceorder/ServiceOrderCollection('{{ServiceOrderObjectID}}')
+@desc Get service order
+@required {$format: str, $expand: str}
+@optional {$select: str, x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/tmserviceorder/ServiceOrderCollection('{{ServiceOrderObjectID}}')
+@desc Update service order
+@required {BuyerID: str, ServicePriorityCode: str, ServiceOrderPeriodTerms: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/tmserviceorder/ItemCollection
+@desc Add service order item
+@required {ParentObjectID: str, ProductID: str, ItemScheduleLine: [map], ExecutionReleaseStatusCode: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/tmserviceorder/TextCollection
+@desc Add incident description
+@required {ParentObjectID: str, Text: str, TypeCode: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/tmserviceorder/Release
+@desc Release service order
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/tmserviceorder/ServiceOrderCollection
+@desc Get service order
+@required {$format: str, $expand: str, $filter: str}
+@optional {$select: str, x-csrf-token: str}
+
+@endpoint POST /sap/bc/srt/scs/sap/manageserviceconfirmationin_v1
+@desc Create Service Confirmation (SOAP 1.1)
+@auth Basic username:password
+
+@endpoint GET /sap/byd/odata/cust/v1/tmserviceconfirmation/ServiceConfirmationCollection
+@desc Get service confirmation
+@required {$format: str, $expand: str, $select: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/tmserviceconfirmation/ItemScheduleLineCollection('{{ServiceConfirmationItemScheduleLineObjectID}}')
+@desc Update fullfilled quantity
+@required {ObjectID: str, ParentObjectID: str, Quantity: str, unitCode: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/tmserviceconfirmation/ItemConfirmExecution
+@desc Confirm execution of service confirmation item
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/tmservicerequest/ServiceRequestComplete
+@desc Complete service request
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CustomerInvoiceRequestCollection
+@desc Get customer invoice request
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CreateCustomerInvoices
+@desc Release customer invoice request
+@required {ObjectID: str, AutomaticReleaseAllowedIndicator: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CustomerInvoiceRequestCollection
+@desc Get customer invoice request and check result
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoice/CustomerInvoiceQueryByElements2
+@desc Query customer invoice
+@required {NumberOfRows: str, ItemBusinessTransactionDocumentReference_ID: str, ItemBusinessTransactionDocumentReference_TypeCode: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerinvoice/Release
+@desc Release customer invoice
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoice/CustomerInvoiceCollection('{{CustomerInvoiceObjectID}}')
+@desc Get customer invoice, check result
+@required {$format: str}
+@optional {$expand: str, $filter: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/
+@desc Get entity sets and CSRF-token
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Create purchase order
+@required {IncotermsCode: str, IncotermsLocationName: str, CurrencyCode: str, Supplier: map, PurchasingUnit: map, PaymentTerms: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Get purchase order employee responsible, buyer and bill-to party
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/khpurchaseorder/BuyerPartyCollection('{{BuyerPartyObjectID}}')
+@desc Update purchase order buyer party
+@required {ObjectID: str, ParentObjectID: str, PartyID: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/khpurchaseorder/BillToPartyCollection('{{BillToPartyObjectID}}')
+@desc Update purchase order bill-to party
+@required {ObjectID: str, ParentObjectID: str, PartyID: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/khpurchaseorder/EmployeeResponsibleCollection('{{EmployeeResponsibleObjectID}}')
+@desc Update purchase order employee responsible
+@required {ObjectID: str, ParentObjectID: str, PartyID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Get purchase order and expand
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khpurchaseorder/SubmitForOrder
+@desc Submit purchase order
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khpurchaseorder/ConfirmBySupplier
+@desc Confirm purchase order by supplier
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khinbounddeliveryrequest/InboundDeliveryRequestQueryByElements
+@desc Query inbound delivery request
+@required {NumberOfRows: str, PurchaseOrderID: str}
+@optional {StartRow: str, ItemBusinessTransactionDocumentReference_TypeCode: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khinbounddeliveryrequest/InboundDeliveryRequestCollection('{{InboundDeliveryRequestObjectID}}')
+@desc Get inbound delivery request and expand (key access)
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khinbounddelivery/InboundDeliveryCollection
+@desc Create inbound delivery notification
+@required {ID: str, ProcessingTypeCode: str, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khinbounddelivery/InboundDeliveryCollection
+@desc Get inbound delivery notification
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khinbounddelivery/PostGoodsReceipt
+@desc Post goods receipt
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khconfirmedinbounddelivery/QueryByElements
+@desc Query confirmed inbound delivery
+@required {NumberOfRows: str, InboundDeliveryID: str}
+@optional {StartRow: str, ItemBusinessTransactionDocumentReference_TypeCode: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khconfirmedinbounddelivery/ConfirmedInboundDeliveryCollection('{{ConfirmedInboundDeliveryObjectID}}')
+@desc Get confirmed inbound delivery (key access)
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/SupplierInvoiceCollection
+@desc Create supplier invoice
+@required {TypeCode: str, DataOriginTypeCode: str, ItemsGrossAmountIndicator: bool, InvoiceDescription: str, InvoiceDate: str, ExternalReference: map, SellerParty: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/CalculateGrossAmount
+@desc Calculate supplier invoice total gross amount
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/CalculateTaxAmount
+@desc Calculate supplier invoice total tax amount
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsupplierinvoice/SupplierInvoiceCollection('{{SupplierInvoiceObjectID}}')
+@desc Get supplier invoice exceptions (key access)
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/FinishDataEntryProcessing
+@desc Post supplier invoice
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsupplierinvoice/SupplierInvoiceCollection
+@desc Get supplier invoice
+@required {$format: str, $filter: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Get purchase order and check status
+@required {$format: str, $filter: str}
+@optional {$expand: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/
+@desc Get entity sets and CSRF-token
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+@desc Create sales order
+@required {ExternalReference: str, Name: str, DataOriginTypeCode: str, DeliveryPriorityCode: str, SalesUnitParty: map, BuyerParty: map, PricingTerms: map, RequestedFulfillmentPeriod: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+@desc Get sales order
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/ItemCheckProductAvailabilityAndConfirm
+@desc Check product availability
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderRelease3
+@desc Release sales order
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/ReleaseAllItemsToExecution
+@desc Release all items to execution
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khoutbounddeliveryrequest/QueryByElements
+@desc Query delivery proposal
+@required {NumberOfRows: str, SalesOrderID: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khoutbounddeliveryrequest/OutboundDeliveryRequestCollection('{{OutboundDeliveryRequestObjectID}}')
+@desc Get delivery proposal (key access)
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khoutbounddeliveryrequest/ItemPostGoodsIssue
+@desc Post goods issue
+@required {ObjectID: str}
+@optional {TaskBasedIndicator: str, AllowSplitIndicator: str, AutoReleaseOutboundDelivery: str, SplitByDeliveryPriorityCodeIndicator: str, SplitByOrderIndicator: str, SplitByShippingOrPickupDateTimeIndicator: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khoutbounddelivery/QueryByElements
+@desc Query outbound delivery
+@required {NumberOfRows: str, OutboundDeliveryRequestID: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khoutbounddelivery/OutboundDeliveryCollection('{{OutboundDeliveryObjectID}}')
+@desc Get outbound delivery (key access)
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khoutbounddelivery/Release
+@desc Release outbound delivery
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CustomerInvoiceRequestCollection
+@desc Get customer invoice request
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CreateCustomerInvoices
+@desc Release customer invoice request
+@required {ObjectID: str, AutomaticReleaseAllowedIndicator: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CustomerInvoiceRequestCollection
+@desc Get customer invoice request and check result
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoice/CustomerInvoiceQueryByElements2
+@desc Query customer invoice
+@required {NumberOfRows: str, ItemBusinessTransactionDocumentReference_ID: str, ItemBusinessTransactionDocumentReference_TypeCode: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerinvoice/Release
+@desc Release customer invoice
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoice/CustomerInvoiceCollection('{{CustomerInvoiceObjectID}}')
+@desc Get customer invoice (key access) and check result
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+@desc Get sales order and check
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/
+@desc Get entity sets and CSRF-token
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+@desc Create sales order
+@required {ExternalReference: str, Name: str, DataOriginTypeCode: str, DeliveryPriorityCode: str, SalesUnitParty: map, BuyerParty: map, PricingTerms: map, RequestedFulfillmentPeriod: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+@desc Get sales order
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint PATCH /sap/byd/odata/cust/v1/khsalesorder/ItemVendorPartyCollection('{{Item1-VendorPartyObjectID}}')
+@desc Update sales order item vendor party
+@required {ObjectID: str, ParentObjectID: str, PartyID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderRelease3
+@desc Release sales order
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsalesorder/ReleaseAllItemsToExecution
+@desc Release all items to execution
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/QueryByElements
+@desc Query purchase order item
+@required {NumberOfRows: str, ItemSalesOrderID: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection('{{PurchaseOrderObjectID}}')
+@desc Get purchase order (key access)
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khinbounddeliveryrequest/InboundDeliveryRequestQueryByElements
+@desc Query inbound delivery request
+@required {NumberOfRows: str, PurchaseOrderID: str}
+@optional {StartRow: str, ItemBusinessTransactionDocumentReference_TypeCode: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khinbounddeliveryrequest/InboundDeliveryRequestCollection('{{InboundDeliveryRequestObjectID}}')
+@desc Get inbound delivery request (key access)
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khinbounddelivery/InboundDeliveryCollection
+@desc Create third-party delivery notification
+@required {ID: str, ProcessingTypeCode: str, SenderParty: map, ShipToParty: map, FreightForwarderParty: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khinbounddelivery/Release
+@desc Release third-party delivery notification
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khinbounddelivery/InboundDeliveryCollection
+@desc Get third-party delivery notification
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/SupplierInvoiceCollection
+@desc Create supplier invoice
+@required {TypeCode: str, DataOriginTypeCode: str, ItemsGrossAmountIndicator: bool, InvoiceDescription: str, ReceiptDate: str, InvoiceDate: str, ExternalReference: map, SellerParty: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/CalculateGrossAmount
+@desc Calculate supplier invoice total gross amount
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/CalculateTaxAmount
+@desc Calculate supplier invoice total tax amount
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khsupplierinvoice/FinishDataEntryProcessing
+@desc Post supplier invoice
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsupplierinvoice/SupplierInvoiceCollection
+@desc Get supplier invoice
+@required {$format: str, $filter: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Get purchase order and check status
+@required {$format: str, $filter: str}
+@optional {$expand: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khoutbounddelivery/QueryByElements
+@desc Query outbound delivery
+@required {NumberOfRows: str, SalesOrderID: str, SalesOrderItemID: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CustomerInvoiceRequestCollection
+@desc Get customer invoice request
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerinvoicerequest/CreateCustomerInvoices
+@desc Release customer invoice request
+@required {ObjectID: str, AutomaticReleaseAllowedIndicator: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoice/CustomerInvoiceQueryByElements2
+@desc Query customer invoice
+@required {NumberOfRows: str, ItemBusinessTransactionDocumentReference_ID: str, ItemBusinessTransactionDocumentReference_TypeCode: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcustomerinvoice/Release
+@desc Release customer invoice
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcustomerinvoice/CustomerInvoiceCollection('{{CustomerInvoiceObjectID}}')
+@desc Get customer invoice (key access) and check result
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection
+@desc Get sales order and check
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khproductionplanningorder/
+@desc Get entity sets and CSRF-token
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Create purchase order for production materials
+@required {IncotermsCode: str, IncotermsLocationName: str, CurrencyCode: str, Supplier: map, PurchasingUnit: map, PaymentTerms: map, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Get purchase order and expand
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khpurchaseorder/SubmitForOrder
+@desc Submit purchase order
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khpurchaseorder/ConfirmBySupplier
+@desc Confirm purchase order by supplier
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khinbounddeliveryrequest/InboundDeliveryRequestQueryByElements
+@desc Query inbound delivery request
+@required {NumberOfRows: str, PurchaseOrderID: str}
+@optional {StartRow: str, ItemBusinessTransactionDocumentReference_TypeCode: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khinbounddeliveryrequest/InboundDeliveryRequestCollection('{{InboundDeliveryRequestObjectID}}')
+@desc Get inbound delivery request and expand (key access)
+@required {$format: str, $expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khinbounddelivery/InboundDeliveryCollection
+@desc Create inbound delivery notification
+@required {ID: str, ProcessingTypeCode: str, Item: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khinbounddelivery/PostGoodsReceipt
+@desc Post goods receipt
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khpurchaseorder/PurchaseOrderCollection
+@desc Get purchase order and check status
+@required {$format: str, $filter: str}
+@optional {$expand: str, x-csrf-token: str}
+
+@endpoint POST /sap/bc/srt/scs/sap/manageproductionproposalin
+@desc Create production proposal (SOAP 1.1)
+@auth Basic username:password
+@errors {401: Create production proposal (Soap 1.1)}
+
+@endpoint GET /sap/byd/odata/cust/v1/khproductionplanningorder/ProductionPlanningOrderCollection
+@desc Get production proposal
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khproductionplanningorder/Release
+@desc Release production proposal
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/bc/srt/scs/sap/queryproductionorderin
+@desc Query production order (SOAP 1.1)
+@auth Basic username:password
+@errors {401: Create production proposal (Soap 1.1)}
+
+@endpoint GET /sap/byd/odata/cust/v1/khproductionorder/ProductionOrderCollection
+@desc Get production order
+@required {$format: str, $expand: str, $filter: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khproductionorder/Release
+@desc Release production order
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/bc/srt/scs/sap/queryproductionlotisiin
+@desc Query production lot (SOAP 1.1)
+@auth Basic username:password
+@errors {401: Create production proposal (Soap 1.1)}
+
+@endpoint POST /sap/bc/srt/scs/sap/manageproductionlotsin
+@desc Assign production task responsible (SOAP 1.1)
+@auth Basic username:password
+@errors {401: Create production proposal (Soap 1.1)}
+
+@endpoint POST /sap/bc/srt/scs/sap/manageproductionlotsin
+@desc Confirm production reporting point (SOAP 1.1)
+@auth Basic username:password
+@errors {401: Create production proposal (Soap 1.1)}
+
+@endpoint POST /sap/bc/srt/scs/sap/manageproductionlotsin
+@desc Finish production task (SOAP 1.1)
+@auth Basic username:password
+@errors {401: Create production proposal (Soap 1.1)}
+
+@endpoint GET /sap/byd/odata/cust/v1/khhousebankstatement/HouseBankStatementCollection
+@desc Get previous bank statement
+@required {$filter: str # ValidityYear eq '{{FiscalYear}}' and HouseBankAccountID eq '{{HouseBankAccountID}}', $format: str # HouseBankAccountID eq '{{HouseBankAccountID}}' and LifeCycleStatusCode eq '5', $orderby: str, $top: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/fin_receivablesar_analytics.svc/RPFINGLAU08_Q0002QueryResults
+@desc Get due items by posting date (report)
+@required {$inlinecount: str, $top: str, $format: str, $select: str, $filter: str # PARA_COMPANY eq '{{CompanyID}}' and PARA_SETOFBKS eq '{{SetOfBooks}}' and PARA_CUSTOMER eq '{{CustomerID}}' and PARA_IM_SUB_TYPE_C eq '1' and PARA_KEYDATE eq datetime'{{OpenItemsKeyDate}}' and COED_PARTNER_C eq '{{ExternalReferencePrefix}}*', $orderby: str # "$orderby = CSP_CDT_F_DATE desc" does not work}
+
+@endpoint GET /sap/byd/odata/cust/v1/khhousebankaccount/HouseBankAccountQueryByElements
+@desc Query house bank account
+@required {NumberOfRows: str, CompanyID: str, LifeCycleStatusCode: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khhousebankaccount/HouseBankAccountCollection('{{HouseBankAccountObjectID}}')
+@desc Get house bank account
+@required {$expand: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcompanypaymentfileregister/QueryByCompany
+@desc Query company payment file register
+@required {NumberOfRows: str, CompanyID: str}
+@optional {StartRow: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcompanypaymentfileregister/CompanyPaymentFileRegisterCollection('{{CompanyPaymentFileRegisterObjectID}}')
+@desc Get company payment file register
+@required {$expand: str}
+@optional {$select: str, x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcompanypaymentfileregister/IncomingFileCollection
+@desc Create bank statement as incoming file
+@required {ParentObjectID: str, HouseBankUUID: str, ContentTypeCode: str, AttachmentFolder: [map]}
+@optional {x-csrf-token: str}
+
+@endpoint POST /sap/byd/odata/cust/v1/khcompanypaymentfileregister/StartPaymentUpdate
+@desc Start payment update
+@required {ObjectID: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khcompanypaymentfileregister/IncomingFileCollection('{{IncomingFileObjectID}}')
+@desc Get incoming file
+@required {$expand: str}
+@optional {$select: str, $filter: str, x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khhousebankstatement/HouseBankStatementCollection
+@desc Get bank statement
+@required {$filter: str # ValidityYear eq '{{FiscalYear}}' and HouseBankAccountID eq '{{HouseBankAccountID}}', $format: str # HouseBankAccountID eq '{{HouseBankAccountID}}' and LifeCycleStatusCode eq '5', $orderby: str, $top: str}
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khhousebankstatement/$metadata
+@desc Get metadata
+@optional {x-csrf-token: str}
+
+@endpoint GET /sap/byd/odata/fin_receivablesar_analytics.svc/$metadata
+@desc Get report metadata
+@required {entityset: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderItemProcessingTypeCodeCollection
+@desc Get code list - item processing types (Param: sap-language)
+@required {$format: str, sap-language: str}
+
+@endpoint GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderItemProcessingTypeCodeCollection
+@desc Get code list - item processing types (Header: Accept-Language)
+@required {$format: str}
+@optional {sap-language: str, Accept-Language: str}
+
+@end

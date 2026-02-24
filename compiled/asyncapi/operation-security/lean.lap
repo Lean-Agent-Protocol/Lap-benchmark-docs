@@ -1,0 +1,12 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Notifications
+@version 1.0.0
+@endpoints 1
+@toc AUTHORIZATION_REVOCATION(1)
+
+@endpoint PUB AUTHORIZATION_REVOCATION
+@optional {metadata: map, notification: map, header:X-SIGNATURE: str, header:Content-Type: str}
+@returns(PUB) {metadata: map{topic: str, schemaVersion: str, deprecated: bool}, notification: map{notificationId: str, eventDate: str, publishDate: str, publishAttemptCount: int, data: map{username: str, userId: str, eiasToken: str, revokeReason: str, revocationDate: str}}}
+
+@end

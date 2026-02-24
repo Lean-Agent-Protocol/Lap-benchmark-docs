@@ -1,0 +1,31 @@
+spec_id: artsy-gql
+tasks:
+  - id: t1
+    description: "Pull up a particular creator's profile from the art platform, then browse their past sales history at auction houses with pagination"
+    target_endpoints:
+      - QUERY artist
+      - QUERY auctionResultsByArtistsConnection
+    expected_params:
+      QUERY artist:
+        - id
+      QUERY auctionResultsByArtistsConnection:
+        - after
+        - artistIds
+        - before
+        - first
+        - last
+  - id: t2
+    description: "Browse available pieces in the gallery using filters like price range, availability, and creator, then place a purchase order for a chosen piece"
+    target_endpoints:
+      - QUERY artworksConnection
+      - MUTATION commerceCreateOrderWithArtwork
+    expected_params:
+      QUERY artworksConnection:
+        - after
+        - artistID
+        - first
+        - forSale
+        - priceRange
+        - sort
+      MUTATION commerceCreateOrderWithArtwork:
+        - input

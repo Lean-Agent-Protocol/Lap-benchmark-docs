@@ -1,0 +1,28 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Website Backend
+@version 1.0.0
+@endpoints 4
+@toc comment(2), like(1), update(1)
+
+@group comment
+@endpoint PUB comment/liked
+
+@endgroup
+
+@group like
+@endpoint SUB like/comment
+
+@endgroup
+
+@group comment
+@endpoint SUB comment/{commentId}/changed
+
+@endgroup
+
+@group update
+@endpoint PUB update/comment/likes
+
+@endgroup
+
+@end

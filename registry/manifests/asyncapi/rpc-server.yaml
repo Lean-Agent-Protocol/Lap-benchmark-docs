@@ -1,0 +1,26 @@
+spec_id: rpc-server
+tasks:
+  - id: t1
+    description: "Act as the server side of a remote computation service: accept an incoming request containing a list of numbers to add up, perform the calculation, and return the result to whichever client sent the request"
+    target_endpoints:
+      - SUBSCRIBE rpc_queue sum
+      - PUBLISH {queue} sendSumResult
+    expected_params:
+      SUBSCRIBE rpc_queue sum:
+        - numbers
+        - correlation_id
+      PUBLISH {queue} sendSumResult:
+        - result
+        - correlation_id
+  - id: t2
+    description: "Act as the client: send a list of numbers to a remote computation service for summation, then wait for and consume the calculated result that arrives on a dynamically assigned response destination"
+    target_endpoints:
+      - PUBLISH rpc_queue sum
+      - SUBSCRIBE {queue} sendSumResult
+    expected_params:
+      PUBLISH rpc_queue sum:
+        - numbers
+        - correlation_id
+      SUBSCRIBE {queue} sendSumResult:
+        - result
+        - correlation_id

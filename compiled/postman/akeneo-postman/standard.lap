@@ -1,0 +1,542 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Official Akeneo PIM REST API Serenity
+@endpoints 135
+@hint download_for_search
+@toc {{url}}(135)
+
+@endpoint GET /{{url}}/api/rest/v1/catalogs/6c046434-4501-4f85-94b7-d0194b3d9fb1
+@desc catalog
+
+@endpoint GET /{{url}}/api/rest/v1/catalogs
+@desc catalogs
+
+@endpoint POST /{{url}}/api/rest/v1/catalogs
+@desc catalog
+@required {name: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/catalogs/6c046434-4501-4f85-94b7-d0194b3d9fb1
+@desc catalog
+@required {name: str}
+
+@endpoint DELETE /{{url}}/api/rest/v1/catalogs/6c046434-4501-4f85-94b7-d0194b3d9fb1
+@desc catalog
+
+@endpoint GET /{{url}}/api/rest/v1/catalogs/6c046434-4501-4f85-94b7-d0194b3d9fb1/product-uuids
+@desc catalog product uuids
+
+@endpoint GET /{{url}}/api/rest/v1/association-types/upsell
+@desc association type (>= v2)
+
+@endpoint GET /{{url}}/api/rest/v1/association-types
+@desc association types (>= v2)
+
+@endpoint POST /{{url}}/api/rest/v1/association-types
+@desc association type (>= v2)
+@required {code: str, labels: map, is_quantified: bool, is_two_way: bool}
+
+@endpoint PATCH /{{url}}/api/rest/v1/association-types/upsell
+@desc association type (>= v2)
+@required {code: str, labels: map, is_quantified: bool, is_two_way: bool}
+
+@endpoint PATCH /{{url}}/api/rest/v1/association-types
+@desc association types (>= v2)
+
+@endpoint GET /{{url}}/api/rest/v1/attributes/auto_exposure
+@desc attribute
+@optional {with_table_select_options: str # (boolean ) • Return the options of 'select' column types (of a table attribute) in the response. (Only available since the 7.0 version)}
+
+@endpoint GET /{{url}}/api/rest/v1/attributes
+@desc attributes
+@optional {search: str # Get the attributes that have been updated since July 4th, 2020 at 10 am (UTC), you can use the following URL., search: str # Get the attributes that code is in the given list, search: str # Get the attributes of types pim_catalog_simpleselect and pim_catalog_multiselect, you can use the following URL., search: str # Get the main identifier attribute., page: str # (integer , 1 by default ) • Number of the page to retrieve when using the `page` pagination method type., limit: str # (integer , 10 by default )  • Number of results by page., with_count: str # (boolean ) • Return the count of items in the response. Be carefull with that, on a big catalog, it can decrease performance in a significative way., with_table_select_options: str # (boolean ) • Return the options of 'select' column types (of a table attribute) in the response. (Only available since the 7.0 version)}
+
+@endpoint POST /{{url}}/api/rest/v1/attributes
+@desc attribute
+@required {code: str, type: str, group: str, unique: bool, useable_as_grid_filter: bool, sort_order: int, localizable: bool, scopable: bool, labels: map}
+@optional {allowed_extensions: [any], metric_family: any, default_metric_unit: any, reference_data_name: any, available_locales: [any], max_characters: any, validation_rule: any, validation_regexp: any, wysiwyg_enabled: any, number_min: any, number_max: any, decimals_allowed: any, negative_allowed: any, date_min: any, date_max: any, max_file_size: any, minimum_input_length: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attributes/auto_exposure
+@desc attribute
+@required {code: str, type: str, group: str, unique: bool, useable_as_grid_filter: bool, sort_order: int, localizable: bool, scopable: bool, labels: map}
+@optional {allowed_extensions: [any], metric_family: any, default_metric_unit: any, reference_data_name: any, available_locales: [any], max_characters: any, validation_rule: any, validation_regexp: any, wysiwyg_enabled: any, number_min: any, number_max: any, decimals_allowed: any, negative_allowed: any, date_min: any, date_max: any, max_file_size: any, minimum_input_length: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attributes
+@desc attributes
+
+@endpoint GET /{{url}}/api/rest/v1/attributes/main_color/options/white
+@desc attribute option
+
+@endpoint GET /{{url}}/api/rest/v1/attributes/main_color/options
+@desc attribute options
+
+@endpoint POST /{{url}}/api/rest/v1/attributes/main_color/options
+@desc attribute option
+@required {code: str, attribute: str, sort_order: int, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attributes/main_color/options/white
+@desc attribute option
+@required {code: str, attribute: str, sort_order: int, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attributes/main_color/options
+@desc attribute options (2.1 only)
+
+@endpoint GET /{{url}}/api/rest/v1/attribute-groups/technical
+@desc attribute group (>= v2)
+
+@endpoint GET /{{url}}/api/rest/v1/attribute-groups
+@desc attribute groups (>= v2)
+@optional {search: str # Only returns attribute groups that are in the list., search: str # Only returns attribute groups that were updated after the given day and hour., page: str # (integer , 1 by default ) • Number of the page to retrieve when using the `page` pagination method type. Should never be set manually., limit: str # (integer , 10 by default )  • Number of results by page., with_count: str # (boolean ) • Return the count of items in the response. Be carefull with that, on a big catalog, it can decrease performance in a significative way.}
+
+@endpoint POST /{{url}}/api/rest/v1/attribute-groups
+@desc attribute group (>= v2)
+@required {code: str, sort_order: int, attributes: [str], labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attribute-groups/technical
+@desc attribute group (>= v2)
+@required {code: str, sort_order: int, attributes: [str], labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attribute-groups
+@desc attribute groups (>= v2)
+
+@endpoint GET /{{url}}/api/rest/v1/categories/master
+@desc category
+@optional {with_position: str # Return information about category position into its category tree (Only available since the 7.0 version)}
+
+@endpoint GET /{{url}}/api/rest/v1/categories
+@desc categories
+@optional {search: str # Get only root categories, search: str # Get the child categories of the parent category categoryA, you can use the following URL., search: str # Get only categories that are in the list, search: str # Get the categories that have been updated since May 17th, 2021 at 10 am (UTC), you can use the following URL., page: str # (integer , 1 by default ) • Number of the page to retrieve when using the `page` pagination method type., limit: str # (integer , 10 by default )  • Number of results by page., with_count: str # (boolean ) • Return the count of items in the response. Be carefull with that, on a big catalog, it can decrease performance in a significative way., with_position: str # (boolean ) • Return information about category position into its category tree (Only available since the 7.0 version)}
+
+@endpoint POST /{{url}}/api/rest/v1/categories
+@desc category
+@required {code: str, parent: str, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/categories/audio_video
+@desc category
+@required {code: str, parent: str, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/categories
+@desc categories
+
+@endpoint GET /{{url}}/api/rest/v1/channels/ecommerce
+@desc channel
+
+@endpoint GET /{{url}}/api/rest/v1/channels
+@desc channels
+
+@endpoint POST /{{url}}/api/rest/v1/channels
+@desc channel (2.x only)
+@required {code: str, currencies: [str], locales: [str], category_tree: str, conversion_units: map, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/channels/my_new_channel_3
+@desc channel (2.x only)
+@required {code: str, currencies: [str], locales: [str], category_tree: str, conversion_units: map, labels: map}
+@optional {yo: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/channels
+@desc channels (2.x only)
+
+@endpoint GET /{{url}}/api/rest/v1/currencies/USD
+@desc currency (>= v2)
+
+@endpoint GET /{{url}}/api/rest/v1/currencies
+@desc currencies (>= v2)
+@optional {search: str # Get enabled currencies}
+
+@endpoint GET /{{url}}/api/rest/v1/families/camcorders
+@desc family
+
+@endpoint GET /{{url}}/api/rest/v1/families
+@desc families
+@optional {search: str # Only returns families that are in the list., search: str # Only returns families that were updated after the given day and hour., search: str # When true, only returns families with at least one product (true) or families with no products (false)., page: str # (integer , 1 by default ) • Number of the page to retrieve when using the `page` pagination method type. Should never be set manually., limit: str # (integer , 10 by default )  • Number of results by page., with_count: str # (boolean ) • Return the count of items in the response. Be carefull with that, on a big catalog, it can decrease performance in a significative way.}
+
+@endpoint POST /{{url}}/api/rest/v1/families
+@desc family
+@required {code: str, attributes: [str], attribute_as_label: str, attribute_as_image: str, attribute_requirements: map, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/families/camcorders
+@desc family
+@required {code: str, attribute_as_label: str, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/families
+@desc families
+
+@endpoint DELETE /{{url}}/api/rest/v1/families/camcorders
+@desc family
+
+@endpoint GET /{{url}}/api/rest/v1/families/clothing/variants/clothing_colorsize
+@desc family variant (>= v2)
+
+@endpoint GET /{{url}}/api/rest/v1/families/clothing/variants
+@desc family variants (>= v2)
+
+@endpoint POST /{{url}}/api/rest/v1/families/clothing/variants
+@desc family variant (>= v2)
+@required {code: str, labels: map, variant_attribute_sets: [map]}
+
+@endpoint PATCH /{{url}}/api/rest/v1/families/clothing/variants/clothing_colorsize
+@desc family variant (>= v2)
+@required {code: str, labels: map, variant_attribute_sets: [map]}
+
+@endpoint PATCH /{{url}}/api/rest/v1/families/clothing/variants
+@desc family variants (>= v2)
+
+@endpoint GET /{{url}}/api/rest/v1/locales/en_US
+@desc locale
+
+@endpoint GET /{{url}}/api/rest/v1/locales
+@desc locales
+@optional {search: str # Get enabled locales, page: str # (integer , 1 by default ) • Number of the page to retrieve when using the `page` pagination method type, limit: str # (integer , 10 by default ) • Number of results by page, see Pagination section, with_count: str # (boolean ) • Return the count of items in the response. Be carefull with that, on a big catalog, it can decrease performance in a significative way}
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand
+@desc reference entity
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities
+@desc reference entities
+@optional {search_after: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand
+@desc reference entity
+@required {code: str, labels: map, image: str}
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/attributes/description
+@desc reference entity attribute
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/attributes
+@desc reference entity attributes
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand/attributes/salesarea
+@desc reference entity attribute
+@required {code: str, labels: map, type: str, value_per_locale: bool, value_per_channel: bool, is_required_for_completeness: bool}
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/attributes/nationality/options/french
+@desc reference entity attribute option
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/attributes/nationality/options
+@desc reference entity attribute options
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand/attributes/salesarea/options/usa
+@desc reference entity attribute option
+@required {code: str, labels: map}
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/records/kartell
+@desc reference entity record
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/records
+@desc reference entity records
+@optional {search: str, search: str, search: str, locales: str, channel: str, search_after: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand/records/kartell
+@desc reference entity record
+@required {code: str, values: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand/records
+@desc reference entity records
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities-media-files/c/f/9/e/cf9e5fad2fe33e326b6def8f4e433537eb7f6633_8z2q6xwlya4_test.jpg
+@desc reference entity media file
+
+@endpoint POST /{{url}}/api/rest/v1/reference-entities-media-files
+@desc reference entity media file
+@required {file: file}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures
+@desc asset family
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families
+@desc asset families
+@optional {search_after: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures
+@desc asset family
+@required {code: str, labels: map}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/warning_mention
+@desc asset attribute
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/attributes
+@desc asset attributes
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/warning_mention
+@desc asset attribute
+@required {code: str, labels: map, type: str, value_per_locale: bool, value_per_channel: bool, is_required_for_completeness: bool}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/model_is_wearing_size/options/small
+@desc asset attribute option
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/model_is_wearing_size/options
+@desc asset attribute options
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/model_is_wearing_size/options/small
+@desc asset attribute option
+@required {code: str, labels: map}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-media-files/c/f/9/e/cf9e5fad2fe33e326b6def8f4e433537eb7f6633_8z2q6xwlya4_test.jpg
+@desc asset media file
+
+@endpoint POST /{{url}}/api/rest/v1/asset-media-files
+@desc asset media file
+@required {file: file}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/assets/allie_jean_model_picture
+@desc asset
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/atmosphere/assets
+@desc assets
+@optional {search: str, search: str, channel: str, locales: str, search_after: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures/assets/allie_jean_model_picture
+@desc asset
+@required {code: str, values: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures/assets
+@desc assets
+
+@endpoint DELETE /{{url}}/api/rest/v1/asset-families/model_pictures/assets/allie_jean_model_picture
+@desc asset
+
+@endpoint GET /{{url}}/api/rest/v1/measure-families/area
+@desc measure family (>= v2 and deprecated > v4.0)
+
+@endpoint GET /{{url}}/api/rest/v1/measure-families
+@desc measure families (>= v2 and deprecated > v4.0)
+
+@endpoint GET /{{url}}/api/rest/v1/measurement-families
+@desc measurement families (Only available since the 7.0 version)
+
+@endpoint PATCH /{{url}}/api/rest/v1/measurement-families
+@desc measurement families (Only available since the 7.0 version)
+
+@endpoint GET /{{url}}/api/rest/v1/media-files/d/d/b/6/ddb6ad393f81503b6be7380785e3b32bbd28cd08_test.png
+@desc media
+
+@endpoint GET /{{url}}/api/rest/v1/media-files
+@desc medias
+
+@endpoint POST /{{url}}/api/rest/v1/media-files
+@desc media
+@required {product: str, file: file}
+
+@endpoint GET /{{url}}/api/rest/v1/products/AKNSTK
+@desc product
+@optional {with_attribute_options: str # (boolean ) • Return labels of attribute options in the response. (Only available since the 5.0 version)., with_quality_scores: str # (boolean ) • Return product quality scores in the response. (Only available since the 5.0 version)., with_completenesses: str # (boolean ) • Return product completenesses in the response. (Only available since the 7.0 version)., with_asset_share_links: str # (boolean ) • Return asset collection share link urls in the response. (Only available in the SaaS version)., with_workflow_execution_statuses: str # Return an array of workflow_execution_statuses directly associated with the requested entity (product or product model) in the response.
+Statuses are level-specific and are not inherited from parent models. For a complete overview of a variant product, you must query the variant itself and its parent model(s) in separate requests.
+Each workflow object contains:
+- The overall execution status (e.g., in_progress, completed).
+- A list of all associated tasks.}
+
+@endpoint GET /{{url}}/api/rest/v1/products
+@desc products
+@optional {attributes: str # Get products with only product values regarding the description and name attributes., locales: str # Get products with only product values regarding the en_US and fr_FR locales., scope: str # Get products from the tree linked to the ecommerce channel with only product values regarding the ecommerce channel (+ the product values of the non scopable attributes)., search: str # Get products that are purple, purple being an option of the simple select main_color attribute and this attribute being neither localizable nor scopable., search: str # Get products having a description begining with Amazing on the en_US locale, the short_description attribute being localizable but not scopable., search: str # Get products that have a release date due after the 4th of July 2016 for the ecommerce channel, the release_date attribute being scopable but not localizable., search: str # Get products that have a name that contains with shirt on the en_US locale for the mobile channel, the name attribute being both localizable and scopable., search: str # Get you the products with description starting with Amazing on the en_US locale for the ecommerce channel, and of purple color., search: str # Get you the products with not empty description on the en_US locale and empty description on the fr_FR locale for the ecommerce channel., search: str # If you need to filter on several attributes on the same locale, you can use the search_locale query parameter, to avoid repeating yourself for each attribute. This parameter expect an existing locale code., search: str # If you need to filter on several attributes on the same scope, you can use the search_scope query parameter, to avoid repeating yourself for each attribute. This parameter expect an existing scope code., search: str # Get the products of the winter_collection category., search: str # Get the disabled products., search: str # Get the products that are 100% complete for the ecommerce channel., search: str # Get the products that are 100% complete on both the en_US and fr_FR locales for the ecommerce channel., search: str # Get the products that are in the promotion group., search: str # Get the products that are not in the camcorders and digital_cameras family., search: str # Get the products that were created on the 4th of July 2016 at 10am., search: str # Get the products that were updated during the last 4 days., search: str # Get all the variant products of the apollon root product model without having to filter on all its sub-product models., search: str # Get all the variant products of the sub product models with the codes tshirt_armor_blue and tshirt_armor_red., search: str # Get all the variant products., search: str # Get all the simple products., search: str # Get the products with a "D" for the ecommerce channel and en_US locale., search: str # Get the products with an "A" or "B" for the mobile channel and en_GB locale, page: str # (integer , 1 by default ) • Number of the page to retrieve when using the `page` pagination method type., with_count: str # (boolean ) • Return the count of items in the response. Be carefull with that, on a big catalog, it can decrease performance in a significative way., pagination_type: str # (string , page by default )  • Pagination method type., limit: str # (integer , 10 by default )  • Number of results by page., with_quality_scores: str # (boolean ) • Return product quality scores in the response. (Only available since the 5.0 version)., search_after: str # (string , cursor to the first page by default ) • Cursor when using the `search_after` pagination method type. Should never be set manually., with_attribute_options: str # (boolean ) • Return labels of attribute options in the response. (Only available since the 5.0 version)., with_completenesses: str # (boolean ) • Return product completenesses in the response. (Only available since the 7.0 version)., with_asset_share_links: str # (boolean ) • Return asset collection share link urls in the response. (Only available in the SaaS version)., with_workflow_execution_statuses: str # Return an array of workflow_execution_statuses directly associated with the requested entity (product or product model) in the response.
+Statuses are level-specific and are not inherited from parent models. For a complete overview of a variant product, you must query the variant itself and its parent model(s) in separate requests.
+Each workflow object contains:
+- The overall execution status (e.g., in_progress, completed).
+- A list of all associated tasks., Cookie: str}
+
+@endpoint POST /{{url}}/api/rest/v1/products
+@desc product
+@required {identifier: str, family: str, categories: [str], enabled: bool, values: map, created: str, updated: str, associations: map}
+@optional {groups: [any], parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products/AKNSTK
+@desc product
+@required {identifier: str, family: str, categories: [str], enabled: bool, values: map, created: str, updated: str, associations: map}
+@optional {groups: [any], parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products
+@desc products
+
+@endpoint DELETE /{{url}}/api/rest/v1/products/AKNTS_BPXS
+@desc product
+
+@endpoint GET /{{url}}/api/rest/v1/products/AKNTS_BPS/draft
+@desc draft (2.x and EE only)
+
+@endpoint POST /{{url}}/api/rest/v1/products/AKNTS_BPS/proposal
+@desc proposal (2.x and EE only)
+
+@endpoint GET /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312
+@desc product
+@optional {with_attribute_options: str # (boolean ) • Return labels of attribute options in the response., with_quality_scores: str # (boolean ) • Return product quality scores in the response., with_completenesses: str # (boolean ) • Return product completenesses in the response., with_asset_share_links: str # (boolean ) • Return asset collection share link urls in the response. (Only available in the SaaS version)., with_workflow_execution_statuses: str # Return an array of workflow_execution_statuses directly associated with the requested entity (product or product model) in the response.
+Statuses are level-specific and are not inherited from parent models. For a complete overview of a variant product, you must query the variant itself and its parent model(s) in separate requests.
+Each workflow object contains:
+- The overall execution status (e.g., in_progress, completed).
+- A list of all associated tasks.}
+
+@endpoint GET /{{url}}/api/rest/v1/products-uuid
+@desc products
+@optional {attributes: str # Get products with only product values regarding the description and name attributes., locales: str # Get products with only product values regarding the en_US and fr_FR locales., scope: str # Get products from the tree linked to the ecommerce channel with only product values regarding the ecommerce channel (+ the product values of the non scopable attributes)., search: str # Get products that are purple, purple being an option of the simple select main_color attribute and this attribute being neither localizable nor scopable., search: str # Get products having a description begining with Amazing on the en_US locale, the short_description attribute being localizable but not scopable., search: str # Get products that have a release date due after the 4th of July 2016 for the ecommerce channel, the release_date attribute being scopable but not localizable., search: str # Get products that have a name that contains with shirt on the en_US locale for the mobile channel, the name attribute being both localizable and scopable., search: str # Get you the products with description starting with Amazing on the en_US locale for the ecommerce channel, and of purple color., search: str # Get you the products with not empty description on the en_US locale and empty description on the fr_FR locale for the ecommerce channel., search: str # If you need to filter on several attributes on the same locale, you can use the search_locale query parameter, to avoid repeating yourself for each attribute. This parameter expect an existing locale code., search: str # If you need to filter on several attributes on the same scope, you can use the search_scope query parameter, to avoid repeating yourself for each attribute. This parameter expect an existing scope code., search: str # Get the products of the winter_collection category., search: str # Get the disabled products., search: str # Get the products that are 100% complete for the ecommerce channel., search: str # Get the products that are 100% complete on both the en_US and fr_FR locales for the ecommerce channel., search: str # Get the products that are in the promotion group., search: str # Get the products that are not in the camcorders and digital_cameras family., search: str # Get the products that were created on the 4th of July 2016 at 10am., search: str # Get the products that were updated during the last 4 days., search: str # Get all the variant products of the apollon root product model without having to filter on all its sub-product models., search: str # Get all the variant products of the sub product models with the codes tshirt_armor_blue and tshirt_armor_red., search: str # Get all the variant products., search: str # Get all the simple products., search: str # Get the products with a "D" for the ecommerce channel and en_US locale., search: str # Get the products with an "A" or "B" for the mobile channel and en_GB locale, page: str # (integer , 1 by default ) • Number of the page to retrieve when using the `page` pagination method type., with_count: str # (boolean ) • Return the count of items in the response. Be carefull with that, on a big catalog, it can decrease performance in a significative way., pagination_type: str # (string , page by default )  • Pagination method type., limit: str # (integer , 10 by default )  • Number of results by page., with_quality_scores: str # (boolean ) • Return product quality scores in the response., search_after: str # (string , cursor to the first page by default ) • Cursor when using the `search_after` pagination method type. Should never be set manually., with_attribute_options: str # (boolean ) • Return labels of attribute options in the response., with_completenesses: str # (boolean ) • Return product completenesses in the response. (Only available since the 7.0 version)., with_asset_share_links: str # (boolean ) • Return asset collection share link urls in the response. (Only available in the SaaS version)., with_workflow_execution_statuses: str # Return an array of workflow_execution_statuses directly associated with the requested entity (product or product model) in the response.
+Statuses are level-specific and are not inherited from parent models. For a complete overview of a variant product, you must query the variant itself and its parent model(s) in separate requests.
+Each workflow object contains:
+- The overall execution status (e.g., in_progress, completed).
+- A list of all associated tasks., Cookie: str}
+
+@endpoint POST /{{url}}/api/rest/v1/products-uuid
+@desc product
+@required {family: str, categories: [str], enabled: bool, values: map, created: str, updated: str, associations: map}
+@optional {groups: [any], parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312
+@desc product
+@required {family: str, categories: [str], enabled: bool, values: map, created: str, updated: str, associations: map}
+@optional {groups: [any], parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products-uuid
+@desc products
+
+@endpoint DELETE /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312
+@desc product
+
+@endpoint GET /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312/draft
+@desc draft (2.x and EE only)
+
+@endpoint POST /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312/proposal
+@desc proposal (2.x and EE only)
+
+@endpoint GET /{{url}}/api/rest/v1/product-models/amor
+@desc product model (>= v2)
+@optional {with_asset_share_links: str, with_quality_scores: str # (boolean ) • Return product model quality scores in the response. (Only available since the 7.0 version)., with_workflow_execution_statuses: str # Return an array of workflow_execution_statuses directly associated with the requested entity (product or product model) in the response.
+Statuses are level-specific and are not inherited from parent models. For a complete overview of a variant product, you must query the variant itself and its parent model(s) in separate requests.
+Each workflow object contains:
+- The overall execution status (e.g., in_progress, completed).
+- A list of all associated tasks.}
+
+@endpoint GET /{{url}}/api/rest/v1/product-models
+@desc product models (>= v2)
+@optional {search: str # Get the product models of the winter_collection category, search: str # Get the product models that are 100% complete for the ecommerce channel on fr_FR locale, you can use the following URL., search: str # Get the product models that are not in the camcorders and digital_cameras family, you can use the following URL, search: str # Get the product models that were created on the 4th of July 2016 at 10am, you can use the following URL, scope: str # (string ) • Filter product values to return scopable attributes for the given channel as well as the non localizable/non scopable attributes., locales: str # (string ) • Filter product values to return localizable attributes for the given locales as well as the non localizable/non scopable attributes., attributes: str # (string ) • Filter product values to only return those concerning the given attributes., pagination_type: str # (string , page by default )  • Pagination method type., page: str # (integer , 1 by default ) • Number of the page to retrieve when using the `page` pagination method type. Should never be set manually., search_after: str # (string , cursor to the first page by default ) • Cursor when using the `search_after` pagination method type. Should never be set manually., limit: str # (integer , 10 by default )  • Number of results by page., with_count: str # (boolean ) • Return the count of items in the response. Be carefull with that, on a big catalog, it can decrease performance in a significative way., with_asset_share_links: str, with_quality_scores: str # (boolean ) • Return product model quality scores in the response. (Only available since the 7.0 version)., with_workflow_execution_statuses: str # Return an array of workflow_execution_statuses directly associated with the requested entity (product or product model) in the response.
+Statuses are level-specific and are not inherited from parent models. For a complete overview of a variant product, you must query the variant itself and its parent model(s) in separate requests.
+Each workflow object contains:
+- The overall execution status (e.g., in_progress, completed).
+- A list of all associated tasks.}
+
+@endpoint POST /{{url}}/api/rest/v1/product-models
+@desc product model (>= v2)
+@required {code: str, family_variant: str, categories: [str], values: map}
+@optional {parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/product-models/apollon_truc
+@desc product model (>= v2)
+@required {code: str, family: str, family_variant: str, categories: [str], values: map, created: str, updated: str, associations: map, metadata: map}
+@optional {parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/product-models
+@desc product models (>= v2)
+
+@endpoint DELETE /{{url}}/api/rest/v1/product-models/amor
+@desc product model (Only available since the 7.0 version)
+
+@endpoint GET /{{url}}/api/rest/v1/product-models/amor/draft
+@desc product model draft (>= v2 and EE only)
+
+@endpoint POST /{{url}}/api/rest/v1/product-models/amor/proposal
+@desc product model proposal (>= v2 and EE only)
+
+@endpoint GET /{{url}}/api/rest/v1/published-products/13527420
+@desc published product (>= v2 and EE only)
+
+@endpoint GET /{{url}}/api/rest/v1/published-products
+@desc published products (>= v2 and EE only)
+@optional {attributes: str # Get published products with only published product values regarding the description and name attributes., locales: str # Get published products with only published product values regarding the en_US and fr_FR locales., scope: str # Get published products from the tree linked to the ecommerce channel with only published product values regarding the ecommerce channel (+ the published product values of the non scopable attributes)., search: str # Get published products that are purple, search: str # Get published products having a description begining with Amazing on the en_US locale, search: str # Get published products that have a release date due after the 4th of July 2016 for the ecommerce channel, search: str # Get published products that have a name that contains with shirt on the en_US locale for the mobile channel, search: str # Get the published products with description starting with Amazing on the en_US locale for the ecommerce channel, and of purple color, search: str # Get the published products with not empty description on the en_US locale and empty description on the fr_FR locale for the ecommerce channel, search: str # Filter on several attributes on the same locale, search: str # Filter on several attributes on the same channel, search: str # Get the published products of the winter_collection category., search: str # Get the disabled published products., search: str # Get the published products that are 100% complete for the ecommerce channel., search: str # Get the published products that are 100% complete on both the en_US and fr_FR locales for the ecommerce channel., search: str # Get the published products that are in the promotion group., search: str # Get the published products that are not in the camcorders and digital_cameras family., search: str # Get the published products that were created on the 4th of July 2016 at 10am., search: str # Get the published products that were updated during the last 4 days., search: str # If you need to filter on several attributes on the same locale, you can use the search_locale query parameter, to avoid repeating yourself for each attribute. This parameter expect an existing locale code., search: str # If you need to filter on several attributes on the same channel, you can use the search_scope query parameter, to avoid repeating yourself for each attribute. This parameter expect an existing channel code., pagination_type: str # (string , page by default )  • Pagination method type., page: str # (integer , 1 by default ) • Number of the page to retrieve when using the `page` pagination method type. Should never be set manually., search_after: str # (string , cursor to the first page by default ) • Cursor when using the `search_after` pagination method type. Should never be set manually., limit: str # (integer , 10 by default )  • Number of results by page., with_count: str # (boolean ) • Return the count of items in the response. Be carefull with that, on a big catalog, it can decrease performance in a significative way.}
+
+@endpoint POST /{{url}}/api/rest/v1/products
+@desc Create product with quantified associations
+@required {identifier: str, quantified_associations: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products/AKNSTK
+@desc Update product with quantified associations
+@required {identifier: str, quantified_associations: map}
+
+@endpoint POST /{{url}}/api/rest/v1/product-models
+@desc Create product model with quantified associations
+@required {code: str, family_variant: str, quantified_associations: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/product-models/apollon_truc
+@desc Update product model with quantified associations
+@required {code: str, family_variant: str, quantified_associations: map}
+
+@endpoint POST /{{url}}/api/rest/v1/jobs/export
+@desc Launch export
+
+@endpoint POST /{{url}}/api/rest/v1/jobs/import
+@desc Launch import
+@required {import_mode: str}
+
+@endpoint GET /{{url}}/api/rest/v1/permissions/{{userUuid}}/channels
+@desc Get User Channels Permissions
+
+@endpoint GET /{{url}}/api/rest/v1/permissions/{{userUuid}}/locales
+@desc Get User Locales Permissions
+
+@endpoint GET /{{url}}/api/rest/v1/ui-extensions
+@desc List extensions
+
+@endpoint POST /{{url}}/api/rest/v1/ui-extensions
+@desc Add an extension
+@required {name: str, version: str, description: str, position: str, type: str, configuration: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/ui-extensions/{ui_extension_uuid}
+@desc Update an extension
+@required {ui_extension_uuid: str # (Required), name: str, version: str, description: str, position: str, type: str, configuration: map}
+
+@endpoint DELETE /{{url}}/api/rest/v1/ui-extensions/{ui_extension_uuid}
+@desc Delete an extension
+@required {ui_extension_uuid: str # (Required)}
+
+@endpoint GET /{{url}}/api/rest/v1/workflows
+@desc Get list of workflows
+@auth Bearer token
+@optional {page: str # Specify which page of results to retrieve when using pagination.
+It is useful for navigating through large datasets by breaking them into smaller, manageable pages.
+See [Pagination](https://api.akeneo.com/documentation/pagination.html) section for more details., limit: str # Specify the maximum number of results to return per page.
+It is useful for controlling the amount of data returned in a single request, especially when dealing with large datasets.
+See [Pagination](https://api.akeneo.com/documentation/pagination.html) section for more details.}
+
+@endpoint GET /{{url}}/api/rest/v1/workflows/{uuid}
+@desc Get a workflow
+@auth Bearer token
+@required {uuid: str # (Required) This path parameter is used to specify the unique identifier of the entity you want to retrieve or manipulate.
+It is essential for identifying the specific entity in the API requests.
+Ensure that the UUID is correctly formatted and corresponds to an existing entity in the system.}
+
+@endpoint GET /{{url}}/api/rest/v1/workflows/steps/{uuid}/assignees
+@desc Get list of workflow step assignees
+@auth Bearer token
+@required {uuid: str # (Required) This path parameter is used to specify the unique identifier of the entity you want to retrieve or manipulate.
+It is essential for identifying the specific entity in the API requests.
+Ensure that the UUID is correctly formatted and corresponds to an existing entity in the system.}
+@optional {page: str # Specify which page of results to retrieve when using pagination.
+It is useful for navigating through large datasets by breaking them into smaller, manageable pages.
+See [Pagination](https://api.akeneo.com/documentation/pagination.html) section for more details., limit: str # Specify the maximum number of results to return per page.
+It is useful for controlling the amount of data returned in a single request, especially when dealing with large datasets.
+See [Pagination](https://api.akeneo.com/documentation/pagination.html) section for more details.}
+
+@endpoint POST /{{url}}/api/rest/v1/workflows/executions
+@desc Start several workflow executions
+@auth Bearer token
+
+@endpoint GET /{{url}}/api/rest/v1/workflows/tasks
+@desc Get list of workflow tasks
+@auth Bearer token
+@required {search: str # (Required) Stringified JSON to filter tasks.
+For more details see the [Filters](https://api.akeneo.com/documentation/filter.html#filter-on-workflow-tasks) section.}
+@optional {with_attributes: str # Whether to include task attributes in the response, page: str # Specify which page of results to retrieve when using pagination.
+It is useful for navigating through large datasets by breaking them into smaller, manageable pages.
+See [Pagination](https://api.akeneo.com/documentation/pagination.html) section for more details., limit: str # Specify the maximum number of results to return per page.
+It is useful for controlling the amount of data returned in a single request, especially when dealing with large datasets.
+See [Pagination](https://api.akeneo.com/documentation/pagination.html) section for more details.}
+
+@endpoint PATCH /{{url}}/api/rest/v1/workflows/tasks/{uuid}
+@desc Update a Workflow Task's Status (Approve, Reject, Complete)
+@auth Bearer token
+@required {uuid: str # (Required) This path parameter is used to specify the unique identifier of the entity you want to retrieve or manipulate.
+It is essential for identifying the specific entity in the API requests.
+Ensure that the UUID is correctly formatted and corresponds to an existing entity in the system., status: str, send_back_to_step_uuid: str, rejected_attributes: map}
+
+@endpoint POST /{{url}}/api/oauth/v1/token
+@desc Authentification by password
+@required {username: str, password: str, grant_type: str}
+
+@endpoint POST /{{url}}/api/oauth/v1/token
+@desc Authentification by refresh token
+@required {refresh_token: str, grant_type: str}
+
+@end

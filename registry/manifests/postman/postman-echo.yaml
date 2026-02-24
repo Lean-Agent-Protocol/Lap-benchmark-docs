@@ -1,0 +1,20 @@
+spec_id: postman-echo
+tasks:
+  - id: t1
+    description: "Submit form data to the diagnostic mirror service and confirm the response echoes it back correctly, then verify the service is healthy by checking for a successful status"
+    target_endpoints:
+      - POST /post
+      - GET /status/200
+    expected_params:
+      POST /post:
+        - yo
+      GET /status/200: []
+  - id: t2
+    description: "Update a resource through the diagnostic service to confirm write-and-reflect behavior, then retrieve a nested document path to verify routing and header forwarding"
+    target_endpoints:
+      - PUT /status/201
+      - GET /path/to/document
+    expected_params:
+      PUT /status/201:
+        - yo
+      GET /path/to/document: []

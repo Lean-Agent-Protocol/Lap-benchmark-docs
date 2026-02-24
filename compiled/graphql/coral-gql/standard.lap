@@ -1,0 +1,650 @@
+@lap v0.1
+@api Coral Gql
+@base /graphql
+
+input AcknowledgeModMessageInput{clientMutationId:str!}
+type AcknowledgeModMessagePayload{clientMutationId:str!,user:User!}
+input AcknowledgeWarningInput{clientMutationId:str!}
+type AcknowledgeWarningPayload{clientMutationId:str!,user:User!}
+type ActionCounts{reaction:ReactionActionCounts!,dontAgree:DontAgreeActionCounts!,flag:FlagActionCounts!,illegal:IllegalActionCounts!}
+type ActionPresence{reaction:bool!,dontAgree:bool!,flag:bool!,illegal:bool!}
+input AddDSAReportNoteInput{userID:id!,body:str!,reportID:id!,clientMutationId:str!}
+type AddDSAReportNotePayload{dsaReport:DSAReport,clientMutationId:str!}
+input AddDSAReportShareInput{userID:id!,reportID:id!,clientMutationId:str!}
+type AddDSAReportSharePayload{dsaReport:DSAReport,clientMutationId:str!}
+input AddStoryExpertInput{clientMutationId:str!,storyID:id!,userID:id!}
+type AddStoryExpertPayload{clientMutationId:str!,story:Story!}
+type AkismetExternalIntegration{enabled:bool!,ipBased:bool!,key:str,site:str}
+type Announcement{id:id!,content:str!,createdAt:Time!,disableAt:Time!,duration:int!}
+input ApproveCommentInput{commentID:id!,commentRevisionID:id!,clientMutationId:str!}
+type ApproveCommentPayload{comment:Comment,moderationQueues(storyID:id,siteID:id,section:SectionFilter):ModerationQueues,clientMutationId:str!}
+input ArchiveStoriesInput{clientMutationId:str!,storyIDs:[id!]!}
+type ArchiveStoriesPayload{clientMutationId:str!,stories:[Story!]!}
+type Auth{integrations:AuthIntegrations!,sessionDuration:int!}
+type AuthIntegrations{local:LocalAuthIntegration!,sso:SSOAuthIntegration!,oidc:OIDCAuthIntegration!,google:GoogleAuthIntegration!,facebook:FacebookAuthIntegration!}
+type AuthenticationTargetFilter{admin:bool!,stream:bool!}
+type BadgeConfiguration{label:str!,memberLabel:str!,staffLabel:str!,moderatorLabel:str!,adminLabel:str!}
+input BadgeConfigurationInput{staffLabel:str,adminLabel:str,moderatorLabel:str,memberLabel:str}
+type BanStatus{active:bool!,sites:[Site!],history:[BanStatusHistory!]!}
+type BanStatusHistory{active:bool!,createdBy:User,createdAt:Time!,message:str,sites:[Site!]}
+input BanUserInput{userID:id!,clientMutationId:str!,message:str!,siteIDs:[id!],rejectExistingComments:bool,rejectionReason:RejectCommentReasonInput}
+type BanUserPayload{user:User!,clientMutationId:str!}
+type BlueskyMedia{url:str!,width:int}
+type BlueskyMediaConfiguration{enabled:bool!}
+input BlueskyMediaConfigurationInput{enabled:bool}
+enum CACHE_CONTROL_SCOPE=PUBLIC|PRIVATE
+enum COMMENT_BODY_FORMAT=HTML|PLAIN_TEXT
+enum COMMENT_FLAG_DETECTED_REASON=COMMENT_DETECTED_TOXIC|COMMENT_DETECTED_SPAM|COMMENT_DETECTED_LINKS|COMMENT_DETECTED_BANNED_WORD|COMMENT_DETECTED_SUSPECT_WORD|COMMENT_DETECTED_RECENT_HISTORY|COMMENT_DETECTED_PREMOD_USER|COMMENT_DETECTED_REPEAT_POST
+enum COMMENT_FLAG_REASON=COMMENT_REPORTED_OFFENSIVE|COMMENT_REPORTED_ABUSIVE|COMMENT_REPORTED_SPAM|COMMENT_REPORTED_OTHER|COMMENT_REPORTED_BIO|COMMENT_DETECTED_TOXIC|COMMENT_DETECTED_SPAM|COMMENT_DETECTED_LINKS|COMMENT_DETECTED_BANNED_WORD|COMMENT_DETECTED_SUSPECT_WORD|COMMENT_DETECTED_RECENT_HISTORY|COMMENT_DETECTED_PREMOD_USER|COMMENT_DETECTED_NEW_COMMENTER|COMMENT_DETECTED_REPEAT_POST
+enum COMMENT_FLAG_REPORTED_REASON=COMMENT_REPORTED_OFFENSIVE|COMMENT_REPORTED_ABUSIVE|COMMENT_REPORTED_SPAM|COMMENT_REPORTED_OTHER|COMMENT_REPORTED_BIO
+enum COMMENT_SORT=CREATED_AT_DESC|CREATED_AT_ASC|REPLIES_DESC|REACTION_DESC
+enum COMMENT_STATUS=NONE|APPROVED|REJECTED|PREMOD|SYSTEM_WITHHELD
+input CacheStoryInput{id:id!,clientMutationId:str!}
+type CacheStoryPayload{story:Story,clientMutationId:str!}
+input CancelAccountDeletionInput{clientMutationId:str!}
+type CancelAccountDeletionPayload{user:User!,clientMutationId:str!}
+input CancelScheduledAccountDeletionInput{userID:id!,clientMutationId:str!}
+type CancelScheduledAccountDeletionPayload{user:User,clientMutationId:str!}
+input ChangeDSAReportStatusInput{userID:id!,status:DSAReportStatus!,reportID:id!,clientMutationId:str!}
+type ChangeDSAReportStatusPayload{dsaReport:DSAReport,clientMutationId:str!}
+type CharCount{enabled:bool!,min:int,max:int}
+type CloseCommenting{auto:bool!,timeout:int!,message:str!}
+input CloseStoryInput{id:id!,clientMutationId:str!}
+type CloseStoryPayload{story:Story,clientMutationId:str!}
+type Comment{id:id!,body:str,revision:CommentRevision,revisionHistory:[CommentRevision!]!,createdAt:Time!,author:User,status:COMMENT_STATUS!,initialStatus:COMMENT_STATUS,statusHistory(first:int=10,after:Cursor):CommentModerationActionConnection!,parentCount:int!,allChildComments(first:int=10,orderBy:COMMENT_SORT=CREATED_AT_DESC):CommentsConnection!,ancestorIDs:[str]!,depth:int!,replyCount:int!,replies(first:int=10,orderBy:COMMENT_SORT=CREATED_AT_DESC,after:Cursor,flatten:bool,refreshStream:bool):CommentsConnection!,parent:Comment,rootParent:Comment,parents(last:int=1,before:Cursor):CommentsConnection!,editing:EditInfo!,actionCounts:ActionCounts!,reactions(first:int=10,after:Cursor):ReactionsConnection!,flags(first:int=10,after:Cursor):FlagsConnection!,illegalContent(first:int=10,after:Cursor):FlagsConnection!,viewerActionPresence:ActionPresence,story:Story!,permalink:str!,tags:[Tag!]!,deleted:bool,canModerate:bool!,canReply:bool!,site:Site!,rating:int,seen:bool,embeddedAt:Time}
+type CommentCounts{totalPublished:int!,tags:CommentTagCounts!,statuses:CommentStatusCounts!}
+type CommentCreatedPayload{comment:Comment!}
+type CommentEdge{node:Comment!,cursor:Cursor!}
+type CommentEditedPayload{comment:Comment!}
+type CommentEnteredModerationQueuePayload{queue:MODERATION_QUEUE!,comment:Comment!}
+type CommentEnteredPayload{comment:Comment!}
+type CommentFeaturedPayload{comment:Comment!}
+type CommentLeftModerationQueuePayload{queue:MODERATION_QUEUE!,comment:Comment!}
+union CommentMedia=GiphyMedia|TwitterMedia|YouTubeMedia|ExternalMedia|TenorMedia|BlueskyMedia
+type CommentModerationAction{id:id!,revision:CommentRevision,comment:Comment,status:COMMENT_STATUS!,moderator:User,rejectionReason:RejectionReason,createdAt:Time!,customReason:str}
+type CommentModerationActionConnection{edges:[CommentModerationActionEdge!]!,nodes:[CommentModerationAction!]!,pageInfo:PageInfo!}
+type CommentModerationActionEdge{node:CommentModerationAction!,cursor:Cursor!}
+type CommentReleasedPayload{comment:Comment!}
+type CommentReplyCreatedPayload{comment:Comment!}
+type CommentRevision{id:id!,comment:Comment!,actionCounts:ActionCounts!,body:str,media:CommentMedia,metadata:CommentRevisionMetadata!,createdAt:Time!,status:COMMENT_STATUS}
+type CommentRevisionExternalModerationPhaseMetadata{name:str!,analyzedAt:Time!,result:ExternalModerationPhaseResult!}
+type CommentRevisionMetadata{perspective:CommentRevisionPerspectiveMetadata,wordList:CommentRevisionWordListMetadata,externalModeration:[CommentRevisionExternalModerationPhaseMetadata!]}
+type CommentRevisionPerspectiveMetadata{score:num!}
+type CommentRevisionWordListMetadata{timedOut:bool,suspectWords:[WordlistMatch!],bannedWords:[WordlistMatch!]}
+type CommentStatusCounts{NONE:int!,APPROVED:int!,REJECTED:int!,PREMOD:int!,SYSTEM_WITHHELD:int!}
+type CommentStatusUpdatedPayload{newStatus:COMMENT_STATUS!,oldStatus:COMMENT_STATUS!,moderator:User,comment:Comment!}
+type CommentTagCounts{ADMIN:int!,EXPERT:int!,FEATURED:int!,MEMBER:int!,MODERATOR:int!,QUESTION:int!,REVIEW:int!,STAFF:int!,UNANSWERED:int!}
+type CommenterAccountFeatures{changeUsername:bool!,downloadComments:bool!,deleteAccount:bool!}
+input CommenterAccountFeaturesInput{changeUsername:bool,downloadComments:bool,deleteAccount:bool}
+type CommentsConnection{edges:[CommentEdge!]!,nodes:[Comment!]!,pageInfo:PageInfo!}
+type CommunityGuidelines{enabled:bool!,content:str}
+input CreateAnnouncementInput{content:str!,duration:int!,clientMutationId:str!}
+type CreateAnnouncementPayload{clientMutationId:str!,settings:Settings!}
+input CreateCommentDontAgreeInput{commentID:id!,commentRevisionID:id!,additionalDetails:str,clientMutationId:str!}
+type CreateCommentDontAgreePayload{comment:Comment,clientMutationId:str!}
+input CreateCommentFlagInput{commentID:id!,commentRevisionID:id!,reason:COMMENT_FLAG_REPORTED_REASON!,additionalDetails:str,clientMutationId:str!}
+type CreateCommentFlagPayload{comment:Comment,clientMutationId:str!}
+input CreateCommentInput{nudge:bool=False,storyID:id!,body:str!,clientMutationId:str!,media:CreateCommentMediaInput,rating:int}
+input CreateCommentMediaInput{type:str!,id:str,url:str!,width:str,height:str}
+type CreateCommentPayload{edge:CommentEdge!,clientMutationId:str!}
+input CreateCommentReactionInput{commentID:id!,commentRevisionID:id!,clientMutationId:str!}
+type CreateCommentReactionPayload{comment:Comment,clientMutationId:str!}
+input CreateCommentReplyInput{nudge:bool=False,storyID:id!,parentID:id!,parentRevisionID:id!,body:str!,clientMutationId:str!,media:CreateCommentMediaInput}
+type CreateCommentReplyPayload{edge:CommentEdge!,clientMutationId:str!}
+input CreateDSAReportInput{commentID:id!,userID:id,lawBrokenDescription:str!,additionalInformation:str!,submissionID:id,commentRevisionID:str,clientMutationId:str!}
+type CreateDSAReportPayload{dsaReport:DSAReport,clientMutationId:str!}
+input CreateEmailDomain{domain:str!,newUserModeration:NEW_USER_MODERATION!}
+input CreateEmailDomainInput{clientMutationId:str!,domain:str!,newUserModeration:NEW_USER_MODERATION!}
+type CreateEmailDomainPayload{clientMutationId:str!,settings:Settings!}
+input CreateExternalModerationPhaseInput{clientMutationId:str!,name:str!,url:str!,format:COMMENT_BODY_FORMAT!,timeout:int!}
+type CreateExternalModerationPhasePayload{clientMutationId:str!,phase:ExternalModerationPhase!,settings:Settings!}
+input CreateFlairBadgeInput{clientMutationId:str!,name:str!,url:str!}
+type CreateFlairBadgePayload{clientMutationId:str!,settings:Settings!}
+input CreateIllegalContentInput{commentID:id!,commentRevisionID:id!}
+type CreateIllegalContentPayload{comment:Comment,clientMutationId:str!}
+input CreateModeratorNoteInput{clientMutationId:str!,body:str!,userID:id!}
+type CreateModeratorNotePayload{clientMutationId:str!,user:User!}
+input CreateSite{name:str!,allowedOrigins:[str!]!}
+input CreateSiteInput{clientMutationId:str!,site:CreateSite!}
+type CreateSitePayload{clientMutationId:str!,site:Site!}
+input CreateStory{id:id!,url:str!,mode:STORY_MODE,metadata:StoryMetadataInput,closedAt:Time}
+input CreateStoryInput{story:CreateStory!,clientMutationId:str!}
+type CreateStoryPayload{story:Story,clientMutationId:str!}
+input CreateTokenInput{name:str!,clientMutationId:str!}
+type CreateTokenPayload{user:User!,token:Token!,signedToken:str!,clientMutationId:str!}
+input CreateWebhookEndpointInput{clientMutationId:str!,url:str!,all:bool!,events:[WEBHOOK_EVENT_NAME!]!}
+type CreateWebhookEndpointPayload{clientMutationId:str!,endpoint:WebhookEndpoint!,settings:Settings!}
+type CustomExternalIntegration{phases:[ExternalModerationPhase!]!}
+enum DIGEST_FREQUENCY=NONE|DAILY|HOURLY
+type DSAConfiguration{enabled:bool!,methodOfRedress:DSAMethodOfRedressConfiguration!}
+input DSAConfigurationInput{enabled:bool,methodOfRedress:DSAMethodOfRedressConfigurationInput}
+type DSAMethodOfRedressConfiguration{method:DSA_METHOD_OF_REDRESS!,email:str,url:str}
+input DSAMethodOfRedressConfigurationInput{method:DSA_METHOD_OF_REDRESS,email:str,url:str}
+enum DSAREPORT_STATUS_FILTER=AWAITING_REVIEW|UNDER_REVIEW|COMPLETED|VOID
+type DSAReport{id:id!,referenceID:str!,submissionID:str!,reporter:User,comment:Comment,createdAt:Time!,status:DSAReportStatus,lawBrokenDescription:str!,additionalInformation:str!,decision:DSAReportDecision,history:[DSAReportHistoryItem],lastUpdated:Time,relatedReports(first:int=10,orderBy:REPORT_SORT=CREATED_AT_DESC,after:Cursor):DSAReportsConnection!}
+type DSAReportDecision{legality:DSAReportDecisionLegality!,legalGrounds:str,detailedExplanation:str}
+enum DSAReportDecisionLegality=LEGAL|ILLEGAL
+type DSAReportEdge{node:DSAReport!,cursor:Cursor!}
+type DSAReportHistoryItem{id:id!,type:DSAReportHistoryType,createdAt:Time!,createdBy:User,decision:DSAReportDecision,note:str,status:DSAReportStatus,body:str}
+enum DSAReportHistoryType=STATUS_CHANGED|NOTE|DECISION_MADE|SHARE
+enum DSAReportStatus=AWAITING_REVIEW|UNDER_REVIEW|COMPLETED|VOID
+type DSAReportsConnection{edges:[DSAReportEdge!]!,nodes:[DSAReport!]!,pageInfo:PageInfo!}
+enum DSA_METHOD_OF_REDRESS=NONE|EMAIL|URL
+input DeactivateSSOSigningSecretInput{clientMutationId:str!,kid:id!}
+type DeactivateSSOSigningSecretPayload{clientMutationId:str!,settings:Settings}
+input DeactivateTokenInput{id:id!,clientMutationId:str!}
+type DeactivateTokenPayload{user:User!,token:Token,clientMutationId:str!}
+input DeleteAnnouncementInput{clientMutationId:str!}
+type DeleteAnnouncementPayload{clientMutationId:str!,settings:Settings!}
+input DeleteDSAReportNoteInput{id:id!,reportID:id!,clientMutationId:str!}
+type DeleteDSAReportNotePayload{dsaReport:DSAReport,clientMutationId:str!}
+input DeleteEmailDomainInput{clientMutationId:str!,id:str!}
+type DeleteEmailDomainPayload{clientMutationId:str!,settings:Settings!}
+input DeleteExternalModerationPhaseInput{clientMutationId:str!,id:id!}
+type DeleteExternalModerationPhasePayload{clientMutationId:str!,phase:ExternalModerationPhase!}
+input DeleteFlairBadgeInput{clientMutationId:str!,name:str!}
+type DeleteFlairBadgePayload{clientMutationId:str!,settings:Settings!}
+input DeleteModeratorNoteInput{clientMutationId:str!,userID:id!,id:id!}
+type DeleteModeratorNotePayload{clientMutationId:str!,user:User!}
+input DeleteSSOSigningSecretInput{clientMutationId:str!,kid:id!}
+type DeleteSSOSigningSecretPayload{clientMutationId:str!,settings:Settings}
+input DeleteUserAccountInput{userID:id!,clientMutationId:str!}
+type DeleteUserAccountPayload{user:User,clientMutationId:str!}
+input DeleteWebhookEndpointInput{clientMutationId:str!,id:id!}
+type DeleteWebhookEndpointPayload{clientMutationId:str!,endpoint:WebhookEndpoint!}
+input DemoteMemberInput{userID:id!,siteIDs:[str!]!,clientMutationId:str!}
+type DemoteMemberPayload{clientMutationId:str!,user:User!}
+input DemoteModeratorInput{userID:id!,siteIDs:[str!]!,clientMutationId:str!}
+type DemoteModeratorPayload{clientMutationId:str!,user:User!}
+type DisableCommenting{enabled:bool!,message:str!}
+input DisableExternalModerationPhaseInput{clientMutationId:str!,id:id!}
+type DisableExternalModerationPhasePayload{clientMutationId:str!,phase:ExternalModerationPhase!}
+input DisableFeatureFlagInput{clientMutationId:str!,flag:FEATURE_FLAG!}
+type DisableFeatureFlagPayload{clientMutationId:str!,flags:[FEATURE_FLAG!]!}
+input DisableWebhookEndpointInput{clientMutationId:str!,id:id!}
+type DisableWebhookEndpointPayload{clientMutationId:str!,endpoint:WebhookEndpoint!}
+type DiscoveredOIDCConfiguration{issuer:str!,authorizationURL:str!,tokenURL:str,jwksURI:str!}
+type DisposableEmailDomainConfiguration{enabled:bool!}
+input DisposableEmailDomainsConfigurationInput{enabled:bool!}
+type DontAgreeActionCounts{total:int!}
+input EditCommentInput{commentID:id!,body:str!,clientMutationId:str!,media:CreateCommentMediaInput}
+type EditCommentPayload{comment:Comment!,clientMutationId:str!}
+type EditInfo{edited:bool!,editableUntil:Time}
+type EmailAliasesConfig{enabled:bool!}
+input EmailAliasesConfigInput{enabled:bool}
+type EmailConfiguration{enabled:bool!,fromName:str,fromEmail:str,smtp:SMTP!}
+type EmailDomain{domain:str!,id:id!,newUserModeration:NEW_USER_MODERATION!}
+type EmbeddedCommentsConfiguration{allowReplies:bool,oEmbedAllowedOrigins:[str!]!}
+input EmbeddedCommentsConfigurationInput{allowReplies:bool,oEmbedAllowedOrigins:[str!]}
+input EnableExternalModerationPhaseInput{clientMutationId:str!,id:id!}
+type EnableExternalModerationPhasePayload{clientMutationId:str!,phase:ExternalModerationPhase!}
+input EnableFeatureFlagInput{clientMutationId:str!,flag:FEATURE_FLAG!}
+type EnableFeatureFlagPayload{clientMutationId:str!,flags:[FEATURE_FLAG!]!}
+input EnableWebhookEndpointInput{clientMutationId:str!,id:id!}
+type EnableWebhookEndpointPayload{clientMutationId:str!,endpoint:WebhookEndpoint!}
+type ExternalIntegrations{akismet:AkismetExternalIntegration!,perspective:PerspectiveExternalIntegration!,external:CustomExternalIntegration}
+type ExternalMedia{url:str!,extension:str!,width:int,height:int}
+type ExternalMediaConfiguration{enabled:bool!}
+type ExternalModerationPhase{id:id!,name:str!,enabled:bool!,url:str!,format:COMMENT_BODY_FORMAT!,timeout:int!,signingSecret:SigningSecret!}
+type ExternalModerationPhaseAction{reason:COMMENT_FLAG_REASON}
+type ExternalModerationPhaseResult{status:COMMENT_STATUS,tags:[TAG!],actions:[ExternalModerationPhaseAction!]}
+type ExternalNotificationsConfiguration{active:bool}
+enum FEATURE_FLAG=SECTIONS|DISABLE_WARN_USER_OF_TOXIC_COMMENT|ENABLE_QA|DEFAULT_QA_STORY_MODE|REDUCED_SECURITY_MODE|DISCUSSIONS|READ_MORE_NEW_TAB|AVATARS|NEW_COMMENT_COUNT|EXTERNAL_MEDIA|RTE_SARCASM|VIEWER_COUNT|ALTERNATE_OLDEST_FIRST_VIEW|ENABLE_RATINGS_AND_REVIEWS|DISABLE_LIVE_UPDATES|EMAIL_META|COMMENT_SEEN|Z_KEY|CONFIGURE_PUBLIC_PROFILE_URL|DATA_CACHE|COUNTS_V2
+type FacebookAuthIntegration{enabled:bool!,allowRegistration:bool!,targetFilter:AuthenticationTargetFilter!,clientID:str,clientSecret:str,callbackURL:str!,redirectURL:str!}
+type FacebookProfile{id:str!}
+input FeatureCommentInput{commentID:id!,commentRevisionID:id!,clientMutationId:str!}
+type FeatureCommentPayload{comment:Comment,clientMutationId:str!,moderationQueues(storyID:id):ModerationQueues}
+type Flag{id:id!,flagger:User,comment:Comment!,revision:CommentRevision,reason:COMMENT_FLAG_REASON,additionalDetails:str,reviewed:bool!,createdAt:Time!,reportID:str}
+type FlagActionCounts{total:int!,reasons:FlagReasonActionCounts!}
+type FlagEdge{node:Flag!,cursor:Cursor!}
+type FlagReasonActionCounts{COMMENT_REPORTED_OFFENSIVE:int!,COMMENT_REPORTED_ABUSIVE:int!,COMMENT_REPORTED_SPAM:int!,COMMENT_REPORTED_OTHER:int!,COMMENT_REPORTED_BIO:int!,COMMENT_DETECTED_TOXIC:int!,COMMENT_DETECTED_SPAM:int!,COMMENT_DETECTED_LINKS:int!,COMMENT_DETECTED_BANNED_WORD:int!,COMMENT_DETECTED_SUSPECT_WORD:int!,COMMENT_DETECTED_RECENT_HISTORY:int!,COMMENT_DETECTED_PREMOD_USER:int!,COMMENT_DETECTED_NEW_COMMENTER:int!,COMMENT_DETECTED_REPEAT_POST:int!}
+type FlagsConnection{edges:[FlagEdge!]!,nodes:[Flag!]!,pageInfo:PageInfo!}
+type FlairBadge{name:str!,url:str!}
+type FlairBadgeConfiguration{flairBadgesEnabled:bool,badges:[FlairBadge!]!}
+input FlairBadgeConfigurationInput{flairBadgesEnabled:bool,flairBadgeURLs:[str!]}
+input FlattenRepliesInput{enabled:bool!}
+input FlushRedisInput{clientMutationId:str!}
+type FlushRedisPayload{clientMutationId:str!}
+enum GIF_MEDIA_SOURCE=GIPHY|TENOR
+type GifMediaConfiguration{enabled:bool!,provider:GIF_MEDIA_SOURCE,maxRating:str,key:str}
+input GifMediaConfigurationInput{enabled:bool,provider:GIF_MEDIA_SOURCE,maxRating:str,key:str}
+type GiphyMedia{url:str!,original:str!,still:str!,video:str!,width:int,height:int,title:str}
+type GoogleAuthIntegration{enabled:bool!,allowRegistration:bool!,targetFilter:AuthenticationTargetFilter!,clientID:str,clientSecret:str,callbackURL:str!,redirectURL:str!}
+type GoogleProfile{id:str!}
+input IgnoreUserInput{userID:id!,clientMutationId:str!}
+type IgnoreUserPayload{user:User!,clientMutationId:str!}
+type IllegalActionCounts{total:int!}
+enum InPageNotificationReplyType=ALL|STAFF
+type InPageNotificationsConfiguration{enabled:bool,floatingBellIndicator:bool,active:bool}
+input InPageNotificationsConfigurationInput{enabled:bool,floatingBellIndicator:bool}
+input InvalidateCachedStoryInput{id:id!,clientMutationId:str!}
+type InvalidateCachedStoryPayload{story:Story,clientMutationId:str!}
+type Invite{id:id!,email:str!,role:USER_ROLE!,createdBy:User!,createdAt:Time!}
+input InviteUsersInput{emails:[str!]!,role:USER_ROLE!,clientMutationId:str!}
+type InviteUsersPayload{invites:[Invite]!,clientMutationId:str!}
+type LiveConfiguration{configurable:bool!,enabled:bool!}
+input LiveConfigurationInput{enabled:bool}
+type LocalAuthIntegration{enabled:bool!,allowRegistration:bool!,targetFilter:AuthenticationTargetFilter!}
+type LocalProfile{id:str!}
+enum MODERATION_MODE=PRE|POST|SPECIFIC_SITES_PRE
+enum MODERATION_QUEUE=UNMODERATED|REPORTED|PENDING
+input MakeDSAReportDecisionInput{userID:id!,legality:DSAReportDecisionLegality!,legalGrounds:str,detailedExplanation:str,commentID:id!,commentRevisionID:id!,reportID:id!,clientMutationId:str!}
+type MakeDSAReportDecisionPayload{dsaReport:DSAReport,clientMutationId:str!}
+input MarkCommentsAsSeenInput{clientMutationId:str!,storyID:id!,commentIDs:[id!]!,orderBy:COMMENT_SORT,updateSeen:bool,markAllAsSeen:bool}
+type MarkCommentsAsSeenPayload{clientMutationId:str!,comments:[Comment!]!}
+type MediaConfiguration{twitter:TwitterMediaConfiguration!,bluesky:BlueskyMediaConfiguration!,youtube:YouTubeMediaConfiguration!,gifs:GifMediaConfiguration!,external:ExternalMediaConfiguration!}
+input MediaConfigurationInput{twitter:TwitterMediaConfigurationInput,bluesky:BlueskyMediaConfigurationInput,youtube:YouTubeMediaConfigurationInput,gifs:GifMediaConfigurationInput}
+input MembershipScopesInput{scoped:bool!,siteIDs:[id!]!}
+input MergeStoriesInput{sourceIDs:[id!]!,destinationID:id!,clientMutationId:str!}
+type MergeStoriesPayload{story:Story,clientMutationId:str!}
+type ModMessageStatus{active:bool!,message:str,history:[ModMessageStatusHistory!]!}
+type ModMessageStatusHistory{active:bool!,createdBy:User!,createdAt:Time!,acknowledgedAt:Time,message:str}
+type ModerationQueue{id:id!,count:int,comments(first:int=10,after:Cursor,orderBy:COMMENT_SORT=CREATED_AT_DESC):CommentsConnection!}
+type ModerationQueues{unmoderated:ModerationQueue!,reported:ModerationQueue!,pending:ModerationQueue!}
+input ModerationScopesInput{scoped:bool!,siteIDs:[id!]!}
+type ModeratorNote{id:id!,body:str!,createdAt:Time!,createdBy:User!}
+enum NEW_USER_MODERATION=BAN|PREMOD
+enum NOTIFICATION_TYPE=UNKNOWN|COMMENT_FEATURED|COMMENT_APPROVED|COMMENT_REJECTED|ILLEGAL_REJECTED|DSA_REPORT_DECISION_MADE|REPLY|REPLY_STAFF|PREVIOUSLY_REJECTED_COMMENT_APPROVED
+type NewCommenterConfiguration{enabled:bool}
+input NewCommenterConfigurationInput{enabled:bool}
+type NewCommentersConfiguration{premodEnabled:bool!,approvedCommentsThreshold:int!,moderation:NewCommentersModerationConfig}
+input NewCommentersConfigurationInput{premodEnabled:bool,approvedCommentsThreshold:int,moderation:NewCommentersModerationConfigInput}
+type NewCommentersModerationConfig{mode:MODERATION_MODE,premodSites:[str!]!}
+input NewCommentersModerationConfigInput{mode:MODERATION_MODE,premodSites:[str!]}
+type Notification{id:id!,ownerID:id!,type:NOTIFICATION_TYPE,createdAt:Time!,comment:Comment,commentReply:Comment,commentStatus:COMMENT_STATUS,previousStatus:COMMENT_STATUS,rejectionReason:REJECTION_REASON_CODE,decisionDetails:NotificationDecisionDetails,customReason:str,dsaReport:NotificationDSAReportDetails}
+type NotificationDSAReportDetails{id:id!,createdAt:Time!,referenceID:str!,comment:Comment,user:User,lawBrokenDescription:str,additionalInformation:str,submissionID:id}
+type NotificationDecisionDetails{legality:DSAReportDecisionLegality,grounds:str,explanation:str}
+type NotificationEdge{node:Notification!,cursor:Cursor!}
+type NotificationsConnection{edges:[NotificationEdge!]!,nodes:[Notification!]!,pageInfo:PageInfo!}
+type OIDCAuthIntegration{enabled:bool!,allowRegistration:bool!,targetFilter:AuthenticationTargetFilter!,name:str,callbackURL:str!,redirectURL:str,clientID:str,clientSecret:str,authorizationURL:str,tokenURL:str,jwksURI:str,issuer:str}
+type OIDCProfile{id:str!,provider:str!}
+type OnReplySettings{enabled:bool!,showReplies:InPageNotificationReplyType!}
+input OnReplySettingsInput{enabled:bool!,showReplies:InPageNotificationReplyType!}
+input OpenStoryInput{id:id!,clientMutationId:str!}
+type OpenStoryPayload{story:Story,clientMutationId:str!}
+type Organization{name:str!,contactEmail:str!,url:str!}
+type PageInfo{hasNextPage:bool!,hasPreviousPage:bool!,startCursor:Cursor,endCursor:Cursor}
+type PersistedQuery{id:str!,operation:str!,operationName:str!,query:str!,bundle:str!,version:str!}
+type PerspectiveExternalIntegration{enabled:bool!,endpoint:str,key:str,threshold:num,model:str,doNotStore:bool,sendFeedback:bool}
+type PremodStatus{active:bool!,history:[PremodStatusHistory!]!}
+type PremodStatusHistory{active:bool!,createdBy:User,createdAt:Time!}
+input PremodUserInput{userID:id!,clientMutationId:str!}
+type PremodUserPayload{user:User!,clientMutationId:str!}
+type PremoderateEmailAddressConfiguration{tooManyPeriods:TooManyPeriodsConfig,emailAliases:EmailAliasesConfig}
+input PremoderateEmailAddressConfigurationInput{tooManyPeriods:TooManyPeriodsConfigInput,emailAliases:EmailAliasesConfigInput}
+union Profile=LocalProfile|OIDCProfile|SSOProfile|FacebookProfile|GoogleProfile
+input PromoteMemberInput{userID:id!,siteIDs:[str!]!,clientMutationId:str!}
+type PromoteMemberPayload{clientMutationId:str!,user:User!}
+input PromoteModeratorInput{userID:id!,siteIDs:[str!]!,clientMutationId:str!}
+type PromoteModeratorPayload{clientMutationId:str!,user:User!}
+type Queue{counts:QueueCounts!}
+type QueueCounts{waiting:int!,active:int!,delayed:int!}
+type Queues{mailer:Queue!,scraper:Queue!,notifier:Queue!,webhook:Queue!,rejector:Queue!,unarchiver:Queue!}
+enum REJECTION_REASON_CODE=OFFENSIVE|ABUSIVE|SPAM|BANNED_WORD|AD|ILLEGAL_CONTENT|HARASSMENT_BULLYING|MISINFORMATION|HATE_SPEECH|IRRELEVANT_CONTENT|OTHER
+enum REPORT_SORT=CREATED_AT_DESC|CREATED_AT_ASC
+type RTEConfiguration{enabled:bool!,strikethrough:bool!,spoiler:bool!,sarcasm:bool!}
+input RTEConfigurationInput{enabled:bool!,strikethrough:bool!,spoiler:bool!}
+type Reacter{username:str,userID:str}
+type Reaction{id:str,reacter:Reacter}
+type ReactionActionCounts{total:int!}
+type ReactionConfiguration{icon:str!,iconActive:str,label:str!,labelActive:str!,sortLabel:str!,color:str}
+input ReactionConfigurationInput{icon:str,iconActive:str,label:str,labelActive:str,sortLabel:str,color:str}
+type ReactionEdge{node:Reaction!,cursor:Cursor!}
+type ReactionsConnection{edges:[ReactionEdge!]!,nodes:[Reaction!]!,pageInfo:PageInfo!}
+type RecentCommentHistory{statuses:CommentStatusCounts!}
+type RecentCommentHistoryConfiguration{enabled:bool!,timeFrame:int!,triggerRejectionRate:num!}
+input RecentCommentHistoryConfigurationInput{enabled:bool,timeFrame:int,triggerRejectionRate:num}
+input RefreshDisposableEmailDomainsInput{clientMutationId:str!}
+type RefreshDisposableEmailDomainsPayload{clientMutationId:str!}
+input RefreshStoryCountsInput{clientMutationId:str!,storyID:str!,tags:bool!}
+type RefreshStoryCountsPayload{clientMutationId:str!,story:Story}
+input RejectCommentInput{commentID:id!,commentRevisionID:id!,reason:RejectCommentReasonInput,clientMutationId:str!}
+type RejectCommentPayload{comment:Comment,moderationQueues(storyID:id,siteID:id,section:SectionFilter):ModerationQueues,clientMutationId:str!}
+input RejectCommentReasonInput{code:REJECTION_REASON_CODE!,legalGrounds:str,detailedExplanation:str,customReason:str}
+type RejectionReason{code:REJECTION_REASON_CODE!,legalGrounds:str,detailedExplanation:str,customReason:str}
+input RemoveCommentDontAgreeInput{commentID:id!,commentRevisionID:id!,clientMutationId:str!}
+type RemoveCommentDontAgreePayload{comment:Comment,clientMutationId:str!}
+input RemoveCommentReactionInput{commentID:id!,commentRevisionID:id!,clientMutationId:str!}
+type RemoveCommentReactionPayload{comment:Comment,clientMutationId:str!}
+input RemovePremodUserInput{userID:id!,clientMutationId:str!}
+type RemovePremodUserPayload{user:User!,clientMutationId:str!}
+input RemoveStoryExpertInput{clientMutationId:str!,storyID:id!,userID:id!}
+type RemoveStoryExpertPayload{clientMutationId:str!,story:Story!}
+input RemoveStoryInput{id:id!,includeComments:bool=False,clientMutationId:str!}
+type RemoveStoryPayload{story:Story,clientMutationId:str!}
+input RemoveUserBanInput{userID:id!,clientMutationId:str!}
+type RemoveUserBanPayload{user:User!,clientMutationId:str!}
+input RemoveUserIgnoreInput{userID:id!,clientMutationId:str!}
+type RemoveUserIgnorePayload{user:User!,clientMutationId:str!}
+input RemoveUserSuspensionInput{userID:id!,clientMutationId:str!}
+type RemoveUserSuspensionPayload{user:User!,clientMutationId:str!}
+input RemoveUserWarningInput{userID:id!,clientMutationId:str!}
+type RemoveUserWarningPayload{clientMutationId:str!,user:User!}
+input RequestAccountDeletionInput{password:str!,clientMutationId:str!}
+type RequestAccountDeletionPayload{user:User!,clientMutationId:str!}
+input RequestCommentsDownloadInput{clientMutationId:str!}
+type RequestCommentsDownloadPayload{clientMutationId:str!}
+input RequestUserCommentsDownloadInput{userID:id!,clientMutationId:str!}
+type RequestUserCommentsDownloadPayload{clientMutationId:str!,archiveURL:str!}
+input ReviewCommentFlagInput{clientMutationId:str!,id:id!}
+type ReviewCommentFlagPayload{clientMutationId:str!,flag:Flag!}
+input RotateExternalModerationPhaseSigningSecretInput{clientMutationId:str!,id:id!,inactiveIn:int!}
+type RotateExternalModerationPhaseSigningSecretPayload{clientMutationId:str!,phase:ExternalModerationPhase!}
+input RotateSSOSigningSecretInput{clientMutationId:str!,inactiveIn:int!}
+type RotateSSOSigningSecretPayload{clientMutationId:str!,settings:Settings}
+input RotateWebhookEndpointSigningSecretInput{clientMutationId:str!,id:id!,inactiveIn:int!}
+type RotateWebhookEndpointSigningSecretPayload{clientMutationId:str!,endpoint:WebhookEndpoint!}
+type SMTP{secure:bool,host:str,port:int,authentication:bool,username:str,password:str}
+type SSOAuthIntegration{enabled:bool!,allowRegistration:bool!,targetFilter:AuthenticationTargetFilter!,signingSecrets:[SigningSecret!]!,key:str,keyGeneratedAt:Time}
+type SSOProfile{id:str!}
+enum STORY_MODE=COMMENTS|QA|RATINGS_AND_REVIEWS
+enum STORY_STATUS=OPEN|CLOSED
+input ScheduleAccountDeletionInput{userID:id!,clientMutationId:str!}
+type ScheduleAccountDeletionPayload{user:User,clientMutationId:str!}
+input ScrapeStoryInput{id:id!,clientMutationId:str!}
+type ScrapeStoryPayload{story:Story,clientMutationId:str!}
+input SectionFilter{name:str}
+input SendModMessageInput{userID:id!,clientMutationId:str!,message:str!}
+type SendModMessagePayload{clientMutationId:str!,user:User!}
+input SetEmailInput{email:str!,clientMutationId:str!}
+type SetEmailPayload{user:User!,clientMutationId:str!}
+input SetPasswordInput{password:str!,clientMutationId:str!}
+type SetPasswordPayload{user:User!,clientMutationId:str!}
+input SetUsernameInput{username:str!,clientMutationId:str!}
+type SetUsernamePayload{user:User!,clientMutationId:str!}
+type Settings{id:id!,domain:str!,webhooks:WebhookConfiguration!,webhookEvents:[WEBHOOK_EVENT_NAME!]!,staticURI:str,locale:Locale!,live:LiveConfiguration!,moderation:MODERATION_MODE,premoderateAllCommentsSites:[id!]!,communityGuidelines:CommunityGuidelines!,premodLinksEnable:bool,closeCommenting:CloseCommenting!,flattenReplies:bool!,collapseReplies:bool!,customCSSURL:str,customFontsCSSURL:str,disableDefaultFonts:bool!,disableCommenting:DisableCommenting!,editCommentWindowLength:int!,charCount:CharCount!,organization:Organization!,email:EmailConfiguration!,slack:SlackConfiguration!,wordList:WordList!,auth:Auth!,integrations:ExternalIntegrations!,recentCommentHistory:RecentCommentHistoryConfiguration!,reaction:ReactionConfiguration!,featuredBy:bool,topCommenter:TopCommenterConfiguration,newCommenter:NewCommenterConfiguration,staff:BadgeConfiguration!,badges:BadgeConfiguration!,accountFeatures:CommenterAccountFeatures!,stories:StoryConfiguration!,media:MediaConfiguration!,featureFlags:[FEATURE_FLAG!]!,createdAt:Time!,newCommenters:NewCommentersConfiguration!,premoderateSuspectWords:bool!,announcement:Announcement,multisite:bool!,rte:RTEConfiguration!,memberBios:bool!,amp:bool!,forReviewQueue:bool!,emailDomainModeration:[EmailDomain!]!,protectedEmailDomains:[str!]!,disposableEmailDomains:DisposableEmailDomainConfiguration,externalProfileURL:str,embeddedComments:EmbeddedCommentsConfiguration,flairBadges:FlairBadgeConfiguration,dsa:DSAConfiguration!,premoderateEmailAddress:PremoderateEmailAddressConfiguration,inPageNotifications:InPageNotificationsConfiguration,externalNotifications:ExternalNotificationsConfiguration,showUnmoderatedCounts:bool}
+input SettingsAkismetExternalIntegrationInput{enabled:bool,ipBased:bool,key:str,site:str}
+input SettingsAuthInput{integrations:SettingsAuthIntegrationsInput,sessionDuration:int!}
+input SettingsAuthIntegrationsInput{local:SettingsLocalAuthIntegrationInput,sso:SettingsSSOAuthIntegrationInput,oidc:SettingsOIDCAuthIntegrationInput,google:SettingsGoogleAuthIntegrationInput,facebook:SettingsFacebookAuthIntegrationInput}
+input SettingsAuthenticationTargetFilterInput{admin:bool!,stream:bool!}
+input SettingsCharCountInput{enabled:bool,min:int,max:int}
+input SettingsCloseCommentingInput{auto:bool,timeout:int,message:str}
+input SettingsCommunityGuidelinesInput{enabled:bool,content:str}
+input SettingsDisableCommentingInput{enabled:bool,message:str}
+input SettingsEmailConfigurationInput{enabled:bool,smtp:SettingsSMTPInput,fromName:str,fromEmail:str}
+input SettingsExternalIntegrationsInput{akismet:SettingsAkismetExternalIntegrationInput,perspective:SettingsPerspectiveExternalIntegrationInput}
+input SettingsFacebookAuthIntegrationInput{enabled:bool,allowRegistration:bool,targetFilter:SettingsAuthenticationTargetFilterInput,clientID:str,clientSecret:str}
+input SettingsGoogleAuthIntegrationInput{enabled:bool,allowRegistration:bool,targetFilter:SettingsAuthenticationTargetFilterInput,clientID:str,clientSecret:str}
+input SettingsInput{live:LiveConfigurationInput,moderation:MODERATION_MODE,premoderateAllCommentsSites:[id!],communityGuidelines:SettingsCommunityGuidelinesInput,premodLinksEnable:bool,customCSSURL:str,customFontsCSSURL:str,disableDefaultFonts:bool,disableCommenting:SettingsDisableCommentingInput,editCommentWindowLength:int,organization:SettingsOrganizationInput,closeCommenting:SettingsCloseCommentingInput,wordList:SettingsWordListInput,email:SettingsEmailConfigurationInput,auth:SettingsAuthInput,integrations:SettingsExternalIntegrationsInput,recentCommentHistory:RecentCommentHistoryConfigurationInput,charCount:SettingsCharCountInput,stories:StoryConfigurationInput,reaction:ReactionConfigurationInput,featuredBy:bool,topCommenter:TopCommenterConfigurationInput,newCommenter:NewCommenterConfigurationInput,badges:BadgeConfigurationInput,staff:BadgeConfigurationInput,accountFeatures:CommenterAccountFeaturesInput,slack:SlackConfigurationInput,locale:Locale,newCommenters:NewCommentersConfigurationInput,premoderateSuspectWords:bool,rte:RTEConfigurationInput,media:MediaConfigurationInput,memberBios:bool,amp:bool,flattenReplies:bool,collapseReplies:bool,forReviewQueue:bool,externalProfileURL:str,embeddedComments:EmbeddedCommentsConfigurationInput,flairBadges:FlairBadgeConfigurationInput,dsa:DSAConfigurationInput,premoderateEmailAddress:PremoderateEmailAddressConfigurationInput,protectedEmailDomains:[str!],disposableEmailDomains:DisposableEmailDomainsConfigurationInput,inPageNotifications:InPageNotificationsConfigurationInput,showUnmoderatedCounts:bool}
+input SettingsLocalAuthIntegrationInput{enabled:bool,allowRegistration:bool,targetFilter:SettingsAuthenticationTargetFilterInput}
+input SettingsOIDCAuthIntegrationInput{enabled:bool,allowRegistration:bool,targetFilter:SettingsAuthenticationTargetFilterInput,name:str,clientID:str,clientSecret:str,authorizationURL:str,tokenURL:str,jwksURI:str,issuer:str}
+input SettingsOrganizationInput{name:str,contactEmail:str,url:str}
+input SettingsPerspectiveExternalIntegrationInput{enabled:bool,endpoint:str,key:str,model:str,threshold:num,doNotStore:bool,sendFeedback:bool}
+input SettingsSMTPInput{secure:bool,host:str,port:int,authentication:bool,username:str,password:str}
+input SettingsSSOAuthIntegrationInput{enabled:bool,allowRegistration:bool,targetFilter:SettingsAuthenticationTargetFilterInput}
+input SettingsWordListInput{banned:[str!],suspect:[str!]}
+type SigningSecret{kid:str!,secret:str!,createdAt:Time!,lastUsedAt:Time,rotatedAt:Time,inactiveAt:Time}
+type Site{id:id!,name:str!,allowedOrigins:[str!]!,canModerate:bool!,topStories(limit:int=5):[Story!]!,createdAt:Time!}
+type SiteEdge{node:Site!,cursor:Cursor!}
+type SitesConnection{edges:[SiteEdge!]!,nodes:[Site!]!,pageInfo:PageInfo!}
+type SlackChannel{enabled:bool!,name:str,hookURL:str,triggers:SlackChannelTriggers!}
+input SlackChannelConfigurationInput{enabled:bool,name:str,hookURL:str,triggers:SlackTriggersConfigurationInput}
+type SlackChannelTriggers{reportedComments:bool,pendingComments:bool,featuredComments:bool,allComments:bool,staffComments:bool}
+type SlackConfiguration{channels:[SlackChannel!]!}
+input SlackConfigurationInput{channels:[SlackChannelConfigurationInput!]}
+input SlackTriggersConfigurationInput{reportedComments:bool,pendingComments:bool,featuredComments:bool,allComments:bool,staffComments:bool}
+type StoriesConnection{edges:[StoryEdge!]!,nodes:[Story!]!,pageInfo:PageInfo!}
+type Story{id:id!,status:STORY_STATUS!,url:str!,metadata:StoryMetadata,scrapedAt:Time,featuredComments(first:int=10,orderBy:COMMENT_SORT=CREATED_AT_DESC,after:Cursor):CommentsConnection!,comments(first:int=20,orderBy:COMMENT_SORT=CREATED_AT_DESC,after:Cursor,refreshStream:bool,rating:int,tag:TAG):CommentsConnection!,commentActionCounts:ActionCounts!,moderationQueues:ModerationQueues!,closedAt:Time,isClosed:bool!,isArchiving:bool!,isArchived:bool!,isUnarchiving:bool!,commentCounts:CommentCounts!,createdAt:Time!,settings:StorySettings!,lastCommentedAt:Time,canModerate:bool!,site:Site!,viewerCount:int,ratings:StoryRatings,viewerRating:Comment,cached:bool}
+type StoryConfiguration{scraping:StoryScrapingConfiguration!,disableLazy:bool!}
+input StoryConfigurationInput{scraping:StoryScrapingConfigurationInput,disableLazy:bool}
+type StoryEdge{node:Story!,cursor:Cursor!}
+type StoryMessageBox{enabled:bool!,icon:str,content:str}
+input StoryMessageBoxInput{enabled:bool,icon:str,content:str}
+type StoryMetadata{title:str,author:str,description:str,image:str,publishedAt:Time,modifiedAt:Time,section:str}
+input StoryMetadataInput{title:str,author:str,description:str,image:str,publishedAt:Time,modifiedAt:Time,section:str}
+type StoryRatings{average:num!,count:int!}
+type StoryScrapingConfiguration{enabled:bool!,proxyURL:str,customUserAgent:str,authentication:bool!,username:str,password:str}
+input StoryScrapingConfigurationInput{enabled:bool,proxyURL:str,customUserAgent:str,authentication:bool!,username:str,password:str}
+type StorySettings{live:LiveConfiguration!,moderation:MODERATION_MODE!,premodLinksEnable:bool!,messageBox:StoryMessageBox!,mode:STORY_MODE!,experts:[User!]!}
+input SuspendUserInput{userID:id!,timeout:int!,clientMutationId:str!,message:str!}
+type SuspendUserPayload{user:User!,clientMutationId:str!}
+type SuspensionStatus{active:bool!,until:Time,history:[SuspensionStatusHistory!]!}
+type SuspensionStatusHistory{active:bool!,from:TimeRange!,createdBy:User,createdAt:Time!,modifiedBy:User,modifiedAt:Time,message:str!}
+enum TAG=STAFF|ADMIN|MODERATOR|MEMBER|FEATURED|EXPERT|UNANSWERED|REVIEW|QUESTION
+type Tag{code:TAG!,createdBy:User,createdAt:Time!}
+type TenorMedia{url:str!,title:str,still:str,video:str,width:int,height:int}
+input TestSMTPInput{clientMutationId:str!}
+type TestSMTPPayload{clientMutationId:str!}
+type TimeRange{start:Time!,finish:Time!}
+type Token{id:id!,name:str!,createdAt:Time!}
+type TooManyPeriodsConfig{enabled:bool!}
+input TooManyPeriodsConfigInput{enabled:bool}
+type TopCommenterConfiguration{enabled:bool}
+input TopCommenterConfigurationInput{enabled:bool}
+type TwitterMedia{url:str!,width:int}
+type TwitterMediaConfiguration{enabled:bool!}
+input TwitterMediaConfigurationInput{enabled:bool}
+enum USER_AUTH_CONDITIONS=MISSING_NAME|MISSING_EMAIL|BANNED|SUSPENDED|PENDING_DELETION|WARNED
+enum USER_ROLE=COMMENTER|MEMBER|STAFF|MODERATOR|ADMIN
+enum USER_STATUS=ACTIVE|BANNED|SUSPENDED|PREMOD|WARNED
+enum USER_STATUS_FILTER=ACTIVE|BANNED|SUSPENDED|PREMOD|WARNED|SITE_BANNED
+input UnarchiveStoriesInput{clientMutationId:str!,storyIDs:[id!]!}
+type UnarchiveStoriesPayload{clientMutationId:str!,stories:[Story!]!}
+input UnfeatureCommentInput{commentID:id!,clientMutationId:str!}
+type UnfeatureCommentPayload{comment:Comment,clientMutationId:str!}
+input UpdateBioInput{bio:str,clientMutationId:str!}
+type UpdateBioPayload{user:User!,clientMutationId:str!}
+input UpdateEmailDomainInput{clientMutationId:str!,id:str!,domain:str!,newUserModeration:NEW_USER_MODERATION!}
+type UpdateEmailDomainPayload{clientMutationId:str!,settings:Settings!}
+input UpdateEmailInput{email:str!,password:str!,clientMutationId:str!}
+input UpdateEmailNotificationSettingsInput{onReply:bool,onFeatured:bool,onStaffReplies:bool,onModeration:bool,digestFrequency:DIGEST_FREQUENCY,clientMutationId:str!}
+type UpdateEmailNotificationSettingsPayload{user:User!,clientMutationId:str!}
+type UpdateEmailPayload{user:User!,clientMutationId:str!}
+input UpdateExternalModerationPhaseInput{clientMutationId:str!,id:id!,name:str,url:str,format:COMMENT_BODY_FORMAT,timeout:int}
+type UpdateExternalModerationPhasePayload{clientMutationId:str!,phase:ExternalModerationPhase!}
+input UpdateInPageNotificationSettingsInput{onReply:OnReplySettingsInput,onFeatured:bool,onModeration:bool,enabled:bool,clientMutationId:str!}
+type UpdateInPageNotificationSettingsPayload{user:User!,clientMutationId:str!}
+input UpdatePasswordInput{oldPassword:str!,newPassword:str!,clientMutationId:str!}
+type UpdatePasswordPayload{user:User!,clientMutationId:str!}
+input UpdateSSOProfileIDInput{clientMutationId:str!,userID:id!,ssoProfileID:str!}
+type UpdateSSOProfileIDPayload{clientMutationId:str!,user:User!}
+input UpdateSettingsInput{settings:SettingsInput!,clientMutationId:str!}
+type UpdateSettingsPayload{settings:Settings,clientMutationId:str!}
+input UpdateSite{name:str,url:str,contactEmail:str,allowedOrigins:[str!]}
+input UpdateSiteInput{clientMutationId:str!,id:id!,site:UpdateSite!}
+type UpdateSitePayload{clientMutationId:str!,site:Site!}
+input UpdateStory{url:str,metadata:StoryMetadataInput}
+input UpdateStoryInput{id:id!,story:UpdateStory!,clientMutationId:str!}
+input UpdateStoryModeInput{storyID:id!,mode:STORY_MODE!,clientMutationId:str!}
+type UpdateStoryModePayload{clientMutationId:str!,story:Story!}
+type UpdateStoryPayload{story:Story,clientMutationId:str!}
+input UpdateStorySettings{live:LiveConfigurationInput,moderation:MODERATION_MODE,premodLinksEnable:bool,messageBox:StoryMessageBoxInput}
+input UpdateStorySettingsInput{id:id!,settings:UpdateStorySettings!,clientMutationId:str!}
+type UpdateStorySettingsPayload{story:Story,clientMutationId:str!}
+input UpdateUserAvatarInput{userID:id!,avatar:str,clientMutationId:str!}
+type UpdateUserAvatarPayload{user:User!,clientMutationId:str!}
+input UpdateUserBanInput{userID:id!,banSiteIDs:[id!],unbanSiteIDs:[id!],message:str!,rejectExistingComments:bool,rejectionReason:RejectCommentReasonInput,clientMutationId:str!}
+type UpdateUserBanPayload{user:User!,clientMutationId:str!}
+input UpdateUserEmailInput{userID:id!,email:str!,clientMutationId:str!}
+type UpdateUserEmailPayload{user:User!,clientMutationId:str!}
+input UpdateUserMediaSettingsInput{unfurlEmbeds:bool,clientMutationId:str!}
+type UpdateUserMediaSettingsPayload{user:User!,clientMutationId:str!}
+input UpdateUserMembershipScopesInput{userID:id!,membershipScopes:MembershipScopesInput!,clientMutationId:str!}
+type UpdateUserMembershipScopesPayload{user:User!,clientMutationId:str!}
+input UpdateUserModerationScopesInput{userID:id!,moderationScopes:ModerationScopesInput!,clientMutationId:str!}
+type UpdateUserModerationScopesPayload{user:User!,clientMutationId:str!}
+input UpdateUserRoleInput{userID:id!,role:USER_ROLE!,scoped:bool!,clientMutationId:str!}
+type UpdateUserRolePayload{clientMutationId:str!,user:User!}
+input UpdateUserUsernameInput{userID:id!,username:str!,clientMutationId:str!}
+type UpdateUserUsernamePayload{user:User!,clientMutationId:str!}
+input UpdateUsernameInput{username:str!,clientMutationId:str!}
+type UpdateUsernamePayload{user:User!,clientMutationId:str!}
+input UpdateWebhookEndpointInput{clientMutationId:str!,id:id!,url:str,all:bool,events:[WEBHOOK_EVENT_NAME!]}
+type UpdateWebhookEndpointPayload{clientMutationId:str!,endpoint:WebhookEndpoint!}
+type User{id:id!,username:str,avatar:str,badges:[str!],email:str,duplicateEmail:str,emailVerified:bool,profiles:[Profile!]!,role:USER_ROLE!,moderatorNotes:[ModeratorNote!]!,ignoreable:bool!,comments(first:int=10,orderBy:COMMENT_SORT=CREATED_AT_DESC,after:Cursor):CommentsConnection!,allComments(first:int=10,after:Cursor):CommentsConnection!,rejectedComments(first:int=10,after:Cursor):CommentsConnection!,ongoingDiscussions(limit:int=5):[Story!]!,recentCommentHistory:RecentCommentHistory!,commentModerationActionHistory(first:int=10,after:Cursor):CommentModerationActionConnection!,status:UserStatus!,tokens:[Token!]!,ignoredUsers:[User!]!,notifications:UserEmailNotificationSettings!,inPageNotifications:UserInPageNotificationSettings!,createdAt:Time!,lastDownloadedAt:Time,scheduledDeletionDate:Time,deletedAt:Time,moderationScopes:UserModerationScopes,membershipScopes:UserMembershipScopes,ssoURL:str,mediaSettings:UserMediaSettings!,bio:str,premoderatedBecauseOfEmailAt:Time,hasNewNotifications:bool!,lastSeenNotificationDate:Time,lastFeaturedDate:Time,featuredCommenter:bool,newCommenter:bool,commentCounts:UserCommentCounts}
+type UserCommentCounts{statuses:CommentStatusCounts!}
+type UserDeletionHistory{updateType:UserDeletionUpdateType!,createdBy:User,createdAt:Time!}
+type UserDeletionStatus{history:[UserDeletionHistory!]!}
+enum UserDeletionUpdateType=REQUESTED|CANCELED
+type UserEdge{node:User!,cursor:Cursor!}
+type UserEmailNotificationSettings{onReply:bool!,onFeatured:bool!,onStaffReplies:bool!,onModeration:bool!,digestFrequency:DIGEST_FREQUENCY!}
+type UserInPageNotificationSettings{enabled:bool!,onReply:OnReplySettings!,onFeatured:bool!,onModeration:bool!}
+type UserMediaSettings{unfurlEmbeds:bool!}
+type UserMembershipScopes{scoped:bool!,sites:[Site!],siteIDs:[str!]}
+type UserModerationScopes{scoped:bool!,sites:[Site!],siteIDs:[str!]}
+type UserStatus{current:[USER_STATUS!]!,username:UsernameStatus!,deletion:UserDeletionStatus!,ban:BanStatus!,suspension:SuspensionStatus!,premod:PremodStatus!,warning:WarningStatus!,modMessage:ModMessageStatus!}
+type UsernameHistory{username:str!,createdBy:User!,createdAt:Time!}
+type UsernameStatus{history:[UsernameHistory!]!}
+type UsersConnection{edges:[UserEdge!]!,nodes:[User!]!,pageInfo:PageInfo!}
+enum WEBHOOK_EVENT_NAME=STORY_CREATED|COMMENT_CREATED|COMMENT_REPLY_CREATED|COMMENT_ENTERED_MODERATION_QUEUE|COMMENT_LEFT_MODERATION_QUEUE
+input WarnUserInput{userID:id!,clientMutationId:str!,message:str!}
+type WarnUserPayload{clientMutationId:str!,user:User!}
+type WarningStatus{active:bool!,message:str,history:[WarningStatusHistory!]!}
+type WarningStatusHistory{active:bool!,createdBy:User!,createdAt:Time!,acknowledgedAt:Time,message:str}
+type WebhookConfiguration{endpoints:[WebhookEndpoint!]!}
+type WebhookDelivery{success:bool!,status:int!,statusText:str!,request:str!,response:str!,createdAt:Time!}
+type WebhookEndpoint{id:id!,enabled:bool!,url:str!,signingSecret:SigningSecret!,deliveries:[WebhookDelivery!]!,all:bool!,events:[WEBHOOK_EVENT_NAME!]!}
+type WordList{banned:[str!]!,suspect:[str!]!}
+type WordlistMatch{value:str!,index:int!,length:int!}
+type YouTubeMedia{url:str!,still:str!,title:str,width:int,height:int}
+type YouTubeMediaConfiguration{enabled:bool!}
+input YouTubeMediaConfigurationInput{enabled:bool}
+
+Q comment(id:id!)->Comment # comment returns a specific comment.
+Q comments(first:int=10,after:Cursor,storyID:id,siteID:id,status:COMMENT_STATUS,section:SectionFilter,tag:TAG,query:str,orderBy:COMMENT_SORT=CREATED_AT_DESC)->CommentsConnection! # comments returns a filtered comments connection that can be paginated. This is a fairly expensive edge to filter against, moderation queues should utilize the dedicated edges for more optimized responses.
+Q story(id:id,url:str)->Story # story is a specific article that can be identified by either an ID or a URL.
+Q stream(id:id,url:str,mode:STORY_MODE)->Story # stream will load a specific story that can be identified by either an ID or a URL and will create the story if that feature is enabled.
+Q stories(first:int=10,after:Cursor,status:STORY_STATUS,query:str,siteIDs:[id!])->StoriesConnection! # stories returns filtered stories that can be paginated.
+Q user(id:id!)->User # user will return the user referenced by their ID.  TODO: evaluate adding a profile based lookup.
+Q users(first:int=10,after:Cursor,role:USER_ROLE,query:str,status:USER_STATUS_FILTER)->UsersConnection! # users returns filtered users that can be paginated.  TODO: evaluate adding status based filtering.
+Q site(id:id!)->Site
+Q sites(first:int=10,after:Cursor,query:str)->SitesConnection!
+Q viewer->User # viewer is the current logged in User. If no user is currently logged in, it will return null. This is the only nullable field that can be returned that depends on the authentication state that will not throw an error.
+Q settings->Settings! # settings is the Settings for a given Tenant.
+Q discoverOIDCConfiguration(issuer:str!)->DiscoveredOIDCConfiguration # discoverOIDCConfiguration will discover the OpenID Connect configuration based on the provided issuer. Discovery is not supported on all providers, and is described in the OpenID Connect Discovery 1.0 incorporating errata set 1:  https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig  If the provider does not support discovery, the response will be null.
+Q debugScrapeStoryMetadata(url:str!)->StoryMetadata # debugScrapeStoryMetadata will return the information that Coral was able to scrape from the given URL. No data will be saved related to the Story based on this scrape.
+Q moderationQueues(storyID:id,siteID:id,section:SectionFilter)->ModerationQueues! # moderationQueues returns the set of ModerationQueues that are available for all stories or if given the story identified by the `storyID`.
+Q sections->[str!] # sections will return the unique sections used by this Tenant.
+Q activeStories(limit:int=10)->[Story!]! # activeStories is the list of most recently commented on stories identified by their `lastCommentedAt` field
+Q webhookEndpoint(id:id!)->WebhookEndpoint # webhookEndpint will return a specific WebhookEndpoint if it exists.
+Q queues->Queues! # queues returns information on queues used in Coral to manage
+Q externalModerationPhase(id:id!)->ExternalModerationPhase # externalModerationPhase will return a specific ExternalModerationPhase if it exists.
+Q flags(first:int=10,after:Cursor,orderBy:COMMENT_SORT,storyID:id,siteID:id,section:SectionFilter)->FlagsConnection! # flags are the list of flags from user reported comments.
+Q emailDomain(id:id!)->EmailDomain # emailDomain will return a specific emailDomain configuration if it exists.
+Q dsaReports(first:int=10,after:Cursor,orderBy:REPORT_SORT=CREATED_AT_DESC,status:[DSAREPORT_STATUS_FILTER!],query:str)->DSAReportsConnection! # dsaReports are the list of dsaReports
+Q dsaReport(id:id!)->DSAReport # dsaReport returns a specific dsaReport.
+Q notifications(ownerID:id!,first:int=10,after:Cursor)->NotificationsConnection! # notifications will return a list of notifications for an ownerID.
+Q notificationCount(userID:id!)->int
+Q persistedQueries->[PersistedQuery!] # persistedQueries returns all the persisted query records in the database
+M createComment(input:CreateCommentInput!)->CreateCommentPayload! # createComment will create a Comment as the current logged in User.
+M createCommentReply(input:CreateCommentReplyInput!)->CreateCommentReplyPayload! # createCommentReply will create a Comment as the current logged in User that is in reply to another Comment.
+M editComment(input:EditCommentInput!)->EditCommentPayload! # editComment will allow the author of a comment to change the body within the time allotment.
+M updateSettings(input:UpdateSettingsInput!)->UpdateSettingsPayload! # updateSettings will update the Settings for the given Tenant.
+M rotateSSOSigningSecret(input:RotateSSOSigningSecretInput!)->RotateSSOSigningSecretPayload! # rotateSSOSigningSecret can be used to rotate a given active SigningSecret.
+M deactivateSSOSigningSecret(input:DeactivateSSOSigningSecretInput!)->DeactivateSSOSigningSecretPayload! # deactivateSSOSigningSecret will deactivate a given deactivated SigningSecret.
+M deleteSSOSigningSecret(input:DeleteSSOSigningSecretInput!)->DeleteSSOSigningSecretPayload! # deleteSSOSigningSecret will delete a given inactive SigningSecret.
+M updateSSOProfileID(input:UpdateSSOProfileIDInput!)->UpdateSSOProfileIDPayload!
+M createCommentReaction(input:CreateCommentReactionInput!)->CreateCommentReactionPayload # createCommentReaction will create a Reaction authored by the current logged in User on a Comment.
+M removeCommentReaction(input:RemoveCommentReactionInput!)->RemoveCommentReactionPayload # removeCommentReaction will remove a Reaction authored by the current logged in User on a Comment if it exists.
+M createCommentDontAgree(input:CreateCommentDontAgreeInput!)->CreateCommentDontAgreePayload # createCommentDontAgree will create a DontAgree authored by the current logged in User on a Comment.
+M removeCommentDontAgree(input:RemoveCommentDontAgreeInput!)->RemoveCommentDontAgreePayload # removeCommentDontAgree will remove a DontAgree authored by the current logged in User on a Comment if it exists.
+M createCommentFlag(input:CreateCommentFlagInput!)->CreateCommentFlagPayload! # createCommentFlag will create a Flag authored by the current logged in User on a given Comment.
+M featureComment(input:FeatureCommentInput!)->FeatureCommentPayload! # featureComment will mark a given Comment as featured.
+M unfeatureComment(input:UnfeatureCommentInput!)->UnfeatureCommentPayload! # unfeatureComment will remove the featured tag from a Comment that is featured.
+M createStory(input:CreateStoryInput!)->CreateStoryPayload! # createStory will create the provided Story.
+M updateStory(input:UpdateStoryInput!)->UpdateStoryPayload! # updateStory will update the given Story.
+M updateStorySettings(input:UpdateStorySettingsInput!)->UpdateStorySettingsPayload! # updateStory will update the given Story's settings.
+M closeStory(input:CloseStoryInput!)->CloseStoryPayload! # closeStory will close the given story for commenting.
+M openStory(input:OpenStoryInput!)->OpenStoryPayload! # openStory will open the given story for commenting.
+M mergeStories(input:MergeStoriesInput!)->MergeStoriesPayload! # mergeStories will merge two stories together, merging their comment streams. This operation is irreversible.
+M removeStory(input:RemoveStoryInput!)->RemoveStoryPayload! # removeStory will remove the given Story.
+M scrapeStory(input:ScrapeStoryInput!)->ScrapeStoryPayload! # scrapeStory will scrape the given Story and update the scraped metadata.
+M approveComment(input:ApproveCommentInput!)->ApproveCommentPayload! # approveComment will mark the Comment as APPROVED.
+M rejectComment(input:RejectCommentInput!)->RejectCommentPayload! # rejectComment will mark the Comment as REJECTED.
+M inviteUsers(input:InviteUsersInput!)->InviteUsersPayload! # inviteUsers will send emails to the users with a new account at the designated role.
+M setUsername(input:SetUsernameInput!)->SetUsernamePayload! # setUsername will set the username on the current User if they have not set one before. This mutation will fail if the username is already set.
+M updateBio(input:UpdateBioInput!)->UpdateBioPayload! # updateBio will update the users bio.
+M updateUsername(input:UpdateUsernameInput!)->UpdateUsernamePayload! # updateUsername will update the users username.
+M setEmail(input:SetEmailInput!)->SetEmailPayload! # setEmail will set the email address on the current User if they have not set one already. This mutation will fail if the email address is already set.
+M setPassword(input:SetPasswordInput!)->SetPasswordPayload! # setPassword will set the password on the current User if they have not set one already. This mutation will fail if the password is already set.
+M updatePassword(input:UpdatePasswordInput!)->UpdatePasswordPayload! # updatePassword allows the current logged in User to change their password if they already have one associated with them.
+M requestAccountDeletion(input:RequestAccountDeletionInput!)->RequestAccountDeletionPayload! # requestAccountDeletion allows the current logged in User to request to delete their account.
+M scheduleAccountDeletion(input:ScheduleAccountDeletionInput!)->ScheduleAccountDeletionPayload! # scheduleAccountDeletion allows an admin to schedule an account deletion for a target user
+M cancelScheduledAccountDeletion(input:CancelScheduledAccountDeletionInput!)->CancelScheduledAccountDeletionPayload! # cancelScheduledAccountDeletion allows an admin to cancel a scheduled account deletion for a target user
+M deleteUserAccount(input:DeleteUserAccountInput!)->DeleteUserAccountPayload! # deleteUserAccount will delete the target user now.
+M cancelAccountDeletion(input:CancelAccountDeletionInput!)->CancelAccountDeletionPayload! # cancelAccountDeletion allows the current logged in User to cancel the request to delete their account
+M createToken(input:CreateTokenInput!)->CreateTokenPayload! # createToken allows an administrator to create a Token based on the current logged in User.
+M deactivateToken(input:DeactivateTokenInput!)->DeactivateTokenPayload! # deactivateToken will deactivate the current logged in User's Token based on the input.
+M updateUserUsername(input:UpdateUserUsernameInput!)->UpdateUserUsernamePayload! # updateUserUsername allows administrators to update a given User's username to the one provided.
+M updateEmail(input:UpdateEmailInput!)->UpdateEmailPayload! # updateEmail will update the current users email address.
+M updateEmailNotificationSettings(input:UpdateEmailNotificationSettingsInput!)->UpdateEmailNotificationSettingsPayload! # updateEmailNotificationSettings can be used to update the email notification settings for the current logged in user.
+M updateInPageNotificationSettings(input:UpdateInPageNotificationSettingsInput!)->UpdateInPageNotificationSettingsPayload! # updateInPageNotificationSettings can be used to update the in-page notification settings for the current logged in user.
+M updateUserMediaSettings(input:UpdateUserMediaSettingsInput!)->UpdateUserMediaSettingsPayload! # updateUserMediaSettings can be used to update the media preferences for the current logged in user.
+M updateUserEmail(input:UpdateUserEmailInput!)->UpdateUserEmailPayload! # updateUserEmail allows administrators to update a given User's email address to the one provided.
+M updateUserAvatar(input:UpdateUserAvatarInput!)->UpdateUserAvatarPayload! # updateUserAvatar allows administrators to update a given User's avatar to the one provided.
+M updateUserRole(input:UpdateUserRoleInput!)->UpdateUserRolePayload! # updateUserRole will update a given User's role.
+M promoteModerator(input:PromoteModeratorInput!)->PromoteModeratorPayload! # promoteModerator will allow the viewer to add one or many scopes that applies to the viewer. If the target user was not already a site moderator, their role is set to site moderator.
+M demoteModerator(input:DemoteModeratorInput!)->DemoteModeratorPayload! # demoteModerator will allow the viewer to remove one or many scopes that applies to the viewer and the target user. If the target user does not have any remaining scopes, they are set to commenter.
+M promoteMember(input:PromoteMemberInput!)->PromoteModeratorPayload! # promoteMember will allow the viewer to add one or many scopes that applies to the viewer.
+M demoteMember(input:DemoteMemberInput!)->DemoteModeratorPayload! # demoteMember will allow the viewer to remove one or many scopes that applies to the viewer and the target user. If the target user does not have any remaining scopes, they are set to commenter.
+M updateUserModerationScopes(input:UpdateUserModerationScopesInput!)->UpdateUserModerationScopesPayload! # updateUserModerationScopes will update the moderation scopes for a given user. This is used to limit the scopes for which a given moderator can moderate if they also have the moderator role.
+M updateUserMembershipScopes(input:UpdateUserMembershipScopesInput!)->UpdateUserMembershipScopesPayload! # updateUserMembershipScopes will update the membership scopes for a given user. This is used to limit the sites on which a user is a member given that they also have the member role.
+M banUser(input:BanUserInput!)->BanUserPayload! # banUser will ban a specific User from interacting with Comments.
+M updateUserBan(input:UpdateUserBanInput!)->UpdateUserBanPayload! # updateUserBan will ban a specified user from specified sites (if not already banned from them) and unban a user from specified sites (if currently banned from them)
+M removeUserBan(input:RemoveUserBanInput!)->RemoveUserBanPayload! # removeUserBan will remove an active ban from a User if they have one
+M suspendUser(input:SuspendUserInput!)->SuspendUserPayload! # suspendUser will suspend a specific User from interacting with Comments.
+M warnUser(input:WarnUserInput!)->WarnUserPayload! # warnUser will warn a user and prevent them from commenting until they acknowledge
+M removeUserWarning(input:RemoveUserWarningInput!)->RemoveUserWarningPayload! # removeUserWarning will remove a user warning
+M acknowledgeWarning(input:AcknowledgeWarningInput!)->AcknowledgeWarningPayload # acknowledgeWarning will remove a warning
+M sendModMessage(input:SendModMessageInput!)->SendModMessagePayload! # sendModMessage will send a user a moderation message that they need to acknowledge
+M acknowledgeModMessage(input:AcknowledgeModMessageInput!)->AcknowledgeModMessagePayload # acknowledgeModMessage will set moderation messages to inactive
+M removeUserSuspension(input:RemoveUserSuspensionInput!)->RemoveUserSuspensionPayload! # removeUserSuspension will remove an active suspension from a User if they have one.
+M ignoreUser(input:IgnoreUserInput!)->IgnoreUserPayload! # ignoreUser will mark the given User as ignored by the current logged in User.
+M removeUserIgnore(input:RemoveUserIgnoreInput!)->RemoveUserIgnorePayload! # removeUserIgnore will remove the given User from the ignored user list from the current logged in User.
+M requestCommentsDownload(input:RequestCommentsDownloadInput!)->RequestCommentsDownloadPayload! # requestCommentsDownload allows a user to request to download their comments.
+M requestUserCommentsDownload(input:RequestUserCommentsDownloadInput!)->RequestUserCommentsDownloadPayload! # requestUserCommentsDownload allows a user to request to download their comments.
+M premodUser(input:PremodUserInput!)->PremodUserPayload! # premodUser sets a user to mandatory premod
+M removeUserPremod(input:RemovePremodUserInput!)->RemovePremodUserPayload! # removeUserPremod removes a user from mandatory premod
+M createModeratorNote(input:CreateModeratorNoteInput!)->CreateModeratorNotePayload! # createModeratorNote creates a note on a user account.
+M deleteModeratorNote(input:DeleteModeratorNoteInput!)->DeleteModeratorNotePayload! # deleteModeratorNote deletes a note on a user account.
+M enableFeatureFlag(input:EnableFeatureFlagInput!)->EnableFeatureFlagPayload! # enableFeatureFlag will enable a given FEATURE_FLAG.
+M disableFeatureFlag(input:DisableFeatureFlagInput!)->DisableFeatureFlagPayload! # disableFeatureFlag will disable a given FEATURE_FLAG
+M createAnnouncement(input:CreateAnnouncementInput!)->CreateAnnouncementPayload! # createAnnouncement creates a global announcement.
+M deleteAnnouncement(input:DeleteAnnouncementInput!)->DeleteAnnouncementPayload! # deleteAnnouncement removes a global announcement.
+M createSite(input:CreateSiteInput!)->CreateSitePayload!
+M updateSite(input:UpdateSiteInput!)->UpdateSitePayload!
+M createFlairBadge(input:CreateFlairBadgeInput!)->CreateFlairBadgePayload! # createFlairBadge creates a custom flair badge url.
+M deleteFlairBadge(input:DeleteFlairBadgeInput!)->DeleteFlairBadgePayload! # deleteFlairBadge removes a custom flair badge url.
+M createEmailDomain(input:CreateEmailDomainInput!)->CreateEmailDomainPayload! # createEmailDomain creates an email domain configuration.
+M updateEmailDomain(input:UpdateEmailDomainInput!)->UpdateEmailDomainPayload! # updateEmailDomain updates an email domain configuration.
+M deleteEmailDomain(input:DeleteEmailDomainInput!)->DeleteEmailDomainPayload! # deleteEmailDomain deletes an email domain configuration.
+M createWebhookEndpoint(input:CreateWebhookEndpointInput!)->CreateWebhookEndpointPayload! # createWebhookEndpoint will create a new WebhookEndpoint.
+M updateWebhookEndpoint(input:UpdateWebhookEndpointInput!)->UpdateWebhookEndpointPayload! # updateWebhookEndpoint will update a WebhookEndpoint.
+M enableWebhookEndpoint(input:EnableWebhookEndpointInput!)->EnableWebhookEndpointPayload! # enableWebhookEndpoint will enable a WebhookEndpoint to receive new events.
+M disableWebhookEndpoint(input:DisableWebhookEndpointInput!)->DisableWebhookEndpointPayload! # disableWebhookEndpoint will disable a WebhookEndpoint from receiving new events.
+M deleteWebhookEndpoint(input:DeleteWebhookEndpointInput!)->DeleteWebhookEndpointPayload! # deleteWebhookEndpoint will delete a WebhookEndpoint.
+M rotateWebhookEndpointSigningSecret(input:RotateWebhookEndpointSigningSecretInput!)->RotateWebhookEndpointSigningSecretPayload! # rotateWebhookEndpointSigningSecret will roll the current active secret to a new key.
+M createExternalModerationPhase(input:CreateExternalModerationPhaseInput!)->CreateExternalModerationPhasePayload! # createExternalModerationPhase will create a new ExternalModerationPhase.
+M updateExternalModerationPhase(input:UpdateExternalModerationPhaseInput!)->UpdateExternalModerationPhasePayload! # updateExternalModerationPhase will update a ExternalModerationPhase.
+M enableExternalModerationPhase(input:EnableExternalModerationPhaseInput!)->EnableExternalModerationPhasePayload! # enableExternalModerationPhase will enable a ExternalModerationPhase to receive new comments.
+M disableExternalModerationPhase(input:DisableExternalModerationPhaseInput!)->DisableExternalModerationPhasePayload! # disableExternalModerationPhase will disable a ExternalModerationPhase from receiving new comments.
+M deleteExternalModerationPhase(input:DeleteExternalModerationPhaseInput!)->DeleteExternalModerationPhasePayload! # deleteExternalModerationPhase will delete a ExternalModerationPhase.
+M rotateExternalModerationPhaseSigningSecret(input:RotateExternalModerationPhaseSigningSecretInput!)->RotateExternalModerationPhaseSigningSecretPayload! # rotateExternalModerationPhaseSigningSecret will roll the current active secret to a new key.
+M updateStoryMode(input:UpdateStoryModeInput!)->UpdateStoryModePayload! # updateStoryMode will set the story mode.
+M addStoryExpert(input:AddStoryExpertInput!)->AddStoryExpertPayload! # addStoryExpert adds an expert to a story.
+M removeStoryExpert(input:RemoveStoryExpertInput!)->RemoveStoryExpertPayload! # removeStoryExpert removes an expert from a story.
+M testSMTP(input:TestSMTPInput!)->TestSMTPPayload! # testSMTP sends a test email.
+M reviewCommentFlag(input:ReviewCommentFlagInput!)->ReviewCommentFlagPayload! # reviewCommentFlag marks comment flag as reviewed
+M archiveStories(input:ArchiveStoriesInput!)->ArchiveStoriesPayload!
+M unarchiveStories(input:UnarchiveStoriesInput!)->UnarchiveStoriesPayload!
+M markCommentsAsSeen(input:MarkCommentsAsSeenInput!)->MarkCommentsAsSeenPayload! # markCommentsAsSeen will set the seen state to true for the commentIDs provided. Seen state is stored per user, per story. It will do nothing if the request is not issued with a valid logged in user token.
+M refreshStoryCounts(input:RefreshStoryCountsInput!)->RefreshStoryCountsPayload! # refreshStoryCounts will recompute the cached counts for a story based on which flags are set to recompute in the operation input.
+M cacheStory(input:CacheStoryInput!)->CacheStoryPayload! # cacheStory will cache the given Story and its comments into redis for fast retrieval avoiding Mongo resources to load the story data.
+M invalidateCachedStory(input:InvalidateCachedStoryInput!)->InvalidateCachedStoryPayload! # invalidateCachedStory will invalidate any cached data for a story whose stream may be cached in redis.
+M flushRedis(input:FlushRedisInput!)->FlushRedisPayload! # flushRedis flushes the redis instance.
+M refreshDisposableEmailDomains(input:RefreshDisposableEmailDomainsInput!)->RefreshDisposableEmailDomainsPayload! # refreshDisposableEmailDomains will refresh disposable email domains in Redis
+M createDSAReport(input:CreateDSAReportInput!)->CreateDSAReportPayload! # createDSAReport creates a DSAReport for the provided comment
+M addDSAReportNote(input:AddDSAReportNoteInput!)->AddDSAReportNotePayload! # addDSAReportNote adds a note to the history for a DSAReport
+M addDSAReportShare(input:AddDSAReportShareInput!)->AddDSAReportSharePayload! # addDSAReportShare adds that the report was downloaded and shared to the history for a DSAReport
+M deleteDSAReportNote(input:DeleteDSAReportNoteInput!)->DeleteDSAReportNotePayload! # deleteDSAReportNote deletes a note from the history for a DSAReport
+M changeDSAReportStatus(input:ChangeDSAReportStatusInput!)->ChangeDSAReportStatusPayload! # changeDSAReportStatus changes the status of a DSAReport and adds the status change to the history for a DSAReport
+M makeDSAReportDecision(input:MakeDSAReportDecisionInput!)->MakeDSAReportDecisionPayload! # makeDSAReportDecision makes a legality decision for a DSAReport and adds the decision to the history for a DSAReport
+S commentEnteredModerationQueue(storyID:id,siteID:id,section:SectionFilter,orderBy:COMMENT_SORT,queue:MODERATION_QUEUE)->CommentEnteredModerationQueuePayload! # commentEnteredModerationQueue returns when a Comment enters a ModerationQueue. Note that a Comment may enter multiple moderation queues.
+S commentLeftModerationQueue(storyID:id,siteID:id,section:SectionFilter,orderBy:COMMENT_SORT,queue:MODERATION_QUEUE)->CommentLeftModerationQueuePayload! # commentLeftModerationQueue returns when a Comment leaves a ModerationQueue. Note that a Comment may leave multiple moderation queues.
+S commentStatusUpdated(id:id)->CommentStatusUpdatedPayload! # commentStatusUpdated returns when a Comment has it's status changed after being created.
+S commentEntered(storyID:id!,ancestorID:id)->CommentEnteredPayload! # commentEntered returns when a Comment is created or released anywhere in the Story.
+S commentCreated(storyID:id!)->CommentCreatedPayload! # commentCreated returns when a Comment is created on the top level of a Story that is visible.
+S commentReleased(storyID:id!)->CommentReleasedPayload! # commentReleased returns when a Comment on a premoderated stream is approved
+S commentReplyCreated(ancestorID:id!)->CommentReplyCreatedPayload! # commentReplyCreated returns when a Comment is posted in the ancestor chain of comments.
+S commentFeatured(storyID:id!)->CommentFeaturedPayload! # commentFeatured returns when a Comment is featured.
+S commentEdited(storyID:id!)->CommentEditedPayload! # commentEdited returns when a Comment is edited.

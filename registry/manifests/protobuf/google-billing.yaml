@@ -1,0 +1,27 @@
+spec_id: google-billing
+tasks:
+  - id: t1
+    description: "Set up a new child payment account under an existing billing arrangement, then retrieve the full list of payment accounts accessible to the current user with filtering and pagination"
+    target_endpoints:
+      - RPC CreateBillingAccount
+      - RPC ListBillingAccounts
+    expected_params:
+      RPC CreateBillingAccount:
+        - billing_account
+        - parent
+      RPC ListBillingAccounts:
+        - page_size
+        - page_token
+        - filter
+        - parent
+  - id: t2
+    description: "Look up which payment account a specific cloud project is currently charged to, then change the payment account association so the project bills to a different account"
+    target_endpoints:
+      - RPC GetProjectBillingInfo
+      - RPC UpdateProjectBillingInfo
+    expected_params:
+      RPC GetProjectBillingInfo:
+        - name
+      RPC UpdateProjectBillingInfo:
+        - name
+        - project_billing_info

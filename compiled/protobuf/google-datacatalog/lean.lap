@@ -1,0 +1,137 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api google.cloud.datacatalog.v1
+@base grpc://google.cloud.datacatalog.v1
+@version proto3
+@endpoints 37
+@hint download_for_search
+@toc DataCatalog(37)
+
+@type Timestamp {seconds: int(i64), nanos: int}
+@type Entry {linked_resource: str, fully_qualified_name: str, type: enum(TABLE/MODEL/DATA_STREAM/FILESET/CLUSTER/DATABASE/DATA_SOURCE_CONNECTION/ROUTINE/LAKE/ZONE/SERVICE/DATABASE_SCHEMA/DASHBOARD/EXPLORE/LOOK/FEATURE_ONLINE_STORE/FEATURE_VIEW/FEATURE_GROUP)?, user_specified_type: str?, integrated_system: IntegratedSystem?, user_specified_system: str?, sql_database_system_spec: SqlDatabaseSystemSpec?, looker_system_spec: LookerSystemSpec?, cloud_bigtable_system_spec: CloudBigtableSystemSpec?, gcs_fileset_spec: GcsFilesetSpec?, bigquery_table_spec: BigQueryTableSpec?, bigquery_date_sharded_spec: BigQueryDateShardedSpec?, database_table_spec: DatabaseTableSpec?, data_source_connection_spec: DataSourceConnectionSpec?, routine_spec: RoutineSpec?, dataset_spec: DatasetSpec?, fileset_spec: FilesetSpec?, service_spec: ServiceSpec?, model_spec: ModelSpec?, feature_online_store_spec: FeatureOnlineStoreSpec?, display_name: str, description: str, business_context: BusinessContext, schema: Schema, source_system_timestamps: SystemTimestamps, usage_signal: UsageSignal, labels: map<str,str>}
+@type MigrationConfig {tag_template_migration: enum(ENABLED/DISABLED), catalog_ui_experience: enum(ENABLED/DISABLED), template_migration_enabled_time: str(timestamp)}
+@type DataSourceConnectionSpec {bigquery_connection_spec: BigQueryConnectionSpec}
+@type FieldMask {paths: [str]}
+@type EntryGroup {display_name: str, description: str}
+@type DatasetSpec {vertex_dataset_spec: VertexDatasetSpec?{data_item_count: int(i64), data_type: enum(TABLE/IMAGE/TEXT/VIDEO/CONVERSATION/TIME_SERIES/DOCUMENT/TEXT_TO_SPEECH/TRANSLATION/STORE_VISION/ENTERPRISE_KNOWLEDGE_GRAPH/TEXT_PROMPT)}}
+@type SqlDatabaseSystemSpec {sql_engine: str, database_version: str, instance_host: str}
+@type RoutineSpec {routine_type: enum(SCALAR_FUNCTION/PROCEDURE), language: str, routine_arguments: [Argument]{name: str, mode: enum(IN/OUT/INOUT), type: str}, return_type: str, definition_body: str, bigquery_routine_spec: BigQueryRoutineSpec?}
+@type ModelSpec {vertex_model_spec: VertexModelSpec?{version_id: str, version_aliases: [str], version_description: str, vertex_model_source_info: VertexModelSourceInfo{source_type: enum(AUTOML/CUSTOM/BQML/MODEL_GARDEN/GENIE/CUSTOM_TEXT_EMBEDDING/MARKETPLACE), copy: bool}, container_image_uri: str}}
+@type BusinessContext {entry_overview: EntryOverview{overview: str}, contacts: Contacts{people: [Person]{designation: str, email: str}}}
+@type DatabaseTableSpec {type: enum(NATIVE/EXTERNAL), database_view_spec: DatabaseViewSpec{view_type: enum(STANDARD_VIEW/MATERIALIZED_VIEW), base_table: str?, sql_query: str?}}
+@type FilesetSpec {dataplex_fileset: DataplexFilesetSpec}
+@type ServiceSpec {cloud_bigtable_instance_spec: CloudBigtableInstanceSpec?{cloud_bigtable_cluster_specs: [CloudBigtableClusterSpec]{display_name: str, location: str, type: str, linked_resource: str}}}
+@type CloudBigtableSystemSpec {instance_display_name: str}
+@type LookerSystemSpec {parent_instance_id: str, parent_instance_display_name: str, parent_model_id: str, parent_model_display_name: str, parent_view_id: str, parent_view_display_name: str}
+
+@endpoint UNARY /DataCatalog/SearchCatalog
+@optional {page_size: int, order_by: str}
+@returns(OK) {results: [SearchCatalogResult], total_size: int, next_page_token: str, unreachable: [str]}
+
+@endpoint UNARY /DataCatalog/CreateEntryGroup
+@optional {entry_group: EntryGroup}
+@returns(OK) → EntryGroup
+
+@endpoint UNARY /DataCatalog/GetEntryGroup
+@optional {read_mask: FieldMask}
+@returns(OK) → EntryGroup
+
+@endpoint UNARY /DataCatalog/UpdateEntryGroup
+@optional {update_mask: FieldMask}
+@returns(OK) → EntryGroup
+
+@endpoint UNARY /DataCatalog/DeleteEntryGroup
+@returns(OK)
+
+@endpoint UNARY /DataCatalog/ListEntryGroups
+@returns(OK) {entry_groups: [EntryGroup], next_page_token: str}
+
+@endpoint UNARY /DataCatalog/CreateEntry
+@returns(OK) → Entry
+
+@endpoint UNARY /DataCatalog/UpdateEntry
+@optional {update_mask: FieldMask}
+@returns(OK) → Entry
+
+@endpoint UNARY /DataCatalog/DeleteEntry
+@returns(OK)
+
+@endpoint UNARY /DataCatalog/GetEntry
+@returns(OK) → Entry
+
+@endpoint UNARY /DataCatalog/LookupEntry
+@optional {linked_resource: str, sql_resource: str, fully_qualified_name: str, project: str, location: str}
+@returns(OK) → Entry
+
+@endpoint UNARY /DataCatalog/ListEntries
+@optional {page_size: int, page_token: str, read_mask: FieldMask}
+@returns(OK) {entries: [Entry], next_page_token: str}
+
+@endpoint UNARY /DataCatalog/ModifyEntryOverview
+@returns(OK) {overview: str}
+
+@endpoint UNARY /DataCatalog/ModifyEntryContacts
+@returns(OK) {people: [Person]{designation: str, email: str}}
+
+@endpoint UNARY /DataCatalog/CreateTagTemplate
+
+@endpoint UNARY /DataCatalog/GetTagTemplate
+
+@endpoint UNARY /DataCatalog/UpdateTagTemplate
+@optional {update_mask: FieldMask}
+
+@endpoint UNARY /DataCatalog/DeleteTagTemplate
+@returns(OK)
+
+@endpoint UNARY /DataCatalog/CreateTagTemplateField
+
+@endpoint UNARY /DataCatalog/UpdateTagTemplateField
+
+@endpoint UNARY /DataCatalog/RenameTagTemplateField
+
+@endpoint UNARY /DataCatalog/RenameTagTemplateFieldEnumValue
+
+@endpoint UNARY /DataCatalog/DeleteTagTemplateField
+@returns(OK)
+
+@endpoint UNARY /DataCatalog/CreateTag
+
+@endpoint UNARY /DataCatalog/UpdateTag
+@optional {update_mask: FieldMask}
+
+@endpoint UNARY /DataCatalog/DeleteTag
+@returns(OK)
+
+@endpoint UNARY /DataCatalog/ListTags
+@optional {page_size: int, page_token: str}
+@returns(OK) {tags: [Tag], next_page_token: str}
+
+@endpoint UNARY /DataCatalog/ReconcileTags
+@optional {force_delete_missing: bool, tags: [Tag]}
+
+@endpoint UNARY /DataCatalog/StarEntry
+@returns(OK)
+
+@endpoint UNARY /DataCatalog/UnstarEntry
+@returns(OK)
+
+@endpoint UNARY /DataCatalog/SetIamPolicy
+
+@endpoint UNARY /DataCatalog/GetIamPolicy
+
+@endpoint UNARY /DataCatalog/TestIamPermissions
+
+@endpoint UNARY /DataCatalog/ImportEntries
+@optional {gcs_bucket_path: str}
+
+@endpoint UNARY /DataCatalog/SetConfig
+@optional {tag_template_migration: enum(ENABLED/DISABLED), catalog_ui_experience: enum(ENABLED/DISABLED)}
+@returns(OK) → MigrationConfig
+
+@endpoint UNARY /DataCatalog/RetrieveConfig
+@returns(OK) {config: map<str,MigrationConfig>}
+
+@endpoint UNARY /DataCatalog/RetrieveEffectiveConfig
+@returns(OK) → MigrationConfig
+
+@end

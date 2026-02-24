@@ -1,0 +1,22 @@
+spec_id: shopify-gql
+tasks:
+  - id: t1
+    description: "Register a new shopper account on the storefront and then sign them in to obtain a session credential for authenticated operations"
+    target_endpoints:
+      - MUTATION customerCreate
+      - MUTATION customerAccessTokenCreate
+    expected_params:
+      MUTATION customerCreate:
+        - input
+      MUTATION customerAccessTokenCreate:
+        - input
+  - id: t2
+    description: "Retrieve the currently signed-in shopper's profile details using their session credential, and start a new shopping cart with selected products ready for purchase"
+    target_endpoints:
+      - QUERY customer
+      - MUTATION checkoutCreate
+    expected_params:
+      QUERY customer:
+        - customerAccessToken
+      MUTATION checkoutCreate:
+        - input

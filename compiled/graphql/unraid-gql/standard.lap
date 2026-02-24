@@ -1,0 +1,283 @@
+@lap v0.1
+@api Unraid Gql
+@base /graphql
+
+type AccessUrl{type:URL_TYPE!,name:str,ipv4:URL,ipv6:URL}
+input AccessUrlInput{type:URL_TYPE!,name:str,ipv4:URL,ipv6:URL}
+type AccessUrlObject{ipv4:str,ipv6:str,type:URL_TYPE!,name:str}
+input AccessUrlObjectInput{ipv4:str,ipv6:str,type:URL_TYPE!,name:str}
+type ActivationCode{code:str,partnerName:str,partnerUrl:str,serverName:str,sysModel:str,comment:str,header:str,headermetacolor:str,background:str,showBannerGradient:bool,theme:str}
+input AddPermissionInput{resource:Resource!,actions:[AuthAction!]!}
+input AddRoleForApiKeyInput{apiKeyId:PrefixedID!,role:Role!}
+type ApiConfig{version:str!,extraOrigins:[str!]!,sandbox:bool,ssoSubIds:[str!]!,plugins:[str!]!}
+type ApiKey:Node{id:PrefixedID!,key:str!,name:str!,description:str,roles:[Role!]!,createdAt:str!,permissions:[Permission!]!}
+type ApiKeyFormSettings:Node,FormSchema{id:PrefixedID!,dataSchema:JSON!,uiSchema:JSON!,values:JSON!}
+type ApiKeyMutations{create(input:CreateApiKeyInput!):ApiKey!,addRole(input:AddRoleForApiKeyInput!):bool!,removeRole(input:RemoveRoleFromApiKeyInput!):bool!,delete(input:DeleteApiKeyInput!):bool!,update(input:UpdateApiKeyInput!):ApiKey!}
+type ApiKeyResponse{valid:bool!,error:str}
+type ArrayCapacity{kilobytes:Capacity!,disks:Capacity!}
+type ArrayDisk:Node{id:PrefixedID!,idx:int!,name:str,device:str,size:BigInt,status:ArrayDiskStatus,rotational:bool,temp:int,numReads:BigInt,numWrites:BigInt,numErrors:BigInt,fsSize:BigInt,fsFree:BigInt,fsUsed:BigInt,exportable:bool,type:ArrayDiskType!,warning:int,critical:int,fsType:str,comment:str,format:str,transport:str,color:ArrayDiskFsColor,isSpinning:bool}
+enum ArrayDiskFsColor=GREEN_ON|GREEN_BLINK|BLUE_ON|BLUE_BLINK|YELLOW_ON|YELLOW_BLINK|RED_ON|RED_OFF|GREY_OFF
+input ArrayDiskInput{id:PrefixedID!,slot:int}
+enum ArrayDiskStatus=DISK_NP|DISK_OK|DISK_NP_MISSING|DISK_INVALID|DISK_WRONG|DISK_DSBL|DISK_NP_DSBL|DISK_DSBL_NEW|DISK_NEW
+enum ArrayDiskType=DATA|PARITY|FLASH|CACHE
+type ArrayMutations{setState(input:ArrayStateInput!):UnraidArray!,addDiskToArray(input:ArrayDiskInput!):UnraidArray!,removeDiskFromArray(input:ArrayDiskInput!):UnraidArray!,mountArrayDisk(id:PrefixedID!):ArrayDisk!,unmountArrayDisk(id:PrefixedID!):ArrayDisk!,clearArrayDiskStatistics(id:PrefixedID!):bool!}
+enum ArrayState=STARTED|STOPPED|NEW_ARRAY|RECON_DISK|DISABLE_DISK|SWAP_DSBL|INVALID_EXPANSION|PARITY_NOT_BIGGEST|TOO_MANY_MISSING_DISKS|NEW_DISK_TOO_SMALL|NO_DATA_DISKS
+input ArrayStateInput{desiredState:ArrayStateInputState!}
+enum ArrayStateInputState=START|STOP
+enum AuthAction=CREATE_ANY|CREATE_OWN|READ_ANY|READ_OWN|UPDATE_ANY|UPDATE_OWN|DELETE_ANY|DELETE_OWN
+enum AuthorizationOperator=EQUALS|CONTAINS|ENDS_WITH|STARTS_WITH
+enum AuthorizationRuleMode=OR|AND
+type Capacity{free:str!,used:str!,total:str!}
+type Cloud{error:str,apiKey:ApiKeyResponse!,relay:RelayResponse,minigraphql:MinigraphqlResponse!,cloud:CloudResponse!,allowedOrigins:[str!]!}
+type CloudResponse{status:str!,ip:str,error:str}
+type Config:Node{id:PrefixedID!,valid:bool,error:str}
+enum ConfigErrorState=UNKNOWN_ERROR|INELIGIBLE|INVALID|NO_KEY_SERVER|WITHDRAWN
+type Connect:Node{id:PrefixedID!,dynamicRemoteAccess:DynamicRemoteAccessStatus!,settings:ConnectSettings!}
+type ConnectSettings:Node{id:PrefixedID!,dataSchema:JSON!,uiSchema:JSON!,values:ConnectSettingsValues!}
+input ConnectSettingsInput{accessType:WAN_ACCESS_TYPE,forwardType:WAN_FORWARD_TYPE,port:int}
+type ConnectSettingsValues{accessType:WAN_ACCESS_TYPE!,forwardType:WAN_FORWARD_TYPE,port:int}
+input ConnectSignInInput{apiKey:str!,userInfo:ConnectUserInfoInput}
+input ConnectUserInfoInput{preferred_username:str!,email:str!,avatar:str}
+type ContainerHostConfig{networkMode:str!}
+type ContainerPort{ip:str,privatePort:Port,publicPort:Port,type:ContainerPortType!}
+enum ContainerPortType=TCP|UDP
+enum ContainerState=RUNNING|PAUSED|EXITED
+type CoreVersions{unraid:str,api:str,kernel:str}
+type CpuLoad{percentTotal:num!,percentUser:num!,percentSystem:num!,percentNice:num!,percentIdle:num!,percentIrq:num!,percentGuest:num!,percentSteal:num!}
+type CpuPackages:Node{id:PrefixedID!,totalPower:num!,power:[num!]!,temp:[num!]!}
+type CpuUtilization:Node{id:PrefixedID!,percentTotal:num!,cpus:[CpuLoad!]!}
+input CreateApiKeyInput{name:str!,description:str,roles:[Role!],permissions:[AddPermissionInput!],overwrite:bool}
+input CreateRCloneRemoteInput{name:str!,type:str!,parameters:JSON!}
+type Customization{activationCode:ActivationCode,partnerInfo:PublicPartnerInfo,theme:Theme!}
+type CustomizationMutations{setTheme(theme:ThemeName!):Theme!}
+input DeleteApiKeyInput{ids:[PrefixedID!]!}
+input DeleteRCloneRemoteInput{name:str!}
+type Disk:Node{id:PrefixedID!,device:str!,type:str!,name:str!,vendor:str!,size:num!,bytesPerSector:num!,totalCylinders:num!,totalHeads:num!,totalSectors:num!,totalTracks:num!,tracksPerCylinder:num!,sectorsPerTrack:num!,firmwareRevision:str!,serialNum:str!,interfaceType:DiskInterfaceType!,smartStatus:DiskSmartStatus!,temperature:num,partitions:[DiskPartition!]!,isSpinning:bool!}
+enum DiskFsType=XFS|BTRFS|VFAT|ZFS|EXT4|NTFS
+enum DiskInterfaceType=SAS|SATA|USB|PCIE|UNKNOWN
+type DiskPartition{name:str!,fsType:DiskFsType!,size:num!}
+enum DiskSmartStatus=OK|UNKNOWN
+type Docker:Node{id:PrefixedID!,containers(skipCache:bool!=False):[DockerContainer!]!,networks(skipCache:bool!=False):[DockerNetwork!]!,portConflicts(skipCache:bool!=False):DockerPortConflicts!,logs(id:PrefixedID!,since:DateTime,tail:int):DockerContainerLogs!,container(id:PrefixedID!):DockerContainer,organizer(skipCache:bool!=False):ResolvedOrganizerV1!,containerUpdateStatuses:[ExplicitStatusItem!]!}
+input DockerAutostartEntryInput{id:PrefixedID!,autoStart:bool!,wait:int}
+type DockerContainer:Node{id:PrefixedID!,names:[str!]!,image:str!,imageId:str!,command:str!,created:int!,ports:[ContainerPort!]!,lanIpPorts:[str!],sizeRootFs:BigInt,sizeRw:BigInt,sizeLog:BigInt,labels:JSON,state:ContainerState!,status:str!,hostConfig:ContainerHostConfig,networkSettings:JSON,mounts:[JSON!],autoStart:bool!,autoStartOrder:int,autoStartWait:int,templatePath:str,projectUrl:str,registryUrl:str,supportUrl:str,iconUrl:str,webUiUrl:str,shell:str,templatePorts:[ContainerPort!],isOrphaned:bool!,isUpdateAvailable:bool,isRebuildReady:bool,tailscaleEnabled:bool!,tailscaleStatus(forceRefresh:bool=False):TailscaleStatus}
+type DockerContainerLogLine{timestamp:DateTime!,message:str!}
+type DockerContainerLogs{containerId:PrefixedID!,lines:[DockerContainerLogLine!]!,cursor:DateTime}
+type DockerContainerPortConflict{privatePort:Port!,type:ContainerPortType!,containers:[DockerPortConflictContainer!]!}
+type DockerContainerStats{id:PrefixedID!,cpuPercent:num!,memUsage:str!,memPercent:num!,netIO:str!,blockIO:str!}
+type DockerLanPortConflict{lanIpPort:str!,publicPort:Port,type:ContainerPortType!,containers:[DockerPortConflictContainer!]!}
+type DockerMutations{start(id:PrefixedID!):DockerContainer!,stop(id:PrefixedID!):DockerContainer!,pause(id:PrefixedID!):DockerContainer!,unpause(id:PrefixedID!):DockerContainer!,removeContainer(id:PrefixedID!,withImage:bool):bool!,updateAutostartConfiguration(entries:[DockerAutostartEntryInput!]!,persistUserPreferences:bool):bool!,updateContainer(id:PrefixedID!):DockerContainer!,updateContainers(ids:[PrefixedID!]!):[DockerContainer!]!,updateAllContainers:[DockerContainer!]!}
+type DockerNetwork:Node{id:PrefixedID!,name:str!,created:str!,scope:str!,driver:str!,enableIPv6:bool!,ipam:JSON!,internal:bool!,attachable:bool!,ingress:bool!,configFrom:JSON!,configOnly:bool!,containers:JSON!,options:JSON!,labels:JSON!}
+type DockerPortConflictContainer{id:PrefixedID!,name:str!}
+type DockerPortConflicts{containerPorts:[DockerContainerPortConflict!]!,lanPorts:[DockerLanPortConflict!]!}
+type DockerTemplateSyncResult{scanned:int!,matched:int!,skipped:int!,errors:[str!]!}
+type DynamicRemoteAccessStatus{enabledType:DynamicRemoteAccessType!,runningType:DynamicRemoteAccessType!,error:str}
+enum DynamicRemoteAccessType=STATIC|UPNP|DISABLED
+input EnableDynamicRemoteAccessInput{url:AccessUrlInput!,enabled:bool!}
+type ExplicitStatusItem{name:str!,updateStatus:UpdateStatus!}
+type Flash:Node{id:PrefixedID!,guid:str!,vendor:str!,product:str!}
+type FlashBackupStatus{status:str!,jobId:str}
+type FlatOrganizerEntry{id:str!,type:str!,name:str!,parentId:str,depth:num!,position:num!,path:[str!]!,hasChildren:bool!,childrenIds:[str!]!,meta:DockerContainer}
+iface FormSchema{dataSchema:JSON!,uiSchema:JSON!,values:JSON!}
+type Info:Node{id:PrefixedID!,time:DateTime!,baseboard:InfoBaseboard!,cpu:InfoCpu!,devices:InfoDevices!,display:InfoDisplay!,machineId:id,memory:InfoMemory!,os:InfoOs!,system:InfoSystem!,versions:InfoVersions!}
+type InfoBaseboard:Node{id:PrefixedID!,manufacturer:str,model:str,version:str,serial:str,assetTag:str,memMax:num,memSlots:num}
+type InfoCpu:Node{id:PrefixedID!,manufacturer:str,brand:str,vendor:str,family:str,model:str,stepping:int,revision:str,voltage:str,speed:num,speedmin:num,speedmax:num,threads:int,cores:int,processors:int,socket:str,cache:JSON,flags:[str!],topology:[[[int!]!]!]!,packages:CpuPackages!}
+type InfoDevices:Node{id:PrefixedID!,gpu:[InfoGpu!],network:[InfoNetwork!],pci:[InfoPci!],usb:[InfoUsb!]}
+type InfoDisplay:Node{id:PrefixedID!,case:InfoDisplayCase!,theme:ThemeName!,unit:Temperature!,scale:bool!,tabs:bool!,resize:bool!,wwn:bool!,total:bool!,usage:bool!,text:bool!,warning:int!,critical:int!,hot:int!,max:int,locale:str}
+type InfoDisplayCase:Node{id:PrefixedID!,url:str!,icon:str!,error:str!,base64:str!}
+type InfoGpu:Node{id:PrefixedID!,type:str!,typeid:str!,blacklisted:bool!,class:str!,productid:str!,vendorname:str}
+type InfoMemory:Node{id:PrefixedID!,layout:[MemoryLayout!]!}
+type InfoNetwork:Node{id:PrefixedID!,iface:str!,model:str,vendor:str,mac:str,virtual:bool,speed:str,dhcp:bool}
+type InfoOs:Node{id:PrefixedID!,platform:str,distro:str,release:str,codename:str,kernel:str,arch:str,hostname:str,fqdn:str,build:str,servicepack:str,uptime:str,logofile:str,serial:str,uefi:bool}
+type InfoPci:Node{id:PrefixedID!,type:str!,typeid:str!,vendorname:str,vendorid:str!,productname:str,productid:str!,blacklisted:str!,class:str!}
+type InfoSystem:Node{id:PrefixedID!,manufacturer:str,model:str,version:str,serial:str,uuid:str,sku:str,virtual:bool}
+type InfoUsb:Node{id:PrefixedID!,name:str!,bus:str,device:str}
+type InfoVersions:Node{id:PrefixedID!,core:CoreVersions!,packages:PackageVersions}
+input InitiateFlashBackupInput{remoteName:str!,sourcePath:str!,destinationPath:str!,options:JSON}
+type KeyFile{location:str,contents:str}
+type LogFile{name:str!,path:str!,size:int!,modifiedAt:DateTime!}
+type LogFileContent{path:str!,content:str!,totalLines:int!,startLine:int}
+type MemoryLayout:Node{id:PrefixedID!,size:BigInt!,bank:str,type:str,clockSpeed:int,partNum:str,serialNum:str,manufacturer:str,formFactor:str,voltageConfigured:int,voltageMin:int,voltageMax:int}
+type MemoryUtilization:Node{id:PrefixedID!,total:BigInt!,used:BigInt!,free:BigInt!,available:BigInt!,active:BigInt!,buffcache:BigInt!,percentTotal:num!,swapTotal:BigInt!,swapUsed:BigInt!,swapFree:BigInt!,percentSwapTotal:num!}
+type Metrics:Node{id:PrefixedID!,cpu:CpuUtilization,memory:MemoryUtilization}
+enum MinigraphStatus=PRE_INIT|CONNECTING|CONNECTED|PING_FAILURE|ERROR_RETRYING
+type MinigraphqlResponse{status:MinigraphStatus!,timeout:int,error:str}
+type Network:Node{id:PrefixedID!,accessUrls:[AccessUrl!]}
+iface Node{id:PrefixedID!}
+type Notification:Node{id:PrefixedID!,title:str!,subject:str!,description:str!,importance:NotificationImportance!,link:str,type:NotificationType!,timestamp:str,formattedTimestamp:str}
+type NotificationCounts{info:int!,warning:int!,alert:int!,total:int!}
+input NotificationData{title:str!,subject:str!,description:str!,importance:NotificationImportance!,link:str}
+input NotificationFilter{importance:NotificationImportance,type:NotificationType!,offset:int!,limit:int!}
+enum NotificationImportance=ALERT|INFO|WARNING
+type NotificationOverview{unread:NotificationCounts!,archive:NotificationCounts!}
+enum NotificationType=UNREAD|ARCHIVE
+type Notifications:Node{id:PrefixedID!,overview:NotificationOverview!,list(filter:NotificationFilter!):[Notification!]!,warningsAndAlerts:[Notification!]!}
+type OidcAuthorizationRule{claim:str!,operator:AuthorizationOperator!,value:[str!]!}
+type OidcConfiguration{providers:[OidcProvider!]!,defaultAllowedOrigins:[str!]}
+type OidcProvider{id:PrefixedID!,name:str!,clientId:str!,clientSecret:str,issuer:str,authorizationEndpoint:str,tokenEndpoint:str,jwksUri:str,scopes:[str!]!,authorizationRules:[OidcAuthorizationRule!],authorizationRuleMode:AuthorizationRuleMode,buttonText:str,buttonIcon:str,buttonVariant:str,buttonStyle:str}
+type OidcSessionValidation{valid:bool!,username:str}
+type Owner{username:str!,url:str!,avatar:str!}
+type PackageVersions{openssl:str,node:str,npm:str,pm2:str,git:str,nginx:str,php:str,docker:str}
+type ParityCheck{date:DateTime,duration:int,speed:str,status:ParityCheckStatus!,errors:int,progress:int,correcting:bool,paused:bool,running:bool}
+type ParityCheckMutations{start(correct:bool!):JSON!,pause:JSON!,resume:JSON!,cancel:JSON!}
+enum ParityCheckStatus=NEVER_RUN|RUNNING|PAUSED|COMPLETED|CANCELLED|FAILED
+type Permission{resource:Resource!,actions:[AuthAction!]!}
+type Plugin{name:str!,version:str!,hasApiModule:bool,hasCliModule:bool}
+input PluginManagementInput{names:[str!]!,bundled:bool!=False,restart:bool!=True}
+type ProfileModel:Node{id:PrefixedID!,username:str!,url:str!,avatar:str!}
+type PublicOidcProvider{id:id!,name:str!,buttonText:str,buttonIcon:str,buttonVariant:str,buttonStyle:str}
+type PublicPartnerInfo{partnerName:str,hasPartnerLogo:bool!,partnerUrl:str,partnerLogoUrl:str}
+type RCloneBackupConfigForm{id:id!,dataSchema:JSON!,uiSchema:JSON!}
+type RCloneBackupSettings{configForm(formOptions:RCloneConfigFormInput):RCloneBackupConfigForm!,drives:[RCloneDrive!]!,remotes:[RCloneRemote!]!}
+input RCloneConfigFormInput{providerType:str,showAdvanced:bool=False,parameters:JSON}
+type RCloneDrive{name:str!,options:JSON!}
+type RCloneMutations{createRCloneRemote(input:CreateRCloneRemoteInput!):RCloneRemote!,deleteRCloneRemote(input:DeleteRCloneRemoteInput!):bool!}
+type RCloneRemote{name:str!,type:str!,parameters:JSON!,config:JSON!}
+type Registration:Node{id:PrefixedID!,type:registrationType,keyFile:KeyFile,state:RegistrationState,expiration:str,updateExpiration:str}
+enum RegistrationState=TRIAL|BASIC|PLUS|PRO|STARTER|UNLEASHED|LIFETIME|EEXPIRED|EGUID|EGUID1|ETRIAL|ENOKEYFILE|ENOKEYFILE1|ENOKEYFILE2|ENOFLASH|ENOFLASH1|ENOFLASH2|ENOFLASH3|ENOFLASH4|ENOFLASH5|ENOFLASH6|ENOFLASH7|EBLACKLISTED|EBLACKLISTED1|EBLACKLISTED2|ENOCONN
+type RelayResponse{status:str!,timeout:str,error:str}
+type RemoteAccess{accessType:WAN_ACCESS_TYPE!,forwardType:WAN_FORWARD_TYPE,port:int}
+input RemoveRoleFromApiKeyInput{apiKeyId:PrefixedID!,role:Role!}
+type ResolvedOrganizerV1{version:num!,views:[ResolvedOrganizerView!]!}
+type ResolvedOrganizerView{id:str!,name:str!,rootId:str!,flatEntries:[FlatOrganizerEntry!]!,prefs:JSON}
+enum Resource=ACTIVATION_CODE|API_KEY|ARRAY|CLOUD|CONFIG|CONNECT|CONNECT__REMOTE_ACCESS|CUSTOMIZATIONS|DASHBOARD|DISK|DISPLAY|DOCKER|FLASH|INFO|LOGS|ME|NETWORK|NOTIFICATIONS|ONLINE|OS|OWNER|PERMISSION|REGISTRATION|SERVERS|SERVICES|SHARE|VARS|VMS|WELCOME
+enum Role=ADMIN|CONNECT|GUEST|VIEWER
+type Server:Node{id:PrefixedID!,owner:ProfileModel!,guid:str!,apikey:str!,name:str!,status:ServerStatus!,wanip:str!,lanip:str!,localurl:str!,remoteurl:str!}
+enum ServerStatus=ONLINE|OFFLINE|NEVER_CONNECTED
+type Service:Node{id:PrefixedID!,name:str,online:bool,uptime:Uptime,version:str}
+type Settings:Node{id:PrefixedID!,unified:UnifiedSettings!,sso:SsoSettings!,api:ApiConfig!}
+input SetupRemoteAccessInput{accessType:WAN_ACCESS_TYPE!,forwardType:WAN_FORWARD_TYPE,port:int}
+type Share:Node{id:PrefixedID!,name:str,free:BigInt,used:BigInt,size:BigInt,include:[str!],exclude:[str!],cache:bool,nameOrig:str,comment:str,allocator:str,splitLevel:str,floor:str,cow:str,color:str,luksStatus:str}
+type SsoSettings:Node{id:PrefixedID!,oidcProviders:[OidcProvider!]!}
+type TailscaleExitNodeStatus{online:bool!,tailscaleIps:[str!]}
+type TailscaleStatus{online:bool!,version:str,latestVersion:str,updateAvailable:bool!,hostname:str,dnsName:str,relay:str,relayName:str,tailscaleIps:[str!],primaryRoutes:[str!],isExitNode:bool!,exitNodeStatus:TailscaleExitNodeStatus,webUiUrl:str,keyExpiry:DateTime,keyExpiryDays:int,keyExpired:bool!,backendState:str,authUrl:str}
+enum Temperature=CELSIUS|FAHRENHEIT
+type Theme{name:ThemeName!,showBannerImage:bool!,showBannerGradient:bool!,showHeaderDescription:bool!,headerBackgroundColor:str,headerPrimaryTextColor:str,headerSecondaryTextColor:str}
+enum ThemeName=azure|black|gray|white
+type UPSBattery{chargeLevel:int!,estimatedRuntime:int!,health:str!}
+enum UPSCableType=USB|SIMPLE|SMART|ETHER|CUSTOM
+input UPSConfigInput{service:UPSServiceState,upsCable:UPSCableType,customUpsCable:str,upsType:UPSType,device:str,overrideUpsCapacity:int,batteryLevel:int,minutes:int,timeout:int,killUps:UPSKillPower}
+type UPSConfiguration{service:str,upsCable:str,customUpsCable:str,upsType:str,device:str,overrideUpsCapacity:int,batteryLevel:int,minutes:int,timeout:int,killUps:str,nisIp:str,netServer:str,upsName:str,modelName:str}
+type UPSDevice{id:id!,name:str!,model:str!,status:str!,battery:UPSBattery!,power:UPSPower!}
+enum UPSKillPower=YES|NO
+type UPSPower{inputVoltage:num!,outputVoltage:num!,loadPercentage:int!}
+enum UPSServiceState=ENABLE|DISABLE
+enum UPSType=USB|APCSMART|NET|SNMP|DUMB|PCNET|MODBUS
+enum URL_TYPE=LAN|WIREGUARD|WAN|MDNS|OTHER|DEFAULT
+type UnifiedSettings:Node,FormSchema{id:PrefixedID!,dataSchema:JSON!,uiSchema:JSON!,values:JSON!}
+type UnraidArray:Node{id:PrefixedID!,state:ArrayState!,capacity:ArrayCapacity!,boot:ArrayDisk,parities:[ArrayDisk!]!,parityCheckStatus:ParityCheck!,disks:[ArrayDisk!]!,caches:[ArrayDisk!]!}
+input UpdateApiKeyInput{id:PrefixedID!,name:str,description:str,roles:[Role!],permissions:[AddPermissionInput!]}
+type UpdateSettingsResponse{restartRequired:bool!,values:JSON!,warnings:[str!]}
+enum UpdateStatus=UP_TO_DATE|UPDATE_AVAILABLE|REBUILD_READY|UNKNOWN
+type Uptime{timestamp:str}
+type UserAccount:Node{id:PrefixedID!,name:str!,description:str!,roles:[Role!]!,permissions:[Permission!]}
+type Vars:Node{id:PrefixedID!,version:str,maxArraysz:int,maxCachesz:int,name:str,timeZone:str,comment:str,security:str,workgroup:str,domain:str,domainShort:str,hideDotFiles:bool,localMaster:bool,enableFruit:str,useNtp:bool,ntpServer1:str,ntpServer2:str,ntpServer3:str,ntpServer4:str,domainLogin:str,sysModel:str,sysArraySlots:int,sysCacheSlots:int,sysFlashSlots:int,useSsl:bool,port:int,portssl:int,localTld:str,bindMgt:bool,useTelnet:bool,porttelnet:int,useSsh:bool,portssh:int,startPage:str,startArray:bool,spindownDelay:str,queueDepth:str,spinupGroups:bool,defaultFormat:str,defaultFsType:str,shutdownTimeout:int,luksKeyfile:str,pollAttributes:str,pollAttributesDefault:str,pollAttributesStatus:str,nrRequests:int,nrRequestsDefault:int,nrRequestsStatus:str,mdNumStripes:int,mdNumStripesDefault:int,mdNumStripesStatus:str,mdSyncWindow:int,mdSyncWindowDefault:int,mdSyncWindowStatus:str,mdSyncThresh:int,mdSyncThreshDefault:int,mdSyncThreshStatus:str,mdWriteMethod:int,mdWriteMethodDefault:str,mdWriteMethodStatus:str,shareDisk:str,shareUser:str,shareUserInclude:str,shareUserExclude:str,shareSmbEnabled:bool,shareNfsEnabled:bool,shareAfpEnabled:bool,shareInitialOwner:str,shareInitialGroup:str,shareCacheEnabled:bool,shareCacheFloor:str,shareMoverSchedule:str,shareMoverLogging:bool,fuseRemember:str,fuseRememberDefault:str,fuseRememberStatus:str,fuseDirectio:str,fuseDirectioDefault:str,fuseDirectioStatus:str,shareAvahiEnabled:bool,shareAvahiSmbName:str,shareAvahiSmbModel:str,shareAvahiAfpName:str,shareAvahiAfpModel:str,safeMode:bool,startMode:str,configValid:bool,configError:ConfigErrorState,joinStatus:str,deviceCount:int,flashGuid:str,flashProduct:str,flashVendor:str,regCheck:str,regFile:str,regGuid:str,regTy:registrationType,regState:RegistrationState,regTo:str,regTm:str,regTm2:str,regGen:str,sbName:str,sbVersion:str,sbUpdated:str,sbEvents:int,sbState:str,sbClean:bool,sbSynced:int,sbSyncErrs:int,sbSynced2:int,sbSyncExit:str,sbNumDisks:int,mdColor:str,mdNumDisks:int,mdNumDisabled:int,mdNumInvalid:int,mdNumMissing:int,mdNumNew:int,mdNumErased:int,mdResync:int,mdResyncCorr:str,mdResyncPos:str,mdResyncDb:str,mdResyncDt:str,mdResyncAction:str,mdResyncSize:int,mdState:str,mdVersion:str,cacheNumDevices:int,cacheSbNumDisks:int,fsState:str,fsProgress:str,fsCopyPrcnt:int,fsNumMounted:int,fsNumUnmountable:int,fsUnmountableMask:str,shareCount:int,shareSmbCount:int,shareNfsCount:int,shareAfpCount:int,shareMoverActive:bool,csrfToken:str}
+type VmDomain:Node{id:PrefixedID!,name:str,state:VmState!,uuid:str}
+type VmMutations{start(id:PrefixedID!):bool!,stop(id:PrefixedID!):bool!,pause(id:PrefixedID!):bool!,resume(id:PrefixedID!):bool!,forceStop(id:PrefixedID!):bool!,reboot(id:PrefixedID!):bool!,reset(id:PrefixedID!):bool!}
+enum VmState=NOSTATE|RUNNING|IDLE|PAUSED|SHUTDOWN|SHUTOFF|CRASHED|PMSUSPENDED
+type Vms:Node{id:PrefixedID!,domains:[VmDomain!],domain:[VmDomain!]}
+enum WAN_ACCESS_TYPE=DYNAMIC|ALWAYS|DISABLED
+enum WAN_FORWARD_TYPE=UPNP|STATIC
+enum registrationType=BASIC|PLUS|PRO|STARTER|UNLEASHED|LIFETIME|INVALID|TRIAL
+
+Q apiKeys->[ApiKey!]!
+Q apiKey(id:PrefixedID!)->ApiKey
+Q apiKeyPossibleRoles->[Role!]! # All possible roles for API keys
+Q apiKeyPossiblePermissions->[Permission!]! # All possible permissions for API keys
+Q getPermissionsForRoles(roles:[Role!]!)->[Permission!]! # Get the actual permissions that would be granted by a set of roles
+Q previewEffectivePermissions(roles:[Role!],permissions:[AddPermissionInput!])->[Permission!]! # Preview the effective permissions for a combination of roles and explicit permissions
+Q getAvailableAuthActions->[AuthAction!]! # Get all available authentication actions with possession
+Q getApiKeyCreationFormSchema->ApiKeyFormSettings! # Get JSON Schema for API key creation form
+Q config->Config!
+Q flash->Flash!
+Q me->UserAccount!
+Q notifications->Notifications! # Get all notifications
+Q online->bool!
+Q owner->Owner!
+Q registration->Registration
+Q server->Server
+Q servers->[Server!]!
+Q services->[Service!]!
+Q shares->[Share!]!
+Q vars->Vars!
+Q isInitialSetup->bool!
+Q vms->Vms! # Get information about all VMs on the system
+Q parityHistory->[ParityCheck!]!
+Q array->UnraidArray!
+Q customization->Customization
+Q publicPartnerInfo->PublicPartnerInfo
+Q publicTheme->Theme!
+Q docker->Docker!
+Q disks->[Disk!]!
+Q disk(id:PrefixedID!)->Disk!
+Q rclone->RCloneBackupSettings!
+Q info->Info!
+Q logFiles->[LogFile!]!
+Q logFile(path:str!,lines:int,startLine:int)->LogFileContent!
+Q settings->Settings!
+Q isSSOEnabled->bool!
+Q publicOidcProviders->[PublicOidcProvider!]! # Get public OIDC provider information for login buttons
+Q oidcProviders->[OidcProvider!]! # Get all configured OIDC providers (admin only)
+Q oidcProvider(id:PrefixedID!)->OidcProvider # Get a specific OIDC provider by ID
+Q oidcConfiguration->OidcConfiguration! # Get the full OIDC configuration (admin only)
+Q validateOidcSession(token:str!)->OidcSessionValidation! # Validate an OIDC session token (internal use for CLI validation)
+Q metrics->Metrics!
+Q upsDevices->[UPSDevice!]!
+Q upsDeviceById(id:str!)->UPSDevice
+Q upsConfiguration->UPSConfiguration!
+Q plugins->[Plugin!]! # List all installed plugins with their metadata
+Q remoteAccess->RemoteAccess!
+Q connect->Connect!
+Q network->Network!
+Q cloud->Cloud!
+M createNotification(input:NotificationData!)->Notification! # Creates a new notification record
+M deleteNotification(id:PrefixedID!,type:NotificationType!)->NotificationOverview!
+M deleteArchivedNotifications->NotificationOverview! # Deletes all archived notifications on server.
+M archiveNotification(id:PrefixedID!)->Notification! # Marks a notification as archived.
+M archiveNotifications(ids:[PrefixedID!]!)->NotificationOverview!
+M notifyIfUnique(input:NotificationData!)->Notification # Creates a notification if an equivalent unread notification does not already exist.
+M archiveAll(importance:NotificationImportance)->NotificationOverview!
+M unreadNotification(id:PrefixedID!)->Notification! # Marks a notification as unread.
+M unarchiveNotifications(ids:[PrefixedID!]!)->NotificationOverview!
+M unarchiveAll(importance:NotificationImportance)->NotificationOverview!
+M recalculateOverview->NotificationOverview! # Reads each notification to recompute & update the overview.
+M array->ArrayMutations!
+M docker->DockerMutations!
+M vm->VmMutations!
+M parityCheck->ParityCheckMutations!
+M apiKey->ApiKeyMutations!
+M customization->CustomizationMutations!
+M rclone->RCloneMutations!
+M createDockerFolder(name:str!,parentId:str,childrenIds:[str!])->ResolvedOrganizerV1!
+M setDockerFolderChildren(folderId:str,childrenIds:[str!]!)->ResolvedOrganizerV1!
+M deleteDockerEntries(entryIds:[str!]!)->ResolvedOrganizerV1!
+M moveDockerEntriesToFolder(sourceEntryIds:[str!]!,destinationFolderId:str!)->ResolvedOrganizerV1!
+M moveDockerItemsToPosition(sourceEntryIds:[str!]!,destinationFolderId:str!,position:num!)->ResolvedOrganizerV1!
+M renameDockerFolder(folderId:str!,newName:str!)->ResolvedOrganizerV1!
+M createDockerFolderWithItems(name:str!,parentId:str,sourceEntryIds:[str!],position:num)->ResolvedOrganizerV1!
+M updateDockerViewPreferences(viewId:str=default,prefs:JSON!)->ResolvedOrganizerV1!
+M syncDockerTemplatePaths->DockerTemplateSyncResult!
+M resetDockerTemplateMappings->bool! # Reset Docker template mappings to defaults. Use this to recover from corrupted state.
+M refreshDockerDigests->bool!
+M initiateFlashBackup(input:InitiateFlashBackupInput!)->FlashBackupStatus! # Initiates a flash drive backup using a configured remote.
+M updateSettings(input:JSON!)->UpdateSettingsResponse!
+M configureUps(config:UPSConfigInput!)->bool!
+M addPlugin(input:PluginManagementInput!)->bool! # Add one or more plugins to the API. Returns false if restart was triggered automatically, true if manual restart is required.
+M removePlugin(input:PluginManagementInput!)->bool! # Remove one or more plugins from the API. Returns false if restart was triggered automatically, true if manual restart is required.
+M updateApiSettings(input:ConnectSettingsInput!)->ConnectSettingsValues!
+M connectSignIn(input:ConnectSignInInput!)->bool!
+M connectSignOut->bool!
+M setupRemoteAccess(input:SetupRemoteAccessInput!)->bool!
+M enableDynamicRemoteAccess(input:EnableDynamicRemoteAccessInput!)->bool!
+S notificationAdded->Notification!
+S notificationsOverview->NotificationOverview!
+S notificationsWarningsAndAlerts->[Notification!]!
+S ownerSubscription->Owner!
+S serversSubscription->Server!
+S parityHistorySubscription->ParityCheck!
+S arraySubscription->UnraidArray!
+S dockerContainerStats->DockerContainerStats!
+S logFile(path:str!)->LogFileContent!
+S systemMetricsCpu->CpuUtilization!
+S systemMetricsCpuTelemetry->CpuPackages!
+S systemMetricsMemory->MemoryUtilization!
+S upsUpdates->UPSDevice!

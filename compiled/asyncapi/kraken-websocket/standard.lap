@@ -1,0 +1,36 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Kraken Websockets API
+@version 1.8.0
+@endpoints 5
+@toc root(5)
+
+@endpoint SUB /
+@desc Ping server to determine whether connection is alive
+@required {event: str}
+@optional {reqid: int # client originated ID reflected in response message.}
+@returns(SUB) {event: str, reqid: int} # message payload
+
+@endpoint PUB /
+@desc Server heartbeat sent if no subscription traffic within 1 second (approximately)
+@optional {event: str}
+@returns(PUB) {event: str} # message payload
+
+@endpoint PUB /
+@desc Status sent on connection or system status changes.
+@optional {event: str, connectionID: int # The ID of the connection, status: str(online/maintenance/cancel_only/limit_only/post_only), version: str}
+@returns(PUB) {event: str, connectionID: int, status: str, version: str} # message payload
+
+@endpoint SUB /
+@desc Subscribe to a topic on a single or multiple currency pairs.
+@required {event: str}
+@optional {reqid: int # client originated ID reflected in response message., pair: [str] # Array of currency pairs., subscription: map}
+@returns(SUB) {event: str, reqid: int, pair: [str], subscription: map{depth: int, interval: int, name: str, ratecounter: bool, snapshot: bool, token: str}} # message payload
+
+@endpoint SUB /
+@desc Unsubscribe, can specify a channelID or multiple currency pairs.
+@required {event: str}
+@optional {reqid: int # client originated ID reflected in response message., pair: [str] # Array of currency pairs., subscription: map}
+@returns(SUB) {event: str, reqid: int, pair: [str], subscription: map{depth: int, interval: int, name: str, token: str}} # message payload
+
+@end

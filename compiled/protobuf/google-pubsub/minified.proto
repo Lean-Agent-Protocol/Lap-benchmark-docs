@@ -1,0 +1,442 @@
+syntax = "proto3";
+package google.pubsub.v1;
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/pubsub/v1/schema.proto";
+option csharp_namespace = "Google.Cloud.PubSub.V1";
+option go_package = "cloud.google.com/go/pubsub/v2/apiv1/pubsubpb;pubsubpb";
+option java_multiple_files = true;
+option java_outer_classname = "PubsubProto";
+option java_package = "com.google.pubsub.v1";
+option php_namespace = "Google\\Cloud\\PubSub\\V1";
+option ruby_package = "Google::Cloud::PubSub::V1";
+option (google.api.resource_definition) = {
+type: "cloudkms.googleapis.com/CryptoKey"
+pattern: "projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}"
+};
+option (google.api.resource_definition) = {
+type: "analyticshub.googleapis.com/Listing"
+pattern: "projects/{project}/locations/{location}/dataExchanges/{data_exchange}/listings/{listing}"
+};
+service Publisher {
+option (google.api.default_host) = "pubsub.googleapis.com";
+option (google.api.oauth_scopes) =
+"https://www.googleapis.com/auth/cloud-platform,"
+"https://www.googleapis.com/auth/pubsub";
+rpc CreateTopic(Topic) returns (Topic) {
+option (google.api.http) = {
+put: "/v1/{name=projectstopicstopicstopicstopicstopicstopicssubscriptions
+string code = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message AIInference {
+message UnstructuredInference {
+google.protobuf.Struct parameters = 1
+[(google.api.field_behavior) = OPTIONAL];
+}
+string endpoint = 1 [(google.api.field_behavior) = REQUIRED];
+oneof inference_mode {
+UnstructuredInference unstructured_inference = 2
+[(google.api.field_behavior) = OPTIONAL];
+}
+string service_account_email = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+message MessageTransform {
+oneof transform {
+JavaScriptUDF javascript_udf = 2 [(google.api.field_behavior) = OPTIONAL];
+AIInference ai_inference = 6 [(google.api.field_behavior) = OPTIONAL];
+}
+bool enabled = 3 [deprecated = true, (google.api.field_behavior) = OPTIONAL];
+bool disabled = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+message Topic {
+option (google.api.resource) = {
+type: "pubsub.googleapis.com/Topic"
+pattern: "projects/{project}/topics/{topic}"
+pattern: "_deleted-topic_"
+plural: "topics"
+singular: "topic"
+};
+enum State {
+STATE_UNSPECIFIED = 0;
+ACTIVE = 1;
+INGESTION_RESOURCE_ERROR = 2;
+}
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.field_behavior) = IDENTIFIER
+];
+map<string, string> labels = 2 [(google.api.field_behavior) = OPTIONAL];
+MessageStoragePolicy message_storage_policy = 3
+[(google.api.field_behavior) = OPTIONAL];
+body: "*"
+};
+}
+}
+message Subscription {
+option (google.api.resource) = {
+type: "pubsub.googleapis.com/Subscription"
+pattern: "projects/{project}/subscriptions/{subscription}"
+plural: "subscriptions"
+singular: "subscription"
+};
+enum State {
+STATE_UNSPECIFIED = 0;
+ACTIVE = 1;
+RESOURCE_ERROR = 2;
+}
+message AnalyticsHubSubscriptionInfo {
+string listing = 1 [
+(google.api.field_behavior) = OPTIONAL,
+(google.api.resource_reference) = {
+type: "analyticshub.googleapis.com/Listing"
+}
+];
+string subscription = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.field_behavior) = IDENTIFIER
+];
+string topic = 2 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "pubsub.googleapis.com/Topic" }
+];
+PushConfig push_config = 4 [(google.api.field_behavior) = OPTIONAL];
+BigQueryConfig bigquery_config = 18 [(google.api.field_behavior) = OPTIONAL];
+CloudStorageConfig cloud_storage_config = 22
+[(google.api.field_behavior) = OPTIONAL];
+int32 ack_deadline_seconds = 5 [(google.api.field_behavior) = OPTIONAL];
+bool retain_acked_messages = 7 [(google.api.field_behavior) = OPTIONAL];
+google.protobuf.Duration message_retention_duration = 8
+[(google.api.field_behavior) = OPTIONAL];
+map<string, string> labels = 9 [(google.api.field_behavior) = OPTIONAL];
+bool enable_message_ordering = 10 [(google.api.field_behavior) = OPTIONAL];
+ExpirationPolicy expiration_policy = 11
+[(google.api.field_behavior) = OPTIONAL];
+string filter = 12 [(google.api.field_behavior) = OPTIONAL];
+DeadLetterPolicy dead_letter_policy = 13
+[(google.api.field_behavior) = OPTIONAL];
+RetryPolicy retry_policy = 14 [(google.api.field_behavior) = OPTIONAL];
+bool detached = 15 [(google.api.field_behavior) = OPTIONAL];
+bool enable_exactly_once_delivery = 16
+[(google.api.field_behavior) = OPTIONAL];
+google.protobuf.Duration topic_message_retention_duration = 17
+[(google.api.field_behavior) = OUTPUT_ONLY];
+State state = 19 [(google.api.field_behavior) = OUTPUT_ONLY];
+AnalyticsHubSubscriptionInfo analytics_hub_subscription_info = 23
+[(google.api.field_behavior) = OUTPUT_ONLY];
+repeated MessageTransform message_transforms = 25
+[(google.api.field_behavior) = OPTIONAL];
+map<string, string> tags = 26 [
+(google.api.field_behavior) = INPUT_ONLY,
+(google.api.field_behavior) = IMMUTABLE,
+(google.api.field_behavior) = OPTIONAL
+];
+}
+message RetryPolicy {
+google.protobuf.Duration minimum_backoff = 1
+[(google.api.field_behavior) = OPTIONAL];
+google.protobuf.Duration maximum_backoff = 2
+[(google.api.field_behavior) = OPTIONAL];
+}
+message DeadLetterPolicy {
+string dead_letter_topic = 1 [
+(google.api.field_behavior) = OPTIONAL,
+(google.api.resource_reference) = { type: "pubsub.googleapis.com/Topic" }
+];
+int32 max_delivery_attempts = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+message ExpirationPolicy {
+google.protobuf.Duration ttl = 1 [(google.api.field_behavior) = OPTIONAL];
+}
+message PushConfig {
+message OidcToken {
+string service_account_email = 1 [(google.api.field_behavior) = OPTIONAL];
+string audience = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+message PubsubWrapper {}
+message NoWrapper {
+bool write_metadata = 1 [(google.api.field_behavior) = OPTIONAL];
+}
+string push_endpoint = 1 [(google.api.field_behavior) = OPTIONAL];
+map<string, string> attributes = 2 [(google.api.field_behavior) = OPTIONAL];
+oneof authentication_method {
+OidcToken oidc_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+oneof wrapper {
+PubsubWrapper pubsub_wrapper = 4 [(google.api.field_behavior) = OPTIONAL];
+NoWrapper no_wrapper = 5 [(google.api.field_behavior) = OPTIONAL];
+}
+}
+message BigQueryConfig {
+enum State {
+STATE_UNSPECIFIED = 0;
+ACTIVE = 1;
+PERMISSION_DENIED = 2;
+NOT_FOUND = 3;
+SCHEMA_MISMATCH = 4;
+IN_TRANSIT_LOCATION_RESTRICTION = 5;
+VERTEX_AI_LOCATION_RESTRICTION = 6;
+}
+string table = 1 [(google.api.field_behavior) = OPTIONAL];
+bool use_topic_schema = 2 [(google.api.field_behavior) = OPTIONAL];
+bool write_metadata = 3 [(google.api.field_behavior) = OPTIONAL];
+bool drop_unknown_fields = 4 [(google.api.field_behavior) = OPTIONAL];
+State state = 5 [(google.api.field_behavior) = OUTPUT_ONLY];
+bool use_table_schema = 6 [(google.api.field_behavior) = OPTIONAL];
+string service_account_email = 7 [(google.api.field_behavior) = OPTIONAL];
+}
+message CloudStorageConfig {
+message TextConfig {}
+message AvroConfig {
+bool write_metadata = 1 [(google.api.field_behavior) = OPTIONAL];
+bool use_topic_schema = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+enum State {
+STATE_UNSPECIFIED = 0;
+ACTIVE = 1;
+PERMISSION_DENIED = 2;
+NOT_FOUND = 3;
+IN_TRANSIT_LOCATION_RESTRICTION = 4;
+SCHEMA_MISMATCH = 5;
+VERTEX_AI_LOCATION_RESTRICTION = 6;
+}
+string bucket = 1 [(google.api.field_behavior) = REQUIRED];
+string filename_prefix = 2 [(google.api.field_behavior) = OPTIONAL];
+string filename_suffix = 3 [(google.api.field_behavior) = OPTIONAL];
+string filename_datetime_format = 10 [(google.api.field_behavior) = OPTIONAL];
+oneof output_format {
+TextConfig text_config = 4 [(google.api.field_behavior) = OPTIONAL];
+AvroConfig avro_config = 5 [(google.api.field_behavior) = OPTIONAL];
+}
+google.protobuf.Duration max_duration = 6
+[(google.api.field_behavior) = OPTIONAL];
+int64 max_bytes = 7 [(google.api.field_behavior) = OPTIONAL];
+int64 max_messages = 8 [(google.api.field_behavior) = OPTIONAL];
+State state = 9 [(google.api.field_behavior) = OUTPUT_ONLY];
+string service_account_email = 11 [(google.api.field_behavior) = OPTIONAL];
+}
+message ReceivedMessage {
+string ack_id = 1 [(google.api.field_behavior) = OPTIONAL];
+PubsubMessage message = 2 [(google.api.field_behavior) = OPTIONAL];
+int32 delivery_attempt = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+message GetSubscriptionRequest {
+string subscription = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Subscription"
+}
+];
+}
+message UpdateSubscriptionRequest {
+Subscription subscription = 1 [(google.api.field_behavior) = REQUIRED];
+google.protobuf.FieldMask update_mask = 2
+[(google.api.field_behavior) = REQUIRED];
+}
+message ListSubscriptionsRequest {
+string project = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "cloudresourcemanager.googleapis.com/Project"
+}
+];
+int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+message ListSubscriptionsResponse {
+repeated Subscription subscriptions = 1
+[(google.api.field_behavior) = OPTIONAL];
+string next_page_token = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+message DeleteSubscriptionRequest {
+string subscription = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Subscription"
+}
+];
+}
+message ModifyPushConfigRequest {
+string subscription = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Subscription"
+}
+];
+PushConfig push_config = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message PullRequest {
+string subscription = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Subscription"
+}
+];
+bool return_immediately = 2
+[deprecated = true, (google.api.field_behavior) = OPTIONAL];
+int32 max_messages = 3 [(google.api.field_behavior) = REQUIRED];
+}
+message PullResponse {
+repeated ReceivedMessage received_messages = 1
+[(google.api.field_behavior) = OPTIONAL];
+}
+message ModifyAckDeadlineRequest {
+string subscription = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Subscription"
+}
+];
+repeated string ack_ids = 4 [(google.api.field_behavior) = REQUIRED];
+int32 ack_deadline_seconds = 3 [(google.api.field_behavior) = REQUIRED];
+}
+message AcknowledgeRequest {
+string subscription = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Subscription"
+}
+];
+repeated string ack_ids = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message StreamingPullRequest {
+string subscription = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Subscription"
+}
+];
+repeated string ack_ids = 2 [(google.api.field_behavior) = OPTIONAL];
+repeated int32 modify_deadline_seconds = 3
+[(google.api.field_behavior) = OPTIONAL];
+repeated string modify_deadline_ack_ids = 4
+[(google.api.field_behavior) = OPTIONAL];
+int32 stream_ack_deadline_seconds = 5
+[(google.api.field_behavior) = REQUIRED];
+string client_id = 6 [(google.api.field_behavior) = OPTIONAL];
+int64 max_outstanding_messages = 7 [(google.api.field_behavior) = OPTIONAL];
+int64 max_outstanding_bytes = 8 [(google.api.field_behavior) = OPTIONAL];
+int64 protocol_version = 10 [(google.api.field_behavior) = OPTIONAL];
+}
+message StreamingPullResponse {
+message AcknowledgeConfirmation {
+repeated string ack_ids = 1 [(google.api.field_behavior) = OPTIONAL];
+repeated string invalid_ack_ids = 2
+[(google.api.field_behavior) = OPTIONAL];
+repeated string unordered_ack_ids = 3
+[(google.api.field_behavior) = OPTIONAL];
+repeated string temporary_failed_ack_ids = 4
+[(google.api.field_behavior) = OPTIONAL];
+}
+message ModifyAckDeadlineConfirmation {
+repeated string ack_ids = 1 [(google.api.field_behavior) = OPTIONAL];
+repeated string invalid_ack_ids = 2
+[(google.api.field_behavior) = OPTIONAL];
+repeated string temporary_failed_ack_ids = 3
+[(google.api.field_behavior) = OPTIONAL];
+}
+message SubscriptionProperties {
+bool exactly_once_delivery_enabled = 1
+[(google.api.field_behavior) = OPTIONAL];
+bool message_ordering_enabled = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+repeated ReceivedMessage received_messages = 1
+[(google.api.field_behavior) = OPTIONAL];
+AcknowledgeConfirmation acknowledge_confirmation = 5
+[(google.api.field_behavior) = OPTIONAL];
+ModifyAckDeadlineConfirmation modify_ack_deadline_confirmation = 3
+[(google.api.field_behavior) = OPTIONAL];
+SubscriptionProperties subscription_properties = 4
+[(google.api.field_behavior) = OPTIONAL];
+}
+message CreateSnapshotRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "pubsub.googleapis.com/Snapshot" }
+];
+string subscription = 2 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Subscription"
+}
+];
+map<string, string> labels = 3 [(google.api.field_behavior) = OPTIONAL];
+map<string, string> tags = 4 [
+(google.api.field_behavior) = INPUT_ONLY,
+(google.api.field_behavior) = IMMUTABLE,
+(google.api.field_behavior) = OPTIONAL
+];
+}
+message UpdateSnapshotRequest {
+Snapshot snapshot = 1 [(google.api.field_behavior) = REQUIRED];
+google.protobuf.FieldMask update_mask = 2
+[(google.api.field_behavior) = REQUIRED];
+}
+message Snapshot {
+option (google.api.resource) = {
+type: "pubsub.googleapis.com/Snapshot"
+pattern: "projects/{project}/snapshots/{snapshot}"
+plural: "snapshots"
+singular: "snapshot"
+};
+string name = 1 [(google.api.field_behavior) = OPTIONAL];
+string topic = 2 [
+(google.api.field_behavior) = OPTIONAL,
+(google.api.resource_reference) = { type: "pubsub.googleapis.com/Topic" }
+];
+google.protobuf.Timestamp expire_time = 3
+[(google.api.field_behavior) = OPTIONAL];
+map<string, string> labels = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+message GetSnapshotRequest {
+string snapshot = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "pubsub.googleapis.com/Snapshot" }
+];
+}
+message ListSnapshotsRequest {
+string project = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "cloudresourcemanager.googleapis.com/Project"
+}
+];
+int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+message ListSnapshotsResponse {
+repeated Snapshot snapshots = 1 [(google.api.field_behavior) = OPTIONAL];
+string next_page_token = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+message DeleteSnapshotRequest {
+string snapshot = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = { type: "pubsub.googleapis.com/Snapshot" }
+];
+}
+message SeekRequest {
+string subscription = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Subscription"
+}
+];
+oneof target {
+google.protobuf.Timestamp time = 2 [(google.api.field_behavior) = OPTIONAL];
+string snapshot = 3 [
+(google.api.field_behavior) = OPTIONAL,
+(google.api.resource_reference) = {
+type: "pubsub.googleapis.com/Snapshot"
+}
+];
+}
+}
+message SeekResponse {}

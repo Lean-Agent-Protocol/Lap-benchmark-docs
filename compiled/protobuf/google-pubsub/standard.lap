@@ -1,0 +1,92 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api google.pubsub.v1
+@base grpc://google.pubsub.v1
+@version proto3
+@endpoints 25
+@hint download_for_search
+@toc Publisher(9), Subscriber(16)
+
+@group Publisher
+@endpoint UNARY /Publisher/CreateTopic
+@returns(OK) Topic
+
+@endpoint UNARY /Publisher/UpdateTopic
+@returns(OK) Topic
+
+@endpoint UNARY /Publisher/Publish
+@returns(OK) PublishResponse
+
+@endpoint UNARY /Publisher/GetTopic
+@returns(OK) Topic
+
+@endpoint UNARY /Publisher/ListTopics
+@returns(OK) ListTopicsResponse
+
+@endpoint UNARY /Publisher/ListTopicSubscriptions
+@returns(OK) ListTopicSubscriptionsResponse
+
+@endpoint UNARY /Publisher/ListTopicSnapshots
+@returns(OK) ListTopicSnapshotsResponse
+
+@endpoint UNARY /Publisher/DeleteTopic
+@returns(OK) Empty response
+
+@endpoint UNARY /Publisher/DetachSubscription
+@returns(OK) DetachSubscriptionResponse
+
+@endgroup
+
+@group Subscriber
+@endpoint UNARY /Subscriber/CreateSubscription
+@returns(OK) Subscription
+
+@endpoint UNARY /Subscriber/GetSubscription
+@returns(OK) Subscription
+
+@endpoint UNARY /Subscriber/UpdateSubscription
+@returns(OK) Subscription
+
+@endpoint UNARY /Subscriber/ListSubscriptions
+@returns(OK) ListSubscriptionsResponse
+
+@endpoint UNARY /Subscriber/DeleteSubscription
+@returns(OK) Empty response
+
+@endpoint UNARY /Subscriber/ModifyAckDeadline
+@returns(OK) Empty response
+
+@endpoint UNARY /Subscriber/Acknowledge
+@returns(OK) Empty response
+
+@endpoint UNARY /Subscriber/Pull
+@returns(OK) PullResponse
+
+@endpoint BIDI-STREAM /Subscriber/StreamingPull
+@returns(OK) StreamingPullResponse
+
+@endpoint UNARY /Subscriber/ModifyPushConfig
+@returns(OK) Empty response
+
+@endpoint UNARY /Subscriber/GetSnapshot
+@returns(OK) Snapshot
+
+@endpoint UNARY /Subscriber/ListSnapshots
+@returns(OK) ListSnapshotsResponse
+
+@endpoint UNARY /Subscriber/CreateSnapshot
+@returns(OK) Snapshot
+
+@endpoint UNARY /Subscriber/UpdateSnapshot
+@returns(OK) Snapshot
+
+@endpoint UNARY /Subscriber/DeleteSnapshot
+@returns(OK) Empty response
+
+@endpoint UNARY /Subscriber/Seek
+@optional {time: str(timestamp), snapshot: str}
+@returns(OK) SeekResponse
+
+@endgroup
+
+@end

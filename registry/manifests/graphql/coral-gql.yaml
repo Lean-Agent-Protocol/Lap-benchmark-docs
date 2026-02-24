@@ -1,0 +1,31 @@
+spec_id: coral-gql
+tasks:
+  - id: t1
+    description: "Browse reader discussions across published articles with status and keyword filters, and see available published articles on the platform with pagination"
+    target_endpoints:
+      - QUERY comments
+      - QUERY stories
+    expected_params:
+      QUERY comments:
+        - first
+        - after
+        - storyID
+        - status
+        - query
+        - orderBy
+      QUERY stories:
+        - first
+        - after
+        - status
+        - query
+        - siteIDs
+  - id: t2
+    description: "Post a new reader response on a published article, and report an inappropriate reader response so moderators can review it"
+    target_endpoints:
+      - MUTATION createComment
+      - MUTATION createCommentFlag
+    expected_params:
+      MUTATION createComment:
+        - input
+      MUTATION createCommentFlag:
+        - input

@@ -1,0 +1,30 @@
+spec_id: azure-devops-postman
+tasks:
+  - id: t1
+    description: "Set up a new private package repository with upstream source access and badge visibility settings, then browse the CI/CD pipeline runs for a project to review recent build activity"
+    target_endpoints:
+      - POST /{organization}/_apis/packaging/feeds
+      - GET /{organization}/{project}/_apis/build/builds
+    expected_params:
+      POST /{organization}/_apis/packaging/feeds:
+        - description
+        - name
+        - hideDeletedPackageVersions
+        - badgesEnabled
+        - upstreamEnabled
+        - api-version
+      GET /{organization}/{project}/_apis/build/builds:
+        - api-version
+  - id: t2
+    description: "Trigger a new CI pipeline run for a project from a specific source branch with a given reason, then look up the full configuration of a particular pipeline definition to inspect its settings"
+    target_endpoints:
+      - POST /{organization}/{project}/_apis/build/builds
+      - GET /{organization}/{project}/_apis/build/definitions/{definitionId}
+    expected_params:
+      POST /{organization}/{project}/_apis/build/builds:
+        - definition
+        - sourceBranch
+        - reason
+        - api-version
+      GET /{organization}/{project}/_apis/build/definitions/{definitionId}:
+        - api-version

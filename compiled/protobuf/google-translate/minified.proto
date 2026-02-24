@@ -1,0 +1,463 @@
+syntax = "proto3";
+package google.cloud.translation.v3;
+import public "google/cloud/translate/v3/adaptive_mt.proto";
+import public "google/cloud/translate/v3/automl_translation.proto";
+import public "google/cloud/translate/v3/common.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/longrunning/operations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+option csharp_namespace = "Google.Cloud.Translate.V3";
+option go_package = "cloud.google.com/go/translate/apiv3/translatepb;translatepb";
+option java_multiple_files = true;
+option java_outer_classname = "TranslationServiceProto";
+option java_package = "com.google.cloud.translate.v3";
+option objc_class_prefix = "CTRL3";
+option php_namespace = "Google\\Cloud\\Translate\\V3";
+option ruby_package = "Google::Cloud::Translate::V3";
+service TranslationService {
+option (google.api.default_host) = "translate.googleapis.com";
+option (google.api.oauth_scopes) =
+"https://www.googleapis.com/auth/cloud-platform,"
+"https://www.googleapis.com/auth/cloud-translation";
+rpc TranslateText(TranslateTextRequest) returns (TranslateTextResponse) {
+option (google.api.http) = {
+post: "/v3/{parent=projectslocationslocationslocationslocationslocationslocationslocationslocationslocationslocationslocationslocationsglossaryEntrieslocationslocationslocationsglossaryEntrieslocationsglossaryEntrieslocationslocationslocationslocationslocationslocationslocationslocationslocationslocationsadaptiveMtFileslocationsadaptiveMtFileslocationslocationslocationsadaptiveMtFileslocationslocationslocationslocationslocationslocationslocationslocations/*/models/*}"
+};
+option (google.api.method_signature) = "name";
+option (google.longrunning.operation_info) = {
+response_type: "google.protobuf.Empty"
+metadata_type: "DeleteModelMetadata"
+};
+}
+}
+message TransliterationConfig {
+bool enable_transliteration = 1;
+}
+message TranslateTextRequest {
+repeated string contents = 1 [(google.api.field_behavior) = REQUIRED];
+string mime_type = 3 [(google.api.field_behavior) = OPTIONAL];
+string source_language_code = 4 [(google.api.field_behavior) = OPTIONAL];
+string target_language_code = 5 [(google.api.field_behavior) = REQUIRED];
+string parent = 8 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "locations.googleapis.com/Location"
+}
+];
+string model = 6 [(google.api.field_behavior) = OPTIONAL];
+TranslateTextGlossaryConfig glossary_config = 7
+[(google.api.field_behavior) = OPTIONAL];
+TransliterationConfig transliteration_config = 13
+[(google.api.field_behavior) = OPTIONAL];
+map<string, string> labels = 10 [(google.api.field_behavior) = OPTIONAL];
+}
+message TranslateTextResponse {
+repeated Translation translations = 1;
+repeated Translation glossary_translations = 3;
+}
+message Translation {
+string translated_text = 1;
+string model = 2;
+string detected_language_code = 4;
+TranslateTextGlossaryConfig glossary_config = 3;
+}
+message RomanizeTextRequest {
+string parent = 4 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "locations.googleapis.com/Location"
+}
+];
+repeated string contents = 1 [(google.api.field_behavior) = REQUIRED];
+string source_language_code = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+message Romanization {
+string romanized_text = 1;
+string detected_language_code = 2;
+}
+message RomanizeTextResponse {
+repeated Romanization romanizations = 1;
+}
+message DetectLanguageRequest {
+string parent = 5 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "locations.googleapis.com/Location"
+}
+];
+string model = 4 [(google.api.field_behavior) = OPTIONAL];
+oneof source {
+string content = 1;
+}
+string mime_type = 3 [(google.api.field_behavior) = OPTIONAL];
+map<string, string> labels = 6 [(google.api.field_behavior) = OPTIONAL];
+}
+message DetectedLanguage {
+string language_code = 1;
+float confidence = 2;
+}
+message DetectLanguageResponse {
+repeated DetectedLanguage languages = 1;
+}
+message GetSupportedLanguagesRequest {
+string parent = 3 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "locations.googleapis.com/Location"
+}
+];
+string display_language_code = 1 [(google.api.field_behavior) = OPTIONAL];
+string model = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+message SupportedLanguages {
+repeated SupportedLanguage languages = 1;
+}
+message SupportedLanguage {
+string language_code = 1;
+string display_name = 2;
+bool support_source = 3;
+bool support_target = 4;
+}
+message GcsSource {
+string input_uri = 1 [(google.api.field_behavior) = REQUIRED];
+}
+message InputConfig {
+string mime_type = 1 [(google.api.field_behavior) = OPTIONAL];
+oneof source {
+GcsSource gcs_source = 2;
+}
+}
+message GcsDestination {
+string output_uri_prefix = 1 [(google.api.field_behavior) = REQUIRED];
+}
+message OutputConfig {
+oneof destination {
+GcsDestination gcs_destination = 1;
+}
+}
+message DocumentInputConfig {
+oneof source {
+bytes content = 1;
+GcsSource gcs_source = 2;
+}
+string mime_type = 4;
+}
+message DocumentOutputConfig {
+oneof destination {
+GcsDestination gcs_destination = 1 [(google.api.field_behavior) = OPTIONAL];
+}
+string mime_type = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+message TranslateDocumentRequest {
+string parent = 1 [(google.api.field_behavior) = REQUIRED];
+string source_language_code = 2 [(google.api.field_behavior) = OPTIONAL];
+string target_language_code = 3 [(google.api.field_behavior) = REQUIRED];
+DocumentInputConfig document_input_config = 4
+[(google.api.field_behavior) = REQUIRED];
+DocumentOutputConfig document_output_config = 5
+[(google.api.field_behavior) = OPTIONAL];
+string model = 6 [(google.api.field_behavior) = OPTIONAL];
+TranslateTextGlossaryConfig glossary_config = 7
+[(google.api.field_behavior) = OPTIONAL];
+map<string, string> labels = 8 [(google.api.field_behavior) = OPTIONAL];
+string customized_attribution = 10 [(google.api.field_behavior) = OPTIONAL];
+bool is_translate_native_pdf_only = 11
+[(google.api.field_behavior) = OPTIONAL];
+bool enable_shadow_removal_native_pdf = 12
+[(google.api.field_behavior) = OPTIONAL];
+bool enable_rotation_correction = 13 [(google.api.field_behavior) = OPTIONAL];
+}
+message DocumentTranslation {
+repeated bytes byte_stream_outputs = 1;
+string mime_type = 2;
+string detected_language_code = 3;
+}
+message TranslateDocumentResponse {
+DocumentTranslation document_translation = 1;
+DocumentTranslation glossary_document_translation = 2;
+string model = 3;
+TranslateTextGlossaryConfig glossary_config = 4;
+}
+message BatchTranslateTextRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "locations.googleapis.com/Location"
+}
+];
+string source_language_code = 2 [(google.api.field_behavior) = REQUIRED];
+repeated string target_language_codes = 3
+[(google.api.field_behavior) = REQUIRED];
+map<string, string> models = 4 [(google.api.field_behavior) = OPTIONAL];
+repeated InputConfig input_configs = 5
+[(google.api.field_behavior) = REQUIRED];
+OutputConfig output_config = 6 [(google.api.field_behavior) = REQUIRED];
+map<string, TranslateTextGlossaryConfig> glossaries = 7
+[(google.api.field_behavior) = OPTIONAL];
+map<string, string> labels = 9 [(google.api.field_behavior) = OPTIONAL];
+}
+message BatchTranslateMetadata {
+enum State {
+STATE_UNSPECIFIED = 0;
+RUNNING = 1;
+SUCCEEDED = 2;
+FAILED = 3;
+CANCELLING = 4;
+CANCELLED = 5;
+}
+State state = 1;
+int64 translated_characters = 2;
+int64 failed_characters = 3;
+int64 total_characters = 4;
+google.protobuf.Timestamp submit_time = 5;
+}
+message BatchTranslateResponse {
+int64 total_characters = 1;
+int64 translated_characters = 2;
+int64 failed_characters = 3;
+google.protobuf.Timestamp submit_time = 4;
+google.protobuf.Timestamp end_time = 5;
+}
+message GlossaryInputConfig {
+oneof source {
+GcsSource gcs_source = 1;
+}
+}
+message Glossary {
+option (google.api.resource) = {
+type: "translate.googleapis.com/Glossary"
+pattern: "projects/{project}/locations/{location}/glossaries/{glossary}"
+};
+message LanguageCodePair {
+string source_language_code = 1;
+string target_language_code = 2;
+}
+message LanguageCodesSet {
+repeated string language_codes = 1;
+}
+string name = 1 [(google.api.field_behavior) = REQUIRED];
+oneof languages {
+LanguageCodePair language_pair = 3;
+LanguageCodesSet language_codes_set = 4;
+}
+GlossaryInputConfig input_config = 5;
+int32 entry_count = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+google.protobuf.Timestamp submit_time = 7
+[(google.api.field_behavior) = OUTPUT_ONLY];
+google.protobuf.Timestamp end_time = 8
+[(google.api.field_behavior) = OUTPUT_ONLY];
+string display_name = 9 [(google.api.field_behavior) = OPTIONAL];
+}
+message CreateGlossaryRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "locations.googleapis.com/Location"
+}
+];
+Glossary glossary = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message UpdateGlossaryRequest {
+Glossary glossary = 1 [(google.api.field_behavior) = REQUIRED];
+google.protobuf.FieldMask update_mask = 2;
+}
+message GetGlossaryRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "translate.googleapis.com/Glossary"
+}
+];
+}
+message DeleteGlossaryRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "translate.googleapis.com/Glossary"
+}
+];
+}
+message ListGlossariesRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "locations.googleapis.com/Location"
+}
+];
+int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+string filter = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+message ListGlossariesResponse {
+repeated Glossary glossaries = 1;
+string next_page_token = 2;
+}
+message GetGlossaryEntryRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "translate.googleapis.com/GlossaryEntry"
+}
+];
+}
+message DeleteGlossaryEntryRequest {
+string name = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "translate.googleapis.com/GlossaryEntry"
+}
+];
+}
+message ListGlossaryEntriesRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "translate.googleapis.com/Glossary"
+}
+];
+int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+message ListGlossaryEntriesResponse {
+repeated GlossaryEntry glossary_entries = 1
+[(google.api.field_behavior) = OPTIONAL];
+string next_page_token = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+message CreateGlossaryEntryRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "translate.googleapis.com/Glossary"
+}
+];
+GlossaryEntry glossary_entry = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message UpdateGlossaryEntryRequest {
+GlossaryEntry glossary_entry = 1 [(google.api.field_behavior) = REQUIRED];
+}
+message CreateGlossaryMetadata {
+enum State {
+STATE_UNSPECIFIED = 0;
+RUNNING = 1;
+SUCCEEDED = 2;
+FAILED = 3;
+CANCELLING = 4;
+CANCELLED = 5;
+}
+string name = 1;
+State state = 2;
+google.protobuf.Timestamp submit_time = 3;
+}
+message UpdateGlossaryMetadata {
+enum State {
+STATE_UNSPECIFIED = 0;
+RUNNING = 1;
+SUCCEEDED = 2;
+FAILED = 3;
+CANCELLING = 4;
+CANCELLED = 5;
+}
+Glossary glossary = 1;
+State state = 2;
+google.protobuf.Timestamp submit_time = 3;
+}
+message DeleteGlossaryMetadata {
+enum State {
+STATE_UNSPECIFIED = 0;
+RUNNING = 1;
+SUCCEEDED = 2;
+FAILED = 3;
+CANCELLING = 4;
+CANCELLED = 5;
+}
+string name = 1;
+State state = 2;
+google.protobuf.Timestamp submit_time = 3;
+}
+message DeleteGlossaryResponse {
+string name = 1;
+google.protobuf.Timestamp submit_time = 2;
+google.protobuf.Timestamp end_time = 3;
+}
+message BatchTranslateDocumentRequest {
+string parent = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "locations.googleapis.com/Location"
+}
+];
+string source_language_code = 2 [(google.api.field_behavior) = REQUIRED];
+repeated string target_language_codes = 3
+[(google.api.field_behavior) = REQUIRED];
+repeated BatchDocumentInputConfig input_configs = 4
+[(google.api.field_behavior) = REQUIRED];
+BatchDocumentOutputConfig output_config = 5
+[(google.api.field_behavior) = REQUIRED];
+map<string, string> models = 6 [(google.api.field_behavior) = OPTIONAL];
+map<string, TranslateTextGlossaryConfig> glossaries = 7
+[(google.api.field_behavior) = OPTIONAL];
+map<string, string> format_conversions = 8
+[(google.api.field_behavior) = OPTIONAL];
+string customized_attribution = 10 [(google.api.field_behavior) = OPTIONAL];
+bool enable_shadow_removal_native_pdf = 11
+[(google.api.field_behavior) = OPTIONAL];
+bool enable_rotation_correction = 12 [(google.api.field_behavior) = OPTIONAL];
+}
+message BatchDocumentInputConfig {
+oneof source {
+GcsSource gcs_source = 1;
+}
+}
+message BatchDocumentOutputConfig {
+oneof destination {
+GcsDestination gcs_destination = 1;
+}
+}
+message BatchTranslateDocumentResponse {
+int64 total_pages = 1;
+int64 translated_pages = 2;
+int64 failed_pages = 3;
+int64 total_billable_pages = 4;
+int64 total_characters = 5;
+int64 translated_characters = 6;
+int64 failed_characters = 7;
+int64 total_billable_characters = 8;
+google.protobuf.Timestamp submit_time = 9;
+google.protobuf.Timestamp end_time = 10;
+}
+message BatchTranslateDocumentMetadata {
+enum State {
+STATE_UNSPECIFIED = 0;
+RUNNING = 1;
+SUCCEEDED = 2;
+FAILED = 3;
+CANCELLING = 4;
+CANCELLED = 5;
+}
+State state = 1;
+int64 total_pages = 2;
+int64 translated_pages = 3;
+int64 failed_pages = 4;
+int64 total_billable_pages = 5;
+int64 total_characters = 6;
+int64 translated_characters = 7;
+int64 failed_characters = 8;
+int64 total_billable_characters = 9;
+google.protobuf.Timestamp submit_time = 10;
+}
+message TranslateTextGlossaryConfig {
+string glossary = 1 [
+(google.api.field_behavior) = REQUIRED,
+(google.api.resource_reference) = {
+type: "translate.googleapis.com/Glossary"
+}
+];
+bool ignore_case = 2 [(google.api.field_behavior) = OPTIONAL];
+bool contextual_translation_enabled = 4
+[(google.api.field_behavior) = OPTIONAL];
+}

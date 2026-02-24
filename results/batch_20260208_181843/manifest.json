@@ -1,0 +1,60 @@
+{
+  "batch_id": "20260208_181843",
+  "created": "2026-02-08T18:18:43.726159+00:00",
+  "total_runs": 6,
+  "specs": [
+    "petstore",
+    "snyk",
+    "proto-google-storage"
+  ],
+  "runs": [
+    {
+      "run_id": "ea412c5f",
+      "spec": "petstore",
+      "type": "openapi",
+      "variant": "verbose",
+      "task_idx": 0,
+      "task": "I run a pet store and need to add 3 new pets to the inventory \u2014 a dog, a cat, and a parrot. Then I want to look up all available pets by status. Show me the API calls."
+    },
+    {
+      "run_id": "807c5ddc",
+      "spec": "petstore",
+      "type": "openapi",
+      "variant": "doclean",
+      "task_idx": 0,
+      "task": "I run a pet store and need to add 3 new pets to the inventory \u2014 a dog, a cat, and a parrot. Then I want to look up all available pets by status. Show me the API calls."
+    },
+    {
+      "run_id": "687c4fd8",
+      "spec": "snyk",
+      "type": "openapi",
+      "variant": "verbose",
+      "task_idx": 0,
+      "task": "I just joined a new org and need to get a security overview. Show me how to list all projects in my org, then pull the aggregated vulnerability issues for the most critical project."
+    },
+    {
+      "run_id": "ac620dfb",
+      "spec": "snyk",
+      "type": "openapi",
+      "variant": "doclean",
+      "task_idx": 0,
+      "task": "I just joined a new org and need to get a security overview. Show me how to list all projects in my org, then pull the aggregated vulnerability issues for the most critical project."
+    },
+    {
+      "run_id": "e2f9aa9c",
+      "spec": "proto-google-storage",
+      "type": "protobuf",
+      "variant": "verbose",
+      "task_idx": 0,
+      "task": "I need to create a new Cloud Storage bucket with versioning enabled, upload an object to it, then set a lifecycle policy to auto-delete objects older than 90 days. Show me the gRPC calls."
+    },
+    {
+      "run_id": "295ac0ff",
+      "spec": "proto-google-storage",
+      "type": "protobuf",
+      "variant": "doclean",
+      "task_idx": 0,
+      "task": "I need to create a new Cloud Storage bucket with versioning enabled, upload an object to it, then set a lifecycle policy to auto-delete objects older than 90 days. Show me the gRPC calls."
+    }
+  ]
+}

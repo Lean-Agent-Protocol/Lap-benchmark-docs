@@ -1,0 +1,31 @@
+spec_id: operation-security
+tasks:
+  - id: t1
+    description: "Deliver a notification that a user's access permissions have been revoked, using the appropriate authenticated delivery mechanism, and include the required event metadata and signature for secure delivery"
+    target_endpoints:
+      - PUBLISH AUTHORIZATION_REVOCATION message
+      - SECURITY oauth2 sendAuthRevoke
+    expected_params:
+      PUBLISH AUTHORIZATION_REVOCATION message:
+        - metadata
+        - notification
+        - X-SIGNATURE
+        - Content-Type
+      SECURITY oauth2 sendAuthRevoke:
+        - subscribe:auth_revocations
+  - id: t2
+    description: "Parse an incoming access revocation event to extract the affected user's identity, the reason for revocation, the date it occurred, and the delivery tracking metadata such as attempt counts and timestamps"
+    target_endpoints:
+      - PUBLISH AUTHORIZATION_REVOCATION message
+      - SCHEMA Notification
+    expected_params:
+      PUBLISH AUTHORIZATION_REVOCATION message:
+        - username
+        - userId
+        - revokeReason
+        - revocationDate
+      SCHEMA Notification:
+        - notificationId
+        - eventDate
+        - publishDate
+        - publishAttemptCount

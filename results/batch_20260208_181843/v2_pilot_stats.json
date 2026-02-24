@@ -1,0 +1,62 @@
+{
+  "petstore-doclean": {
+    "input": 4,
+    "output": 992,
+    "cache_read": 16278,
+    "cache_write": 6709,
+    "total": 23983,
+    "tools": 1,
+    "duration_s": 16.323,
+    "cost": 0.07489024999999999
+  },
+  "petstore-verbose": {
+    "input": 8,
+    "output": 1697,
+    "cache_read": 64633,
+    "cache_write": 7783,
+    "total": 74121,
+    "tools": 5,
+    "duration_s": 31.31,
+    "cost": 0.12342525000000001
+  },
+  "proto-storage-doclean": {
+    "input": 4,
+    "output": 1480,
+    "cache_read": 16280,
+    "cache_write": 6647,
+    "total": 24411,
+    "tools": 1,
+    "duration_s": 26.878,
+    "cost": 0.08670375
+  },
+  "proto-storage-verbose": {
+    "input": 12,
+    "output": 2816,
+    "cache_read": 157591,
+    "cache_write": 15095,
+    "total": 175514,
+    "tools": 9,
+    "duration_s": 59.288,
+    "cost": 0.24359925
+  },
+  "snyk-doclean": {
+    "input": 4,
+    "output": 1359,
+    "cache_read": 16254,
+    "cache_write": 15483,
+    "total": 33100,
+    "tools": 1,
+    "duration_s": 24.506,
+    "cost": 0.13889075
+  },
+  "snyk-verbose": {
+    "input": 10,
+    "output": 2120,
+    "cache_read": 118560,
+    "cache_write": 14375,
+    "total": 135065,
+    "tools": 7,
+    "duration_s": 44.364,
+    "cost": 0.20217374999999999
+  }
+}

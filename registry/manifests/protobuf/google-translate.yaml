@@ -1,0 +1,34 @@
+spec_id: google-translate
+tasks:
+  - id: t1
+    description: "Convert a piece of text from one language to another specifying the desired output language, then identify what language an unknown text passage is written in"
+    target_endpoints:
+      - RPC TranslateText
+      - RPC DetectLanguage
+    expected_params:
+      RPC TranslateText:
+        - parent
+        - contents
+        - target_language_code
+        - source_language_code
+        - mime_type
+        - model
+      RPC DetectLanguage:
+        - parent
+        - content
+        - mime_type
+        - model
+  - id: t2
+    description: "Set up a custom terminology dictionary to ensure domain-specific terms are translated consistently, then retrieve all such custom dictionaries configured in the project"
+    target_endpoints:
+      - RPC CreateGlossary
+      - RPC ListGlossaries
+    expected_params:
+      RPC CreateGlossary:
+        - parent
+        - glossary
+      RPC ListGlossaries:
+        - parent
+        - page_size
+        - page_token
+        - filter

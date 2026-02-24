@@ -1,0 +1,364 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Official Akeneo PIM REST API Serenity
+@endpoints 135
+@hint download_for_search
+@toc {{url}}(135)
+
+@endpoint GET /{{url}}/api/rest/v1/catalogs/6c046434-4501-4f85-94b7-d0194b3d9fb1
+
+@endpoint GET /{{url}}/api/rest/v1/catalogs
+
+@endpoint POST /{{url}}/api/rest/v1/catalogs
+@required {name: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/catalogs/6c046434-4501-4f85-94b7-d0194b3d9fb1
+@required {name: str}
+
+@endpoint DELETE /{{url}}/api/rest/v1/catalogs/6c046434-4501-4f85-94b7-d0194b3d9fb1
+
+@endpoint GET /{{url}}/api/rest/v1/catalogs/6c046434-4501-4f85-94b7-d0194b3d9fb1/product-uuids
+
+@endpoint GET /{{url}}/api/rest/v1/association-types/upsell
+
+@endpoint GET /{{url}}/api/rest/v1/association-types
+
+@endpoint POST /{{url}}/api/rest/v1/association-types
+@required {code: str, labels: map, is_quantified: bool, is_two_way: bool}
+
+@endpoint PATCH /{{url}}/api/rest/v1/association-types/upsell
+@required {code: str, labels: map, is_quantified: bool, is_two_way: bool}
+
+@endpoint PATCH /{{url}}/api/rest/v1/association-types
+
+@endpoint GET /{{url}}/api/rest/v1/attributes/auto_exposure
+@optional {with_table_select_options: str}
+
+@endpoint GET /{{url}}/api/rest/v1/attributes
+@optional {search: str, search: str, search: str, search: str, page: str, limit: str, with_count: str, with_table_select_options: str}
+
+@endpoint POST /{{url}}/api/rest/v1/attributes
+@required {code: str, type: str, group: str, unique: bool, useable_as_grid_filter: bool, sort_order: int, localizable: bool, scopable: bool, labels: map}
+@optional {allowed_extensions: [any], metric_family: any, default_metric_unit: any, reference_data_name: any, available_locales: [any], max_characters: any, validation_rule: any, validation_regexp: any, wysiwyg_enabled: any, number_min: any, number_max: any, decimals_allowed: any, negative_allowed: any, date_min: any, date_max: any, max_file_size: any, minimum_input_length: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attributes/auto_exposure
+@required {code: str, type: str, group: str, unique: bool, useable_as_grid_filter: bool, sort_order: int, localizable: bool, scopable: bool, labels: map}
+@optional {allowed_extensions: [any], metric_family: any, default_metric_unit: any, reference_data_name: any, available_locales: [any], max_characters: any, validation_rule: any, validation_regexp: any, wysiwyg_enabled: any, number_min: any, number_max: any, decimals_allowed: any, negative_allowed: any, date_min: any, date_max: any, max_file_size: any, minimum_input_length: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attributes
+
+@endpoint GET /{{url}}/api/rest/v1/attributes/main_color/options/white
+
+@endpoint GET /{{url}}/api/rest/v1/attributes/main_color/options
+
+@endpoint POST /{{url}}/api/rest/v1/attributes/main_color/options
+@required {code: str, attribute: str, sort_order: int, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attributes/main_color/options/white
+@required {code: str, attribute: str, sort_order: int, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attributes/main_color/options
+
+@endpoint GET /{{url}}/api/rest/v1/attribute-groups/technical
+
+@endpoint GET /{{url}}/api/rest/v1/attribute-groups
+@optional {search: str, search: str, page: str, limit: str, with_count: str}
+
+@endpoint POST /{{url}}/api/rest/v1/attribute-groups
+@required {code: str, sort_order: int, attributes: [str], labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attribute-groups/technical
+@required {code: str, sort_order: int, attributes: [str], labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/attribute-groups
+
+@endpoint GET /{{url}}/api/rest/v1/categories/master
+@optional {with_position: str}
+
+@endpoint GET /{{url}}/api/rest/v1/categories
+@optional {search: str, search: str, search: str, search: str, page: str, limit: str, with_count: str, with_position: str}
+
+@endpoint POST /{{url}}/api/rest/v1/categories
+@required {code: str, parent: str, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/categories/audio_video
+@required {code: str, parent: str, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/categories
+
+@endpoint GET /{{url}}/api/rest/v1/channels/ecommerce
+
+@endpoint GET /{{url}}/api/rest/v1/channels
+
+@endpoint POST /{{url}}/api/rest/v1/channels
+@required {code: str, currencies: [str], locales: [str], category_tree: str, conversion_units: map, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/channels/my_new_channel_3
+@required {code: str, currencies: [str], locales: [str], category_tree: str, conversion_units: map, labels: map}
+@optional {yo: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/channels
+
+@endpoint GET /{{url}}/api/rest/v1/currencies/USD
+
+@endpoint GET /{{url}}/api/rest/v1/currencies
+@optional {search: str}
+
+@endpoint GET /{{url}}/api/rest/v1/families/camcorders
+
+@endpoint GET /{{url}}/api/rest/v1/families
+@optional {search: str, search: str, search: str, page: str, limit: str, with_count: str}
+
+@endpoint POST /{{url}}/api/rest/v1/families
+@required {code: str, attributes: [str], attribute_as_label: str, attribute_as_image: str, attribute_requirements: map, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/families/camcorders
+@required {code: str, attribute_as_label: str, labels: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/families
+
+@endpoint DELETE /{{url}}/api/rest/v1/families/camcorders
+
+@endpoint GET /{{url}}/api/rest/v1/families/clothing/variants/clothing_colorsize
+
+@endpoint GET /{{url}}/api/rest/v1/families/clothing/variants
+
+@endpoint POST /{{url}}/api/rest/v1/families/clothing/variants
+@required {code: str, labels: map, variant_attribute_sets: [map]}
+
+@endpoint PATCH /{{url}}/api/rest/v1/families/clothing/variants/clothing_colorsize
+@required {code: str, labels: map, variant_attribute_sets: [map]}
+
+@endpoint PATCH /{{url}}/api/rest/v1/families/clothing/variants
+
+@endpoint GET /{{url}}/api/rest/v1/locales/en_US
+
+@endpoint GET /{{url}}/api/rest/v1/locales
+@optional {search: str, page: str, limit: str, with_count: str}
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities
+@optional {search_after: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand
+@required {code: str, labels: map, image: str}
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/attributes/description
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/attributes
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand/attributes/salesarea
+@required {code: str, labels: map, type: str, value_per_locale: bool, value_per_channel: bool, is_required_for_completeness: bool}
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/attributes/nationality/options/french
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/attributes/nationality/options
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand/attributes/salesarea/options/usa
+@required {code: str, labels: map}
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/records/kartell
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities/brand/records
+@optional {search: str, search: str, search: str, locales: str, channel: str, search_after: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand/records/kartell
+@required {code: str, values: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/reference-entities/brand/records
+
+@endpoint GET /{{url}}/api/rest/v1/reference-entities-media-files/c/f/9/e/cf9e5fad2fe33e326b6def8f4e433537eb7f6633_8z2q6xwlya4_test.jpg
+
+@endpoint POST /{{url}}/api/rest/v1/reference-entities-media-files
+@required {file: file}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families
+@optional {search_after: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures
+@required {code: str, labels: map}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/warning_mention
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/attributes
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/warning_mention
+@required {code: str, labels: map, type: str, value_per_locale: bool, value_per_channel: bool, is_required_for_completeness: bool}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/model_is_wearing_size/options/small
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/model_is_wearing_size/options
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures/attributes/model_is_wearing_size/options/small
+@required {code: str, labels: map}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-media-files/c/f/9/e/cf9e5fad2fe33e326b6def8f4e433537eb7f6633_8z2q6xwlya4_test.jpg
+
+@endpoint POST /{{url}}/api/rest/v1/asset-media-files
+@required {file: file}
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/model_pictures/assets/allie_jean_model_picture
+
+@endpoint GET /{{url}}/api/rest/v1/asset-families/atmosphere/assets
+@optional {search: str, search: str, channel: str, locales: str, search_after: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures/assets/allie_jean_model_picture
+@required {code: str, values: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/asset-families/model_pictures/assets
+
+@endpoint DELETE /{{url}}/api/rest/v1/asset-families/model_pictures/assets/allie_jean_model_picture
+
+@endpoint GET /{{url}}/api/rest/v1/measure-families/area
+
+@endpoint GET /{{url}}/api/rest/v1/measure-families
+
+@endpoint GET /{{url}}/api/rest/v1/measurement-families
+
+@endpoint PATCH /{{url}}/api/rest/v1/measurement-families
+
+@endpoint GET /{{url}}/api/rest/v1/media-files/d/d/b/6/ddb6ad393f81503b6be7380785e3b32bbd28cd08_test.png
+
+@endpoint GET /{{url}}/api/rest/v1/media-files
+
+@endpoint POST /{{url}}/api/rest/v1/media-files
+@required {product: str, file: file}
+
+@endpoint GET /{{url}}/api/rest/v1/products/AKNSTK
+@optional {with_attribute_options: str, with_quality_scores: str, with_completenesses: str, with_asset_share_links: str, with_workflow_execution_statuses: str}
+
+@endpoint GET /{{url}}/api/rest/v1/products
+@optional {attributes: str, locales: str, scope: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, page: str, with_count: str, pagination_type: str, limit: str, with_quality_scores: str, search_after: str, with_attribute_options: str, with_completenesses: str, with_asset_share_links: str, with_workflow_execution_statuses: str, Cookie: str}
+
+@endpoint POST /{{url}}/api/rest/v1/products
+@required {identifier: str, family: str, categories: [str], enabled: bool, values: map, created: str, updated: str, associations: map}
+@optional {groups: [any], parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products/AKNSTK
+@required {identifier: str, family: str, categories: [str], enabled: bool, values: map, created: str, updated: str, associations: map}
+@optional {groups: [any], parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products
+
+@endpoint DELETE /{{url}}/api/rest/v1/products/AKNTS_BPXS
+
+@endpoint GET /{{url}}/api/rest/v1/products/AKNTS_BPS/draft
+
+@endpoint POST /{{url}}/api/rest/v1/products/AKNTS_BPS/proposal
+
+@endpoint GET /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312
+@optional {with_attribute_options: str, with_quality_scores: str, with_completenesses: str, with_asset_share_links: str, with_workflow_execution_statuses: str}
+
+@endpoint GET /{{url}}/api/rest/v1/products-uuid
+@optional {attributes: str, locales: str, scope: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, page: str, with_count: str, pagination_type: str, limit: str, with_quality_scores: str, search_after: str, with_attribute_options: str, with_completenesses: str, with_asset_share_links: str, with_workflow_execution_statuses: str, Cookie: str}
+
+@endpoint POST /{{url}}/api/rest/v1/products-uuid
+@required {family: str, categories: [str], enabled: bool, values: map, created: str, updated: str, associations: map}
+@optional {groups: [any], parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312
+@required {family: str, categories: [str], enabled: bool, values: map, created: str, updated: str, associations: map}
+@optional {groups: [any], parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products-uuid
+
+@endpoint DELETE /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312
+
+@endpoint GET /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312/draft
+
+@endpoint POST /{{url}}/api/rest/v1/products-uuid/f62190e8-8314-4360-8ff8-7dbdb4af6312/proposal
+
+@endpoint GET /{{url}}/api/rest/v1/product-models/amor
+@optional {with_asset_share_links: str, with_quality_scores: str, with_workflow_execution_statuses: str}
+
+@endpoint GET /{{url}}/api/rest/v1/product-models
+@optional {search: str, search: str, search: str, search: str, scope: str, locales: str, attributes: str, pagination_type: str, page: str, search_after: str, limit: str, with_count: str, with_asset_share_links: str, with_quality_scores: str, with_workflow_execution_statuses: str}
+
+@endpoint POST /{{url}}/api/rest/v1/product-models
+@required {code: str, family_variant: str, categories: [str], values: map}
+@optional {parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/product-models/apollon_truc
+@required {code: str, family: str, family_variant: str, categories: [str], values: map, created: str, updated: str, associations: map, metadata: map}
+@optional {parent: any}
+
+@endpoint PATCH /{{url}}/api/rest/v1/product-models
+
+@endpoint DELETE /{{url}}/api/rest/v1/product-models/amor
+
+@endpoint GET /{{url}}/api/rest/v1/product-models/amor/draft
+
+@endpoint POST /{{url}}/api/rest/v1/product-models/amor/proposal
+
+@endpoint GET /{{url}}/api/rest/v1/published-products/13527420
+
+@endpoint GET /{{url}}/api/rest/v1/published-products
+@optional {attributes: str, locales: str, scope: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, search: str, pagination_type: str, page: str, search_after: str, limit: str, with_count: str}
+
+@endpoint POST /{{url}}/api/rest/v1/products
+@required {identifier: str, quantified_associations: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/products/AKNSTK
+@required {identifier: str, quantified_associations: map}
+
+@endpoint POST /{{url}}/api/rest/v1/product-models
+@required {code: str, family_variant: str, quantified_associations: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/product-models/apollon_truc
+@required {code: str, family_variant: str, quantified_associations: map}
+
+@endpoint POST /{{url}}/api/rest/v1/jobs/export
+
+@endpoint POST /{{url}}/api/rest/v1/jobs/import
+@required {import_mode: str}
+
+@endpoint GET /{{url}}/api/rest/v1/permissions/{{userUuid}}/channels
+
+@endpoint GET /{{url}}/api/rest/v1/permissions/{{userUuid}}/locales
+
+@endpoint GET /{{url}}/api/rest/v1/ui-extensions
+
+@endpoint POST /{{url}}/api/rest/v1/ui-extensions
+@required {name: str, version: str, description: str, position: str, type: str, configuration: map}
+
+@endpoint PATCH /{{url}}/api/rest/v1/ui-extensions/{ui_extension_uuid}
+@required {ui_extension_uuid: str, name: str, version: str, description: str, position: str, type: str, configuration: map}
+
+@endpoint DELETE /{{url}}/api/rest/v1/ui-extensions/{ui_extension_uuid}
+@required {ui_extension_uuid: str}
+
+@endpoint GET /{{url}}/api/rest/v1/workflows
+@auth Bearer token
+@optional {page: str, limit: str}
+
+@endpoint GET /{{url}}/api/rest/v1/workflows/{uuid}
+@auth Bearer token
+@required {uuid: str}
+
+@endpoint GET /{{url}}/api/rest/v1/workflows/steps/{uuid}/assignees
+@auth Bearer token
+@required {uuid: str}
+@optional {page: str, limit: str}
+
+@endpoint POST /{{url}}/api/rest/v1/workflows/executions
+@auth Bearer token
+
+@endpoint GET /{{url}}/api/rest/v1/workflows/tasks
+@auth Bearer token
+@required {search: str}
+@optional {with_attributes: str, page: str, limit: str}
+
+@endpoint PATCH /{{url}}/api/rest/v1/workflows/tasks/{uuid}
+@auth Bearer token
+@required {uuid: str, status: str, send_back_to_step_uuid: str, rejected_attributes: map}
+
+@endpoint POST /{{url}}/api/oauth/v1/token
+@required {username: str, password: str, grant_type: str}
+
+@endpoint POST /{{url}}/api/oauth/v1/token
+@required {refresh_token: str, grant_type: str}
+
+@end

@@ -1,0 +1,26 @@
+spec_id: streetlights
+tasks:
+  - id: t1
+    description: "Set up a listener to receive real-time brightness sensor readings from a specific outdoor lighting unit, then send a remote command to switch that unit on"
+    target_endpoints:
+      - SUBSCRIBE smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured
+      - PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.turn.on
+    expected_params:
+      SUBSCRIBE smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured:
+        - lumens
+        - sentAt
+      PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.turn.on:
+        - command
+        - sentAt
+  - id: t2
+    description: "Remotely shut down one outdoor lighting unit, and then adjust another unit to a partial brightness percentage"
+    target_endpoints:
+      - PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.turn.off
+      - PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.dim
+    expected_params:
+      PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.turn.off:
+        - command
+        - sentAt
+      PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.dim:
+        - percentage
+        - sentAt

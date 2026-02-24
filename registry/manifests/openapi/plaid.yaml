@@ -1,0 +1,38 @@
+spec_id: plaid
+tasks:
+  - id: t1
+    description: "Obtain all the bank accounts connected through a user's financial link, then pull their spending and deposit history over a specified date range"
+    target_endpoints:
+      - POST /accounts/get
+      - POST /transactions/get
+    expected_params:
+      POST /accounts/get:
+        - access_token
+        - client_id
+        - secret
+      POST /transactions/get:
+        - access_token
+        - start_date
+        - end_date
+        - client_id
+        - secret
+  - id: t2
+    description: "Generate a temporary session credential for the bank connection onboarding flow specifying the user's locale and desired financial products, then browse the catalog of supported banks and credit unions by country"
+    target_endpoints:
+      - POST /link/token/create
+      - POST /institutions/get
+    expected_params:
+      POST /link/token/create:
+        - client_name
+        - language
+        - country_codes
+        - user
+        - products
+        - client_id
+        - secret
+      POST /institutions/get:
+        - count
+        - offset
+        - country_codes
+        - client_id
+        - secret

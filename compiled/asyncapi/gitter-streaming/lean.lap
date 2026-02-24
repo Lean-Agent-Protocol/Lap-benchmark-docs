@@ -1,0 +1,13 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Gitter Streaming API
+@version 1.0.0
+@auth https
+@endpoints 2
+@toc rooms(2)
+
+@endpoint PUB /rooms/{roomId}/{resource}
+
+@endpoint PUB /rooms/{roomId}/{resource}
+
+@end

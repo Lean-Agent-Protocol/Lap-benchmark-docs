@@ -1,0 +1,28 @@
+spec_id: google-pubsub
+tasks:
+  - id: t1
+    description: "Send a batch of messages to a messaging channel, then retrieve a paginated list of all messaging channels available in the project"
+    target_endpoints:
+      - RPC Publish
+      - RPC ListTopics
+    expected_params:
+      RPC Publish:
+        - topic
+        - messages
+      RPC ListTopics:
+        - project
+        - page_size
+        - page_token
+  - id: t2
+    description: "Consume pending messages from a message queue and then confirm that each message has been successfully processed so it is not redelivered"
+    target_endpoints:
+      - RPC Pull
+      - RPC Acknowledge
+    expected_params:
+      RPC Pull:
+        - subscription
+        - max_messages
+        - return_immediately
+      RPC Acknowledge:
+        - subscription
+        - ack_ids

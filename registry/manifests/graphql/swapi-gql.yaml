@@ -1,0 +1,30 @@
+spec_id: swapi-gql
+tasks:
+  - id: t1
+    description: "Get a paginated catalog of all movies in the franchise, and retrieve the biographical details of a specific character"
+    target_endpoints:
+      - QUERY allFilms
+      - QUERY person
+    expected_params:
+      QUERY allFilms:
+        - after
+        - first
+        - before
+        - last
+      QUERY person:
+        - id
+        - personID
+  - id: t2
+    description: "Browse the full directory of worlds in the franchise with pagination support, and pull up the technical specs of a particular spacecraft"
+    target_endpoints:
+      - QUERY allPlanets
+      - QUERY starship
+    expected_params:
+      QUERY allPlanets:
+        - after
+        - first
+        - before
+        - last
+      QUERY starship:
+        - id
+        - starshipID

@@ -1,0 +1,23 @@
+spec_id: social-media
+tasks:
+  - id: t1
+    description: "Capture a user's reaction on a piece of content from the client-side connection, then broadcast an engagement notification to all backend services so they can update their records"
+    target_endpoints:
+      - SUBSCRIBE like/comment
+      - PUBLISH comment/liked
+    expected_params:
+      SUBSCRIBE like/comment:
+        - commentId
+      PUBLISH comment/liked:
+        - commentId
+  - id: t2
+    description: "Listen for backend notifications that a content item's engagement data has been modified, then push the refreshed engagement count to the user's browser in real time"
+    target_endpoints:
+      - SUBSCRIBE comment/{commentId}/changed
+      - PUBLISH update/comment/likes
+    expected_params:
+      SUBSCRIBE comment/{commentId}/changed:
+        - commentId
+      PUBLISH update/comment/likes:
+        - commentId
+        - likes

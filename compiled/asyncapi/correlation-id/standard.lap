@@ -1,0 +1,19 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Correlation ID Example
+@version 1.0.0
+@auth mqtt
+@endpoints 2
+@toc smartylighting(2)
+
+@endpoint SUB smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured
+@desc Inform about environmental lighting conditions of a particular streetlight.
+@optional {lumens: int # Light intensity measured in lumens., sentAt: str(date-time) # Date and time when the message was sent.}
+@returns(SUB) {lumens: int, sentAt: str(date-time)} # message payload
+
+@endpoint PUB smartylighting/streetlights/1/0/action/{streetlightId}/dim
+@desc Command a particular streetlight to dim the lights.
+@optional {percentage: int # Percentage to which the light should be dimmed to., sentAt: str(date-time) # Date and time when the message was sent.}
+@returns(PUB) {percentage: int, sentAt: str(date-time)} # message payload
+
+@end

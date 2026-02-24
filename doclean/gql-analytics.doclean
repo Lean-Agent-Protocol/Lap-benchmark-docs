@@ -1,0 +1,24 @@
+@doclean v0.1
+@api Analytics
+@base /graphql
+
+input CreateDashboardInput{name:str!,widgetIds:[id!]}
+type Dashboard{id:id!,name:str!,widgets:[Widget!]!,createdAt:str!}
+input DateRange{start:str!,end:str!}
+type MetricResult{metric:MetricType!,total:num!,average:num!,timeSeries:[TimeSeries!]!}
+enum MetricType=PAGEVIEWS|UNIQUE_VISITORS|BOUNCE_RATE|SESSION_DURATION|CONVERSION_RATE
+enum TimeGranularity=HOUR|DAY|WEEK|MONTH
+type TimeSeries{timestamp:str!,value:num!}
+type TopPage{path:str!,views:int!,uniqueVisitors:int!,avgDuration:num!}
+type TrafficSource{source:str!,medium:str!,visits:int!,conversionRate:num!}
+type Widget{id:id!,type:str!,metric:MetricType!,granularity:TimeGranularity!,data:MetricResult!}
+
+Q metrics(siteId:id!,metrics:[MetricType!]!,dateRange:DateRange!,granularity:TimeGranularity=DAY)->[MetricResult!]! # Get metrics for a date range
+Q topPages(siteId:id!,dateRange:DateRange!,limit:int=10)->[TopPage!]! # Get top pages
+Q trafficSources(siteId:id!,dateRange:DateRange!)->[TrafficSource!]! # Get traffic sources
+Q dashboard(id:id!)->Dashboard # Get a dashboard
+Q dashboards->[Dashboard!]! # List dashboards
+M createDashboard(input:CreateDashboardInput!)->Dashboard! # Create a dashboard
+M deleteDashboard(id:id!)->bool! # Delete a dashboard
+M trackPageView(siteId:id!,path:str!,referrer:str)->bool! # Track a page view event
+S realtimeMetrics(siteId:id!,metric:MetricType!)->TimeSeries! # Real-time metrics stream

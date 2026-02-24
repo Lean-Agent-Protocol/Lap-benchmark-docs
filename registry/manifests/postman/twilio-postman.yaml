@@ -1,0 +1,24 @@
+spec_id: twilio-postman
+tasks:
+  - id: t1
+    description: "Dispatch an over-the-air instruction to a connected IoT device in binary mode, then look up the delivery receipt for that instruction to confirm it was received"
+    target_endpoints:
+      - POST /v1/Commands
+      - GET /v1/Commands/{Command_Sid}
+    expected_params:
+      POST /v1/Commands:
+        - Sim
+        - Command
+        - CommandMode
+      GET /v1/Commands/{Command_Sid}:
+        - Sid
+  - id: t2
+    description: "Pull the data consumption history for a particular wireless device, then check the pricing and allowance details of the billing plan it is enrolled in"
+    target_endpoints:
+      - GET /v1/Sims/{SimSid}/UsageRecords
+      - GET /v1/RatePlans/{RatePlanSid}
+    expected_params:
+      GET /v1/Sims/{SimSid}/UsageRecords:
+        - Sid
+      GET /v1/RatePlans/{RatePlanSid}:
+        - Sid

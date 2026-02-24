@@ -1,0 +1,26 @@
+spec_id: correlation-id
+tasks:
+  - id: t1
+    description: "Listen for real-time brightness sensor data from a specific outdoor lighting device, then issue a remote command to adjust that device's output level, ensuring the request and response can be matched together"
+    target_endpoints:
+      - SUBSCRIBE smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured
+      - PUBLISH smartylighting/streetlights/1/0/action/{streetlightId}/dim
+    expected_params:
+      SUBSCRIBE smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured:
+        - lumens
+        - sentAt
+      PUBLISH smartylighting/streetlights/1/0/action/{streetlightId}/dim:
+        - percentage
+        - sentAt
+  - id: t2
+    description: "Determine how the messaging broker connection is configured including its variable port and security settings, and explain the mechanism used to pair outgoing commands with their corresponding incoming sensor reports for a given device"
+    target_endpoints:
+      - SUBSCRIBE smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured
+      - PUBLISH smartylighting/streetlights/1/0/action/{streetlightId}/dim
+    expected_params:
+      SUBSCRIBE smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured:
+        - streetlightId
+        - correlationId
+      PUBLISH smartylighting/streetlights/1/0/action/{streetlightId}/dim:
+        - streetlightId
+        - correlationId

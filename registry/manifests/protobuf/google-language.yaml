@@ -1,0 +1,27 @@
+spec_id: google-language
+tasks:
+  - id: t1
+    description: "Determine the overall emotional tone and opinion expressed in a block of text, then identify and extract the people, places, organizations, and other proper nouns mentioned in it"
+    target_endpoints:
+      - RPC AnalyzeSentiment
+      - RPC AnalyzeEntities
+    expected_params:
+      RPC AnalyzeSentiment:
+        - document
+        - encoding_type
+      RPC AnalyzeEntities:
+        - document
+        - encoding_type
+  - id: t2
+    description: "Automatically sort a piece of content into predefined topic categories, then run a comprehensive linguistic analysis that combines multiple insights like syntax, entities, and sentiment in a single pass"
+    target_endpoints:
+      - RPC ClassifyText
+      - RPC AnnotateText
+    expected_params:
+      RPC ClassifyText:
+        - document
+        - classification_model_options
+      RPC AnnotateText:
+        - document
+        - features
+        - encoding_type

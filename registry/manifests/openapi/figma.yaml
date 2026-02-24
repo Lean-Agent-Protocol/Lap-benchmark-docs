@@ -1,0 +1,39 @@
+spec_id: figma
+tasks:
+  - id: t1
+    description: "Generate scaled raster renderings of selected design components from a project file in a chosen image format, then leave a review note anchored to a specific location on the canvas referencing those components"
+    target_endpoints:
+      - GET /v1/images/{file_key}
+      - POST /v1/files/{file_key}/comments
+    expected_params:
+      GET /v1/images/{file_key}:
+        - file_key
+        - ids
+        - scale
+        - format
+        - contents_only
+        - use_absolute_bounds
+      POST /v1/files/{file_key}/comments:
+        - file_key
+        - message
+        - comment_id
+        - client_meta
+  - id: t2
+    description: "Set up an automated listener that notifies your server whenever design files change within a team workspace, then review the organization's audit trail of recent actions over a specified time window"
+    target_endpoints:
+      - POST /v2/webhooks
+      - GET /v1/activity_logs
+    expected_params:
+      POST /v2/webhooks:
+        - event_type
+        - context
+        - context_id
+        - endpoint
+        - passcode
+        - description
+      GET /v1/activity_logs:
+        - events
+        - start_time
+        - end_time
+        - limit
+        - order

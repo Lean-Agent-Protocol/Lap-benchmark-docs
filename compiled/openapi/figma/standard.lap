@@ -1,0 +1,382 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Figma API
+@base https://api.figma.com
+@version 0.36.0
+@auth ApiKey X-Figma-Token in header | OAuth2 | OAuth2
+@endpoints 46
+@hint download_for_search
+@toc files(19), images(1), teams(5), projects(1), me(1), components(1), component_sets(1), styles(1), webhooks(6), activity_logs(1), payments(1), dev_resources(2), analytics(6)
+
+@group files
+@endpoint GET /v1/files/{file_key}
+@desc Get file JSON
+@required {file_key: str # File to export JSON from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key.}
+@optional {version: str # A specific version ID to get. Omitting this will get the current version of the file., ids: str # Comma separated list of nodes that you care about in the document. If specified, only a subset of the document will be returned corresponding to the nodes listed, their children, and everything between the root node and the listed nodes.  Note: There may be other nodes included in the returned JSON that are outside the ancestor chains of the desired nodes. The response may also include dependencies of anything in the nodes' subtrees. For example, if a node subtree contains an instance of a local component that lives elsewhere in that file, that component and its ancestor chain will also be included.  For historical reasons, top-level canvas nodes are always returned, regardless of whether they are listed in the `ids` parameter. This quirk may be removed in a future version of the API., depth: num # Positive integer representing how deep into the document tree to traverse. For example, setting this to 1 returns only Pages, setting it to 2 returns Pages and all top level objects on each page. Not setting this parameter returns all nodes., geometry: str # Set to "paths" to export vector data., plugin_data: str # A comma separated list of plugin IDs and/or the string "shared". Any data present in the document written by those plugins will be included in the result in the `pluginData` and `sharedPluginData` properties., branch_data: bool=False # Returns branch metadata for the requested file. If the file is a branch, the main file's key will be included in the returned response. If the file has branches, their metadata will be included in the returned response. Default: false.}
+@returns(200) {name: str, role: str, lastModified: str(date-time), editorType: str, thumbnailUrl: str, version: str, document: any, components: map, componentSets: map, schemaVersion: num, styles: map, linkAccess: str, mainFileKey: str, branches: [map]} # Response from the GET /v1/files/{file_key} endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/files/{file_key}/nodes
+@desc Get file JSON for specific nodes
+@required {file_key: str # File to export JSON from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key., ids: str # A comma separated list of node IDs to retrieve and convert.}
+@optional {version: str # A specific version ID to get. Omitting this will get the current version of the file., depth: num # Positive integer representing how deep into the node tree to traverse. For example, setting this to 1 will return only the children directly underneath the desired nodes. Not setting this parameter returns all nodes.  Note: this parameter behaves differently from the same parameter in the `GET /v1/files/:key` endpoint. In this endpoint, the depth will be counted starting from the desired node rather than the document root node., geometry: str # Set to "paths" to export vector data., plugin_data: str # A comma separated list of plugin IDs and/or the string "shared". Any data present in the document written by those plugins will be included in the result in the `pluginData` and `sharedPluginData` properties.}
+@returns(200) {name: str, role: str, lastModified: str(date-time), editorType: str, thumbnailUrl: str, version: str, nodes: map} # Response from the GET /v1/files/{file_key}/nodes endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group images
+@endpoint GET /v1/images/{file_key}
+@desc Render images of file nodes
+@required {file_key: str # File to export images from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key., ids: str # A comma separated list of node IDs to render.}
+@optional {version: str # A specific version ID to get. Omitting this will get the current version of the file., scale: num # A number between 0.01 and 4, the image scaling factor., format: str(jpg/png/svg/pdf)=png # A string enum for the image output format., svg_outline_text: bool=True # Whether text elements are rendered as outlines (vector paths) or as `<text>` elements in SVGs.  Rendering text elements as outlines guarantees that the text looks exactly the same in the SVG as it does in the browser/inside Figma.  Exporting as `<text>` allows text to be selectable inside SVGs and generally makes the SVG easier to read. However, this relies on the browser's rendering engine which can vary between browsers and/or operating systems. As such, visual accuracy is not guaranteed as the result could look different than in Figma., svg_include_id: bool=False # Whether to include id attributes for all SVG elements. Adds the layer name to the `id` attribute of an svg element., svg_include_node_id: bool=False # Whether to include node id attributes for all SVG elements. Adds the node id to a `data-node-id` attribute of an svg element., svg_simplify_stroke: bool=True # Whether to simplify inside/outside strokes and use stroke attribute if possible instead of `<mask>`., contents_only: bool=True # Whether content that overlaps the node should be excluded from rendering. Passing false (i.e., rendering overlaps) may increase processing time, since more of the document must be included in rendering., use_absolute_bounds: bool=False # Use the full dimensions of the node regardless of whether or not it is cropped or the space around it is empty. Use this to export text nodes without cropping.}
+@returns(200) {err: null?, images: map} # Response from the GET /v1/images/{file_key} endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/images
+@desc Get image fills
+@required {file_key: str # File to get image URLs from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key.}
+@returns(200) {error: bool, status: num, meta: map{images: map}} # Response from the GET /v1/files/{file_key}/images endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/files/{file_key}/meta
+@desc Get file metadata
+@required {file_key: str # File to get metadata for. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key.}
+@returns(200) {name: str, folder_name: str, last_touched_at: str(date-time), creator: map{id: str, handle: str, img_url: str}, last_touched_by: map{id: str, handle: str, img_url: str}, thumbnail_url: str, editorType: str, role: str, link_access: str, url: str, version: str} # Response from the GET /v1/files/{file_key}/meta endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group teams
+@endpoint GET /v1/teams/{team_id}/projects
+@desc Get projects in a team
+@required {team_id: str # ID of the team to list projects from}
+@returns(200) {name: str, projects: [map]} # Response from the GET /v1/teams/{team_id}/projects endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group projects
+@endpoint GET /v1/projects/{project_id}/files
+@desc Get files in a project
+@required {project_id: str # ID of the project to list files from}
+@optional {branch_data: bool=False # Returns branch metadata in the response for each main file with a branch inside the project.}
+@returns(200) {name: str, files: [map]} # Response from the GET /v1/projects/{project_id}/files endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/versions
+@desc Get versions of a file
+@required {file_key: str # File to get version history from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key.}
+@optional {page_size: num # The number of items returned in a page of the response. If not included, `page_size` is `30`., before: num # A version ID for one of the versions in the history. Gets versions before this ID. Used for paginating. If the response is not paginated, this link returns the same data in the current response., after: num # A version ID for one of the versions in the history. Gets versions after this ID. Used for paginating. If the response is not paginated, this property is not included.}
+@returns(200) {versions: [map], pagination: map{prev_page: str, next_page: str}} # Response from the GET /v1/files/{file_key}/versions endpoint.
+@errors {403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/files/{file_key}/comments
+@desc Get comments in a file
+@required {file_key: str # File to get comments from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key.}
+@optional {as_md: bool # If enabled, will return comments as their markdown equivalents when applicable.}
+@returns(200) {comments: [map]} # Response from the GET /v1/files/{file_key}/comments endpoint.
+@errors {403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint POST /v1/files/{file_key}/comments
+@desc Add a comment to a file
+@required {file_key: str # File to add comments in. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key., message: str # The text contents of the comment to post.}
+@optional {comment_id: str # The ID of the comment to reply to, if any. This must be a root comment. You cannot reply to other replies (a comment that has a parent_id)., client_meta: any # The position where to place the comment.}
+@returns(200) {id: str, client_meta: any, file_key: str, parent_id: str, user: map{id: str, handle: str, img_url: str}, created_at: str(date-time), resolved_at: str(date-time)?, message: str, order_id: str?, reactions: [map]} # Response from the POST /v1/files/{file_key}/comments endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint DELETE /v1/files/{file_key}/comments/{comment_id}
+@desc Delete a comment
+@required {file_key: str # File to delete comment from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key., comment_id: str # Comment id of comment to delete}
+@returns(200) {status: num, error: bool} # Response from the DELETE /v1/files/{file_key}/comments/{comment_id} endpoint.
+@errors {403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/files/{file_key}/comments/{comment_id}/reactions
+@desc Get reactions for a comment
+@required {file_key: str # File to get comment containing reactions from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key., comment_id: str # ID of comment to get reactions from.}
+@optional {cursor: str # Cursor for pagination, retrieved from the response of the previous call.}
+@returns(200) {reactions: [map], pagination: map{prev_page: str, next_page: str}} # Response from the GET /v1/files/{file_key}/comments/{comment_id}/reactions endpoint.
+@errors {403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint POST /v1/files/{file_key}/comments/{comment_id}/reactions
+@desc Add a reaction to a comment
+@required {file_key: str # File to post comment reactions to. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key., comment_id: str # ID of comment to react to., emoji: str # The emoji type of reaction as shortcode (e.g. `:heart:`, `:+1::skin-tone-2:`). The list of accepted emoji shortcodes can be found in [this file](https://raw.githubusercontent.com/missive/emoji-mart/main/packages/emoji-mart-data/sets/14/native.json) under the top-level emojis and aliases fields, with optional skin tone modifiers when applicable.}
+@returns(200) {status: num, error: bool} # Response from the POST /v1/files/{file_key}/comments/{comment_id}/reactions endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint DELETE /v1/files/{file_key}/comments/{comment_id}/reactions
+@desc Delete a reaction
+@required {file_key: str # File to delete comment reaction from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key., comment_id: str # ID of comment to delete reaction from., emoji: str}
+@returns(200) {status: num, error: bool} # Response from the DELETE /v1/files/{file_key}/comments/{comment_id}/reactions endpoint.
+@errors {403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group me
+@endpoint GET /v1/me
+@desc Get current user
+@returns(200) Response from the GET /v1/me endpoint.
+@errors {403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group teams
+@endpoint GET /v1/teams/{team_id}/components
+@desc Get team components
+@required {team_id: str # Id of the team to list components from.}
+@optional {page_size: num=30 # Number of items to return in a paged list of results. Defaults to 30. Maximum of 1000., after: num # Cursor indicating which id after which to start retrieving components for. Exclusive with before. The cursor value is an internally tracked integer that doesn't correspond to any Ids., before: num # Cursor indicating which id before which to start retrieving components for. Exclusive with after. The cursor value is an internally tracked integer that doesn't correspond to any Ids.}
+@returns(200) {status: num, error: bool, meta: map{components: [map], cursor: map{before: num, after: num}}} # Response from the GET /v1/teams/{team_id}/components endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/components
+@desc Get file components
+@required {file_key: str # File to list components from. This must be a main file key, not a branch key, as it is not possible to publish from branches.}
+@returns(200) {status: num, error: bool, meta: map{components: [map]}} # Response from the GET /v1/files/{file_key}/components endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group components
+@endpoint GET /v1/components/{key}
+@desc Get component
+@required {key: str # The unique identifier of the component.}
+@returns(200) {status: num, error: bool, meta: map{key: str, file_key: str, node_id: str, thumbnail_url: str, name: str, description: str, created_at: str(date-time), updated_at: str(date-time), user: map{id: str, handle: str, img_url: str}, containing_frame: map{nodeId: str, name: str, backgroundColor: str, pageId: str, pageName: str, containingStateGroup: any, containingComponentSet: any}}} # Response from the GET /v1/components/{key} endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group teams
+@endpoint GET /v1/teams/{team_id}/component_sets
+@desc Get team component sets
+@required {team_id: str # Id of the team to list component sets from.}
+@optional {page_size: num=30 # Number of items to return in a paged list of results. Defaults to 30., after: num # Cursor indicating which id after which to start retrieving component sets for. Exclusive with before. The cursor value is an internally tracked integer that doesn't correspond to any Ids., before: num # Cursor indicating which id before which to start retrieving component sets for. Exclusive with after. The cursor value is an internally tracked integer that doesn't correspond to any Ids.}
+@returns(200) {status: num, error: bool, meta: map{component_sets: [map], cursor: map{before: num, after: num}}} # Response from the GET /v1/teams/{team_id}/component_sets endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/component_sets
+@desc Get file component sets
+@required {file_key: str # File to list component sets from. This must be a main file key, not a branch key, as it is not possible to publish from branches.}
+@returns(200) {status: num, error: bool, meta: map{component_sets: [map]}} # Response from the GET /v1/files/{file_key}/component_sets endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group component_sets
+@endpoint GET /v1/component_sets/{key}
+@desc Get component set
+@required {key: str # The unique identifier of the component set.}
+@returns(200) {status: num, error: bool, meta: map{key: str, file_key: str, node_id: str, thumbnail_url: str, name: str, description: str, created_at: str(date-time), updated_at: str(date-time), user: map{id: str, handle: str, img_url: str}, containing_frame: map{nodeId: str, name: str, backgroundColor: str, pageId: str, pageName: str, containingStateGroup: any, containingComponentSet: any}}} # Response from the GET /v1/component_sets/{key} endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group teams
+@endpoint GET /v1/teams/{team_id}/styles
+@desc Get team styles
+@required {team_id: str # Id of the team to list styles from.}
+@optional {page_size: num=30 # Number of items to return in a paged list of results. Defaults to 30., after: num # Cursor indicating which id after which to start retrieving styles for. Exclusive with before. The cursor value is an internally tracked integer that doesn't correspond to any Ids., before: num # Cursor indicating which id before which to start retrieving styles for. Exclusive with after. The cursor value is an internally tracked integer that doesn't correspond to any Ids.}
+@returns(200) {status: num, error: bool, meta: map{styles: [map], cursor: map{before: num, after: num}}} # Response from the GET /v1/teams/{team_id}/styles endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/styles
+@desc Get file styles
+@required {file_key: str # File to list styles from. This must be a main file key, not a branch key, as it is not possible to publish from branches.}
+@returns(200) {status: num, error: bool, meta: map{styles: [map]}} # Response from the GET /v1/files/{file_key}/styles endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group styles
+@endpoint GET /v1/styles/{key}
+@desc Get style
+@required {key: str # The unique identifier of the style.}
+@returns(200) {status: num, error: bool, meta: map{key: str, file_key: str, node_id: str, style_type: str, thumbnail_url: str, name: str, description: str, created_at: str(date-time), updated_at: str(date-time), user: map{id: str, handle: str, img_url: str}, sort_position: str}} # Response from the GET /v1/styles/{key} endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group webhooks
+@endpoint GET /v2/webhooks
+@desc Get webhooks by context or plan
+@optional {context: str # Context to create the resource on. Should be "team", "project", or "file"., context_id: str # The id of the context that you want to get attached webhooks for. If you're using context_id, you cannot use plan_api_id., plan_api_id: str # The id of your plan. Use this to get all webhooks for all contexts you have access to. If you're using plan_api_id, you cannot use context or context_id. When you use plan_api_id, the response is paginated., cursor: str # If you're using plan_api_id, this is the cursor to use for pagination. If you're using context or context_id, this parameter is ignored. Provide the next_page or prev_page value from the previous response to get the next or previous page of results.}
+@returns(200) {webhooks: [map], pagination: map{prev_page: str, next_page: str}} # Response from the GET /v2/webhooks endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort.}
+
+@endpoint POST /v2/webhooks
+@desc Create a webhook
+@required {event_type: str(PING/FILE_UPDATE/FILE_VERSION_UPDATE/FILE_DELETE/LIBRARY_PUBLISH/FILE_COMMENT/DEV_MODE_STATUS_UPDATE) # An enum representing the possible events that a webhook can subscribe to, context: str # Context to create the webhook for. Must be "team", "project", or "file"., context_id: str # The id of the context you want to receive updates about., endpoint: str # The HTTP endpoint that will receive a POST request when the event triggers. Max length 2048 characters., passcode: str # String that will be passed back to your webhook endpoint to verify that it is being called by Figma. Max length 100 characters.}
+@optional {team_id: str # Team id to receive updates about. This is deprecated, use 'context' and 'context_id' instead., status: str(ACTIVE/PAUSED) # An enum representing the possible statuses you can set a webhook to: - `ACTIVE`: The webhook is healthy and receive all events - `PAUSED`: The webhook is paused and will not receive any events, description: str # User provided description or name for the webhook. Max length 150 characters.}
+@returns(200) {id: str, event_type: str, team_id: str, context: str, context_id: str, plan_api_id: str, status: str, client_id: str?, passcode: str, endpoint: str, description: str?} # Response from the POST /v2/webhooks endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v2/webhooks/{webhook_id}
+@desc Get a webhook
+@required {webhook_id: str # ID of webhook to get}
+@returns(200) {id: str, event_type: str, team_id: str, context: str, context_id: str, plan_api_id: str, status: str, client_id: str?, passcode: str, endpoint: str, description: str?} # Response from the GET /v2/webhooks/{webhook_id} endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint PUT /v2/webhooks/{webhook_id}
+@desc Update a webhook
+@required {webhook_id: str # ID of webhook to update, event_type: str(PING/FILE_UPDATE/FILE_VERSION_UPDATE/FILE_DELETE/LIBRARY_PUBLISH/FILE_COMMENT/DEV_MODE_STATUS_UPDATE) # An enum representing the possible events that a webhook can subscribe to, endpoint: str # The HTTP endpoint that will receive a POST request when the event triggers. Max length 2048 characters., passcode: str # String that will be passed back to your webhook endpoint to verify that it is being called by Figma. Max length 100 characters.}
+@optional {status: str(ACTIVE/PAUSED) # An enum representing the possible statuses you can set a webhook to: - `ACTIVE`: The webhook is healthy and receive all events - `PAUSED`: The webhook is paused and will not receive any events, description: str # User provided description or name for the webhook. Max length 150 characters.}
+@returns(200) {id: str, event_type: str, team_id: str, context: str, context_id: str, plan_api_id: str, status: str, client_id: str?, passcode: str, endpoint: str, description: str?} # Response from the PUT /v2/webhooks/{webhook_id} endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint DELETE /v2/webhooks/{webhook_id}
+@desc Delete a webhook
+@required {webhook_id: str # ID of webhook to delete}
+@returns(200) {id: str, event_type: str, team_id: str, context: str, context_id: str, plan_api_id: str, status: str, client_id: str?, passcode: str, endpoint: str, description: str?} # Response from the DELETE /v2/webhooks/{webhook_id} endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group teams
+@endpoint GET /v2/teams/{team_id}/webhooks
+@desc [Deprecated] Get team webhooks
+@required {team_id: str # ID of team to get webhooks for}
+@returns(200) {webhooks: [map]} # Response from the GET /v2/teams/{team_id}/webhooks endpoint.
+@errors {403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group webhooks
+@endpoint GET /v2/webhooks/{webhook_id}/requests
+@desc Get webhook requests
+@required {webhook_id: str # The id of the webhook subscription you want to see events from}
+@returns(200) {requests: [map]} # Response from the GET /v2/webhooks/{webhook_id}/requests endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group activity_logs
+@endpoint GET /v1/activity_logs
+@desc Get activity logs
+@optional {events: str # Event type(s) to include in the response. Can have multiple values separated by comma. All events are returned by default., start_time: num # Unix timestamp of the least recent event to include. This param defaults to one year ago if unspecified., end_time: num # Unix timestamp of the most recent event to include. This param defaults to the current timestamp if unspecified., limit: num # Maximum number of events to return. This param defaults to 1000 if unspecified., order: str(asc/desc)=asc # Event order by timestamp. This param can be either "asc" (default) or "desc".}
+@returns(200) {status: num, error: bool, meta: map{activity_logs: [map], cursor: str, next_page: bool}} # Response from the GET /v1/activity_logs endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group payments
+@endpoint GET /v1/payments
+@desc Get payments
+@optional {plugin_payment_token: str # Short-lived token returned from "getPluginPaymentTokenAsync" in the plugin payments API and used to authenticate to this endpoint. Read more about generating this token through "Calling the Payments REST API from a plugin or widget" below., user_id: str # The ID of the user to query payment information about. You can get the user ID by having the user OAuth2 to the Figma REST API., community_file_id: str # The ID of the Community file to query a user's payment information on. You can get the Community file ID from the file's Community page (look for the number after "file/" in the URL). Provide exactly one of "community_file_id", "plugin_id", or "widget_id"., plugin_id: str # The ID of the plugin to query a user's payment information on. You can get the plugin ID from the plugin's manifest, or from the plugin's Community page (look for the number after "plugin/" in the URL). Provide exactly one of "community_file_id", "plugin_id", or "widget_id"., widget_id: str # The ID of the widget to query a user's payment information on. You can get the widget ID from the widget's manifest, or from the widget's Community page (look for the number after "widget/" in the URL). Provide exactly one of "community_file_id", "plugin_id", or "widget_id".}
+@returns(200) {status: num, error: bool, meta: map{user_id: str, resource_id: str, resource_type: str, payment_status: map{type: str}, date_of_purchase: str(date-time)}} # Response from the GET /v1/payments endpoint.
+@errors {401: Token is missing or incorrect., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group files
+@endpoint GET /v1/files/{file_key}/variables/local
+@desc Get local variables
+@required {file_key: str # File to get variables from. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key.}
+@returns(200) {status: num, error: bool, meta: map{variables: map, variableCollections: map}} # Response from the GET /v1/files/{file_key}/variables/local endpoint.
+@errors {401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/files/{file_key}/variables/published
+@desc Get published variables
+@required {file_key: str # File to get variables from. This must be a main file key, not a branch key, as it is not possible to publish from branches.}
+@returns(200) {status: num, error: bool, meta: map{variables: map, variableCollections: map}} # Response from the GET /v1/files/{file_key}/variables/published endpoint.
+@errors {401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint POST /v1/files/{file_key}/variables
+@desc Create/modify/delete variables
+@required {file_key: str # File to modify variables in. This can be a file key or branch key. Use `GET /v1/files/:key` with the `branch_data` query param to get the branch key.}
+@optional {variableCollections: [any] # For creating, updating, and deleting variable collections., variableModes: [any] # For creating, updating, and deleting modes within variable collections., variables: [any] # For creating, updating, and deleting variables., variableModeValues: [map{variableId!: str, modeId!: str, value!: any}] # For setting a specific value, given a variable and a mode.}
+@returns(200) {status: num, error: bool, meta: map{tempIdToRealId: map}} # Response from the POST /v1/files/{file_key}/variables endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/files/{file_key}/dev_resources
+@desc Get dev resources
+@required {file_key: str # The file to get the dev resources from. This must be a main file key, not a branch key.}
+@optional {node_ids: str # Comma separated list of nodes that you care about in the document. If specified, only dev resources attached to these nodes will be returned. If not specified, all dev resources in the file will be returned.}
+@returns(200) {dev_resources: [map]} # Response from the GET /v1/files/{file_key}/dev_resources endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group dev_resources
+@endpoint POST /v1/dev_resources
+@desc Create dev resources
+@required {dev_resources: [map{name!: str, url!: str, file_key!: str, node_id!: str}] # An array of dev resources.}
+@returns(200) {links_created: [map], errors: [map]} # Response from the POST /v1/dev_resources endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint PUT /v1/dev_resources
+@desc Update dev resources
+@required {dev_resources: [map{id!: str, name: str, url: str}] # An array of dev resources.}
+@returns(200) {links_updated: [map], errors: [map]} # Response from the PUT /v1/dev_resources endpoint.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group files
+@endpoint DELETE /v1/files/{file_key}/dev_resources/{dev_resource_id}
+@desc Delete dev resource
+@required {file_key: str # The file to delete the dev resource from. This must be a main file key, not a branch key., dev_resource_id: str # The id of the dev resource to delete.}
+@returns(200) Response from the DELETE /v1/files/{file_key}/dev_resources/{dev_resource_id} endpoint.
+@errors {401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 404: The requested file or resource was not found., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@group analytics
+@endpoint GET /v1/analytics/libraries/{file_key}/component/actions
+@desc Get library analytics component action data.
+@required {file_key: str # File key of the library to fetch analytics data for., group_by: str(component/team) # A dimension to group returned analytics data by.}
+@optional {cursor: str # Cursor indicating what page of data to fetch. Obtained from prior API call., start_date: str # ISO 8601 date string (YYYY-MM-DD) of the earliest week to include. Dates are rounded back to the nearest start of a week. Defaults to one year prior., end_date: str # ISO 8601 date string (YYYY-MM-DD) of the latest week to include. Dates are rounded forward to the nearest end of a week. Defaults to the latest computed week.}
+@returns(200) {rows: any, next_page: bool, cursor: str} # Response from the GET /v1/analytics/libraries/{file_key}/component/actions.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/component/usages
+@desc Get library analytics component usage data.
+@required {file_key: str # File key of the library to fetch analytics data for., group_by: str(component/file) # A dimension to group returned analytics data by.}
+@optional {cursor: str # Cursor indicating what page of data to fetch. Obtained from prior API call.}
+@returns(200) {rows: any, next_page: bool, cursor: str} # Response from the PUT /v1/analytics/libraries/{file_key}/component/usages.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/style/actions
+@desc Get library analytics style action data.
+@required {file_key: str # File key of the library to fetch analytics data for., group_by: str(style/team) # A dimension to group returned analytics data by.}
+@optional {cursor: str # Cursor indicating what page of data to fetch. Obtained from prior API call., start_date: str # ISO 8601 date string (YYYY-MM-DD) of the earliest week to include. Dates are rounded back to the nearest start of a week. Defaults to one year prior., end_date: str # ISO 8601 date string (YYYY-MM-DD) of the latest week to include. Dates are rounded forward to the nearest end of a week. Defaults to the latest computed week.}
+@returns(200) {rows: any, next_page: bool, cursor: str} # Response from the GET /v1/analytics/libraries/{file_key}/style/actions.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/style/usages
+@desc Get library analytics style usage data.
+@required {file_key: str # File key of the library to fetch analytics data for., group_by: str(style/file) # A dimension to group returned analytics data by.}
+@optional {cursor: str # Cursor indicating what page of data to fetch. Obtained from prior API call.}
+@returns(200) {rows: any, next_page: bool, cursor: str} # Response from the PUT /v1/analytics/libraries/{file_key}/style/usages.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/variable/actions
+@desc Get library analytics variable action data.
+@required {file_key: str # File key of the library to fetch analytics data for., group_by: str(variable/team) # A dimension to group returned analytics data by.}
+@optional {cursor: str # Cursor indicating what page of data to fetch. Obtained from prior API call., start_date: str # ISO 8601 date string (YYYY-MM-DD) of the earliest week to include. Dates are rounded back to the nearest start of a week. Defaults to one year prior., end_date: str # ISO 8601 date string (YYYY-MM-DD) of the latest week to include. Dates are rounded forward to the nearest end of a week. Defaults to the latest computed week.}
+@returns(200) {rows: any, next_page: bool, cursor: str} # Response from the GET /v1/analytics/libraries/{file_key}/variable/actions.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endpoint GET /v1/analytics/libraries/{file_key}/variable/usages
+@desc Get library analytics variable usage data.
+@required {file_key: str # File key of the library to fetch analytics data for., group_by: str(variable/file) # A dimension to group returned analytics data by.}
+@optional {cursor: str # Cursor indicating what page of data to fetch. Obtained from prior API call.}
+@returns(200) {rows: any, next_page: bool, cursor: str} # Response from the PUT /v1/analytics/libraries/{file_key}/variable/usages.
+@errors {400: Bad request. Parameters are invalid or malformed. Please check the input formats. This error can also happen if the requested resources are too large to complete the request, which results in a timeout. Please reduce the number and size of objects requested., 401: Token is missing or incorrect., 403: The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort., 429: In some cases API requests may be throttled or rate limited. Please wait a while before attempting the request again (typically a minute)., 500: An internal server error occurred.}
+
+@endgroup
+
+@end

@@ -1,0 +1,37 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Streetlights Kafka API
+@version 1.0.0
+@auth kafka-secure
+@endpoints 4
+@toc smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured(1), smartylighting.streetlights.1.0.action.{streetlightId}.turn.on(1), smartylighting.streetlights.1.0.action.{streetlightId}.turn.off(1), smartylighting.streetlights.1.0.action.{streetlightId}.dim(1)
+
+@group smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured
+@endpoint SUB smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured
+@optional {lumens: int, sentAt: str(date-time)}
+@returns(SUB) {lumens: int, sentAt: str(date-time)}
+
+@endgroup
+
+@group smartylighting.streetlights.1.0.action.{streetlightId}.turn.on
+@endpoint PUB smartylighting.streetlights.1.0.action.{streetlightId}.turn.on
+@optional {command: str(on/off), sentAt: str(date-time)}
+@returns(PUB) {command: str, sentAt: str(date-time)}
+
+@endgroup
+
+@group smartylighting.streetlights.1.0.action.{streetlightId}.turn.off
+@endpoint PUB smartylighting.streetlights.1.0.action.{streetlightId}.turn.off
+@optional {command: str(on/off), sentAt: str(date-time)}
+@returns(PUB) {command: str, sentAt: str(date-time)}
+
+@endgroup
+
+@group smartylighting.streetlights.1.0.action.{streetlightId}.dim
+@endpoint PUB smartylighting.streetlights.1.0.action.{streetlightId}.dim
+@optional {percentage: int, sentAt: str(date-time)}
+@returns(PUB) {percentage: int, sentAt: str(date-time)}
+
+@endgroup
+
+@end

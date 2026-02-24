@@ -1,0 +1,37 @@
+spec_id: google-spanner
+tasks:
+  - id: t1
+    description: "Run a database query using standard SQL within an active database connection, then finalize and persist the resulting changes as a completed transaction"
+    target_endpoints:
+      - RPC ExecuteSql
+      - RPC Commit
+    expected_params:
+      RPC ExecuteSql:
+        - session
+        - sql
+        - transaction
+        - params
+        - param_types
+        - query_mode
+      RPC Commit:
+        - session
+        - transaction_id
+        - mutations
+        - return_commit_stats
+  - id: t2
+    description: "Establish a new connection to a cloud database instance, then retrieve specific rows from a table by looking up primary keys with optional column and index selection"
+    target_endpoints:
+      - RPC CreateSession
+      - RPC Read
+    expected_params:
+      RPC CreateSession:
+        - database
+        - session
+      RPC Read:
+        - session
+        - table
+        - columns
+        - key_set
+        - transaction
+        - index
+        - limit

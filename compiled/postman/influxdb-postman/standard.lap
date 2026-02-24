@@ -1,0 +1,576 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api InfluxDB_API_2.0
+@base https://us-east-1-1.aws.cloud2.influxdata.com
+@auth ApiKey Authorization in header
+@endpoints 154
+@hint download_for_search
+@toc <INSERT_URL>(150), api(4)
+
+@group <INSERT_URL>
+@endpoint POST /<INSERT_URL>/api/v2/write
+@desc Write Example
+@required {bucket: str, precision: str, org: str}
+@returns(200) jetson_data
+
+@endgroup
+
+@group api
+@endpoint POST /api/v2/delete
+@desc Delete Request
+@required {bucket: str, precision: str, org: str, start: str, stop: str}
+
+@endgroup
+
+@group <INSERT_URL>
+@endpoint GET /<INSERT_URL>/api/v2/buckets
+@desc List Buckets
+
+@endpoint POST /<INSERT_URL>/api/v2/query/analyze
+@desc Query data
+@required {orgID: str, query: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/setup
+@desc Check if database has default user, org, bucket
+
+@endpoint POST /<INSERT_URL>/api/v2/setup
+@desc Set up initial user, org and bucket
+@required {bucket: str, org: str, password: str, retentionPeriodHrs: int, retentionPeriodSeconds: int, token: str, username: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/write
+@desc Write time series data into InfluxDB
+@required {bucket: str, precision: str, org: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/query/ast
+@desc Generate an Abstract Syntax Tree (AST) from a query
+@required {query: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/query/suggestions
+@desc Retrieve query suggestions
+
+@endpoint GET /<INSERT_URL>/api/v2/query/suggestions/<INSET_QUERY_SUGGESTION>
+@desc Retrieve query suggestions for a branching suggestion
+
+@endpoint POST /<INSERT_URL>/api/v2/query/analyze
+@desc Query data
+@required {orgID: str, extern: map, query: str, type: str, params: map, dialect: map, now: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/query/analyze
+@desc Retrieve query suggestions
+@required {dialect: map, extern: map, now: str, params: map, query: str, type: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/delete
+@desc Delete time series data from InfluxDB
+@required {bucket: str, precision: str, org: str, start: str, stop: str, predicate: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>/labels
+@desc List all labels for a bucket
+
+@endpoint POST /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>/labels
+@desc Add a label to a bucket
+@required {labelID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>/labels
+@desc Delete a label from a bucket
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members
+@desc List all dashboard members
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members
+@desc Add a member to a dashboard
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members<INSERT_USER_ID>
+@desc Remove a member from a dashboard
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners
+@desc List all dashboard owners
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners
+@desc Add an owner to a dashboard
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners/<INSERT_USER_ID>
+@desc Remove an owner from a dashboard
+
+@endpoint GET /<INSERT_URL>/api/v2/dbrps
+@desc List database retention policy mappings
+
+@endpoint POST /<INSERT_URL>/api/v2/dbrps
+@desc Add a database retention policy mapping
+@required {bucketID: str, default: bool, org: str, orgID: str, retention_policy: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dbrps/<INSERT_dbrpID_ID>
+@desc Delete a database retention policy
+
+@endpoint GET /<INSERT_URL>/api/v2/dbrps/<INSERT_dbrpID_ID>
+@desc Retrieve a database retention policy mapping
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dbrps/<INSERT_dbrpID_ID>
+@desc Update a database retention policy mapping
+@required {default: bool, retention_policy: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/buckets
+@desc List all buckets
+
+@endpoint GET /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>
+@desc Retrieve a bucket
+
+@endpoint DELETE /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>
+@desc Delete a bucket
+
+@endpoint PATCH /<INSERT_URL>/api/v2/buckets/<INSERT_BUCKET_ID>
+@desc Update a bucket
+@required {name: str, description: str, retentionRules: [map]}
+
+@endpoint POST /<INSERT_URL>/api/v2/buckets
+@desc Create a bucket
+@required {orgID: str, name: str, description: str, rp: str, retentionRules: [map], schemaType: str}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells
+@desc Replace cells in a dashboard
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells
+@desc Create a dashboard cell
+@required {name: str, x: int, y: int, w: int, h: int, usingView: str}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells/<INSERT_CELL_ID>
+@desc Update the non-positional information related to a cell
+@required {x: int, y: int, w: int, h: int}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells/<INSERT_CELL_ID>
+@desc Delete a dashboard cell
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells/<INSERT_CELL_ID>/view
+@desc Retrieve the view for a cell
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/cells/<INSERT_CELL_ID>/view
+@desc Update the view for a cell
+@required {name: str, properties: map}
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/labels
+@desc List all labels for a dashboard
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/labels
+@desc Add a label to a dashboard
+@required {labelID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/labels/<INSERT_LABEL_ID>
+@desc Delete a label from a dashboard
+@required {labelID: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members
+@desc List all dashboard members
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members
+@desc Add a member to a dashboard
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/members<INSERT_USER_ID>
+@desc Remove a member from a dashboard
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners
+@desc List all dashboard owners
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners
+@desc Add an owner to a dashboard
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>/owners/<INSERT_USER_ID>
+@desc Remove an owner from a dashboard
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>
+@desc Retrieve a Dashboard
+
+@endpoint DELETE /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>
+@desc Delete a dashboard
+
+@endpoint PATCH /<INSERT_URL>/api/v2/dashboards/<INSERT_DASHBOARD_ID>
+@desc Update a dashboard
+@required {name: str, description: str, cells: map}
+
+@endpoint GET /<INSERT_URL>/api/v2/dashboards
+@desc List all dashboards
+
+@endpoint POST /<INSERT_URL>/api/v2/dashboards
+@desc Create a dashboard
+@required {orgID: str, name: str, description: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/labels
+@desc List all labels for a task
+
+@endpoint DELETE /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/labels/<INSERT_LABEL_ID>
+@desc Delete a label from a task
+
+@endpoint POST /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/labels
+@desc Add a label to a task
+@required {labelID: str}
+
+@endgroup
+
+@group api
+@endpoint POST /api/v2/tasks/<INSERT_TASK_ID>/members
+@desc Add member to a task
+@required {id: str, name: str}
+
+@endpoint DELETE /api/v2/tasks/<INSERT_TASK_ID>/members/<INSERT_USER_ID>
+@desc Remove a member from a task
+
+@endpoint GET /api/v2/tasks/<INSERT_TASK_ID>/members
+@desc List all task members
+
+@endgroup
+
+@group <INSERT_URL>
+@endpoint POST /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>/retry
+@desc Retry a task run
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>
+@desc Retrieve a single run for a task
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>/logs
+@desc Retrieve all logs for a run
+
+@endpoint POST /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs
+@desc Manually start a task run, overriding the current schedule
+
+@endpoint DELETE /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>
+@desc Cancel a running task
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs
+@desc List all runs for a task
+@required {limit : str}
+@optional {after: str, afterTime: str, beforeTime: str}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>
+@desc Update a task
+@required {description: str, every: str, flux: str, name: str, offset: str, status: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>
+@desc Retrieve a task
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks
+@desc List all tasks
+@required {org : str}
+@optional {after: str, limit: str, status: str, type: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/logs
+@desc Retrieve all logs for a task
+
+@endpoint POST /<INSERT_URL>/api/v2/tasks
+@desc Create a new task
+@required {orgID: str, status: str, flux: str, description: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/tasks/<INSERT_TASK_ID>/runs/<INSERT_RUN_ID>
+@desc Delete a task
+
+@endpoint GET /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>/labels
+@desc List all labels for a check Copy
+@optional {limit: str, offset: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>/labels/<INSERT_LABEL_ID>
+@desc Delete label from a check
+@optional {limit: str, offset: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>/labels
+@desc Add a label to a check
+@required {labelID: str}
+@optional {limit: str, offset: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>/query
+@desc Retrieve a check query
+@optional {limit: str, offset: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/checks
+@desc List all checks
+@required {orgID: str}
+@optional {limit: str, offset: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>
+@desc Delete a Check
+
+@endpoint GET /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>
+@desc Retrieve a check
+
+@endpoint PATCH /<INSERT_URL>/api/v2/checks/<INSERT_CHECK_ID>
+@desc Update a check
+
+@endpoint POST /<INSERT_URL>/api/v2/checks
+@desc Add new check
+@required {description: str, labels: [map], name: str, orgID: str, query: map, status: str, taskID: str, every: str, level: str, offset: str, reportZero: bool, staleTime: str, statusMessageTemplate: str, tags: [map], timeSince: str, type: str}
+@returns(200) deadman check
+@returns(200) threshold check
+
+@endpoint GET /<INSERT_URL>/api/v2/resources
+@desc List all known resources
+
+@endpoint GET /<INSERT_URL>/api/v2/stacks
+@desc List all installed InfluxDB templates
+@required {orgID: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/stacks/<INSERT_STACK_ID>
+@desc Retrieve a stack
+
+@endpoint POST /<INSERT_URL>/api/v2/stacks
+@desc Create a new stack
+@required {orgID: str, name: str, description: str, urls: [str]}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/stacks/<INSERT_STACK_ID>
+@desc Update an InfluxDB Stack
+@required {name: str, description: str, templateURLs: [str], additionalResources: [map]}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/stacks/<INSERT_STACK_ID>
+@desc Delete a stack and associated resources
+
+@endpoint POST /<INSERT_URL>/api/v2/stacks/<INSERT_STACK_ID>/uninstall
+@desc Uninstall an InfluxDB Stack
+
+@endpoint POST /<INSERT_URL>/api/v2/templates/apply
+@desc Apply or dry-run an InfluxDB Template
+@required {dryRun: bool, orgID: str, stackID: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/templates/export
+@desc Export a new Influx Template
+@required {stackID: str, orgIDs: [map]}
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>/labels
+@desc List all labels for a notification endpoint
+
+@endpoint POST /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>/labels
+@desc Add a label to a notification endpoint
+@required {labelID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>/labels/<INSERT_LABEL_ID>
+@desc Delete a label from a notification endpoint
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationEndpoints
+@desc List all notification endpoints
+@required {orgID: str}
+@optional {limit: str, status: str, type: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/notificationEndpoints
+@desc Add a notification endpoint
+@required {description: str, id: str, labels: [map], name: str, orgID: str, status: str, type: str, userID: str, token: str, url: str}
+@optional {limit: str, status: str, type: str}
+@returns(200) http
+@returns(200) pageduty
+@returns(200) Slack
+@returns(200) telegram
+
+@endpoint DELETE /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>
+@desc Delete a notification endpoint
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>
+@desc Retrieve a notification endpoint
+
+@endpoint PATCH /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>
+@desc Update a notification endpoint
+@required {description: str, name: str, status: str}
+
+@endpoint PUT /<INSERT_URL>/api/v2/notificationEndpoints/<INSERT_endpoint_ID>
+@desc Update a notification endpoint
+@required {description: str, id: str, labels: [map], name: str, orgID: str, status: str, type: str, userID: str, authMethod: str, contentTemplate: str, headers: map, method: str, password: str, token: str, url: str, username: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>/labels
+@desc List all labels for a notification rule
+
+@endpoint POST /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>/labels
+@desc Add a label to a notification rule
+@required {labelID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>/labels/<INSERT_LABEL_ID>
+@desc Delete a label from a notification rule
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationRules
+@desc List all notification rules
+@required {orgID: str}
+@optional {limit: str, status: str, type: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/notificationRules
+@desc Add a notification rule
+@required {description: str, endpointID: str, every: str, labels: [map], limit: int, limitEvery: int, name: str, offset: str, orgID: str, runbookLink: str, sleepUntil: str, status: str, statusRules: [map], tagRules: [map], taskID: str, channel: str, messageTemplate: str, type: str}
+@optional {limit: str, status: str, type: str}
+@returns(200) http
+@returns(200) pageduty
+@returns(200) Slack
+@returns(200) telegram
+
+@endpoint DELETE /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>
+@desc Delete a notification rule
+
+@endpoint GET /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>
+@desc Retrieve a notification Rule
+
+@endpoint PATCH /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>
+@desc Update a notification rule
+@required {description: str, name: str, status: str}
+
+@endpoint PUT /<INSERT_URL>/api/v2/notificationRules/<INSERT_rule_ID>
+@desc Update a notification rule
+@required {description: str, endpointID: str, every: str, labels: [map], limit: int, limitEvery: int, name: str, offset: str, orgID: str, runbookLink: str, sleepUntil: str, status: str, statusRules: [map], tagRules: [map], taskID: str, channel: str, messageTemplate: str, type: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/authorizations
+@desc List all authorizations
+@required {orgID: str, userID: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/authorizations
+@desc Create an authorization
+@required {orgID: str, userID: str, status: str, description: str, orgID: str, userID: str, permissions: [map]}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/authorizations/<INSERT_AUTH_ID>
+@desc Delete an authorization
+
+@endpoint GET /<INSERT_URL>/api/v2/authorizations/{authID}
+@desc Retrieve an authorization
+
+@endpoint PATCH /<INSERT_URL>/api/v2/authorizations/{authID}
+@desc Update an authorization to be active or inactive
+@required {description: str, status: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/members
+@desc List all members of an organization
+
+@endpoint DELETE /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/members/<INSERT_USER_ID>
+@desc Remove a member from an organization
+
+@endpoint POST /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/members
+@desc Add a member to an organization
+@required {id: str, name: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_ID>/owners/<INSERT_USER_ID>
+@desc Remove an owner from an organization
+
+@endpoint GET /<INSERT_URL>/api/v2/orgs
+@desc List all organizations
+
+@endpoint POST /<INSERT_URL>/api/v2/orgs
+@desc Create an organization
+@required {name: str, description: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/buckets/<INSERT_ORG_NAME>
+@desc Retrieve an organization
+
+@endpoint DELETE /<INSERT_URL>/api/v2/buckets/<INSERT_ORG_NAME>
+@desc Delete an organization
+
+@endpoint PATCH /<INSERT_URL>/api/v2/buckets/<INSERT_ORG_NAME>
+@desc Update an organization
+@required {name: str, description: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/flags
+@desc Return the feature flags for the currently authenticated user
+
+@endpoint GET /<INSERT_URL>/api/v2/me
+@desc Retrieve the currently authenticated user
+
+@endpoint POST /<INSERT_URL>/api/v2/users/<INSERT_USER_ID>/password
+@desc Update a password
+@required {password: str}
+
+@endpoint PUT /<INSERT_URL>/api/v2/me/password
+@desc Update a password (Personel)
+@required {password: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/users
+@desc List all users
+
+@endpoint POST /<INSERT_URL>/api/v2/users/
+@desc Create a user
+@required {oauthID: str, name: str, status: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/users/<INSERT_USER_ID>
+@desc Retrieve a user
+
+@endpoint PATCH /<INSERT_URL>/api/v2/users/<INSERT_USER_ID>
+@desc Update a user
+@required {oauthID: str, name: str, status: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/users/<INSERT_USER_ID>
+@desc Retrieve a user Copy
+
+@endpoint GET /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/secrets
+@desc List all secret keys for an organization
+
+@endpoint POST /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/secrets/delete
+@desc Delete secrets from an organization
+@required {secrets: [str]}
+
+@endpoint PATCH /<INSERT_URL>/api/v2/orgs/<INSERT_ORG_NAME>/secrets
+@desc Update secrets in an organization Copy
+@required {apikey: str}
+
+@endpoint GET /<INSERT_URL>/health
+@desc Get the health of an instance
+
+@endpoint GET /<INSERT_URL>/ping
+@desc Checks the status of InfluxDB instance and version of InfluxDB.
+
+@endpoint HEAD /<INSERT_URL>/ping
+@desc Checks the status of InfluxDB instance and version of InfluxDB
+
+@endpoint GET /<INSERT_URL>/ready
+@desc Get the readiness of an instance at startup
+
+@endpoint GET /<INSERT_URL>/api/v2/
+@desc List all top level routes
+
+@endpoint GET /<INSERT_URL>/api/v2/backup/metadata
+@desc Download snapshot of all metadata in the server
+
+@endpoint GET /<INSERT_URL>/api/v2/backup/shards/<INSERT_SHARD_ID>
+@desc Download snapshot of all TSM data in a shard
+
+@endpoint POST /<INSERT_URL>/api/v2/restore/bucketMetadata
+@desc Create a new bucket pre-seeded with shard info from a backup
+@required {bucketID: str, bucketName: str, defaultRetentionPolicy: str, description: str, organizationID: str, organizationName: str, retentionPolicies: [map]}
+
+@endpoint POST /<INSERT_URL>/api/v2/restore/kv
+@desc Overwrite the embedded KV store on the server with a backed-up snapshot
+@required {token: str}
+
+@endpoint POST /<INSERT_URL>/api/v2/restore/shards/<INSERT_SHARD_ID>
+@desc Restore a TSM snapshot into a shard
+
+@endpoint POST /<INSERT_URL>/api/v2/restore/sql
+@desc Overwrite the embedded SQL store on the server with a backed-up snapshot
+
+@endpoint GET /<INSERT_URL>/api/v2/scrapers
+@desc List all scraper targets
+
+@endpoint POST /<INSERT_URL>/api/v2/scrapers
+@desc Create a scraper target
+@required {allowInsecure: bool, bucketID: str, name: str, orgID: str, type: str, url: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/scrapers/<INSERT_scraperTarget_ID>
+@desc Delete a scraper target
+
+@endpoint GET /<INSERT_URL>/api/v2/scrapers/<INSERT_scraperTarget_ID>
+@desc Retrieve a scraper target
+
+@endpoint PATCH /<INSERT_URL>/api/v2/scrapers/<INSERT_scraperTarget_ID>
+@desc Update a scraper target
+@required {allowInsecure: bool, bucketID: str, name: str, orgID: str, type: str, url: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/telegrafs
+@desc List all Telegraf configurations
+
+@endpoint POST /<INSERT_URL>/api/v2/telegrafs
+@desc Create a Telegraf configuration
+@required {config: str, description: str, metadata: map, name: str, orgID: str}
+
+@endpoint DELETE /<INSERT_URL>/api/v2/telegrafs/<INSERT_telegraf_ID>
+@desc Delete a Telegraf configuration
+
+@endpoint GET /<INSERT_URL>/api/v2/telegrafs/<INSERT_telegraf_ID>
+@desc Retrieve a Telegraf configuration
+
+@endpoint PUT /<INSERT_URL>/api/v2/telegrafs/<INSERT_telegraf_ID>
+@desc Update a Telegraf configuration
+@required {config: str, description: str, metadata: map, name: str, orgID: str}
+
+@endpoint GET /<INSERT_URL>/api/v2/telegraf/plugins
+@desc List all Telegraf plugins
+
+@endgroup
+
+@end

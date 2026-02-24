@@ -1,0 +1,32 @@
+spec_id: stripe-postman
+tasks:
+  - id: t1
+    description: "Process a one-time payment for a given amount and currency using a payment source, then register a new customer profile in the billing system with their contact information and default payment method"
+    target_endpoints:
+      - POST /v1/charges
+      - POST /v1/customers
+    expected_params:
+      POST /v1/charges:
+        - amount
+        - currency
+        - source
+      POST /v1/customers:
+        - source
+        - name
+        - email
+        - description
+  - id: t2
+    description: "Initiate a new payment flow specifying how and when funds should be captured and confirmed from a customer's payment method, then issue a refund against a previously completed transaction"
+    target_endpoints:
+      - POST /v1/payment_intents
+      - POST /v1/refunds
+    expected_params:
+      POST /v1/payment_intents:
+        - amount
+        - currency
+        - capture_method
+        - confirm
+        - customer
+        - payment_method
+      POST /v1/refunds:
+        - charge

@@ -1,0 +1,961 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Twilio - Api
+@base https://api.twilio.com
+@version 1.0.0
+@auth Bearer basic
+@common_fields {AccountSid: str # The SID of the [Account](https://www.twilio.com/docs/iam/api/account) that will be responsible for the new Address resource.}
+@endpoints 197
+@hint download_for_search
+@toc 2010-04-01(197)
+
+@endpoint POST /2010-04-01/Accounts.json
+@desc Create a new Twilio Subaccount from the account making the request
+@returns(201) {auth_token: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, owner_account_sid: str?, sid: str?, status: str, subresource_uris: map?, type: str, uri: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts.json
+@desc Retrieves a collection of Accounts belonging to the account used to make the request
+@optional {FriendlyName: str # Only return the Account resources with friendly names that exactly match this name., Status: str # Only return Account resources with the given status. Can be `closed`, `suspended` or `active`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {accounts: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{Sid}.json
+@desc Fetch the account specified by the provided Account Sid
+@required {Sid: str # The Account Sid that uniquely identifies the account to fetch}
+@returns(200) {auth_token: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, owner_account_sid: str?, sid: str?, status: str, subresource_uris: map?, type: str, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{Sid}.json
+@desc Modify the properties of a given Account
+@required {Sid: str # The Account Sid that uniquely identifies the account to update}
+@returns(200) {auth_token: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, owner_account_sid: str?, sid: str?, status: str, subresource_uris: map?, type: str, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Addresses.json
+@returns(201) {account_sid: str?, city: str?, customer_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, iso_country: str(iso-country-code)?, postal_code: str?, region: str?, sid: str?, street: str?, uri: str?, emergency_enabled: bool?, validated: bool?, verified: bool?, street_secondary: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Addresses.json
+@optional {CustomerName: str # The `customer_name` of the Address resources to read., FriendlyName: str # The string that identifies the Address resources to read., EmergencyEnabled: bool # Whether the address can be associated to a number for emergency calling., IsoCountry: str(iso-country-code) # The ISO country code of the Address resources to read., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {addresses: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Addresses/{Sid}.json
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Address resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Addresses/{Sid}.json
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Address resource to fetch.}
+@returns(200) {account_sid: str?, city: str?, customer_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, iso_country: str(iso-country-code)?, postal_code: str?, region: str?, sid: str?, street: str?, uri: str?, emergency_enabled: bool?, validated: bool?, verified: bool?, street_secondary: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Addresses/{Sid}.json
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Address resource to update.}
+@returns(200) {account_sid: str?, city: str?, customer_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, iso_country: str(iso-country-code)?, postal_code: str?, region: str?, sid: str?, street: str?, uri: str?, emergency_enabled: bool?, validated: bool?, verified: bool?, street_secondary: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Applications.json
+@desc Create a new application within your account
+@returns(201) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, message_status_callback: str(uri)?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_status_callback: str(uri)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, uri: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, public_application_connect_enabled: bool?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Applications.json
+@desc Retrieve a list of applications representing an application within the requesting account
+@optional {FriendlyName: str # The string that identifies the Application resources to read., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {applications: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Applications/{Sid}.json
+@desc Delete the application by the specified application sid
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Application resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Applications/{Sid}.json
+@desc Fetch the application specified by the provided sid
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Application resource to fetch.}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, message_status_callback: str(uri)?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_status_callback: str(uri)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, uri: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, public_application_connect_enabled: bool?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Applications/{Sid}.json
+@desc Updates the application's properties
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Application resource to update.}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, message_status_callback: str(uri)?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_status_callback: str(uri)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, uri: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, public_application_connect_enabled: bool?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AuthorizedConnectApps/{ConnectAppSid}.json
+@desc Fetch an instance of an authorized-connect-app
+@required {ConnectAppSid: str # The SID of the Connect App to fetch.}
+@returns(200) {account_sid: str?, connect_app_company_name: str?, connect_app_description: str?, connect_app_friendly_name: str?, connect_app_homepage_url: str(uri)?, connect_app_sid: str?, permissions: [str]?, uri: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AuthorizedConnectApps.json
+@desc Retrieve a list of authorized-connect-apps belonging to the account used to make the request
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {authorized_connect_apps: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers.json
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {countries: [map], uri: str(uri)?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}.json
+@required {CountryCode: str(iso-country-code) # The [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the country to fetch available phone number information about.}
+@returns(200) {country_code: str(iso-country-code)?, country: str?, uri: str(uri)?, beta: bool?, subresource_uris: map?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/Local.json
+@required {CountryCode: str(iso-country-code) # The [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the country from which to read phone numbers.}
+@optional {AreaCode: int # The area code of the phone numbers to read. Applies to only phone numbers in the US and Canada., Contains: str # Matching pattern to identify phone numbers. This pattern can be between 2 and 16 characters long and allows all digits (0-9) and all non-diacritic latin alphabet letters (a-z, A-Z). It accepts four meta-characters: `*`, `%`, `+`, `$`. The `*` and `%` meta-characters can appear multiple times in the pattern. To match wildcards at the beginning or end of the pattern, use `*` to match any single character or `%` to match a sequence of characters. If you use the wildcard patterns, it must include at least two non-meta-characters, and wildcards cannot be used between non-meta-characters. To match the beginning of a pattern, start the pattern with `+`. To match the end of the pattern, append the pattern with `$`. These meta-characters can't be adjacent to each other., SmsEnabled: bool # Whether the phone numbers can receive text messages. Can be: `true` or `false`., MmsEnabled: bool # Whether the phone numbers can receive MMS messages. Can be: `true` or `false`., VoiceEnabled: bool # Whether the phone numbers can receive calls. Can be: `true` or `false`., ExcludeAllAddressRequired: bool # Whether to exclude phone numbers that require an [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeLocalAddressRequired: bool # Whether to exclude phone numbers that require a local [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeForeignAddressRequired: bool # Whether to exclude phone numbers that require a foreign [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., Beta: bool # Whether to read phone numbers that are new to the Twilio platform. Can be: `true` or `false` and the default is `true`., NearNumber: str(phone-number) # Given a phone number, find a geographically close number within `distance` miles. Distance defaults to 25 miles. Applies to only phone numbers in the US and Canada., NearLatLong: str # Given a latitude/longitude pair `lat,long` find geographically close numbers within `distance` miles. Applies to only phone numbers in the US and Canada., Distance: int # The search radius, in miles, for a `near_` query.  Can be up to `500` and the default is `25`. Applies to only phone numbers in the US and Canada., InPostalCode: str # Limit results to a particular postal code. Given a phone number, search within the same postal code as that number. Applies to only phone numbers in the US and Canada., InRegion: str # Limit results to a particular region, state, or province. Given a phone number, search within the same region as that number. Applies to only phone numbers in the US and Canada., InRateCenter: str # Limit results to a specific rate center, or given a phone number search within the same rate center as that number. Requires `in_lata` to be set as well. Applies to only phone numbers in the US and Canada., InLata: str # Limit results to a specific local access and transport area ([LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area)). Given a phone number, search within the same [LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area) as that number. Applies to only phone numbers in the US and Canada., InLocality: str # Limit results to a particular locality or city. Given a phone number, search within the same Locality as that number., FaxEnabled: bool # Whether the phone numbers can receive faxes. Can be: `true` or `false`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/MachineToMachine.json
+@required {CountryCode: str(iso-country-code) # The [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the country from which to read phone numbers.}
+@optional {AreaCode: int # The area code of the phone numbers to read. Applies to only phone numbers in the US and Canada., Contains: str # Matching pattern to identify phone numbers. This pattern can be between 2 and 16 characters long and allows all digits (0-9) and all non-diacritic latin alphabet letters (a-z, A-Z). It accepts four meta-characters: `*`, `%`, `+`, `$`. The `*` and `%` meta-characters can appear multiple times in the pattern. To match wildcards at the beginning or end of the pattern, use `*` to match any single character or `%` to match a sequence of characters. If you use the wildcard patterns, it must include at least two non-meta-characters, and wildcards cannot be used between non-meta-characters. To match the beginning of a pattern, start the pattern with `+`. To match the end of the pattern, append the pattern with `$`. These meta-characters can't be adjacent to each other., SmsEnabled: bool # Whether the phone numbers can receive text messages. Can be: `true` or `false`., MmsEnabled: bool # Whether the phone numbers can receive MMS messages. Can be: `true` or `false`., VoiceEnabled: bool # Whether the phone numbers can receive calls. Can be: `true` or `false`., ExcludeAllAddressRequired: bool # Whether to exclude phone numbers that require an [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeLocalAddressRequired: bool # Whether to exclude phone numbers that require a local [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeForeignAddressRequired: bool # Whether to exclude phone numbers that require a foreign [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., Beta: bool # Whether to read phone numbers that are new to the Twilio platform. Can be: `true` or `false` and the default is `true`., NearNumber: str(phone-number) # Given a phone number, find a geographically close number within `distance` miles. Distance defaults to 25 miles. Applies to only phone numbers in the US and Canada., NearLatLong: str # Given a latitude/longitude pair `lat,long` find geographically close numbers within `distance` miles. Applies to only phone numbers in the US and Canada., Distance: int # The search radius, in miles, for a `near_` query.  Can be up to `500` and the default is `25`. Applies to only phone numbers in the US and Canada., InPostalCode: str # Limit results to a particular postal code. Given a phone number, search within the same postal code as that number. Applies to only phone numbers in the US and Canada., InRegion: str # Limit results to a particular region, state, or province. Given a phone number, search within the same region as that number. Applies to only phone numbers in the US and Canada., InRateCenter: str # Limit results to a specific rate center, or given a phone number search within the same rate center as that number. Requires `in_lata` to be set as well. Applies to only phone numbers in the US and Canada., InLata: str # Limit results to a specific local access and transport area ([LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area)). Given a phone number, search within the same [LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area) as that number. Applies to only phone numbers in the US and Canada., InLocality: str # Limit results to a particular locality or city. Given a phone number, search within the same Locality as that number., FaxEnabled: bool # Whether the phone numbers can receive faxes. Can be: `true` or `false`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/Mobile.json
+@required {CountryCode: str(iso-country-code) # The [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the country from which to read phone numbers.}
+@optional {AreaCode: int # The area code of the phone numbers to read. Applies to only phone numbers in the US and Canada., Contains: str # Matching pattern to identify phone numbers. This pattern can be between 2 and 16 characters long and allows all digits (0-9) and all non-diacritic latin alphabet letters (a-z, A-Z). It accepts four meta-characters: `*`, `%`, `+`, `$`. The `*` and `%` meta-characters can appear multiple times in the pattern. To match wildcards at the beginning or end of the pattern, use `*` to match any single character or `%` to match a sequence of characters. If you use the wildcard patterns, it must include at least two non-meta-characters, and wildcards cannot be used between non-meta-characters. To match the beginning of a pattern, start the pattern with `+`. To match the end of the pattern, append the pattern with `$`. These meta-characters can't be adjacent to each other., SmsEnabled: bool # Whether the phone numbers can receive text messages. Can be: `true` or `false`., MmsEnabled: bool # Whether the phone numbers can receive MMS messages. Can be: `true` or `false`., VoiceEnabled: bool # Whether the phone numbers can receive calls. Can be: `true` or `false`., ExcludeAllAddressRequired: bool # Whether to exclude phone numbers that require an [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeLocalAddressRequired: bool # Whether to exclude phone numbers that require a local [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeForeignAddressRequired: bool # Whether to exclude phone numbers that require a foreign [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., Beta: bool # Whether to read phone numbers that are new to the Twilio platform. Can be: `true` or `false` and the default is `true`., NearNumber: str(phone-number) # Given a phone number, find a geographically close number within `distance` miles. Distance defaults to 25 miles. Applies to only phone numbers in the US and Canada., NearLatLong: str # Given a latitude/longitude pair `lat,long` find geographically close numbers within `distance` miles. Applies to only phone numbers in the US and Canada., Distance: int # The search radius, in miles, for a `near_` query.  Can be up to `500` and the default is `25`. Applies to only phone numbers in the US and Canada., InPostalCode: str # Limit results to a particular postal code. Given a phone number, search within the same postal code as that number. Applies to only phone numbers in the US and Canada., InRegion: str # Limit results to a particular region, state, or province. Given a phone number, search within the same region as that number. Applies to only phone numbers in the US and Canada., InRateCenter: str # Limit results to a specific rate center, or given a phone number search within the same rate center as that number. Requires `in_lata` to be set as well. Applies to only phone numbers in the US and Canada., InLata: str # Limit results to a specific local access and transport area ([LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area)). Given a phone number, search within the same [LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area) as that number. Applies to only phone numbers in the US and Canada., InLocality: str # Limit results to a particular locality or city. Given a phone number, search within the same Locality as that number., FaxEnabled: bool # Whether the phone numbers can receive faxes. Can be: `true` or `false`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/National.json
+@required {CountryCode: str(iso-country-code) # The [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the country from which to read phone numbers.}
+@optional {AreaCode: int # The area code of the phone numbers to read. Applies to only phone numbers in the US and Canada., Contains: str # Matching pattern to identify phone numbers. This pattern can be between 2 and 16 characters long and allows all digits (0-9) and all non-diacritic latin alphabet letters (a-z, A-Z). It accepts four meta-characters: `*`, `%`, `+`, `$`. The `*` and `%` meta-characters can appear multiple times in the pattern. To match wildcards at the beginning or end of the pattern, use `*` to match any single character or `%` to match a sequence of characters. If you use the wildcard patterns, it must include at least two non-meta-characters, and wildcards cannot be used between non-meta-characters. To match the beginning of a pattern, start the pattern with `+`. To match the end of the pattern, append the pattern with `$`. These meta-characters can't be adjacent to each other., SmsEnabled: bool # Whether the phone numbers can receive text messages. Can be: `true` or `false`., MmsEnabled: bool # Whether the phone numbers can receive MMS messages. Can be: `true` or `false`., VoiceEnabled: bool # Whether the phone numbers can receive calls. Can be: `true` or `false`., ExcludeAllAddressRequired: bool # Whether to exclude phone numbers that require an [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeLocalAddressRequired: bool # Whether to exclude phone numbers that require a local [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeForeignAddressRequired: bool # Whether to exclude phone numbers that require a foreign [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., Beta: bool # Whether to read phone numbers that are new to the Twilio platform. Can be: `true` or `false` and the default is `true`., NearNumber: str(phone-number) # Given a phone number, find a geographically close number within `distance` miles. Distance defaults to 25 miles. Applies to only phone numbers in the US and Canada., NearLatLong: str # Given a latitude/longitude pair `lat,long` find geographically close numbers within `distance` miles. Applies to only phone numbers in the US and Canada., Distance: int # The search radius, in miles, for a `near_` query.  Can be up to `500` and the default is `25`. Applies to only phone numbers in the US and Canada., InPostalCode: str # Limit results to a particular postal code. Given a phone number, search within the same postal code as that number. Applies to only phone numbers in the US and Canada., InRegion: str # Limit results to a particular region, state, or province. Given a phone number, search within the same region as that number. Applies to only phone numbers in the US and Canada., InRateCenter: str # Limit results to a specific rate center, or given a phone number search within the same rate center as that number. Requires `in_lata` to be set as well. Applies to only phone numbers in the US and Canada., InLata: str # Limit results to a specific local access and transport area ([LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area)). Given a phone number, search within the same [LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area) as that number. Applies to only phone numbers in the US and Canada., InLocality: str # Limit results to a particular locality or city. Given a phone number, search within the same Locality as that number., FaxEnabled: bool # Whether the phone numbers can receive faxes. Can be: `true` or `false`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/SharedCost.json
+@required {CountryCode: str(iso-country-code) # The [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the country from which to read phone numbers.}
+@optional {AreaCode: int # The area code of the phone numbers to read. Applies to only phone numbers in the US and Canada., Contains: str # Matching pattern to identify phone numbers. This pattern can be between 2 and 16 characters long and allows all digits (0-9) and all non-diacritic latin alphabet letters (a-z, A-Z). It accepts four meta-characters: `*`, `%`, `+`, `$`. The `*` and `%` meta-characters can appear multiple times in the pattern. To match wildcards at the beginning or end of the pattern, use `*` to match any single character or `%` to match a sequence of characters. If you use the wildcard patterns, it must include at least two non-meta-characters, and wildcards cannot be used between non-meta-characters. To match the beginning of a pattern, start the pattern with `+`. To match the end of the pattern, append the pattern with `$`. These meta-characters can't be adjacent to each other., SmsEnabled: bool # Whether the phone numbers can receive text messages. Can be: `true` or `false`., MmsEnabled: bool # Whether the phone numbers can receive MMS messages. Can be: `true` or `false`., VoiceEnabled: bool # Whether the phone numbers can receive calls. Can be: `true` or `false`., ExcludeAllAddressRequired: bool # Whether to exclude phone numbers that require an [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeLocalAddressRequired: bool # Whether to exclude phone numbers that require a local [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeForeignAddressRequired: bool # Whether to exclude phone numbers that require a foreign [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., Beta: bool # Whether to read phone numbers that are new to the Twilio platform. Can be: `true` or `false` and the default is `true`., NearNumber: str(phone-number) # Given a phone number, find a geographically close number within `distance` miles. Distance defaults to 25 miles. Applies to only phone numbers in the US and Canada., NearLatLong: str # Given a latitude/longitude pair `lat,long` find geographically close numbers within `distance` miles. Applies to only phone numbers in the US and Canada., Distance: int # The search radius, in miles, for a `near_` query.  Can be up to `500` and the default is `25`. Applies to only phone numbers in the US and Canada., InPostalCode: str # Limit results to a particular postal code. Given a phone number, search within the same postal code as that number. Applies to only phone numbers in the US and Canada., InRegion: str # Limit results to a particular region, state, or province. Given a phone number, search within the same region as that number. Applies to only phone numbers in the US and Canada., InRateCenter: str # Limit results to a specific rate center, or given a phone number search within the same rate center as that number. Requires `in_lata` to be set as well. Applies to only phone numbers in the US and Canada., InLata: str # Limit results to a specific local access and transport area ([LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area)). Given a phone number, search within the same [LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area) as that number. Applies to only phone numbers in the US and Canada., InLocality: str # Limit results to a particular locality or city. Given a phone number, search within the same Locality as that number., FaxEnabled: bool # Whether the phone numbers can receive faxes. Can be: `true` or `false`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/TollFree.json
+@required {CountryCode: str(iso-country-code) # The [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the country from which to read phone numbers.}
+@optional {AreaCode: int # The area code of the phone numbers to read. Applies to only phone numbers in the US and Canada., Contains: str # Matching pattern to identify phone numbers. This pattern can be between 2 and 16 characters long and allows all digits (0-9) and all non-diacritic latin alphabet letters (a-z, A-Z). It accepts four meta-characters: `*`, `%`, `+`, `$`. The `*` and `%` meta-characters can appear multiple times in the pattern. To match wildcards at the beginning or end of the pattern, use `*` to match any single character or `%` to match a sequence of characters. If you use the wildcard patterns, it must include at least two non-meta-characters, and wildcards cannot be used between non-meta-characters. To match the beginning of a pattern, start the pattern with `+`. To match the end of the pattern, append the pattern with `$`. These meta-characters can't be adjacent to each other., SmsEnabled: bool # Whether the phone numbers can receive text messages. Can be: `true` or `false`., MmsEnabled: bool # Whether the phone numbers can receive MMS messages. Can be: `true` or `false`., VoiceEnabled: bool # Whether the phone numbers can receive calls. Can be: `true` or `false`., ExcludeAllAddressRequired: bool # Whether to exclude phone numbers that require an [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeLocalAddressRequired: bool # Whether to exclude phone numbers that require a local [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeForeignAddressRequired: bool # Whether to exclude phone numbers that require a foreign [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., Beta: bool # Whether to read phone numbers that are new to the Twilio platform. Can be: `true` or `false` and the default is `true`., NearNumber: str(phone-number) # Given a phone number, find a geographically close number within `distance` miles. Distance defaults to 25 miles. Applies to only phone numbers in the US and Canada., NearLatLong: str # Given a latitude/longitude pair `lat,long` find geographically close numbers within `distance` miles. Applies to only phone numbers in the US and Canada., Distance: int # The search radius, in miles, for a `near_` query.  Can be up to `500` and the default is `25`. Applies to only phone numbers in the US and Canada., InPostalCode: str # Limit results to a particular postal code. Given a phone number, search within the same postal code as that number. Applies to only phone numbers in the US and Canada., InRegion: str # Limit results to a particular region, state, or province. Given a phone number, search within the same region as that number. Applies to only phone numbers in the US and Canada., InRateCenter: str # Limit results to a specific rate center, or given a phone number search within the same rate center as that number. Requires `in_lata` to be set as well. Applies to only phone numbers in the US and Canada., InLata: str # Limit results to a specific local access and transport area ([LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area)). Given a phone number, search within the same [LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area) as that number. Applies to only phone numbers in the US and Canada., InLocality: str # Limit results to a particular locality or city. Given a phone number, search within the same Locality as that number., FaxEnabled: bool # Whether the phone numbers can receive faxes. Can be: `true` or `false`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/AvailablePhoneNumbers/{CountryCode}/Voip.json
+@required {CountryCode: str(iso-country-code) # The [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the country from which to read phone numbers.}
+@optional {AreaCode: int # The area code of the phone numbers to read. Applies to only phone numbers in the US and Canada., Contains: str # Matching pattern to identify phone numbers. This pattern can be between 2 and 16 characters long and allows all digits (0-9) and all non-diacritic latin alphabet letters (a-z, A-Z). It accepts four meta-characters: `*`, `%`, `+`, `$`. The `*` and `%` meta-characters can appear multiple times in the pattern. To match wildcards at the beginning or end of the pattern, use `*` to match any single character or `%` to match a sequence of characters. If you use the wildcard patterns, it must include at least two non-meta-characters, and wildcards cannot be used between non-meta-characters. To match the beginning of a pattern, start the pattern with `+`. To match the end of the pattern, append the pattern with `$`. These meta-characters can't be adjacent to each other., SmsEnabled: bool # Whether the phone numbers can receive text messages. Can be: `true` or `false`., MmsEnabled: bool # Whether the phone numbers can receive MMS messages. Can be: `true` or `false`., VoiceEnabled: bool # Whether the phone numbers can receive calls. Can be: `true` or `false`., ExcludeAllAddressRequired: bool # Whether to exclude phone numbers that require an [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeLocalAddressRequired: bool # Whether to exclude phone numbers that require a local [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., ExcludeForeignAddressRequired: bool # Whether to exclude phone numbers that require a foreign [Address](https://www.twilio.com/docs/usage/api/address). Can be: `true` or `false` and the default is `false`., Beta: bool # Whether to read phone numbers that are new to the Twilio platform. Can be: `true` or `false` and the default is `true`., NearNumber: str(phone-number) # Given a phone number, find a geographically close number within `distance` miles. Distance defaults to 25 miles. Applies to only phone numbers in the US and Canada., NearLatLong: str # Given a latitude/longitude pair `lat,long` find geographically close numbers within `distance` miles. Applies to only phone numbers in the US and Canada., Distance: int # The search radius, in miles, for a `near_` query.  Can be up to `500` and the default is `25`. Applies to only phone numbers in the US and Canada., InPostalCode: str # Limit results to a particular postal code. Given a phone number, search within the same postal code as that number. Applies to only phone numbers in the US and Canada., InRegion: str # Limit results to a particular region, state, or province. Given a phone number, search within the same region as that number. Applies to only phone numbers in the US and Canada., InRateCenter: str # Limit results to a specific rate center, or given a phone number search within the same rate center as that number. Requires `in_lata` to be set as well. Applies to only phone numbers in the US and Canada., InLata: str # Limit results to a specific local access and transport area ([LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area)). Given a phone number, search within the same [LATA](https://en.wikipedia.org/wiki/Local_access_and_transport_area) as that number. Applies to only phone numbers in the US and Canada., InLocality: str # Limit results to a particular locality or city. Given a phone number, search within the same Locality as that number., FaxEnabled: bool # Whether the phone numbers can receive faxes. Can be: `true` or `false`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {available_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Balance.json
+@desc Fetch the balance for an Account based on Account Sid. Balance changes may not be reflected immediately. Child accounts do not contain balance information
+@returns(200) {account_sid: str?, balance: str?, currency: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls.json
+@desc Create a new outgoing call to phones, SIP-enabled endpoints or Twilio Client connections
+@returns(201) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, parent_call_sid: str?, account_sid: str?, to: str?, to_formatted: str?, from: str?, from_formatted: str?, phone_number_sid: str?, status: str, start_time: str(date-time-rfc-2822)?, end_time: str(date-time-rfc-2822)?, duration: str?, price: str?, price_unit: str(currency)?, direction: str?, answered_by: str?, api_version: str?, forwarded_from: str?, group_sid: str?, caller_name: str?, queue_time: str?, trunk_sid: str?, uri: str?, subresource_uris: map?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls.json
+@desc Retrieves a collection of calls made to and from your account
+@optional {To: str(phone-number) # Only show calls made to this phone number, SIP address, Client identifier or SIM SID., From: str(phone-number) # Only include calls from this phone number, SIP address, Client identifier or SIM SID., ParentCallSid: str # Only include calls spawned by calls with this SID., Status: str # The status of the calls to include. Can be: `queued`, `ringing`, `in-progress`, `canceled`, `completed`, `failed`, `busy`, or `no-answer`., StartTime: str(date-time) # Only include calls that started on this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only calls that started on this date. You can also specify an inequality, such as `StartTime<=YYYY-MM-DD`, to read calls that started on or before midnight of this date, and `StartTime>=YYYY-MM-DD` to read calls that started on or after midnight of this date., StartTime<: str(date-time) # Only include calls that started before this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only calls that started before this date., StartTime>: str(date-time) # Only include calls that started on or after this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only calls that started on or after this date., EndTime: str(date-time) # Only include calls that ended on this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only calls that ended on this date. You can also specify an inequality, such as `EndTime<=YYYY-MM-DD`, to read calls that ended on or before midnight of this date, and `EndTime>=YYYY-MM-DD` to read calls that ended on or after midnight of this date., EndTime<: str(date-time) # Only include calls that ended before this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only calls that ended before this date., EndTime>: str(date-time) # Only include calls that ended on or after this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only calls that ended on or after this date., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {calls: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Calls/{Sid}.json
+@desc Delete a Call record from your account. Once the record is deleted, it will no longer appear in the API and Account Portal logs.
+@required {Sid: str # The Twilio-provided Call SID that uniquely identifies the Call resource to delete}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{Sid}.json
+@desc Fetch the call specified by the provided Call SID
+@required {Sid: str # The SID of the Call resource to fetch.}
+@returns(200) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, parent_call_sid: str?, account_sid: str?, to: str?, to_formatted: str?, from: str?, from_formatted: str?, phone_number_sid: str?, status: str, start_time: str(date-time-rfc-2822)?, end_time: str(date-time-rfc-2822)?, duration: str?, price: str?, price_unit: str(currency)?, direction: str?, answered_by: str?, api_version: str?, forwarded_from: str?, group_sid: str?, caller_name: str?, queue_time: str?, trunk_sid: str?, uri: str?, subresource_uris: map?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{Sid}.json
+@desc Initiates a call redirect or terminates a call
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Call resource to update}
+@returns(200) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, parent_call_sid: str?, account_sid: str?, to: str?, to_formatted: str?, from: str?, from_formatted: str?, phone_number_sid: str?, status: str, start_time: str(date-time-rfc-2822)?, end_time: str(date-time-rfc-2822)?, duration: str?, price: str?, price_unit: str(currency)?, direction: str?, answered_by: str?, api_version: str?, forwarded_from: str?, group_sid: str?, caller_name: str?, queue_time: str?, trunk_sid: str?, uri: str?, subresource_uris: map?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Events.json
+@desc Retrieve a list of all events for a call.
+@required {CallSid: str # The unique SID identifier of the Call.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {events: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Notifications/{Sid}.json
+@required {CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID of the Call Notification resource to fetch., Sid: str # The Twilio-provided string that uniquely identifies the Call Notification resource to fetch.}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, error_code: str?, log: str?, message_date: str(date-time-rfc-2822)?, message_text: str?, more_info: str(uri)?, request_method: str(http-method)?, request_url: str(uri)?, request_variables: str?, response_body: str?, response_headers: str?, sid: str?, uri: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Notifications.json
+@required {CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID of the Call Notification resources to read.}
+@optional {Log: int # Only read notifications of the specified log level. Can be:  `0` to read only ERROR notifications or `1` to read only WARNING notifications. By default, all notifications are read., MessageDate: str(date) # Only show notifications for the specified date, formatted as `YYYY-MM-DD`. You can also specify an inequality, such as `<=YYYY-MM-DD` for messages logged at or before midnight on a date, or `>=YYYY-MM-DD` for messages logged at or after midnight on a date., MessageDate<: str(date) # Only show notifications for the specified date, formatted as `YYYY-MM-DD`. You can also specify an inequality, such as `<=YYYY-MM-DD` for messages logged at or before midnight on a date, or `>=YYYY-MM-DD` for messages logged at or after midnight on a date., MessageDate>: str(date) # Only show notifications for the specified date, formatted as `YYYY-MM-DD`. You can also specify an inequality, such as `<=YYYY-MM-DD` for messages logged at or before midnight on a date, or `>=YYYY-MM-DD` for messages logged at or after midnight on a date., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {notifications: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings.json
+@desc Create a recording for the call
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) to associate the resource with.}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: num?, uri: str?, encryption_details: any?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, track: str?} # OK
+@returns(201) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: num?, uri: str?, encryption_details: any?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, track: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings.json
+@desc Retrieve a list of recordings belonging to the call used to make the request
+@required {CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID of the resources to read.}
+@optional {DateCreated: str(date) # The `date_created` value, specified as `YYYY-MM-DD`, of the resources to read. You can also specify inequality: `DateCreated<=YYYY-MM-DD` will return recordings generated at or before midnight on a given date, and `DateCreated>=YYYY-MM-DD` returns recordings generated at or after midnight on a date., DateCreated<: str(date) # The `date_created` value, specified as `YYYY-MM-DD`, of the resources to read. You can also specify inequality: `DateCreated<=YYYY-MM-DD` will return recordings generated at or before midnight on a given date, and `DateCreated>=YYYY-MM-DD` returns recordings generated at or after midnight on a date., DateCreated>: str(date) # The `date_created` value, specified as `YYYY-MM-DD`, of the resources to read. You can also specify inequality: `DateCreated<=YYYY-MM-DD` will return recordings generated at or before midnight on a given date, and `DateCreated>=YYYY-MM-DD` returns recordings generated at or after midnight on a date., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {recordings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings/{Sid}.json
+@desc Changes the status of the recording to paused, stopped, or in-progress. Note: Pass `Twilio.CURRENT` instead of recording sid to reference current active recording.
+@required {CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID of the resource to update., Sid: str # The Twilio-provided string that uniquely identifies the Recording resource to update.}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: num?, uri: str?, encryption_details: any?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, track: str?} # OK
+@errors {408: Request Timeout}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings/{Sid}.json
+@desc Fetch an instance of a recording for a call
+@required {CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID of the resource to fetch., Sid: str # The Twilio-provided string that uniquely identifies the Recording resource to fetch.}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: num?, uri: str?, encryption_details: any?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, track: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings/{Sid}.json
+@desc Delete a recording from your account
+@required {CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID of the resources to delete., Sid: str # The Twilio-provided string that uniquely identifies the Recording resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{Sid}.json
+@desc Fetch an instance of a conference
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Conference resource to fetch}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, api_version: str?, friendly_name: str?, region: str?, sid: str?, status: str, uri: str?, subresource_uris: map?, reason_conference_ended: str, call_sid_ending_conference: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Conferences/{Sid}.json
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Conference resource to update}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, api_version: str?, friendly_name: str?, region: str?, sid: str?, status: str, uri: str?, subresource_uris: map?, reason_conference_ended: str, call_sid_ending_conference: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences.json
+@desc Retrieve a list of conferences belonging to the account used to make the request
+@optional {DateCreated: str(date) # Only include conferences that were created on this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only conferences that were created on this date. You can also specify an inequality, such as `DateCreated<=YYYY-MM-DD`, to read conferences that were created on or before midnight of this date, and `DateCreated>=YYYY-MM-DD` to read conferences that were created on or after midnight of this date., DateCreated<: str(date) # Only include conferences that were created on this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only conferences that were created on this date. You can also specify an inequality, such as `DateCreated<=YYYY-MM-DD`, to read conferences that were created on or before midnight of this date, and `DateCreated>=YYYY-MM-DD` to read conferences that were created on or after midnight of this date., DateCreated>: str(date) # Only include conferences that were created on this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only conferences that were created on this date. You can also specify an inequality, such as `DateCreated<=YYYY-MM-DD`, to read conferences that were created on or before midnight of this date, and `DateCreated>=YYYY-MM-DD` to read conferences that were created on or after midnight of this date., DateUpdated: str(date) # Only include conferences that were last updated on this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only conferences that were last updated on this date. You can also specify an inequality, such as `DateUpdated<=YYYY-MM-DD`, to read conferences that were last updated on or before midnight of this date, and `DateUpdated>=YYYY-MM-DD` to read conferences that were last updated on or after midnight of this date., DateUpdated<: str(date) # Only include conferences that were last updated on this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only conferences that were last updated on this date. You can also specify an inequality, such as `DateUpdated<=YYYY-MM-DD`, to read conferences that were last updated on or before midnight of this date, and `DateUpdated>=YYYY-MM-DD` to read conferences that were last updated on or after midnight of this date., DateUpdated>: str(date) # Only include conferences that were last updated on this date. Specify a date as `YYYY-MM-DD` in UTC, for example: `2009-07-06`, to read only conferences that were last updated on this date. You can also specify an inequality, such as `DateUpdated<=YYYY-MM-DD`, to read conferences that were last updated on or before midnight of this date, and `DateUpdated>=YYYY-MM-DD` to read conferences that were last updated on or after midnight of this date., FriendlyName: str # The string that identifies the Conference resources to read., Status: str # The status of the resources to read. Can be: `init`, `in-progress`, or `completed`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {conferences: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Recordings.json
+@desc Retrieve a list of recordings belonging to the call used to make the request
+@required {ConferenceSid: str # The Conference SID that identifies the conference associated with the recording to read.}
+@optional {DateCreated: str(date) # The `date_created` value, specified as `YYYY-MM-DD`, of the resources to read. You can also specify inequality: `DateCreated<=YYYY-MM-DD` will return recordings generated at or before midnight on a given date, and `DateCreated>=YYYY-MM-DD` returns recordings generated at or after midnight on a date., DateCreated<: str(date) # The `date_created` value, specified as `YYYY-MM-DD`, of the resources to read. You can also specify inequality: `DateCreated<=YYYY-MM-DD` will return recordings generated at or before midnight on a given date, and `DateCreated>=YYYY-MM-DD` returns recordings generated at or after midnight on a date., DateCreated>: str(date) # The `date_created` value, specified as `YYYY-MM-DD`, of the resources to read. You can also specify inequality: `DateCreated<=YYYY-MM-DD` will return recordings generated at or before midnight on a given date, and `DateCreated>=YYYY-MM-DD` returns recordings generated at or after midnight on a date., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {recordings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Recordings/{Sid}.json
+@desc Changes the status of the recording to paused, stopped, or in-progress. Note: To use `Twilio.CURRENT`, pass it as recording sid.
+@required {ConferenceSid: str # The Conference SID that identifies the conference associated with the recording to update., Sid: str # The Twilio-provided string that uniquely identifies the Conference Recording resource to update. Use `Twilio.CURRENT` to reference the current active recording.}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: str?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, encryption_details: any?, uri: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Recordings/{Sid}.json
+@desc Fetch an instance of a recording for a call
+@required {ConferenceSid: str # The Conference SID that identifies the conference associated with the recording to fetch., Sid: str # The Twilio-provided string that uniquely identifies the Conference Recording resource to fetch.}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: str?, price_unit: str(currency)?, status: str, channels: int, source: str, error_code: int?, encryption_details: any?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Recordings/{Sid}.json
+@desc Delete a recording from your account
+@required {ConferenceSid: str # The Conference SID that identifies the conference associated with the recording to delete., Sid: str # The Twilio-provided string that uniquely identifies the Conference Recording resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/ConnectApps/{Sid}.json
+@desc Fetch an instance of a connect-app
+@required {Sid: str # The Twilio-provided string that uniquely identifies the ConnectApp resource to fetch.}
+@returns(200) {account_sid: str?, authorize_redirect_url: str(uri)?, company_name: str?, deauthorize_callback_method: str(http-method)?, deauthorize_callback_url: str(uri)?, description: str?, friendly_name: str?, homepage_url: str(uri)?, permissions: [str]?, sid: str?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/ConnectApps/{Sid}.json
+@desc Update a connect-app with the specified parameters
+@required {Sid: str # The Twilio-provided string that uniquely identifies the ConnectApp resource to update.}
+@returns(200) {account_sid: str?, authorize_redirect_url: str(uri)?, company_name: str?, deauthorize_callback_method: str(http-method)?, deauthorize_callback_url: str(uri)?, description: str?, friendly_name: str?, homepage_url: str(uri)?, permissions: [str]?, sid: str?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/ConnectApps/{Sid}.json
+@desc Delete an instance of a connect-app
+@required {Sid: str # The Twilio-provided string that uniquely identifies the ConnectApp resource to fetch.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/ConnectApps.json
+@desc Retrieve a list of connect-apps belonging to the account used to make the request
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {connect_apps: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Addresses/{AddressSid}/DependentPhoneNumbers.json
+@required {AddressSid: str # The SID of the Address resource associated with the phone number.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {dependent_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{Sid}.json
+@desc Update an incoming-phone-number instance.
+@required {Sid: str # The Twilio-provided string that uniquely identifies the IncomingPhoneNumber resource to update.}
+@returns(200) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?, type: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{Sid}.json
+@desc Fetch an incoming-phone-number belonging to the account used to make the request.
+@required {Sid: str # The Twilio-provided string that uniquely identifies the IncomingPhoneNumber resource to fetch.}
+@returns(200) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?, type: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{Sid}.json
+@desc Delete a phone-numbers belonging to the account used to make the request.
+@required {Sid: str # The Twilio-provided string that uniquely identifies the IncomingPhoneNumber resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers.json
+@desc Retrieve a list of incoming-phone-numbers belonging to the account used to make the request.
+@optional {Beta: bool # Whether to include phone numbers new to the Twilio platform. Can be: `true` or `false` and the default is `true`., FriendlyName: str # A string that identifies the IncomingPhoneNumber resources to read., PhoneNumber: str(phone-number) # The phone numbers of the IncomingPhoneNumber resources to read. You can specify partial numbers and use '*' as a wildcard for any digit., Origin: str # Whether to include phone numbers based on their origin. Can be: `twilio` or `hosted`. By default, phone numbers of all origin are included., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {incoming_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers.json
+@desc Purchase a phone-number for the account.
+@returns(201) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?, type: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns/{Sid}.json
+@desc Fetch an instance of an Add-on installation currently assigned to this Number.
+@required {ResourceSid: str # The SID of the Phone Number to which the Add-on is assigned., Sid: str # The Twilio-provided string that uniquely identifies the resource to fetch.}
+@returns(200) {sid: str?, account_sid: str?, resource_sid: str?, friendly_name: str?, description: str?, configuration: any?, unique_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?, subresource_uris: map?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns/{Sid}.json
+@desc Remove the assignment of an Add-on installation from the Number specified.
+@required {ResourceSid: str # The SID of the Phone Number to which the Add-on is assigned., Sid: str # The Twilio-provided string that uniquely identifies the resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns.json
+@desc Retrieve a list of Add-on installations currently assigned to this Number.
+@required {ResourceSid: str # The SID of the Phone Number to which the Add-on is assigned.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {assigned_add_ons: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns.json
+@desc Assign an Add-on installation to the Number specified.
+@required {ResourceSid: str # The SID of the Phone Number to assign the Add-on.}
+@returns(201) {sid: str?, account_sid: str?, resource_sid: str?, friendly_name: str?, description: str?, configuration: any?, unique_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?, subresource_uris: map?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns/{AssignedAddOnSid}/Extensions/{Sid}.json
+@desc Fetch an instance of an Extension for the Assigned Add-on.
+@required {ResourceSid: str # The SID of the Phone Number to which the Add-on is assigned., AssignedAddOnSid: str # The SID that uniquely identifies the assigned Add-on installation., Sid: str # The Twilio-provided string that uniquely identifies the resource to fetch.}
+@returns(200) {sid: str?, account_sid: str?, resource_sid: str?, assigned_add_on_sid: str?, friendly_name: str?, product_name: str?, unique_name: str?, uri: str?, enabled: bool?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{ResourceSid}/AssignedAddOns/{AssignedAddOnSid}/Extensions.json
+@desc Retrieve a list of Extensions for the Assigned Add-on.
+@required {ResourceSid: str # The SID of the Phone Number to which the Add-on is assigned., AssignedAddOnSid: str # The SID that uniquely identifies the assigned Add-on installation.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {extensions: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/Local.json
+@optional {Beta: bool # Whether to include phone numbers new to the Twilio platform. Can be: `true` or `false` and the default is `true`., FriendlyName: str # A string that identifies the resources to read., PhoneNumber: str(phone-number) # The phone numbers of the IncomingPhoneNumber resources to read. You can specify partial numbers and use '*' as a wildcard for any digit., Origin: str # Whether to include phone numbers based on their origin. Can be: `twilio` or `hosted`. By default, phone numbers of all origin are included., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {incoming_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/Local.json
+@returns(201) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/Mobile.json
+@optional {Beta: bool # Whether to include phone numbers new to the Twilio platform. Can be: `true` or `false` and the default is `true`., FriendlyName: str # A string that identifies the resources to read., PhoneNumber: str(phone-number) # The phone numbers of the IncomingPhoneNumber resources to read. You can specify partial numbers and use '*' as a wildcard for any digit., Origin: str # Whether to include phone numbers based on their origin. Can be: `twilio` or `hosted`. By default, phone numbers of all origin are included., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {incoming_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/Mobile.json
+@returns(201) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/TollFree.json
+@optional {Beta: bool # Whether to include phone numbers new to the Twilio platform. Can be: `true` or `false` and the default is `true`., FriendlyName: str # A string that identifies the resources to read., PhoneNumber: str(phone-number) # The phone numbers of the IncomingPhoneNumber resources to read. You can specify partial numbers and use '*' as a wildcard for any digit., Origin: str # Whether to include phone numbers based on their origin. Can be: `twilio` or `hosted`. By default, phone numbers of all origin are included., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {incoming_phone_numbers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/TollFree.json
+@returns(201) {account_sid: str?, address_sid: str?, address_requirements: str, api_version: str?, beta: bool?, capabilities: map?{mms: bool, sms: bool, voice: bool, fax: bool}, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, identity_sid: str?, phone_number: str(phone-number)?, origin: str?, sid: str?, sms_application_sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, status_callback: str(uri)?, status_callback_method: str(http-method)?, trunk_sid: str?, uri: str?, voice_receive_mode: str, voice_application_sid: str?, voice_caller_id_lookup: bool?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_url: str(uri)?, emergency_status: str, emergency_address_sid: str?, emergency_address_status: str, bundle_sid: str?, status: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Keys/{Sid}.json
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Key resource to fetch.}
+@returns(200) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Keys/{Sid}.json
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Key resource to update.}
+@returns(200) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Keys/{Sid}.json
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Key resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Keys.json
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {keys: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Keys.json
+@returns(201) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, secret: str?} # Created
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}/Media/{Sid}.json
+@desc Delete the Media resource.
+@required {MessageSid: str # The SID of the Message resource that is associated with the Media resource., Sid: str # The unique identifier of the to-be-deleted Media resource.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}/Media/{Sid}.json
+@desc Fetch a single Media resource associated with a specific Message resource
+@required {MessageSid: str # The SID of the Message resource that is associated with the Media resource., Sid: str # The Twilio-provided string that uniquely identifies the Media resource to fetch.}
+@returns(200) {account_sid: str?, content_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, parent_sid: str?, sid: str?, uri: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}/Media.json
+@desc Read a list of Media resources associated with a specific Message resource
+@required {MessageSid: str # The SID of the Message resource that is associated with the Media resources.}
+@optional {DateCreated: str(date-time) # Only include Media resources that were created on this date. Specify a date as `YYYY-MM-DD` in GMT, for example: `2009-07-06`, to read Media that were created on this date. You can also specify an inequality, such as `StartTime<=YYYY-MM-DD`, to read Media that were created on or before midnight of this date, and `StartTime>=YYYY-MM-DD` to read Media that were created on or after midnight of this date., DateCreated<: str(date-time) # Only include Media resources that were created on this date. Specify a date as `YYYY-MM-DD` in GMT, for example: `2009-07-06`, to read Media that were created on this date. You can also specify an inequality, such as `StartTime<=YYYY-MM-DD`, to read Media that were created on or before midnight of this date, and `StartTime>=YYYY-MM-DD` to read Media that were created on or after midnight of this date., DateCreated>: str(date-time) # Only include Media resources that were created on this date. Specify a date as `YYYY-MM-DD` in GMT, for example: `2009-07-06`, to read Media that were created on this date. You can also specify an inequality, such as `StartTime<=YYYY-MM-DD`, to read Media that were created on or before midnight of this date, and `StartTime>=YYYY-MM-DD` to read Media that were created on or after midnight of this date., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {media_list: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Queues/{QueueSid}/Members/{CallSid}.json
+@desc Fetch a specific member from the queue
+@required {QueueSid: str # The SID of the Queue in which to find the members to fetch., CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID of the resource(s) to fetch.}
+@returns(200) {call_sid: str?, date_enqueued: str(date-time-rfc-2822)?, position: int, uri: str?, wait_time: int, queue_sid: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Queues/{QueueSid}/Members/{CallSid}.json
+@desc Dequeue a member from a queue and have the member's call begin executing the TwiML document at that URL
+@required {QueueSid: str # The SID of the Queue in which to find the members to update., CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID of the resource(s) to update.}
+@returns(200) {call_sid: str?, date_enqueued: str(date-time-rfc-2822)?, position: int, uri: str?, wait_time: int, queue_sid: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Queues/{QueueSid}/Members.json
+@desc Retrieve the members of the queue
+@required {QueueSid: str # The SID of the Queue in which to find the members}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {queue_members: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Messages.json
+@desc Send a message
+@returns(201) {body: str?, num_segments: str?, direction: str, from: str(phone-number)?, to: str?, date_updated: str(date-time-rfc-2822)?, price: str?, error_message: str?, uri: str?, account_sid: str?, num_media: str?, status: str, messaging_service_sid: str?, sid: str?, date_sent: str(date-time-rfc-2822)?, date_created: str(date-time-rfc-2822)?, error_code: int?, price_unit: str(currency)?, api_version: str?, subresource_uris: map?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Messages.json
+@desc Retrieve a list of Message resources associated with a Twilio Account
+@optional {To: str(phone-number) # Filter by recipient. For example: Set this parameter to `+15558881111` to retrieve a list of Message resources sent to `+15558881111`., From: str(phone-number) # Filter by sender. For example: Set this parameter to `+15552229999` to retrieve a list of Message resources sent by `+15552229999`., DateSent: str(date-time) # Filter by Message `sent_date`. Accepts GMT dates in the following formats: `YYYY-MM-DD` (to find Messages with a specific `sent_date`), `<=YYYY-MM-DD` (to find Messages with `sent_date`s on and before a specific date), and `>=YYYY-MM-DD` (to find Messages with `sent_dates` on and after a specific date)., DateSent<: str(date-time) # Filter by Message `sent_date`. Accepts GMT dates in the following formats: `YYYY-MM-DD` (to find Messages with a specific `sent_date`), `<=YYYY-MM-DD` (to find Messages with `sent_date`s on and before a specific date), and `>=YYYY-MM-DD` (to find Messages with `sent_dates` on and after a specific date)., DateSent>: str(date-time) # Filter by Message `sent_date`. Accepts GMT dates in the following formats: `YYYY-MM-DD` (to find Messages with a specific `sent_date`), `<=YYYY-MM-DD` (to find Messages with `sent_date`s on and before a specific date), and `>=YYYY-MM-DD` (to find Messages with `sent_dates` on and after a specific date)., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {messages: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json
+@desc Deletes a Message resource from your account
+@required {Sid: str # The SID of the Message resource you wish to delete}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json
+@desc Fetch a specific Message
+@required {Sid: str # The SID of the Message resource to be fetched}
+@returns(200) {body: str?, num_segments: str?, direction: str, from: str(phone-number)?, to: str?, date_updated: str(date-time-rfc-2822)?, price: str?, error_message: str?, uri: str?, account_sid: str?, num_media: str?, status: str, messaging_service_sid: str?, sid: str?, date_sent: str(date-time-rfc-2822)?, date_created: str(date-time-rfc-2822)?, error_code: int?, price_unit: str(currency)?, api_version: str?, subresource_uris: map?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json
+@desc Update a Message resource (used to redact Message `body` text and to cancel not-yet-sent messages)
+@required {Sid: str # The SID of the Message resource to be updated}
+@returns(200) {body: str?, num_segments: str?, direction: str, from: str(phone-number)?, to: str?, date_updated: str(date-time-rfc-2822)?, price: str?, error_message: str?, uri: str?, account_sid: str?, num_media: str?, status: str, messaging_service_sid: str?, sid: str?, date_sent: str(date-time-rfc-2822)?, date_created: str(date-time-rfc-2822)?, error_code: int?, price_unit: str(currency)?, api_version: str?, subresource_uris: map?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}/Feedback.json
+@desc Create Message Feedback to confirm a tracked user action was performed by the recipient of the associated Message
+@required {MessageSid: str # The SID of the Message resource for which to create MessageFeedback.}
+@returns(200) {account_sid: str?, message_sid: str?, outcome: str, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SigningKeys.json
+@desc Create a new Signing Key for the account making the request.
+@returns(201) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, secret: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SigningKeys.json
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {signing_keys: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Notifications/{Sid}.json
+@desc Fetch a notification belonging to the account used to make the request
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Notification resource to fetch.}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, error_code: str?, log: str?, message_date: str(date-time-rfc-2822)?, message_text: str?, more_info: str(uri)?, request_method: str(http-method)?, request_url: str(uri)?, request_variables: str?, response_body: str?, response_headers: str?, sid: str?, uri: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Notifications.json
+@desc Retrieve a list of notifications belonging to the account used to make the request
+@optional {Log: int # Only read notifications of the specified log level. Can be:  `0` to read only ERROR notifications or `1` to read only WARNING notifications. By default, all notifications are read., MessageDate: str(date) # Only show notifications for the specified date, formatted as `YYYY-MM-DD`. You can also specify an inequality, such as `<=YYYY-MM-DD` for messages logged at or before midnight on a date, or `>=YYYY-MM-DD` for messages logged at or after midnight on a date., MessageDate<: str(date) # Only show notifications for the specified date, formatted as `YYYY-MM-DD`. You can also specify an inequality, such as `<=YYYY-MM-DD` for messages logged at or before midnight on a date, or `>=YYYY-MM-DD` for messages logged at or after midnight on a date., MessageDate>: str(date) # Only show notifications for the specified date, formatted as `YYYY-MM-DD`. You can also specify an inequality, such as `<=YYYY-MM-DD` for messages logged at or before midnight on a date, or `>=YYYY-MM-DD` for messages logged at or after midnight on a date., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {notifications: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds/{Sid}.json
+@desc Fetch an outgoing-caller-id belonging to the account used to make the request
+@required {Sid: str # The Twilio-provided string that uniquely identifies the OutgoingCallerId resource to fetch.}
+@returns(200) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, account_sid: str?, phone_number: str(phone-number)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds/{Sid}.json
+@desc Updates the caller-id
+@required {Sid: str # The Twilio-provided string that uniquely identifies the OutgoingCallerId resource to update.}
+@returns(200) {sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, account_sid: str?, phone_number: str(phone-number)?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds/{Sid}.json
+@desc Delete the caller-id specified from the account
+@required {Sid: str # The Twilio-provided string that uniquely identifies the OutgoingCallerId resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds.json
+@desc Retrieve a list of outgoing-caller-ids belonging to the account used to make the request
+@optional {PhoneNumber: str(phone-number) # The phone number of the OutgoingCallerId resources to read., FriendlyName: str # The string that identifies the OutgoingCallerId resources to read., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {outgoing_caller_ids: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/OutgoingCallerIds.json
+@returns(200) {account_sid: str?, call_sid: str?, friendly_name: str?, phone_number: str(phone-number)?, validation_code: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants/{CallSid}.json
+@desc Fetch an instance of a participant
+@required {ConferenceSid: str # The SID of the conference with the participant to fetch., CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID or label of the participant to fetch. Non URL safe characters in a label must be percent encoded, for example, a space character is represented as %20.}
+@returns(200) {account_sid: str?, call_sid: str?, label: str?, call_sid_to_coach: str?, coaching: bool?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, end_conference_on_exit: bool?, muted: bool?, hold: bool?, start_conference_on_enter: bool?, status: str, queue_time: str?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants/{CallSid}.json
+@desc Update the properties of the participant
+@required {ConferenceSid: str # The SID of the conference with the participant to update., CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID or label of the participant to update. Non URL safe characters in a label must be percent encoded, for example, a space character is represented as %20.}
+@returns(200) {account_sid: str?, call_sid: str?, label: str?, call_sid_to_coach: str?, coaching: bool?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, end_conference_on_exit: bool?, muted: bool?, hold: bool?, start_conference_on_enter: bool?, status: str, queue_time: str?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants/{CallSid}.json
+@desc Kick a participant from a given conference
+@required {ConferenceSid: str # The SID of the conference with the participants to delete., CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID or label of the participant to delete. Non URL safe characters in a label must be percent encoded, for example, a space character is represented as %20.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants.json
+@required {ConferenceSid: str # The SID of the participant's conference.}
+@returns(201) {account_sid: str?, call_sid: str?, label: str?, call_sid_to_coach: str?, coaching: bool?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, end_conference_on_exit: bool?, muted: bool?, hold: bool?, start_conference_on_enter: bool?, status: str, queue_time: str?, uri: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants.json
+@desc Retrieve a list of participants belonging to the account used to make the request
+@required {ConferenceSid: str # The SID of the conference with the participants to read.}
+@optional {Muted: bool # Whether to return only participants that are muted. Can be: `true` or `false`., Hold: bool # Whether to return only participants that are on hold. Can be: `true` or `false`., Coaching: bool # Whether to return only participants who are coaching another call. Can be: `true` or `false`., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {participants: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Payments.json
+@desc create an instance of payments. This will start a new payments session
+@required {CallSid: str # The SID of the call that will create the resource. Call leg associated with this sid is expected to provide payment information thru DTMF.}
+@returns(201) {account_sid: str?, call_sid: str?, sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?} # Created
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Payments/{Sid}.json
+@desc update an instance of payments with different phases of payment flows.
+@required {CallSid: str # The SID of the call that will update the resource. This should be the same call sid that was used to create payments resource., Sid: str # The SID of Payments session that needs to be updated.}
+@returns(202) {account_sid: str?, call_sid: str?, sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?} # Accepted
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Queues/{Sid}.json
+@desc Fetch an instance of a queue identified by the QueueSid
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Queue resource to fetch}
+@returns(200) {date_updated: str(date-time-rfc-2822)?, current_size: int, friendly_name: str?, uri: str?, account_sid: str?, average_wait_time: int, sid: str?, date_created: str(date-time-rfc-2822)?, max_size: int} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Queues/{Sid}.json
+@desc Update the queue with the new parameters
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Queue resource to update}
+@returns(200) {date_updated: str(date-time-rfc-2822)?, current_size: int, friendly_name: str?, uri: str?, account_sid: str?, average_wait_time: int, sid: str?, date_created: str(date-time-rfc-2822)?, max_size: int} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Queues/{Sid}.json
+@desc Remove an empty queue
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Queue resource to delete}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Queues.json
+@desc Retrieve a list of queues belonging to the account used to make the request
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {queues: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Queues.json
+@desc Create a queue
+@returns(201) {date_updated: str(date-time-rfc-2822)?, current_size: int, friendly_name: str?, uri: str?, account_sid: str?, average_wait_time: int, sid: str?, date_created: str(date-time-rfc-2822)?, max_size: int} # Created
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Transcriptions.json
+@desc Create a Transcription
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) the Transcription resource is associated with.}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Transcriptions/{Sid}.json
+@desc Stop a Transcription using either the SID of the Transcription resource or the `name` used when creating the resource
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) the Transcription resource is associated with., Sid: str # The SID of the Transcription resource, or the `name` used when creating the resource}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{Sid}.json
+@desc Fetch an instance of a recording
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Recording resource to fetch.}
+@optional {IncludeSoftDeleted: bool # A boolean parameter indicating whether to retrieve soft deleted recordings or not. Recordings metadata are kept after deletion for a retention period of 40 days.}
+@returns(200) {account_sid: str?, api_version: str?, call_sid: str?, conference_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, start_time: str(date-time-rfc-2822)?, duration: str?, sid: str?, price: str?, price_unit: str?, status: str, channels: int?, source: str, error_code: int?, uri: str?, encryption_details: any?, subresource_uris: map?, media_url: str(uri)?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Recordings/{Sid}.json
+@desc Delete a recording from your account
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Recording resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings.json
+@desc Retrieve a list of recordings belonging to the account used to make the request
+@optional {DateCreated: str(date-time) # Only include recordings that were created on this date. Specify a date as `YYYY-MM-DD` in GMT, for example: `2009-07-06`, to read recordings that were created on this date. You can also specify an inequality, such as `DateCreated<=YYYY-MM-DD`, to read recordings that were created on or before midnight of this date, and `DateCreated>=YYYY-MM-DD` to read recordings that were created on or after midnight of this date., DateCreated<: str(date-time) # Only include recordings that were created on this date. Specify a date as `YYYY-MM-DD` in GMT, for example: `2009-07-06`, to read recordings that were created on this date. You can also specify an inequality, such as `DateCreated<=YYYY-MM-DD`, to read recordings that were created on or before midnight of this date, and `DateCreated>=YYYY-MM-DD` to read recordings that were created on or after midnight of this date., DateCreated>: str(date-time) # Only include recordings that were created on this date. Specify a date as `YYYY-MM-DD` in GMT, for example: `2009-07-06`, to read recordings that were created on this date. You can also specify an inequality, such as `DateCreated<=YYYY-MM-DD`, to read recordings that were created on or before midnight of this date, and `DateCreated>=YYYY-MM-DD` to read recordings that were created on or after midnight of this date., CallSid: str # The [Call](https://www.twilio.com/docs/voice/api/call-resource) SID of the resources to read., ConferenceSid: str # The Conference SID that identifies the conference associated with the recording to read., IncludeSoftDeleted: bool # A boolean parameter indicating whether to retrieve soft deleted recordings or not. Recordings metadata are kept after deletion for a retention period of 40 days., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {recordings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{Sid}.json
+@desc Fetch an instance of an AddOnResult
+@required {ReferenceSid: str # The SID of the recording to which the result to fetch belongs., Sid: str # The Twilio-provided string that uniquely identifies the Recording AddOnResult resource to fetch.}
+@returns(200) {sid: str?, account_sid: str?, status: str, add_on_sid: str?, add_on_configuration_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, date_completed: str(date-time-rfc-2822)?, reference_sid: str?, subresource_uris: map?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{Sid}.json
+@desc Delete a result and purge all associated Payloads
+@required {ReferenceSid: str # The SID of the recording to which the result to delete belongs., Sid: str # The Twilio-provided string that uniquely identifies the Recording AddOnResult resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults.json
+@desc Retrieve a list of results belonging to the recording
+@required {ReferenceSid: str # The SID of the recording to which the result to read belongs.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {add_on_results: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{AddOnResultSid}/Payloads/{Sid}.json
+@desc Fetch an instance of a result payload
+@required {ReferenceSid: str # The SID of the recording to which the AddOnResult resource that contains the payload to fetch belongs., AddOnResultSid: str # The SID of the AddOnResult to which the payload to fetch belongs., Sid: str # The Twilio-provided string that uniquely identifies the Recording AddOnResult Payload resource to fetch.}
+@returns(200) {sid: str?, add_on_result_sid: str?, account_sid: str?, label: str?, add_on_sid: str?, add_on_configuration_sid: str?, content_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, reference_sid: str?, subresource_uris: map?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{AddOnResultSid}/Payloads/{Sid}.json
+@desc Delete a payload from the result along with all associated Data
+@required {ReferenceSid: str # The SID of the recording to which the AddOnResult resource that contains the payloads to delete belongs., AddOnResultSid: str # The SID of the AddOnResult to which the payloads to delete belongs., Sid: str # The Twilio-provided string that uniquely identifies the Recording AddOnResult Payload resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{AddOnResultSid}/Payloads.json
+@desc Retrieve a list of payloads belonging to the AddOnResult
+@required {ReferenceSid: str # The SID of the recording to which the AddOnResult resource that contains the payloads to read belongs., AddOnResultSid: str # The SID of the AddOnResult to which the payloads to read belongs.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {payloads: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{ReferenceSid}/AddOnResults/{AddOnResultSid}/Payloads/{PayloadSid}/Data.json
+@desc Fetch an instance of a result payload
+@required {ReferenceSid: str # The SID of the recording to which the AddOnResult resource that contains the payload to fetch belongs., AddOnResultSid: str # The SID of the AddOnResult to which the payload to fetch belongs., PayloadSid: str # The Twilio-provided string that uniquely identifies the Recording AddOnResult Payload resource to fetch.}
+@errors {307: Temporary Redirect}
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{RecordingSid}/Transcriptions/{Sid}.json
+@required {RecordingSid: str # The SID of the [Recording](https://www.twilio.com/docs/voice/api/recording) that created the transcription to fetch., Sid: str # The Twilio-provided string that uniquely identifies the Transcription resource to fetch.}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, duration: str?, price: num?, price_unit: str(currency)?, recording_sid: str?, sid: str?, status: str, transcription_text: str?, type: str?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Recordings/{RecordingSid}/Transcriptions/{Sid}.json
+@required {RecordingSid: str # The SID of the [Recording](https://www.twilio.com/docs/voice/api/recording) that created the transcription to delete., Sid: str # The Twilio-provided string that uniquely identifies the Transcription resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Recordings/{RecordingSid}/Transcriptions.json
+@required {RecordingSid: str # The SID of the [Recording](https://www.twilio.com/docs/voice/api/recording) that created the transcriptions to read.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {transcriptions: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SMS/ShortCodes/{Sid}.json
+@desc Fetch an instance of a short code
+@required {Sid: str # The Twilio-provided string that uniquely identifies the ShortCode resource to fetch}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, short_code: str?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SMS/ShortCodes/{Sid}.json
+@desc Update a short code with the following parameters
+@required {Sid: str # The Twilio-provided string that uniquely identifies the ShortCode resource to update}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, short_code: str?, sid: str?, sms_fallback_method: str(http-method)?, sms_fallback_url: str(uri)?, sms_method: str(http-method)?, sms_url: str(uri)?, uri: str?} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SMS/ShortCodes.json
+@desc Retrieve a list of short-codes belonging to the account used to make the request
+@optional {FriendlyName: str # The string that identifies the ShortCode resources to read., ShortCode: str # Only show the ShortCode resources that match this pattern. You can specify partial numbers and use '*' as a wildcard for any digit., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {short_codes: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SigningKeys/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SigningKeys/{Sid}.json
+@required {Sid: str}
+@returns(200) {sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SigningKeys/{Sid}.json
+@required {Sid: str}
+@returns(204) The resource was deleted successfully.
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/CredentialListMappings.json
+@desc Create a new credential list mapping resource
+@required {DomainSid: str # The SID of the SIP domain that will contain the new resource.}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/CredentialListMappings.json
+@desc Retrieve a list of credential list mappings belonging to the domain used in the request
+@required {DomainSid: str # The SID of the SIP domain that contains the resources to read.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {contents: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/CredentialListMappings/{Sid}.json
+@desc Fetch a specific instance of a credential list mapping
+@required {DomainSid: str # The SID of the SIP domain that contains the resource to fetch., Sid: str # The Twilio-provided string that uniquely identifies the CredentialListMapping resource to fetch.}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/CredentialListMappings/{Sid}.json
+@desc Delete a credential list mapping from the requested domain
+@required {DomainSid: str # The SID of the SIP domain that contains the resource to delete., Sid: str # The Twilio-provided string that uniquely identifies the CredentialListMapping resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/IpAccessControlListMappings.json
+@desc Create a new IP Access Control List mapping
+@required {DomainSid: str # The SID of the SIP domain that will contain the new resource.}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/IpAccessControlListMappings.json
+@desc Retrieve a list of IP Access Control List mappings belonging to the domain used in the request
+@required {DomainSid: str # The SID of the SIP domain that contains the resources to read.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {contents: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/IpAccessControlListMappings/{Sid}.json
+@desc Fetch a specific instance of an IP Access Control List mapping
+@required {DomainSid: str # The SID of the SIP domain that contains the resource to fetch., Sid: str # The Twilio-provided string that uniquely identifies the IpAccessControlListMapping resource to fetch.}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Calls/IpAccessControlListMappings/{Sid}.json
+@desc Delete an IP Access Control List mapping from the requested domain
+@required {DomainSid: str # The SID of the SIP domain that contains the resources to delete., Sid: str # The Twilio-provided string that uniquely identifies the IpAccessControlListMapping resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Registrations/CredentialListMappings.json
+@desc Create a new credential list mapping resource
+@required {DomainSid: str # The SID of the SIP domain that will contain the new resource.}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Registrations/CredentialListMappings.json
+@desc Retrieve a list of credential list mappings belonging to the domain used in the request
+@required {DomainSid: str # The SID of the SIP domain that contains the resources to read.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {contents: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Registrations/CredentialListMappings/{Sid}.json
+@desc Fetch a specific instance of a credential list mapping
+@required {DomainSid: str # The SID of the SIP domain that contains the resource to fetch., Sid: str # The Twilio-provided string that uniquely identifies the CredentialListMapping resource to fetch.}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/Auth/Registrations/CredentialListMappings/{Sid}.json
+@desc Delete a credential list mapping from the requested domain
+@required {DomainSid: str # The SID of the SIP domain that contains the resources to delete., Sid: str # The Twilio-provided string that uniquely identifies the CredentialListMapping resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials.json
+@desc Retrieve a list of credentials.
+@required {CredentialListSid: str # The unique id that identifies the credential list that contains the desired credentials.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {credentials: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials.json
+@desc Create a new credential resource.
+@required {CredentialListSid: str # The unique id that identifies the credential list to include the created credential.}
+@returns(201) {sid: str?, account_sid: str?, credential_list_sid: str?, username: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials/{Sid}.json
+@desc Fetch a single credential.
+@required {CredentialListSid: str # The unique id that identifies the credential list that contains the desired credential., Sid: str # The unique id that identifies the resource to fetch.}
+@returns(200) {sid: str?, account_sid: str?, credential_list_sid: str?, username: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials/{Sid}.json
+@desc Update a credential resource.
+@required {CredentialListSid: str # The unique id that identifies the credential list that includes this credential., Sid: str # The unique id that identifies the resource to update.}
+@returns(200) {sid: str?, account_sid: str?, credential_list_sid: str?, username: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{CredentialListSid}/Credentials/{Sid}.json
+@desc Delete a credential resource.
+@required {CredentialListSid: str # The unique id that identifies the credential list that contains the desired credentials., Sid: str # The unique id that identifies the resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists.json
+@desc Get All Credential Lists
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {credential_lists: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists.json
+@desc Create a Credential List
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?, subresource_uris: map?, uri: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{Sid}.json
+@desc Get a Credential List
+@required {Sid: str # The credential list Sid that uniquely identifies this resource}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?, subresource_uris: map?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{Sid}.json
+@desc Update a Credential List
+@required {Sid: str # The credential list Sid that uniquely identifies this resource}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, sid: str?, subresource_uris: map?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/CredentialLists/{Sid}.json
+@desc Delete a Credential List
+@required {Sid: str # The credential list Sid that uniquely identifies this resource}
+@returns(204) The resource was deleted successfully.
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/CredentialListMappings.json
+@desc Create a CredentialListMapping resource for an account.
+@required {DomainSid: str # A 34 character string that uniquely identifies the SIP Domain for which the CredentialList resource will be mapped.}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_sid: str?, friendly_name: str?, sid: str?, uri: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/CredentialListMappings.json
+@desc Read multiple CredentialListMapping resources from an account.
+@required {DomainSid: str # A 34 character string that uniquely identifies the SIP Domain that includes the resource to read.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {credential_list_mappings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/CredentialListMappings/{Sid}.json
+@desc Fetch a single CredentialListMapping resource from an account.
+@required {DomainSid: str # A 34 character string that uniquely identifies the SIP Domain that includes the resource to fetch., Sid: str # A 34 character string that uniquely identifies the resource to fetch.}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_sid: str?, friendly_name: str?, sid: str?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/CredentialListMappings/{Sid}.json
+@desc Delete a CredentialListMapping resource from an account.
+@required {DomainSid: str # A 34 character string that uniquely identifies the SIP Domain that includes the resource to delete., Sid: str # A 34 character string that uniquely identifies the resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains.json
+@desc Retrieve a list of domains belonging to the account used to make the request
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {domains: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains.json
+@desc Create a new Domain
+@returns(201) {account_sid: str?, api_version: str?, auth_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_name: str?, friendly_name: str?, sid: str?, uri: str?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_status_callback_method: str(http-method)?, voice_status_callback_url: str(uri)?, voice_url: str(uri)?, subresource_uris: map?, sip_registration: bool?, emergency_calling_enabled: bool?, secure: bool?, byoc_trunk_sid: str?, emergency_caller_sid: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{Sid}.json
+@desc Fetch an instance of a Domain
+@required {Sid: str # The Twilio-provided string that uniquely identifies the SipDomain resource to fetch.}
+@returns(200) {account_sid: str?, api_version: str?, auth_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_name: str?, friendly_name: str?, sid: str?, uri: str?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_status_callback_method: str(http-method)?, voice_status_callback_url: str(uri)?, voice_url: str(uri)?, subresource_uris: map?, sip_registration: bool?, emergency_calling_enabled: bool?, secure: bool?, byoc_trunk_sid: str?, emergency_caller_sid: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{Sid}.json
+@desc Update the attributes of a domain
+@required {Sid: str # The Twilio-provided string that uniquely identifies the SipDomain resource to update.}
+@returns(200) {account_sid: str?, api_version: str?, auth_type: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_name: str?, friendly_name: str?, sid: str?, uri: str?, voice_fallback_method: str(http-method)?, voice_fallback_url: str(uri)?, voice_method: str(http-method)?, voice_status_callback_method: str(http-method)?, voice_status_callback_url: str(uri)?, voice_url: str(uri)?, subresource_uris: map?, sip_registration: bool?, emergency_calling_enabled: bool?, secure: bool?, byoc_trunk_sid: str?, emergency_caller_sid: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{Sid}.json
+@desc Delete an instance of a Domain
+@required {Sid: str # The Twilio-provided string that uniquely identifies the SipDomain resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists.json
+@desc Retrieve a list of IpAccessControlLists that belong to the account used to make the request
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {ip_access_control_lists: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists.json
+@desc Create a new IpAccessControlList resource
+@returns(201) {sid: str?, account_sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, subresource_uris: map?, uri: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{Sid}.json
+@desc Fetch a specific instance of an IpAccessControlList
+@required {Sid: str # A 34 character string that uniquely identifies the resource to fetch.}
+@returns(200) {sid: str?, account_sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, subresource_uris: map?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{Sid}.json
+@desc Rename an IpAccessControlList
+@required {Sid: str # A 34 character string that uniquely identifies the resource to udpate.}
+@returns(200) {sid: str?, account_sid: str?, friendly_name: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, subresource_uris: map?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{Sid}.json
+@desc Delete an IpAccessControlList from the requested account
+@required {Sid: str # A 34 character string that uniquely identifies the resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/IpAccessControlListMappings/{Sid}.json
+@desc Fetch an IpAccessControlListMapping resource.
+@required {DomainSid: str # A 34 character string that uniquely identifies the SIP domain., Sid: str # A 34 character string that uniquely identifies the resource to fetch.}
+@returns(200) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_sid: str?, friendly_name: str?, sid: str?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/IpAccessControlListMappings/{Sid}.json
+@desc Delete an IpAccessControlListMapping resource.
+@required {DomainSid: str # A 34 character string that uniquely identifies the SIP domain., Sid: str # A 34 character string that uniquely identifies the resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/IpAccessControlListMappings.json
+@desc Create a new IpAccessControlListMapping resource.
+@required {DomainSid: str # A 34 character string that uniquely identifies the SIP domain.}
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, domain_sid: str?, friendly_name: str?, sid: str?, uri: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/Domains/{DomainSid}/IpAccessControlListMappings.json
+@desc Retrieve a list of IpAccessControlListMapping resources.
+@required {DomainSid: str # A 34 character string that uniquely identifies the SIP domain.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {ip_access_control_list_mappings: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses.json
+@desc Read multiple IpAddress resources.
+@required {IpAccessControlListSid: str # The IpAccessControlList Sid that identifies the IpAddress resources to read.}
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {ip_addresses: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses.json
+@desc Create a new IpAddress resource.
+@required {IpAccessControlListSid: str # The IpAccessControlList Sid with which to associate the created IpAddress resource.}
+@returns(201) {sid: str?, account_sid: str?, friendly_name: str?, ip_address: str?, cidr_prefix_length: int, ip_access_control_list_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses/{Sid}.json
+@desc Read one IpAddress resource.
+@required {IpAccessControlListSid: str # The IpAccessControlList Sid that identifies the IpAddress resources to fetch., Sid: str # A 34 character string that uniquely identifies the IpAddress resource to fetch.}
+@returns(200) {sid: str?, account_sid: str?, friendly_name: str?, ip_address: str?, cidr_prefix_length: int, ip_access_control_list_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses/{Sid}.json
+@desc Update an IpAddress resource.
+@required {IpAccessControlListSid: str # The IpAccessControlList Sid that identifies the IpAddress resources to update., Sid: str # A 34 character string that identifies the IpAddress resource to update.}
+@returns(200) {sid: str?, account_sid: str?, friendly_name: str?, ip_address: str?, cidr_prefix_length: int, ip_access_control_list_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/SIP/IpAccessControlLists/{IpAccessControlListSid}/IpAddresses/{Sid}.json
+@desc Delete an IpAddress resource.
+@required {IpAccessControlListSid: str # The IpAccessControlList Sid that identifies the IpAddress resources to delete., Sid: str # A 34 character string that uniquely identifies the resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Siprec.json
+@desc Create a Siprec
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) the Siprec resource is associated with.}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Siprec/{Sid}.json
+@desc Stop a Siprec using either the SID of the Siprec resource or the `name` used when creating the resource
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) the Siprec resource is associated with., Sid: str # The SID of the Siprec resource, or the `name` used when creating the resource}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Streams.json
+@desc Create a Stream
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) the Stream resource is associated with.}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Streams/{Sid}.json
+@desc Stop a Stream using either the SID of the Stream resource or the `name` used when creating the resource
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) the Stream resource is associated with., Sid: str # The SID or the `name` of the Stream resource to be stopped}
+@returns(200) {sid: str?, account_sid: str?, call_sid: str?, name: str?, status: str, date_updated: str(date-time-rfc-2822)?, uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Tokens.json
+@desc Create a new token for ICE servers
+@returns(201) {account_sid: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, ice_servers: [map]?, password: str?, ttl: str?, username: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Transcriptions/{Sid}.json
+@desc Fetch an instance of a Transcription
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Transcription resource to fetch.}
+@returns(200) {account_sid: str?, api_version: str?, date_created: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, duration: str?, price: num?, price_unit: str(currency)?, recording_sid: str?, sid: str?, status: str, transcription_text: str?, type: str?, uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Transcriptions/{Sid}.json
+@desc Delete a transcription from the account used to make the request
+@required {Sid: str # The Twilio-provided string that uniquely identifies the Transcription resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Transcriptions.json
+@desc Retrieve a list of transcriptions belonging to the account used to make the request
+@optional {PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {transcriptions: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records.json
+@desc Retrieve a list of usage-records belonging to the account used to make the request
+@optional {Category: str # The [usage category](https://www.twilio.com/docs/usage/api/usage-record#usage-categories) of the UsageRecord resources to read. Only UsageRecord resources in the specified category are retrieved., StartDate: str(date) # Only include usage that has occurred on or after this date. Specify the date in GMT and format as `YYYY-MM-DD`. You can also specify offsets from the current date, such as: `-30days`, which will set the start date to be 30 days before the current date., EndDate: str(date) # Only include usage that occurred on or before this date. Specify the date in GMT and format as `YYYY-MM-DD`.  You can also specify offsets from the current date, such as: `+30days`, which will set the end date to 30 days from the current date., IncludeSubaccounts: bool # Whether to include usage from the master account and all its subaccounts. Can be: `true` (the default) to include usage from the master account and all subaccounts or `false` to retrieve usage from only the specified account., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/AllTime.json
+@optional {Category: str # The [usage category](https://www.twilio.com/docs/usage/api/usage-record#usage-categories) of the UsageRecord resources to read. Only UsageRecord resources in the specified category are retrieved., StartDate: str(date) # Only include usage that has occurred on or after this date. Specify the date in GMT and format as `YYYY-MM-DD`. You can also specify offsets from the current date, such as: `-30days`, which will set the start date to be 30 days before the current date., EndDate: str(date) # Only include usage that occurred on or before this date. Specify the date in GMT and format as `YYYY-MM-DD`.  You can also specify offsets from the current date, such as: `+30days`, which will set the end date to 30 days from the current date., IncludeSubaccounts: bool # Whether to include usage from the master account and all its subaccounts. Can be: `true` (the default) to include usage from the master account and all subaccounts or `false` to retrieve usage from only the specified account., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Daily.json
+@optional {Category: str # The [usage category](https://www.twilio.com/docs/usage/api/usage-record#usage-categories) of the UsageRecord resources to read. Only UsageRecord resources in the specified category are retrieved., StartDate: str(date) # Only include usage that has occurred on or after this date. Specify the date in GMT and format as `YYYY-MM-DD`. You can also specify offsets from the current date, such as: `-30days`, which will set the start date to be 30 days before the current date., EndDate: str(date) # Only include usage that occurred on or before this date. Specify the date in GMT and format as `YYYY-MM-DD`.  You can also specify offsets from the current date, such as: `+30days`, which will set the end date to 30 days from the current date., IncludeSubaccounts: bool # Whether to include usage from the master account and all its subaccounts. Can be: `true` (the default) to include usage from the master account and all subaccounts or `false` to retrieve usage from only the specified account., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/LastMonth.json
+@optional {Category: str # The [usage category](https://www.twilio.com/docs/usage/api/usage-record#usage-categories) of the UsageRecord resources to read. Only UsageRecord resources in the specified category are retrieved., StartDate: str(date) # Only include usage that has occurred on or after this date. Specify the date in GMT and format as `YYYY-MM-DD`. You can also specify offsets from the current date, such as: `-30days`, which will set the start date to be 30 days before the current date., EndDate: str(date) # Only include usage that occurred on or before this date. Specify the date in GMT and format as `YYYY-MM-DD`.  You can also specify offsets from the current date, such as: `+30days`, which will set the end date to 30 days from the current date., IncludeSubaccounts: bool # Whether to include usage from the master account and all its subaccounts. Can be: `true` (the default) to include usage from the master account and all subaccounts or `false` to retrieve usage from only the specified account., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Monthly.json
+@optional {Category: str # The [usage category](https://www.twilio.com/docs/usage/api/usage-record#usage-categories) of the UsageRecord resources to read. Only UsageRecord resources in the specified category are retrieved., StartDate: str(date) # Only include usage that has occurred on or after this date. Specify the date in GMT and format as `YYYY-MM-DD`. You can also specify offsets from the current date, such as: `-30days`, which will set the start date to be 30 days before the current date., EndDate: str(date) # Only include usage that occurred on or before this date. Specify the date in GMT and format as `YYYY-MM-DD`.  You can also specify offsets from the current date, such as: `+30days`, which will set the end date to 30 days from the current date., IncludeSubaccounts: bool # Whether to include usage from the master account and all its subaccounts. Can be: `true` (the default) to include usage from the master account and all subaccounts or `false` to retrieve usage from only the specified account., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/ThisMonth.json
+@optional {Category: str # The [usage category](https://www.twilio.com/docs/usage/api/usage-record#usage-categories) of the UsageRecord resources to read. Only UsageRecord resources in the specified category are retrieved., StartDate: str(date) # Only include usage that has occurred on or after this date. Specify the date in GMT and format as `YYYY-MM-DD`. You can also specify offsets from the current date, such as: `-30days`, which will set the start date to be 30 days before the current date., EndDate: str(date) # Only include usage that occurred on or before this date. Specify the date in GMT and format as `YYYY-MM-DD`.  You can also specify offsets from the current date, such as: `+30days`, which will set the end date to 30 days from the current date., IncludeSubaccounts: bool # Whether to include usage from the master account and all its subaccounts. Can be: `true` (the default) to include usage from the master account and all subaccounts or `false` to retrieve usage from only the specified account., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Today.json
+@optional {Category: str # The [usage category](https://www.twilio.com/docs/usage/api/usage-record#usage-categories) of the UsageRecord resources to read. Only UsageRecord resources in the specified category are retrieved., StartDate: str(date) # Only include usage that has occurred on or after this date. Specify the date in GMT and format as `YYYY-MM-DD`. You can also specify offsets from the current date, such as: `-30days`, which will set the start date to be 30 days before the current date., EndDate: str(date) # Only include usage that occurred on or before this date. Specify the date in GMT and format as `YYYY-MM-DD`.  You can also specify offsets from the current date, such as: `+30days`, which will set the end date to 30 days from the current date., IncludeSubaccounts: bool # Whether to include usage from the master account and all its subaccounts. Can be: `true` (the default) to include usage from the master account and all subaccounts or `false` to retrieve usage from only the specified account., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Yearly.json
+@optional {Category: str # The [usage category](https://www.twilio.com/docs/usage/api/usage-record#usage-categories) of the UsageRecord resources to read. Only UsageRecord resources in the specified category are retrieved., StartDate: str(date) # Only include usage that has occurred on or after this date. Specify the date in GMT and format as `YYYY-MM-DD`. You can also specify offsets from the current date, such as: `-30days`, which will set the start date to be 30 days before the current date., EndDate: str(date) # Only include usage that occurred on or before this date. Specify the date in GMT and format as `YYYY-MM-DD`.  You can also specify offsets from the current date, such as: `+30days`, which will set the end date to 30 days from the current date., IncludeSubaccounts: bool # Whether to include usage from the master account and all its subaccounts. Can be: `true` (the default) to include usage from the master account and all subaccounts or `false` to retrieve usage from only the specified account., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Records/Yesterday.json
+@optional {Category: str # The [usage category](https://www.twilio.com/docs/usage/api/usage-record#usage-categories) of the UsageRecord resources to read. Only UsageRecord resources in the specified category are retrieved., StartDate: str(date) # Only include usage that has occurred on or after this date. Specify the date in GMT and format as `YYYY-MM-DD`. You can also specify offsets from the current date, such as: `-30days`, which will set the start date to be 30 days before the current date., EndDate: str(date) # Only include usage that occurred on or before this date. Specify the date in GMT and format as `YYYY-MM-DD`.  You can also specify offsets from the current date, such as: `+30days`, which will set the end date to 30 days from the current date., IncludeSubaccounts: bool # Whether to include usage from the master account and all its subaccounts. Can be: `true` (the default) to include usage from the master account and all subaccounts or `false` to retrieve usage from only the specified account., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_records: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Triggers/{Sid}.json
+@desc Fetch and instance of a usage-trigger
+@required {Sid: str # The Twilio-provided string that uniquely identifies the UsageTrigger resource to fetch.}
+@returns(200) {account_sid: str?, api_version: str?, callback_method: str(http-method)?, callback_url: str(uri)?, current_value: str?, date_created: str(date-time-rfc-2822)?, date_fired: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, recurring: str, sid: str?, trigger_by: str, trigger_value: str?, uri: str?, usage_category: str?, usage_record_uri: str?} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Usage/Triggers/{Sid}.json
+@desc Update an instance of a usage trigger
+@required {Sid: str # The Twilio-provided string that uniquely identifies the UsageTrigger resource to update.}
+@returns(200) {account_sid: str?, api_version: str?, callback_method: str(http-method)?, callback_url: str(uri)?, current_value: str?, date_created: str(date-time-rfc-2822)?, date_fired: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, recurring: str, sid: str?, trigger_by: str, trigger_value: str?, uri: str?, usage_category: str?, usage_record_uri: str?} # OK
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Usage/Triggers/{Sid}.json
+@required {Sid: str # The Twilio-provided string that uniquely identifies the UsageTrigger resource to delete.}
+@returns(204) The resource was deleted successfully.
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Usage/Triggers.json
+@desc Create a new UsageTrigger
+@returns(201) {account_sid: str?, api_version: str?, callback_method: str(http-method)?, callback_url: str(uri)?, current_value: str?, date_created: str(date-time-rfc-2822)?, date_fired: str(date-time-rfc-2822)?, date_updated: str(date-time-rfc-2822)?, friendly_name: str?, recurring: str, sid: str?, trigger_by: str, trigger_value: str?, uri: str?, usage_category: str?, usage_record_uri: str?} # Created
+
+@endpoint GET /2010-04-01/Accounts/{AccountSid}/Usage/Triggers.json
+@desc Retrieve a list of usage-triggers belonging to the account used to make the request
+@optional {Recurring: str # The frequency of recurring UsageTriggers to read. Can be: `daily`, `monthly`, or `yearly` to read recurring UsageTriggers. An empty value or a value of `alltime` reads non-recurring UsageTriggers., TriggerBy: str # The trigger field of the UsageTriggers to read.  Can be: `count`, `usage`, or `price` as described in the [UsageRecords documentation](https://www.twilio.com/docs/usage/api/usage-record#usage-count-price)., UsageCategory: str # The usage category of the UsageTriggers to read. Must be a supported [usage categories](https://www.twilio.com/docs/usage/api/usage-record#usage-categories)., PageSize: int(int64) # How many resources to return in each list page. The default is 50, and the maximum is 1000., Page: int # The page index. This value is simply for client state., PageToken: str # The page token. This is provided by the API.}
+@returns(200) {usage_triggers: [map], end: int, first_page_uri: str(uri), next_page_uri: str(uri)?, page: int, page_size: int, previous_page_uri: str(uri)?, start: int, uri: str(uri)} # OK
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/UserDefinedMessages.json
+@desc Create a new User Defined Message for the given Call SID.
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) the User Defined Message is associated with.}
+@returns(201) {account_sid: str?, call_sid: str?, sid: str?, date_created: str(date-time-rfc-2822)?} # Created
+
+@endpoint POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/UserDefinedMessageSubscriptions.json
+@desc Subscribe to User Defined Messages for a given Call SID.
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) the User Defined Messages subscription is associated with. This refers to the Call SID that is producing the user defined messages.}
+@returns(201) {account_sid: str?, call_sid: str?, sid: str?, date_created: str(date-time-rfc-2822)?, uri: str?} # Created
+
+@endpoint DELETE /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/UserDefinedMessageSubscriptions/{Sid}.json
+@desc Delete a specific User Defined Message Subscription.
+@required {CallSid: str # The SID of the [Call](https://www.twilio.com/docs/voice/api/call-resource) the User Defined Message Subscription is associated with. This refers to the Call SID that is producing the User Defined Messages., Sid: str # The SID that uniquely identifies this User Defined Message Subscription.}
+@returns(204) The resource was deleted successfully.
+
+@end

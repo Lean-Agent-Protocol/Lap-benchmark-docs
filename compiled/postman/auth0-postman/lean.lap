@@ -1,0 +1,213 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Auth0 Management API
+@base https://{{auth0_domain}}
+@endpoints 69
+@hint download_for_search
+@toc api(69)
+
+@endpoint GET /api/v2/blacklists/tokens
+
+@endpoint POST /api/v2/blacklists/tokens
+@optional {aud: str, jti: str}
+
+@endpoint GET /api/v2/client-grants
+
+@endpoint POST /api/v2/client-grants
+@required {scope: [str]}
+@optional {client_id: str, audience: str}
+
+@endpoint DELETE /api/v2/client-grants/{id}
+@required {id: str}
+
+@endpoint PATCH /api/v2/client-grants/{id}
+@required {id: str, scope: [str]}
+
+@endpoint GET /api/v2/clients
+
+@endpoint POST /api/v2/clients
+@required {callbacks: [str], allowed_origins: [str], client_aliases: [str], allowed_clients: [str], allowed_logout_urls: [str], is_first_party: bool, jwt_configuration: map, encryption_key: map, sso: bool, custom_login_page_on: bool, is_heroku_app: bool, addons: map, resource_servers: [map], client_metadata: map, mobile: map}
+@optional {name: str, client_secret: str, logo_uri: str, token_endpoint_auth_method: str, app_type: str, custom_login_page: str, custom_login_page_preview: str, form_template: str}
+
+@endpoint GET /api/v2/clients/{id}
+@required {id: str}
+
+@endpoint DELETE /api/v2/clients/{id}
+@required {id: str}
+
+@endpoint PATCH /api/v2/clients/{id}
+@required {id: str, callbacks: [str], allowed_origins: [str], client_aliases: [str], allowed_clients: [str], allowed_logout_urls: [str], jwt_configuration: map, encryption_key: map, sso: bool, custom_login_page_on: bool, is_first_party: bool, addons: map, resource_servers: [map], client_metadata: map, mobile: map}
+@optional {name: str, client_secret: str, logo_uri: str, token_endpoint_auth_method: str, app_type: str, custom_login_page: str, custom_login_page_preview: str, form_template: str}
+
+@endpoint GET /api/v2/connections
+
+@endpoint POST /api/v2/connections
+@required {options: map, enabled_clients: [str]}
+@optional {name: str, strategy: str}
+
+@endpoint GET /api/v2/connections/{id}
+@required {id: str}
+
+@endpoint DELETE /api/v2/connections/{id}
+@required {id: str}
+
+@endpoint PATCH /api/v2/connections/{id}
+@required {id: str, options: map, enabled_clients: [str]}
+
+@endpoint DELETE /api/v2/connections/{id}/users
+@required {id: str}
+
+@endpoint GET /api/v2/device-credentials
+
+@endpoint POST /api/v2/device-credentials
+@optional {device_name: str, type: str, value: str, device_id: str, client_id: str}
+
+@endpoint DELETE /api/v2/device-credentials/{id}
+@required {id: str}
+
+@endpoint GET /api/v2/emails/provider
+
+@endpoint DELETE /api/v2/emails/provider
+
+@endpoint POST /api/v2/emails/provider
+@required {enabled: bool, credentials: map, settings: map}
+@optional {name: str, default_from_address: str}
+
+@endpoint PATCH /api/v2/emails/provider
+@required {enabled: bool, credentials: map, settings: map}
+@optional {name: str, default_from_address: str}
+
+@endpoint GET /api/v2/guardian/factors
+
+@endpoint GET /api/v2/guardian/enrollments/{id}
+@required {id: str}
+
+@endpoint DELETE /api/v2/guardian/enrollments/{id}
+@required {id: str}
+
+@endpoint GET /api/v2/guardian/factors/sms/templates
+
+@endpoint PUT /api/v2/guardian/factors/sms/templates
+@optional {enrollment_message: str, verification_message: str}
+
+@endpoint GET /api/v2/guardian/factors/{factor_name}/providers/{name}
+@required {factor_name: str, name: str}
+
+@endpoint PUT /api/v2/guardian/factors/{name}
+@required {name: str, enabled: bool}
+
+@endpoint PUT /api/v2/guardian/factors/sms/providers/twilio
+@optional {from: str, messaging_service_sid: str, auth_token: str, sid: str}
+
+@endpoint GET /api/v2/jobs/{id}
+@required {id: str}
+
+@endpoint GET /api/v2/jobs/{id}/errors
+@required {id: str}
+
+@endpoint POST /api/v2/jobs/users-imports
+
+@endpoint POST /api/v2/jobs/verification-email
+@optional {user_id: str}
+
+@endpoint GET /api/v2/logs
+
+@endpoint GET /api/v2/logs/{id}
+@required {id: str}
+
+@endpoint GET /api/v2/resource-servers/{id}
+@required {id: str}
+
+@endpoint DELETE /api/v2/resource-servers/{id}
+@required {id: str}
+
+@endpoint PATCH /api/v2/resource-servers/{id}
+@required {id: str, scopes: [map], token_lifetime: int}
+@optional {name: str, signing_alg: str, signing_secret: str}
+
+@endpoint POST /api/v2/resource-servers
+@required {scopes: [map], token_lifetime: int}
+@optional {name: str, identifier: str, signing_alg: str, signing_secret: str}
+
+@endpoint GET /api/v2/rules
+
+@endpoint POST /api/v2/rules
+@required {order: map, enabled: bool}
+@optional {name: str, script: str, stage: str}
+
+@endpoint GET /api/v2/rules/{id}
+@required {id: str}
+
+@endpoint DELETE /api/v2/rules/{id}
+@required {id: str}
+
+@endpoint PATCH /api/v2/rules/{id}
+@required {id: str, order: map, enabled: bool}
+@optional {script: str, name: str}
+
+@endpoint GET /api/v2/stats/active-users
+
+@endpoint GET /api/v2/stats/daily
+
+@endpoint GET /api/v2/tenants/settings
+
+@endpoint PATCH /api/v2/tenants/settings
+@required {change_password: map, guardian_mfa_page: map, error_page: map, flags: map, allowed_logout_urls: [str], session_lifetime: int}
+@optional {friendly_name: str, picture_url: str, support_email: str, support_url: str}
+
+@endpoint POST /api/v2/tickets/email-verification
+@optional {result_url: str, user_id: str}
+
+@endpoint POST /api/v2/tickets/password-change
+@required {ttl_sec: int}
+@optional {result_url: str, user_id: str, new_password: str, connection_id: str, email: str}
+
+@endpoint GET /api/v2/user-blocks
+
+@endpoint DELETE /api/v2/user-blocks
+
+@endpoint GET /api/v2/user-blocks/{id}
+@required {id: str}
+
+@endpoint DELETE /api/v2/user-blocks/{id}
+@required {id: str}
+
+@endpoint GET /api/v2/users
+
+@endpoint POST /api/v2/users
+@required {user_metadata: map, email_verified: bool, app_metadata: map}
+@optional {connection: str, email: str, username: str, password: str, phone_number: str}
+
+@endpoint GET /api/v2/users/{id}
+@required {id: str}
+
+@endpoint DELETE /api/v2/users/{id}
+@required {id: str}
+
+@endpoint PATCH /api/v2/users/{id}
+@required {id: str, blocked: bool, email_verified: bool, verify_email: bool, phone_verified: bool, verify_phone_number: bool, verify_password: bool, user_metadata: map, app_metadata: map}
+@optional {email: str, phone_number: str, password: str, connection: str, username: str, client_id: str}
+
+@endpoint GET /api/v2/users/{user_id}/logs
+@required {user_id: str}
+
+@endpoint GET /api/v2/users/{id}/enrollments
+@required {id: str}
+
+@endpoint DELETE /api/v2/users/{id}/multifactor/{provider}
+@required {id: str, provider: str}
+
+@endpoint DELETE /api/v2/users/{id}/identities/{provider}/{user_id}
+@required {id: str, provider: str, user_id: str}
+
+@endpoint POST /api/v2/users/{id}/recovery-code-regeneration
+@required {id: str}
+
+@endpoint POST /api/v2/users/{id}/identities
+@required {id: str}
+@optional {provider: str, connection_id: str, user_id: str, link_with: str}
+
+@endpoint GET /api/v2/users-by-email
+@required {email: str}
+
+@end

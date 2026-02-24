@@ -1,0 +1,41 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Data Ingestion API
+@base https://platform.adobe.io
+@endpoints 9
+@toc data(9)
+
+@endpoint POST /data/foundation/import/collection/{CONNECTION_ID}
+@required {syncValidation: str, synchronousValidation: str}
+@optional {Cache-Control: str, x-sandbox-name: str}
+
+@endpoint POST /data/foundation/import/collection/batch/{CONNECTION_ID}
+@required {synchronousValidation: str}
+@optional {x-sandbox-name: str}
+
+@endpoint POST /data/foundation/import/batches
+@optional {x-api-key: str, x-gw-ims-org-id: str, x-sandbox-name: str}
+
+@endpoint PUT /data/foundation/import/batches/{batchId}/datasets/{datasetId}/files/{filePath}
+@optional {x-api-key: str, x-gw-ims-org-id: str, x-sandbox-name: str}
+
+@endpoint POST /data/foundation/import/batches/{batchId}/datasets/{datasetId}/files/{filePath}
+@required {action: str}
+@optional {x-api-key: str, x-gw-ims-org-id: str, x-sandbox-name: str}
+
+@endpoint PATCH /data/foundation/import/batches/{batchId}/datasets/{datasetId}/files/{filePath}
+@required {file: str}
+@optional {x-api-key: str, x-gw-ims-org-id: str, x-sandbox-name: str, Content-Range: str}
+
+@endpoint HEAD /data/foundation/import/batches/{batchId}/datasets/{datasetId}/files/{filePath}
+@optional {x-api-key: str, x-gw-ims-org-id: str, x-sandbox-name: str}
+
+@endpoint GET /data/foundation/import/batches/{batchId}/datasets/{datasetId}/preview
+@required {format: str, delimiter: str, quote: str, escape: str, charset: str, header: str, nrow: str}
+@optional {x-api-key: str, x-gw-ims-org-id: str, x-sandbox-name: str}
+
+@endpoint POST /data/foundation/import/batches/{batchId}
+@required {action: str}
+@optional {x-api-key: str, x-gw-ims-org-id: str, x-sandbox-name: str}
+
+@end

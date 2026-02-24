@@ -1,0 +1,32 @@
+spec_id: box
+tasks:
+  - id: t1
+    description: "Look up the metadata and properties of a stored document, then see who has been granted shared access to that document along with their permission levels"
+    target_endpoints:
+      - GET /files/{file_id}
+      - GET /files/{file_id}/collaborations
+    expected_params:
+      GET /files/{file_id}:
+        - file_id
+        - fields
+      GET /files/{file_id}/collaborations:
+        - file_id
+        - fields
+        - limit
+        - marker
+  - id: t2
+    description: "Retrieve the properties of a specific storage container, then browse through the files and sub-containers inside it with sorting and pagination controls"
+    target_endpoints:
+      - GET /folders/{folder_id}
+      - GET /folders/{folder_id}/items
+    expected_params:
+      GET /folders/{folder_id}:
+        - folder_id
+        - fields
+      GET /folders/{folder_id}/items:
+        - folder_id
+        - fields
+        - limit
+        - offset
+        - sort
+        - direction

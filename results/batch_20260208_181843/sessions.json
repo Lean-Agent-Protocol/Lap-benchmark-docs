@@ -1,0 +1,8 @@
+{
+  "petstore-verbose": "agent:main:subagent:20322140-a3af-4dfe-b187-05450a46cdde",
+  "petstore-doclean": "agent:main:subagent:b8b2a10a-0fe6-41a8-8e52-c962750079c0",
+  "proto-storage-verbose": "agent:main:subagent:989dcfa8-c79e-4ba1-a28c-56f2ca37bd04",
+  "proto-storage-doclean": "agent:main:subagent:83b3dfc8-358e-4383-93f5-c201f02555a2",
+  "snyk-verbose": "agent:main:subagent:e25ff30d-900b-4b55-b09f-10aba871d076",
+  "snyk-doclean": "agent:main:subagent:0096315b-c3f8-437d-a6fb-4352830460e3"
+}

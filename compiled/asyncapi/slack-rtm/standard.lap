@@ -1,0 +1,245 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Slack Real Time Messaging API
+@version 1.0.0
+@auth https
+@endpoints 47
+@hint download_for_search
+@toc root(47)
+
+@endpoint SUB /
+@desc A message was sent to a channel.
+@optional {id: num, type: str, channel: str, text: str}
+@returns(SUB) {id: num, type: str, channel: str, text: str} # message payload
+
+@endpoint PUB /
+@desc First event received upon connection.
+@optional {type: str}
+@returns(PUB) {type: str} # message payload
+
+@endpoint PUB /
+@desc Event received when a connection error happens.
+@optional {type: str, error: map}
+@returns(PUB) {type: str, error: map{code: num, msg: str}} # message payload
+
+@endpoint PUB /
+@desc The list of accounts a user is signed into has changed.
+@optional {type: str}
+@returns(PUB) {type: str} # message payload
+
+@endpoint PUB /
+@desc A bot user was added.
+@optional {type: str, bot: map}
+@returns(PUB) {type: str, bot: map{id: str, app_id: str, name: str, icons: map}} # message payload
+
+@endpoint PUB /
+@desc A bot user was changed.
+@optional {type: str, bot: map}
+@returns(PUB) {type: str, bot: map{id: str, app_id: str, name: str, icons: map}} # message payload
+
+@endpoint PUB /
+@desc A channel was archived.
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str} # message payload
+
+@endpoint PUB /
+@desc A channel was created.
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num, creator: str}} # message payload
+
+@endpoint PUB /
+@desc A channel was deleted.
+@optional {type: str, channel: str}
+@returns(PUB) {type: str, channel: str} # message payload
+
+@endpoint PUB /
+@desc Bulk updates were made to a channel's history.
+@optional {type: str, latest: str, ts: str, event_ts: str}
+@returns(PUB) {type: str, latest: str, ts: str, event_ts: str} # message payload
+
+@endpoint PUB /
+@desc You joined a channel.
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num, creator: str}} # message payload
+
+@endpoint PUB /
+@desc You left a channel.
+@optional {type: str, channel: str}
+@returns(PUB) {type: str, channel: str} # message payload
+
+@endpoint PUB /
+@desc Your channel read marker was updated.
+@optional {type: str, channel: str, ts: str}
+@returns(PUB) {type: str, channel: str, ts: str} # message payload
+
+@endpoint PUB /
+@desc A channel was renamed.
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num}} # message payload
+
+@endpoint PUB /
+@desc A channel was unarchived.
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str} # message payload
+
+@endpoint PUB /
+@desc A slash command has been added or changed.
+@optional {type: str, event_ts: str}
+@returns(PUB) {type: str, event_ts: str} # message payload
+
+@endpoint PUB /
+@desc Do not Disturb settings changed for the current user.
+@optional {type: str, user: str, dnd_status: map}
+@returns(PUB) {type: str, user: str, dnd_status: map{dnd_enabled: bool, next_dnd_start_ts: num, next_dnd_end_ts: num, snooze_enabled: bool, snooze_endtime: num}} # message payload
+
+@endpoint PUB /
+@desc Do not Disturb settings changed for a member.
+@optional {type: str, user: str, dnd_status: map}
+@returns(PUB) {type: str, user: str, dnd_status: map{dnd_enabled: bool, next_dnd_start_ts: num, next_dnd_end_ts: num}} # message payload
+
+@endpoint PUB /
+@desc The workspace email domain has changed.
+@optional {type: str, email_domain: str, event_ts: str}
+@returns(PUB) {type: str, email_domain: str, event_ts: str} # message payload
+
+@endpoint PUB /
+@desc A custom emoji has been removed.
+@optional {type: str, subtype: str, names: [str], event_ts: str}
+@returns(PUB) {type: str, subtype: str, names: [str], event_ts: str} # message payload
+
+@endpoint PUB /
+@desc A custom emoji has been added.
+@optional {type: str, subtype: str, name: str, value: str(uri), event_ts: str}
+@returns(PUB) {type: str, subtype: str, name: str, value: str(uri), event_ts: str} # message payload
+
+@endpoint PUB /
+@desc A file was changed.
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}} # message payload
+
+@endpoint PUB /
+@desc A file comment was added.
+@optional {type: str, comment: any, file_id: str, file: map}
+@returns(PUB) {type: str, comment: any, file_id: str, file: map{id: str}} # message payload
+
+@endpoint PUB /
+@desc A file comment was deleted.
+@optional {type: str, comment: str, file_id: str, file: map}
+@returns(PUB) {type: str, comment: str, file_id: str, file: map{id: str}} # message payload
+
+@endpoint PUB /
+@desc A file comment was edited.
+@optional {type: str, comment: any, file_id: str, file: map}
+@returns(PUB) {type: str, comment: any, file_id: str, file: map{id: str}} # message payload
+
+@endpoint PUB /
+@desc A file was created.
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}} # message payload
+
+@endpoint PUB /
+@desc A file was deleted.
+@optional {type: str, file_id: str, event_ts: str}
+@returns(PUB) {type: str, file_id: str, event_ts: str} # message payload
+
+@endpoint PUB /
+@desc A file was made public.
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}} # message payload
+
+@endpoint PUB /
+@desc A file was shared.
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}} # message payload
+
+@endpoint PUB /
+@desc A file was unshared.
+@optional {type: str, file_id: str, file: map}
+@returns(PUB) {type: str, file_id: str, file: map{id: str}} # message payload
+
+@endpoint PUB /
+@desc The server intends to close the connection soon.
+@optional {type: str}
+@returns(PUB) {type: str} # message payload
+
+@endpoint PUB /
+@desc A private channel was archived.
+@optional {type: str, channel: str}
+@returns(PUB) {type: str, channel: str} # message payload
+
+@endpoint PUB /
+@desc You closed a private channel.
+@optional {type: str, user: str, channel: str}
+@returns(PUB) {type: str, user: str, channel: str} # message payload
+
+@endpoint PUB /
+@desc Bulk updates were made to a private channel's history.
+@optional {type: str, latest: str, ts: str, event_ts: str}
+@returns(PUB) {type: str, latest: str, ts: str, event_ts: str} # message payload
+
+@endpoint PUB /
+@desc You joined a private channel.
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num, creator: str}} # message payload
+
+@endpoint PUB /
+@desc You left a private channel.
+@optional {type: str, channel: str}
+@returns(PUB) {type: str, channel: str} # message payload
+
+@endpoint PUB /
+@desc A private channel read marker was updated.
+@optional {type: str, channel: str, ts: str}
+@returns(PUB) {type: str, channel: str, ts: str} # message payload
+
+@endpoint PUB /
+@desc You opened a private channel.
+@optional {type: str, user: str, channel: str}
+@returns(PUB) {type: str, user: str, channel: str} # message payload
+
+@endpoint PUB /
+@desc A private channel was renamed.
+@optional {type: str, channel: map}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num}} # message payload
+
+@endpoint PUB /
+@desc A private channel was unarchived.
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str} # message payload
+
+@endpoint PUB /
+@desc You closed a DM.
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str} # message payload
+
+@endpoint PUB /
+@desc A DM was created.
+@optional {type: str, channel: map, user: str}
+@returns(PUB) {type: str, channel: map{id: str, name: str, created: num, creator: str}, user: str} # message payload
+
+@endpoint PUB /
+@desc A direct message read marker was updated.
+@optional {type: str, channel: str, ts: str}
+@returns(PUB) {type: str, channel: str, ts: str} # message payload
+
+@endpoint PUB /
+@desc You opened a DM.
+@optional {type: str, channel: str, user: str}
+@returns(PUB) {type: str, channel: str, user: str} # message payload
+
+@endpoint PUB /
+@desc You manually updated your presence.
+@optional {type: str, presence: str}
+@returns(PUB) {type: str, presence: str} # message payload
+
+@endpoint PUB /
+@desc A user joined a public or private channel.
+@optional {type: str, user: str, channel: str, channel_type: str(C/G), team: str, inviter: str}
+@returns(PUB) {type: str, user: str, channel: str, channel_type: str, team: str, inviter: str} # message payload
+
+@endpoint PUB /
+@desc A message was sent to a channel.
+@optional {type: str, user: str, channel: str, text: str, ts: str, attachments: [map], edited: map}
+@returns(PUB) {type: str, user: str, channel: str, text: str, ts: str, attachments: [map], edited: map{user: str, ts: str}} # message payload
+
+@end

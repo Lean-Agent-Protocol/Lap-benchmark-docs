@@ -1,0 +1,13 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Adeo AsyncAPI Case Study
+@version %REPLACED_BY_MAVEN%
+@auth kafka
+@endpoints 1
+@toc adeo-{env}-case-study-COSTING-REQUEST-{version}(1)
+
+@endpoint SUB adeo-{env}-case-study-COSTING-REQUEST-{version}
+@desc [COSTING] Request one or more Costing calculation for any product [kafka(groupId=string)]
+@optional {header:REQUEST_ID: str(uuid) # A unique Request ID needed to define a `CORRELATION_ID` for exchanges, which will be sent back in the Costing Responses., header:REPLY_TOPIC: str # The Kafka topic where to send the Costing Response. This is required for the [Return Address EIP pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/ReturnAddress.html). **You must grant WRITE access to our `svc-ccr-app` service account.**, header:REQUESTER_ID: str # The Costing requester service account used to produce costing request., header:REQUESTER_CODE: str # The Costing requester code (generally the BU Code). The requester code is useful to get the dedicated context (tenant).}
+
+@end

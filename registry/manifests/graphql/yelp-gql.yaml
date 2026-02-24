@@ -1,0 +1,50 @@
+spec_id: yelp-gql
+tasks:
+  - id: t1
+    description: "Discover nearby restaurants or shops by area and keyword with sorting and filtering options, then read what customers are saying about a particular venue"
+    target_endpoints:
+      - QUERY search
+      - QUERY reviews
+    expected_params:
+      QUERY search:
+        - term
+        - location
+        - country
+        - offset
+        - limit
+        - sort_by
+        - locale
+        - longitude
+        - latitude
+        - categories
+        - open_now
+        - open_at
+        - price
+        - attributes
+        - radius
+      QUERY reviews:
+        - business
+        - locale
+        - limit
+        - offset
+  - id: t2
+    description: "Pull up the full profile of a specific venue using its platform identifier, and find upcoming happenings in a given area with date and category filters"
+    target_endpoints:
+      - QUERY business
+      - QUERY event_search
+    expected_params:
+      QUERY business:
+        - id
+      QUERY event_search:
+        - locale
+        - offset
+        - limit
+        - sort_by
+        - sort_on
+        - start_date
+        - end_date
+        - categories
+        - is_free
+        - location
+        - latitude
+        - longitude

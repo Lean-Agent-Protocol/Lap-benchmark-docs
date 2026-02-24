@@ -1,0 +1,32 @@
+spec_id: twilio
+tasks:
+  - id: t1
+    description: "Dispatch a text notification to a phone number from a specific sender with a callback for delivery status, then look up the delivery details and status of that specific notification"
+    target_endpoints:
+      - POST /2010-04-01/Accounts/{AccountSid}/Messages.json
+      - GET /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json
+    expected_params:
+      POST /2010-04-01/Accounts/{AccountSid}/Messages.json:
+        - AccountSid
+        - To
+        - From
+        - Body
+        - StatusCallback
+      GET /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json:
+        - AccountSid
+        - Sid
+  - id: t2
+    description: "Initiate an outbound voice connection to a recipient from a designated number with a handler URL, then access all the audio recordings captured during that voice session"
+    target_endpoints:
+      - POST /2010-04-01/Accounts/{AccountSid}/Calls.json
+      - GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings.json
+    expected_params:
+      POST /2010-04-01/Accounts/{AccountSid}/Calls.json:
+        - AccountSid
+        - To
+        - From
+        - Url
+        - Method
+      GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings.json:
+        - AccountSid
+        - CallSid

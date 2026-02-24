@@ -1,0 +1,617 @@
+@lap v0.3
+# Machine-readable API spec. Each @endpoint block is one API call.
+@api Spotify Web API with fixes and improvements from sonallux
+@base https://api.spotify.com/v1
+@version 2025.5.18
+@auth OAuth2
+@endpoints 97
+@hint download_for_search
+@toc albums(3), artists(5), shows(3), episodes(2), audiobooks(3), me(47), chapters(2), tracks(2), search(1), playlists(15), users(3), browse(5), audio-features(2), audio-analysis(1), recommendations(2), markets(1)
+
+@group albums
+@endpoint GET /albums/{id}
+@required {id: str}
+@optional {market: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /albums
+@required {ids: str}
+@optional {market: str}
+@returns(200) {albums: [any]}
+@errors {401, 403, 429}
+
+@endpoint GET /albums/{id}/tracks
+@required {id: str}
+@optional {market: str, limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group artists
+@endpoint GET /artists/{id}
+@required {id: str}
+@returns(200) {external_urls: any, followers: any, genres: [str], href: str, id: str, images: [map], name: str, popularity: int, type: str, uri: str}
+@errors {401, 403, 429}
+
+@endpoint GET /artists
+@required {ids: str}
+@returns(200) {artists: [map]}
+@errors {401, 403, 429}
+
+@endpoint GET /artists/{id}/albums
+@required {id: str}
+@optional {include_groups: str, market: str, limit: int=5, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /artists/{id}/top-tracks
+@required {id: str}
+@optional {market: str}
+@returns(200) {tracks: [map]}
+@errors {401, 403, 429}
+
+@endpoint GET /artists/{id}/related-artists
+@required {id: str}
+@returns(200) {artists: [map]}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group shows
+@endpoint GET /shows/{id}
+@required {id: str}
+@optional {market: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /shows
+@required {ids: str}
+@optional {market: str}
+@returns(200) {shows: [any]}
+@errors {401, 403, 429}
+
+@endpoint GET /shows/{id}/episodes
+@required {id: str}
+@optional {market: str, limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group episodes
+@endpoint GET /episodes/{id}
+@required {id: str}
+@optional {market: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /episodes
+@required {ids: str}
+@optional {market: str}
+@returns(200) {episodes: [map]}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group audiobooks
+@endpoint GET /audiobooks/{id}
+@required {id: str}
+@optional {market: str}
+@returns(200)
+@errors {400, 401, 403, 404, 429}
+
+@endpoint GET /audiobooks
+@required {ids: str}
+@optional {market: str}
+@returns(200) {audiobooks: [any]}
+@errors {401, 403, 429}
+
+@endpoint GET /audiobooks/{id}/chapters
+@required {id: str}
+@optional {market: str, limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group me
+@endpoint GET /me/audiobooks
+@optional {limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/audiobooks
+@required {ids: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint DELETE /me/audiobooks
+@required {ids: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/audiobooks/contains
+@required {ids: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group chapters
+@endpoint GET /chapters/{id}
+@required {id: str}
+@optional {market: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /chapters
+@required {ids: str}
+@optional {market: str}
+@returns(200) {chapters: [map]}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group tracks
+@endpoint GET /tracks/{id}
+@required {id: str}
+@optional {market: str}
+@returns(200) {album: any, artists: [map], available_markets: [str], disc_number: int, duration_ms: int, explicit: bool, external_ids: any, external_urls: any, href: str, id: str, is_playable: bool, linked_from: any, restrictions: any, name: str, popularity: int, preview_url: str?, track_number: int, type: str, uri: str, is_local: bool}
+@errors {401, 403, 429}
+
+@endpoint GET /tracks
+@required {ids: str}
+@optional {market: str}
+@returns(200) {tracks: [map]}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group search
+@endpoint GET /search
+@required {q: str, type: [str]}
+@optional {market: str, limit: int=20, offset: int=0, include_external: str}
+@returns(200) {tracks: map, artists: map, albums: map, playlists: map, shows: map, episodes: map, audiobooks: map}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group me
+@endpoint GET /me
+@returns(200) {country: str, display_name: str, email: str, explicit_content: any, external_urls: any, followers: any, href: str, id: str, images: [map], product: str, type: str, uri: str}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group playlists
+@endpoint GET /playlists/{playlist_id}
+@required {playlist_id: str}
+@optional {market: str, fields: str, additional_types: str}
+@returns(200) {collaborative: bool, description: str?, external_urls: any, href: str, id: str, images: [map], name: str, owner: any, public: bool, snapshot_id: str, items: map, tracks: map, type: str, uri: str, followers: any}
+@errors {401, 403, 429}
+
+@endpoint PUT /playlists/{playlist_id}
+@required {playlist_id: str}
+@optional {name: str, public: bool, collaborative: bool, description: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /playlists/{playlist_id}/tracks
+@required {playlist_id: str}
+@optional {market: str, fields: str, limit: int=20, offset: int=0, additional_types: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint POST /playlists/{playlist_id}/tracks
+@required {playlist_id: str}
+@optional {position: int, uris: str, uris: [str], position: int}
+@returns(201) {snapshot_id: str}
+@errors {401, 403, 429}
+
+@endpoint PUT /playlists/{playlist_id}/tracks
+@required {playlist_id: str}
+@optional {uris: str, uris: [str], range_start: int, insert_before: int, range_length: int, snapshot_id: str}
+@returns(200) {snapshot_id: str}
+@errors {401, 403, 429}
+
+@endpoint DELETE /playlists/{playlist_id}/tracks
+@required {playlist_id: str, tracks: [map{uri: str}]}
+@optional {snapshot_id: str}
+@returns(200) {snapshot_id: str}
+@errors {401, 403, 429}
+
+@endpoint GET /playlists/{playlist_id}/items
+@required {playlist_id: str}
+@optional {market: str, fields: str, limit: int=20, offset: int=0, additional_types: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint POST /playlists/{playlist_id}/items
+@required {playlist_id: str}
+@optional {position: int, uris: str, uris: [str], position: int}
+@returns(201) {snapshot_id: str}
+@errors {401, 403, 429}
+
+@endpoint PUT /playlists/{playlist_id}/items
+@required {playlist_id: str}
+@optional {uris: str, uris: [str], range_start: int, insert_before: int, range_length: int, snapshot_id: str}
+@returns(200) {snapshot_id: str}
+@errors {401, 403, 429}
+
+@endpoint DELETE /playlists/{playlist_id}/items
+@required {playlist_id: str, items: [map{uri: str}]}
+@optional {snapshot_id: str}
+@returns(200) {snapshot_id: str}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group me
+@endpoint GET /me/playlists
+@optional {limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint POST /me/playlists
+@required {name: str}
+@optional {public: bool, collaborative: bool, description: str}
+@returns(201) {collaborative: bool, description: str?, external_urls: any, href: str, id: str, images: [map], name: str, owner: any, public: bool, snapshot_id: str, items: map, tracks: map, type: str, uri: str, followers: any}
+@errors {401, 403, 429}
+
+@endpoint PUT /me/library
+@required {uris: str}
+@returns(200)
+@errors {400, 401, 403, 429}
+
+@endpoint DELETE /me/library
+@required {uris: str}
+@returns(200)
+@errors {400, 401, 403, 429}
+
+@endpoint GET /me/library/contains
+@required {uris: str}
+@returns(200)
+@errors {400, 401, 403, 429}
+
+@endpoint GET /me/albums
+@optional {limit: int=20, offset: int=0, market: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/albums
+@required {ids: str}
+@optional {ids: [str]}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint DELETE /me/albums
+@required {ids: str}
+@optional {ids: [str]}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/albums/contains
+@required {ids: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/tracks
+@optional {market: str, limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/tracks
+@required {ids: [str]}
+@optional {timestamped_ids: [map{id!: str, added_at!: str(date-time)}]}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint DELETE /me/tracks
+@required {ids: str}
+@optional {ids: [str]}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/tracks/contains
+@required {ids: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/episodes
+@optional {market: str, limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/episodes
+@required {ids: str, ids: [str]}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint DELETE /me/episodes
+@required {ids: str}
+@optional {ids: [str]}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/episodes/contains
+@required {ids: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/shows
+@optional {limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/shows
+@required {ids: str}
+@optional {ids: [str]}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint DELETE /me/shows
+@required {ids: str}
+@optional {market: str, ids: [str]}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/shows/contains
+@required {ids: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group users
+@endpoint GET /users/{user_id}
+@required {user_id: str}
+@returns(200) {display_name: str?, external_urls: any, followers: any, href: str, id: str, images: [map], type: str, uri: str}
+@errors {401, 403, 429}
+
+@endpoint GET /users/{user_id}/playlists
+@required {user_id: str}
+@optional {limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint POST /users/{user_id}/playlists
+@required {user_id: str, name: str}
+@optional {public: bool, collaborative: bool, description: str}
+@returns(201) {collaborative: bool, description: str?, external_urls: any, href: str, id: str, images: [map], name: str, owner: any, public: bool, snapshot_id: str, items: map, tracks: map, type: str, uri: str, followers: any}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group playlists
+@endpoint PUT /playlists/{playlist_id}/followers
+@required {playlist_id: str}
+@optional {public: bool}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint DELETE /playlists/{playlist_id}/followers
+@required {playlist_id: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group browse
+@endpoint GET /browse/featured-playlists
+@optional {locale: str, limit: int=20, offset: int=0}
+@returns(200) {message: str, playlists: map}
+@errors {401, 403, 429}
+
+@endpoint GET /browse/categories
+@optional {locale: str, limit: int=20, offset: int=0}
+@returns(200) {categories: map}
+@errors {401, 403, 429}
+
+@endpoint GET /browse/categories/{category_id}
+@required {category_id: str}
+@optional {locale: str}
+@returns(200) {href: str, icons: [map], id: str, name: str}
+@errors {401, 403, 429}
+
+@endpoint GET /browse/categories/{category_id}/playlists
+@required {category_id: str}
+@optional {limit: int=20, offset: int=0}
+@returns(200) {message: str, playlists: map}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group playlists
+@endpoint GET /playlists/{playlist_id}/images
+@required {playlist_id: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint PUT /playlists/{playlist_id}/images
+@required {playlist_id: str}
+@returns(202)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group browse
+@endpoint GET /browse/new-releases
+@optional {limit: int=20, offset: int=0}
+@returns(200) {albums: map}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group me
+@endpoint GET /me/following
+@required {type: str}
+@optional {after: str, limit: int=20}
+@returns(200) {artists: map}
+@errors {401, 403, 429}
+
+@endpoint PUT /me/following
+@required {type: str(artist/user), ids: str, ids: [str]}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint DELETE /me/following
+@required {type: str(artist/user), ids: str}
+@optional {ids: [str]}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint GET /me/following/contains
+@required {type: str(artist/user), ids: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group playlists
+@endpoint GET /playlists/{playlist_id}/followers/contains
+@required {playlist_id: str}
+@optional {ids: str}
+@returns(200)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group audio-features
+@endpoint GET /audio-features
+@required {ids: str}
+@returns(200) {audio_features: [map]}
+@errors {401, 403, 429}
+
+@endpoint GET /audio-features/{id}
+@required {id: str}
+@returns(200) {acousticness: num(float), analysis_url: str, danceability: num(float), duration_ms: int, energy: num(float), id: str, instrumentalness: num(float), key: int, liveness: num(float), loudness: num(float), mode: int, speechiness: num(float), tempo: num(float), time_signature: int, track_href: str, type: str, uri: str, valence: num(float)}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group audio-analysis
+@endpoint GET /audio-analysis/{id}
+@required {id: str}
+@returns(200) {meta: map{analyzer_version: str, platform: str, detailed_status: str, status_code: int, timestamp: int(int64), analysis_time: num, input_process: str}, track: map{num_samples: int, duration: num, sample_md5: str, offset_seconds: int, window_seconds: int, analysis_sample_rate: int, analysis_channels: int, end_of_fade_in: num, start_of_fade_out: num, loudness: num(float), tempo: num(float), tempo_confidence: num, time_signature: int, time_signature_confidence: num, key: int, key_confidence: num, mode: int, mode_confidence: num, codestring: str, code_version: num, echoprintstring: str, echoprint_version: num, synchstring: str, synch_version: num, rhythmstring: str, rhythm_version: num}, bars: [map], beats: [map], sections: [map], segments: [map], tatums: [map]}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group recommendations
+@endpoint GET /recommendations
+@optional {limit: int=20, market: str, seed_artists: str, seed_genres: str, seed_tracks: str, min_acousticness: num, max_acousticness: num, target_acousticness: num, min_danceability: num, max_danceability: num, target_danceability: num, min_duration_ms: int, max_duration_ms: int, target_duration_ms: int, min_energy: num, max_energy: num, target_energy: num, min_instrumentalness: num, max_instrumentalness: num, target_instrumentalness: num, min_key: int, max_key: int, target_key: int, min_liveness: num, max_liveness: num, target_liveness: num, min_loudness: num, max_loudness: num, target_loudness: num, min_mode: int, max_mode: int, target_mode: int, min_popularity: int, max_popularity: int, target_popularity: int, min_speechiness: num, max_speechiness: num, target_speechiness: num, min_tempo: num, max_tempo: num, target_tempo: num, min_time_signature: int, max_time_signature: int, target_time_signature: int, min_valence: num, max_valence: num, target_valence: num}
+@returns(200) {seeds: [map], tracks: [map]}
+@errors {401, 403, 429}
+
+@endpoint GET /recommendations/available-genre-seeds
+@returns(200) {genres: [str]}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group me
+@endpoint GET /me/player
+@optional {market: str, additional_types: str}
+@returns(200) {device: any, repeat_state: str, shuffle_state: bool, context: any, timestamp: int(int64), progress_ms: int, is_playing: bool, item: any, currently_playing_type: str, actions: any}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/player
+@required {device_ids: [str]}
+@optional {play: bool}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint GET /me/player/devices
+@returns(200) {devices: [map]}
+@errors {401, 403, 429}
+
+@endpoint GET /me/player/currently-playing
+@optional {market: str, additional_types: str}
+@returns(200) {context: any, timestamp: int(int64), progress_ms: int, is_playing: bool, item: any, currently_playing_type: str, actions: any}
+@errors {401, 403, 429}
+
+@endpoint PUT /me/player/play
+@optional {device_id: str, context_uri: str, uris: [str], offset: map, position_ms: int}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/player/pause
+@optional {device_id: str}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint POST /me/player/next
+@optional {device_id: str}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint POST /me/player/previous
+@optional {device_id: str}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/player/seek
+@required {position_ms: int}
+@optional {device_id: str}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/player/repeat
+@required {state: str}
+@optional {device_id: str}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/player/volume
+@required {volume_percent: int}
+@optional {device_id: str}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint PUT /me/player/shuffle
+@required {state: bool}
+@optional {device_id: str}
+@returns(204)
+@errors {401, 403, 429}
+
+@endpoint GET /me/player/recently-played
+@optional {limit: int=20, after: int, before: int}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/player/queue
+@returns(200) {currently_playing: any, queue: [any]}
+@errors {401, 403, 429}
+
+@endpoint POST /me/player/queue
+@required {uri: str}
+@optional {device_id: str}
+@returns(204)
+@errors {401, 403, 429}
+
+@endgroup
+
+@group markets
+@endpoint GET /markets
+@returns(200) {markets: [str]}
+@errors {401, 403, 429}
+
+@endgroup
+
+@group me
+@endpoint GET /me/top/artists
+@optional {time_range: str=medium_term, limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endpoint GET /me/top/tracks
+@optional {time_range: str=medium_term, limit: int=20, offset: int=0}
+@returns(200)
+@errors {401, 403, 429}
+
+@endgroup
+
+@end
