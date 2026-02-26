@@ -41,6 +41,10 @@ if not _lap_core.exists():
             _lap_core = candidate
             break
 sys.path.insert(0, str(_lap_core))
+# Also add the inner 'lap' package directory where core.compilers lives
+_lap_inner = _lap_core / "lap"
+if _lap_inner.exists():
+    sys.path.insert(0, str(_lap_inner))
 
 import yaml
 

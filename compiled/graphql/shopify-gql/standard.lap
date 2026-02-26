@@ -1,0 +1,146 @@
+@lap v0.1
+@api Shopify Gql
+@base /graphql
+
+type AppliedGiftCard:Node{amountUsed:Money!,balance:Money!,id:id!,lastCharacters:str!}
+type Article:Node{author:ArticleAuthor!,blog:Blog!,comments(first:int!,after:str,reverse:bool=False):CommentConnection!,content(truncateAt:int):str!,contentHtml:HTML!,excerpt(truncateAt:int):str,excerptHtml:HTML,id:id!,image(maxWidth:int,maxHeight:int,crop:CropRegion,scale:int=1):Image,publishedAt:DateTime!,tags:[str!]!,title:str!,url:URL!}
+type ArticleAuthor{bio:str,email:str!,firstName:str!,lastName:str!,name:str!}
+type ArticleConnection{edges:[ArticleEdge!]!,pageInfo:PageInfo!}
+type ArticleEdge{cursor:str!,node:Article!}
+enum ArticleSortKeys=TITLE|BLOG_TITLE|AUTHOR|UPDATED_AT|ID|RELEVANCE
+type Attribute{key:str!,value:str}
+input AttributeInput{key:str!,value:str!}
+type AvailableShippingRates{ready:bool!,shippingRates:[ShippingRate!]}
+type Blog:Node{articles(first:int!,after:str,reverse:bool=False):ArticleConnection!,id:id!,title:str!,url:URL!}
+type BlogConnection{edges:[BlogEdge!]!,pageInfo:PageInfo!}
+type BlogEdge{cursor:str!,node:Blog!}
+enum BlogSortKeys=HANDLE|TITLE|ID|RELEVANCE
+enum CardBrand=VISA|MASTERCARD|DISCOVER|AMERICAN_EXPRESS|DINERS_CLUB|JCB
+type Checkout:Node{appliedGiftCards:[AppliedGiftCard!]!,availableShippingRates:AvailableShippingRates,completedAt:DateTime,createdAt:DateTime!,currencyCode:CurrencyCode!,customAttributes:[Attribute!]!,customer:Customer,email:str,id:id!,lineItems(first:int!,after:str,reverse:bool=False):CheckoutLineItemConnection!,note:str,order:Order,orderStatusUrl:URL,paymentDue:Money!,ready:bool!,requiresShipping:bool!,shippingAddress:MailingAddress,shippingLine:ShippingRate,subtotalPrice:Money!,taxExempt:bool!,taxesIncluded:bool!,totalPrice:Money!,totalTax:Money!,updatedAt:DateTime!,webUrl:URL!}
+input CheckoutAttributesUpdateInput{note:str,customAttributes:[AttributeInput!],allowPartialAddresses:bool=False}
+type CheckoutAttributesUpdatePayload{checkout:Checkout!,userErrors:[UserError!]!}
+type CheckoutCompleteFreePayload{checkout:Checkout,userErrors:[UserError!]!}
+type CheckoutCompleteWithCreditCardPayload{checkout:Checkout!,payment:Payment,userErrors:[UserError!]!}
+type CheckoutCompleteWithTokenizedPaymentPayload{checkout:Checkout!,payment:Payment,userErrors:[UserError!]!}
+input CheckoutCreateInput{email:str,lineItems:[CheckoutLineItemInput!],shippingAddress:MailingAddressInput,note:str,customAttributes:[AttributeInput!],allowPartialAddresses:bool}
+type CheckoutCreatePayload{checkout:Checkout,userErrors:[UserError!]!}
+type CheckoutCustomerAssociatePayload{checkout:Checkout!,userErrors:[UserError!]!}
+type CheckoutCustomerDisassociatePayload{checkout:Checkout!,userErrors:[UserError!]!}
+type CheckoutEmailUpdatePayload{checkout:Checkout!,userErrors:[UserError!]!}
+type CheckoutGiftCardApplyPayload{checkout:Checkout!,userErrors:[UserError!]!}
+type CheckoutGiftCardRemovePayload{checkout:Checkout!,userErrors:[UserError!]!}
+type CheckoutLineItem:Node{customAttributes:[Attribute!]!,id:id!,quantity:int!,title:str!,variant:ProductVariant}
+type CheckoutLineItemConnection{edges:[CheckoutLineItemEdge!]!,pageInfo:PageInfo!}
+type CheckoutLineItemEdge{cursor:str!,node:CheckoutLineItem!}
+input CheckoutLineItemInput{customAttributes:[AttributeInput!],quantity:int!,variantId:id!}
+input CheckoutLineItemUpdateInput{id:id,variantId:id,quantity:int,customAttributes:[AttributeInput!]}
+type CheckoutLineItemsAddPayload{checkout:Checkout,userErrors:[UserError!]!}
+type CheckoutLineItemsRemovePayload{checkout:Checkout,userErrors:[UserError!]!}
+type CheckoutLineItemsUpdatePayload{checkout:Checkout,userErrors:[UserError!]!}
+type CheckoutShippingAddressUpdatePayload{checkout:Checkout!,userErrors:[UserError!]!}
+type CheckoutShippingLineUpdatePayload{checkout:Checkout,userErrors:[UserError!]!}
+type Collection:Node{description(truncateAt:int):str!,descriptionHtml:HTML!,handle:str!,id:id!,image(maxWidth:int,maxHeight:int,crop:CropRegion,scale:int=1):Image,products(first:int!,after:str,sortKey:ProductCollectionSortKeys=COLLECTION_DEFAULT,reverse:bool=False):ProductConnection!,title:str!,updatedAt:DateTime!}
+type CollectionConnection{edges:[CollectionEdge!]!,pageInfo:PageInfo!}
+type CollectionEdge{cursor:str!,node:Collection!}
+enum CollectionSortKeys=TITLE|UPDATED_AT|ID|RELEVANCE
+type Comment:Node{author:CommentAuthor!,content(truncateAt:int):str!,contentHtml:HTML!,id:id!}
+type CommentAuthor{email:str!,name:str!}
+type CommentConnection{edges:[CommentEdge!]!,pageInfo:PageInfo!}
+type CommentEdge{cursor:str!,node:Comment!}
+enum CountryCode=CA|US|GB|AF|AL|DZ|AD|AO|AG|AR|AM|AW|AU|AT|AZ|BS|BH|BD|BB|BY|BE|BZ|BJ|BM|BT|BO|BA|BW|BR|BN|BG|NC|KH|CM|CV|KY|CL|CN|CO|KM|CG|CD|CR|CI|HR|CW|CY|CZ|DK|DM|DO|EC|EG|SV|EE|ET|GQ|FO|FJ|FI|FR|PF|GA|GM|GE|DE|GH|GI|GR|GL|GD|GP|GT|GG|GY|HT|HN|HK|HU|IS|IN|ID|IE|IM|IL|IT|JM|JP|JE|JO|KZ|KE|XK|KW|KG|LA|LV|LB|LS|LR|LI|LT|LU|MO|MK|MG|MW|MY|MV|MT|MQ|MU|YT|MX|MD|MC|MN|ME|MA|MZ|MM|NA|NP|AN|NL|NZ|NI|NE|NG|NO|OM|PK|PS|PA|PG|PY|PE|PH|PL|PT|QA|RE|RO|RU|RW|KN|LC|MF|ST|WS|SA|SN|RS|SC|SG|SX|SK|SI|SB|ZA|KR|SS|ES|LK|VC|SD|SR|SE|CH|SY|TW|TZ|TH|TT|TN|TR|TM|TC|UG|UA|AE|UY|UZ|VU|VE|VN|VG|YE|ZM|ZW|AX|AI|BV|IO|BF|BI|CF|TD|CX|CC|CK|CU|DJ|ER|FK|GF|TF|GN|GW|HM|VA|IR|IQ|KI|KP|LY|ML|MR|MS|NR|NU|NF|PN|BL|SH|PM|SM|SL|SO|GS|SJ|SZ|TJ|TL|TG|TK|TO|TV|UM|WF|EH
+type CreditCard{brand:str,expiryMonth:int,expiryYear:int,firstDigits:str,firstName:str,lastDigits:str,lastName:str,maskedNumber:str}
+input CreditCardPaymentInput{amount:Money!,idempotencyKey:str!,billingAddress:MailingAddressInput!,vaultId:str!,test:bool=False}
+enum CropRegion=CENTER|TOP|BOTTOM|LEFT|RIGHT
+enum CurrencyCode=USD|EUR|GBP|CAD|AFN|ALL|DZD|AOA|ARS|AMD|AWG|AUD|BBD|AZN|BDT|BSD|BHD|BYR|BZD|BTN|BAM|BRL|BOB|BWP|BND|BGN|MMK|KHR|CVE|KYD|XAF|CLP|CNY|COP|KMF|CDF|CRC|HRK|CZK|DKK|DOP|XCD|EGP|ETB|XPF|FJD|GMD|GHS|GTQ|GYD|GEL|HTG|HNL|HKD|HUF|ISK|INR|IDR|ILS|JMD|JPY|JEP|JOD|KZT|KES|KWD|KGS|LAK|LVL|LBP|LSL|LRD|LTL|MGA|MKD|MOP|MWK|MVR|MXN|MYR|MUR|MDL|MAD|MNT|MZN|NAD|NPR|ANG|NZD|NIO|NGN|NOK|OMR|PKR|PGK|PYG|PEN|PHP|PLN|QAR|RON|RUB|RWF|WST|SAR|STD|RSD|SCR|SGD|SDG|SYP|ZAR|KRW|SSP|SBD|LKR|SRD|SEK|CHF|TWD|THB|TZS|TTD|TND|TRY|TMT|UGX|UAH|AED|UYU|UZS|VUV|VEF|VND|XOF|YER|ZMW
+type Customer{acceptsMarketing:bool!,addresses(first:int!,after:str,reverse:bool=False):MailingAddressConnection!,createdAt:DateTime!,defaultAddress:MailingAddress,displayName:str!,email:str,firstName:str,id:id!,lastName:str,orders(first:int!,after:str,query:str,sortKey:OrderSortKeys=ID,reverse:bool=False):OrderConnection!,phone:str,updatedAt:DateTime!}
+type CustomerAccessToken{accessToken:str!,expiresAt:DateTime!}
+input CustomerAccessTokenCreateInput{email:str!,password:str!}
+type CustomerAccessTokenCreatePayload{customerAccessToken:CustomerAccessToken,userErrors:[UserError!]!}
+type CustomerAccessTokenDeletePayload{deletedAccessToken:str,deletedCustomerAccessTokenId:str,userErrors:[UserError!]!}
+type CustomerAccessTokenRenewPayload{customerAccessToken:CustomerAccessToken,userErrors:[UserError!]!}
+input CustomerActivateInput{activationToken:str!,password:str!}
+type CustomerActivatePayload{customer:Customer,userErrors:[UserError!]!}
+type CustomerAddressCreatePayload{customerAddress:MailingAddress,userErrors:[UserError!]!}
+type CustomerAddressDeletePayload{deletedCustomerAddressId:str,userErrors:[UserError!]!}
+type CustomerAddressUpdatePayload{customerAddress:MailingAddress,userErrors:[UserError!]!}
+input CustomerCreateInput{firstName:str,lastName:str,email:str!,phone:str,password:str!,acceptsMarketing:bool}
+type CustomerCreatePayload{customer:Customer,userErrors:[UserError!]!}
+type CustomerRecoverPayload{userErrors:[UserError!]!}
+input CustomerResetInput{resetToken:str!,password:str!}
+type CustomerResetPayload{customer:Customer,userErrors:[UserError!]!}
+input CustomerUpdateInput{firstName:str,lastName:str,email:str,phone:str,password:str,acceptsMarketing:bool}
+type CustomerUpdatePayload{customer:Customer,userErrors:[UserError!]!}
+enum DigitalWallet=APPLE_PAY|ANDROID_PAY|SHOPIFY_PAY
+type Domain{host:str!,sslEnabled:bool!,url:URL!}
+type Image{altText:str,id:id,src:URL!}
+type ImageConnection{edges:[ImageEdge!]!,pageInfo:PageInfo!}
+type ImageEdge{cursor:str!,node:Image!}
+type MailingAddress:Node{address1:str,address2:str,city:str,company:str,country:str,countryCode:str,firstName:str,formatted(withName:bool=False,withCompany:bool=True):[str!]!,formattedArea:str,id:id!,lastName:str,latitude:num,longitude:num,name:str,phone:str,province:str,provinceCode:str,zip:str}
+type MailingAddressConnection{edges:[MailingAddressEdge!]!,pageInfo:PageInfo!}
+type MailingAddressEdge{cursor:str!,node:MailingAddress!}
+input MailingAddressInput{address1:str,address2:str,city:str,company:str,country:str,firstName:str,lastName:str,phone:str,province:str,zip:str}
+iface Node{id:id!}
+type Order:Node{currencyCode:CurrencyCode!,customerLocale:str,customerUrl:URL,email:str,id:id!,lineItems(first:int!,after:str,reverse:bool=False):OrderLineItemConnection!,orderNumber:int!,phone:str,processedAt:DateTime!,shippingAddress:MailingAddress,subtotalPrice:Money,totalPrice:Money!,totalRefunded:Money!,totalShippingPrice:Money!,totalTax:Money}
+type OrderConnection{edges:[OrderEdge!]!,pageInfo:PageInfo!}
+type OrderEdge{cursor:str!,node:Order!}
+type OrderLineItem{customAttributes:[Attribute!]!,quantity:int!,title:str!,variant:ProductVariant}
+type OrderLineItemConnection{edges:[OrderLineItemEdge!]!,pageInfo:PageInfo!}
+type OrderLineItemEdge{cursor:str!,node:OrderLineItem!}
+enum OrderSortKeys=PROCESSED_AT|TOTAL_PRICE|ID|RELEVANCE
+type PageInfo{hasNextPage:bool!,hasPreviousPage:bool!}
+type Payment:Node{amount:Money!,billingAddress:MailingAddress,checkout:Checkout!,creditCard:CreditCard,errorMessage:str,id:id!,idempotencyKey:str,ready:bool!,test:bool!,transaction:Transaction}
+type PaymentSettings{acceptedCardBrands:[CardBrand!]!,cardVaultUrl:URL!,countryCode:CountryCode!,currencyCode:CurrencyCode!,shopifyPaymentsAccountId:str,supportedDigitalWallets:[DigitalWallet!]!}
+type Product:Node{collections(first:int!,after:str,reverse:bool=False):CollectionConnection!,createdAt:DateTime!,description(truncateAt:int):str!,descriptionHtml:HTML!,handle:str!,id:id!,images(first:int!,after:str,sortKey:ProductImageSortKeys=POSITION,reverse:bool=False,maxWidth:int,maxHeight:int,crop:CropRegion,scale:int=1):ImageConnection!,options(first:int):[ProductOption!]!,productType:str!,publishedAt:DateTime!,tags:[str!]!,title:str!,updatedAt:DateTime!,variantBySelectedOptions(selectedOptions:[SelectedOptionInput!]!):ProductVariant,variants(first:int!,after:str,reverse:bool=False):ProductVariantConnection!,vendor:str!}
+enum ProductCollectionSortKeys=MANUAL|BEST_SELLING|TITLE|PRICE|CREATED|COLLECTION_DEFAULT|ID|RELEVANCE
+type ProductConnection{edges:[ProductEdge!]!,pageInfo:PageInfo!}
+type ProductEdge{cursor:str!,node:Product!}
+enum ProductImageSortKeys=CREATED_AT|POSITION|ID|RELEVANCE
+type ProductOption:Node{id:id!,name:str!,values:[str!]!}
+enum ProductSortKeys=TITLE|PRODUCT_TYPE|VENDOR|UPDATED_AT|CREATED_AT|ID|RELEVANCE
+type ProductVariant:Node{available:bool,availableForSale:bool!,compareAtPrice:Money,id:id!,image(maxWidth:int,maxHeight:int,crop:CropRegion,scale:int=1):Image,price:Money!,product:Product!,selectedOptions:[SelectedOption!]!,sku:str,title:str!,weight:num,weightUnit:WeightUnit!}
+type ProductVariantConnection{edges:[ProductVariantEdge!]!,pageInfo:PageInfo!}
+type ProductVariantEdge{cursor:str!,node:ProductVariant!}
+type SelectedOption{name:str!,value:str!}
+input SelectedOptionInput{name:str!,value:str!}
+type ShippingRate{handle:str!,price:Money!,title:str!}
+type Shop{articles(first:int!,after:str,query:str,sortKey:ArticleSortKeys=ID,reverse:bool=False):ArticleConnection!,blogs(first:int!,after:str,query:str,sortKey:BlogSortKeys=ID,reverse:bool=False):BlogConnection!,cardVaultUrl:URL!,collectionByHandle(handle:str!):Collection,collections(first:int!,after:str,query:str,sortKey:CollectionSortKeys=ID,reverse:bool=False):CollectionConnection!,currencyCode:CurrencyCode!,description:str,moneyFormat:str!,name:str!,paymentSettings:PaymentSettings!,primaryDomain:Domain!,privacyPolicy:ShopPolicy,productByHandle(handle:str!):Product,productTypes(first:int!):StringConnection!,products(first:int!,after:str,query:str,sortKey:ProductSortKeys=ID,reverse:bool=False):ProductConnection!,refundPolicy:ShopPolicy,shopifyPaymentsAccountId:str,termsOfService:ShopPolicy}
+type ShopPolicy:Node{body:str!,id:id!,title:str!,url:URL!}
+type StringConnection{edges:[StringEdge!]!,pageInfo:PageInfo!}
+type StringEdge{cursor:str!,node:str!}
+input TokenizedPaymentInput{amount:Money!,idempotencyKey:str!,billingAddress:MailingAddressInput!,type:str!,paymentData:str!,test:bool=False,identifier:str}
+type Transaction{amount:Money!,kind:TransactionKind!,status:TransactionStatus!,test:bool!}
+enum TransactionKind=SALE|CAPTURE|AUTHORIZATION|EMV_AUTHORIZATION|CHANGE
+enum TransactionStatus=PENDING|SUCCESS|FAILURE|ERROR
+type UserError{field:[str!],message:str!}
+enum WeightUnit=KILOGRAMS|GRAMS|POUNDS|OUNCES
+
+Q customer(customerAccessToken:str!)->Customer
+Q node(id:id!)->Node
+Q nodes(ids:[id!]!)->[Node]!
+Q shop->Shop!
+M checkoutAttributesUpdate(checkoutId:id!,input:CheckoutAttributesUpdateInput!)->CheckoutAttributesUpdatePayload # Updates the attributes of a checkout.
+M checkoutCompleteFree(checkoutId:id!)->CheckoutCompleteFreePayload
+M checkoutCompleteWithCreditCard(checkoutId:id!,payment:CreditCardPaymentInput!)->CheckoutCompleteWithCreditCardPayload # Completes a checkout using a credit card token from Shopify's Vault.
+M checkoutCompleteWithTokenizedPayment(checkoutId:id!,payment:TokenizedPaymentInput!)->CheckoutCompleteWithTokenizedPaymentPayload # Completes a checkout with a tokenized payment.
+M checkoutCreate(input:CheckoutCreateInput!)->CheckoutCreatePayload # Creates a new checkout.
+M checkoutCustomerAssociate(checkoutId:id!,customerAccessToken:str!)->CheckoutCustomerAssociatePayload # Associates a customer to the checkout.
+M checkoutCustomerDisassociate(checkoutId:id!)->CheckoutCustomerDisassociatePayload # Disassociates the current checkout customer from the checkout.
+M checkoutEmailUpdate(checkoutId:id!,email:str!)->CheckoutEmailUpdatePayload # Updates the email on an existing checkout.
+M checkoutGiftCardApply(giftCardCode:str!,checkoutId:id!)->CheckoutGiftCardApplyPayload # Applies a gift card to an existing checkout using a gift card code.
+M checkoutGiftCardRemove(appliedGiftCardId:id!,checkoutId:id!)->CheckoutGiftCardRemovePayload # Removes an applied gift card from the checkout.
+M checkoutLineItemsAdd(lineItems:[CheckoutLineItemInput!]!,checkoutId:id!)->CheckoutLineItemsAddPayload # Adds a list of line items to a checkout.
+M checkoutLineItemsRemove(checkoutId:id!,lineItemIds:[id!]!)->CheckoutLineItemsRemovePayload # Removes line items from an existing checkout
+M checkoutLineItemsUpdate(checkoutId:id!,lineItems:[CheckoutLineItemUpdateInput!]!)->CheckoutLineItemsUpdatePayload # Updates line items on a checkout.
+M checkoutShippingAddressUpdate(shippingAddress:MailingAddressInput!,checkoutId:id!)->CheckoutShippingAddressUpdatePayload # Updates the shipping address of an existing checkout.
+M checkoutShippingLineUpdate(checkoutId:id!,shippingRateHandle:str!)->CheckoutShippingLineUpdatePayload # Updates the shipping lines on an existing checkout.
+M customerAccessTokenCreate(input:CustomerAccessTokenCreateInput!)->CustomerAccessTokenCreatePayload # Creates a customer access token. The customer access token is required to modify the customer object in any way.
+M customerAccessTokenDelete(customerAccessToken:str!)->CustomerAccessTokenDeletePayload # Permanently destroys a customer access token.
+M customerAccessTokenRenew(customerAccessToken:str!)->CustomerAccessTokenRenewPayload # Renews a customer access token.
+M customerActivate(id:id!,input:CustomerActivateInput!)->CustomerActivatePayload # Activates a customer.
+M customerAddressCreate(customerAccessToken:str!,address:MailingAddressInput!)->CustomerAddressCreatePayload # Creates a new address for a customer.
+M customerAddressDelete(id:id!,customerAccessToken:str!)->CustomerAddressDeletePayload # Permanently deletes the address of an existing customer.
+M customerAddressUpdate(customerAccessToken:str!,id:id!,address:MailingAddressInput!)->CustomerAddressUpdatePayload # Updates the address of an existing customer.
+M customerCreate(input:CustomerCreateInput!)->CustomerCreatePayload # Creates a new customer.
+M customerRecover(email:str!)->CustomerRecoverPayload # Sends a reset password email to the customer, as the first step in the reset password process.
+M customerReset(id:id!,input:CustomerResetInput!)->CustomerResetPayload # Resets a customer’s password with a token received from `CustomerRecover`.
+M customerUpdate(customerAccessToken:str!,customer:CustomerUpdateInput!)->CustomerUpdatePayload # Updates an existing customer.

@@ -1,0 +1,28 @@
+@lap v0.1
+@api Yelp Gql
+@base /graphql
+
+type Business{name:str,id:str,alias:str,is_claimed:bool,is_closed:bool,url:str,phone:str,display_phone:str,review_count:int,categories:[Category],rating:num,price:str,location:Location,coordinates:Coordinates,photos:[str],hours:[Hours],reviews(limit:int,offset:int):[Review],distance:num,attributes:GenericScalar}
+type Businesses{business:[Business],total:int}
+type Category{title:str,alias:str,parent_categories:[Category],country_whitelist:[Country],country_blacklist:[Country]}
+type Coordinates{latitude:num,longitude:num}
+type Country{code:str,locales:[Locale]}
+type Event{name:str,id:str,business:Business,business_id:str,attending_count:str,category:str,cost:int,cost_max:int,country:str,description:str,event_site_url:str,image_url:str,interested_count:str,is_canceled:bool,is_free:bool,is_official:bool,latitude:num,longitude:num,location:Location,tickets_url:str,time_end:str,time_start:str,zip_code:str}
+type Events{events:[Event],total:int}
+type Hours{hours_type:str,open:[OpenHours],is_open_now:bool}
+type Language{code:str,locales:[Locale]}
+type Locale{code:str,language:Language,country:Country}
+type Location{address1:str,address2:str,address3:str,city:str,state:str,zip_code:str,country:str,formatted_address:str}
+type OpenHours{is_overnight:bool,end:str,start:str,day:int}
+type Review{id:str,rating:int,user:User,text:str,time_created:str,url:str}
+type Reviews{review:[Review],total:int,possible_languages:[Language],business:Business}
+type User{image_url:str,name:str}
+
+Q business(id:str)->Business
+Q business_match_best(name:str!,address1:str,address2:str,address3:str,city:str!,state:str!,country:str!,latitude:num,longitude:num,phone:str,postal_code:str)->Business
+Q business_match_lookup(name:str!,address1:str,address2:str,address3:str,city:str!,state:str!,country:str!,latitude:num,longitude:num,phone:str,postal_code:str)->Businesses
+Q reviews(business:str,locale:str,limit:int,offset:int)->Reviews
+Q phone_search(phone:str)->Businesses
+Q search(term:str,location:str,country:str,offset:int,limit:int,sort_by:str,locale:str,longitude:num,latitude:num,categories:str,open_now:bool,open_at:int,price:str,attributes:[str],radius:num)->Businesses
+Q event(id:str)->Event
+Q event_search(locale:str,offset:int,limit:int,sort_by:str,sort_on:str,start_date:int,end_date:int,categories:[str],is_free:bool,location:str,latitude:num,longitude:num,radius:num)->Events
