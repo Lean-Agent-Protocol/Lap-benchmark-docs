@@ -3,9 +3,9 @@
 Automated scoring for benchmark runs.
 
 Scoring components (0.0 - 1.0):
-  - Endpoint identification (35%): Did agent find each target endpoint?
+  - Endpoint identification (60%): Did agent find each target endpoint?
   - Parameter accuracy (30%): Fraction of expected params mentioned per endpoint
-  - Code quality (35%): Are the correct endpoints+params present in code blocks?
+  - Code quality (10%): Are the correct endpoints+params present in code blocks?
 
 Endpoint identification checks BOTH structured output (CALL blocks) AND code blocks.
 Code quality scoring is protocol-agnostic: checks path/channel segments in code,
@@ -509,7 +509,7 @@ def score_run(
         {total, endpoint, params, code} scores (0.0 - 1.0 each)
     """
     if weights is None:
-        weights = {"endpoint": 0.35, "param": 0.3, "code": 0.35}
+        weights = {"endpoint": 0.6, "param": 0.3, "code": 0.1}
 
     found_endpoints = extract_endpoints_from_output(agent_output)
     ep_score = score_endpoints(found_endpoints, target_endpoints, full_text=agent_output)

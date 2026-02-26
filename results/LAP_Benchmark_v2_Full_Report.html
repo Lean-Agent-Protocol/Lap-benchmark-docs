@@ -34,7 +34,7 @@ body{
 
 /* ---- Cover ---- */
 .cover{
-  background:linear-gradient(135deg,var(--navy) 0%,#16213e 50%,#0f3460 100%);
+  background:linear-gradient(135deg,#0a0a0a 0%,#111111 50%,#1a1a1a 100%);
   color:var(--white);
   padding:80px 40px 60px;
   text-align:center;
@@ -45,21 +45,8 @@ body{
   content:'';
   position:absolute;
   top:-50%;left:-50%;width:200%;height:200%;
-  background:radial-gradient(ellipse at center,rgba(0,184,148,0.08) 0%,transparent 60%);
+  background:radial-gradient(ellipse at center,rgba(0,184,148,0.06) 0%,transparent 60%);
   pointer-events:none;
-}
-.cover-badge{
-  display:inline-block;
-  background:rgba(0,184,148,0.2);
-  border:1px solid rgba(0,184,148,0.4);
-  color:var(--teal);
-  padding:4px 14px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:600;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  margin-bottom:20px;
 }
 .cover h1{
   font-size:clamp(22px,4vw,42px);
@@ -321,7 +308,7 @@ footer a{color:var(--teal);text-decoration:none}
 /* ---- Print ---- */
 @media print{
   .toc-wrap,.cover::before{display:none}
-  .cover{padding:30px;background:#1a1a2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cover{padding:30px;background:#0a0a0a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .section{box-shadow:none;border:1px solid #ddd;page-break-inside:avoid}
   body{font-size:12px}
   .page{padding:10px}
@@ -339,7 +326,6 @@ footer a{color:var(--teal);text-decoration:none}
 </head>
 <body>
 <div class="cover">
-  <div class="cover-badge">Full Benchmark Report - February 2026</div>
   <h1>LAP Benchmark v2: Measuring<br><span>API Documentation Compression</span><br>Efficacy for AI Coding Agents</h1>
   <div class="cover-subtitle">How much can you compress API docs before AI agents lose effectiveness?</div>
   <div class="cover-meta">
@@ -353,27 +339,37 @@ footer a{color:var(--teal);text-decoration:none}
 <div class="toc-wrap">
   <div class="toc-inner">
     <div class="toc-label">Contents</div>
-    <div class="toc-links"><a href="#abstract">Abstract</a><a href="#findings">Key Findings</a><a href="#methodology">Methodology</a><a href="#tier-comparison">Tier Comparison</a><a href="#compression">Compression Analysis</a><a href="#cost">Cost & Efficiency</a><a href="#heatmap">Spec Heatmap</a><a href="#format">Format Comparison</a><a href="#task-difficulty">Task Difficulty</a><a href="#code-quality">Code Quality</a><a href="#distribution">Score Distribution</a><a href="#stats">Statistical Notes</a><a href="#discussion">Discussion</a><a href="#conclusion">Conclusion</a><a href="#appendix">Appendix: All Runs</a></div>
+    <div class="toc-links"><a href="#abstract">Abstract</a><a href="#findings">Key Findings</a><a href="#methodology">Methodology</a><a href="#tier-comparison">Tier Comparison</a><a href="#compression">Compression Analysis</a><a href="#cost">Cost & Efficiency</a><a href="#wall-time">Wall Time</a><a href="#heatmap">Spec Heatmap</a><a href="#format">Format Comparison</a><a href="#task-difficulty">Task Difficulty</a><a href="#code-quality">Code Quality</a><a href="#distribution">Score Distribution</a><a href="#stats">Statistical Analysis</a><a href="#doc-sensitive">Doc-Sensitive Subset</a><a href="#limitations">Limitations</a><a href="#discussion">Discussion</a><a href="#conclusion">Conclusion</a><a href="#appendix">Appendix A: All Runs</a><a href="#appendix-tasks">Appendix B: Tasks</a></div>
   </div>
 </div>
 <div class="page">
 <div class="section" id="abstract">
   <h2 class="section-title"><span class="sec-num">0</span> Abstract</h2>
   <div class="abstract-box">
-    This report presents the full results of LAP Benchmark v2, a controlled evaluation measuring
-    how API documentation compression affects the task performance of AI coding agents.
-    We tested five documentation tiers - no documentation, original pretty-printed format,
-    whitespace-minified, LAP-Standard (structured with descriptions), and LAP-Lean
-    (types only) - across 50 real-world production APIs spanning 5 specification formats
-    (OpenAPI, AsyncAPI, GraphQL, Postman, and Protobuf). Agents were evaluated on 500 runs
-    (500 completed successfully) using a weighted scoring rubric
-    (60% endpoint identification, 30% parameter accuracy, 10% code quality).
-    Results show that LAP-format tiers achieve 82-88% token reduction in documentation
-    size while maintaining task completion scores within 0.03 points of the
-    full-format baseline. The no-documentation baseline confirms that API documentation
-    is critical for accurate endpoint identification across all tested formats.
-    LAP-Lean achieves the best score-per-token efficiency, making it the recommended tier
-    for production AI coding workflows where inference cost and context window utilization matter.
+    <p>This report presents the full results of LAP Benchmark v2, a controlled evaluation measuring
+    how API documentation compression affects AI coding agent performance. We tested five documentation
+    tiers across 50 real-world production APIs spanning 5 specification formats
+    (OpenAPI, AsyncAPI, GraphQL, Postman, and Protobuf), completing 500 runs
+    (500 successfully) using Claude Sonnet 4.5.</p>
+
+    <p style="margin-top:12px"><strong>Primary finding:</strong> Providing any form of API documentation dramatically
+    improves agent performance over no documentation (mean documented-tier score 0.84 vs
+    none-tier 0.40, paired t-test p &lt;&lt; 0.001). This effect is consistent across all 5 formats.</p>
+
+    <p style="margin-top:12px"><strong>Compression finding:</strong> No statistically significant quality difference
+    was detected between documented tiers (pretty, minified, LAP-Standard, LAP-Lean) at the current sample
+    size (n=100 per tier, paired t-tests, all p &gt; 0.05). LAP-Lean achieved the numerically highest score
+    (0.851) compared to the pretty baseline (0.825), but this difference is
+    directional only. However, LAP-format tiers achieve highly significant reductions in inference cost
+    (35%, p &lt; 0.001),
+    wall time (-29s/run, p &lt; 0.001), and total token consumption
+    (p &lt; 0.001) compared to pretty-printed originals. LAP-Lean achieves 88%
+    documentation token reduction while maintaining task performance parity.</p>
+
+    <p style="margin-top:12px"><strong>Practical recommendation:</strong> For production AI coding workflows,
+    LAP-Lean offers the best efficiency: equivalent quality at significantly lower cost and latency.
+    Future work with repeated trials and additional models is needed to determine whether the directional
+    quality advantage of LAP formats is a real effect or sampling noise.</p>
   </div>
 </div>
 <div class="section" id="findings">
@@ -416,7 +412,7 @@ footer a{color:var(--teal);text-decoration:none}
 </div>
   </div>
   <div class="callout" style="background:#e8f5e9;color:#1b5e20;border-left:4px solid #2e7d32">
-  <strong>Core result:</strong> LAP format tiers maintain near-identical task performance while reducing documentation token counts by 50-90%+, translating directly to lower inference costs and faster agent response times. This result holds consistently across all 5 API specification formats tested, providing strong cross-format evidence for LAP's effectiveness.
+  <strong>Core result:</strong> Any documentation dramatically outperforms no documentation (p &lt;&lt; 0.001). Among documented tiers, LAP-Lean achieves the numerically highest score (0.851) while using ~90% fewer documentation tokens than pretty-printed originals. Differences between documented tiers are directionally consistent but do not reach statistical significance at the current sample size (n=100 per tier). However, LAP-Lean's cost savings, wall time reduction, and token efficiency gains are all statistically significant (p &lt; 0.001). This result holds consistently across all 5 API specification formats tested.
 </div>
 </div>
 <div class="section" id="methodology">
@@ -484,7 +480,7 @@ footer a{color:var(--teal);text-decoration:none}
   <p class="prose">The benchmark applies several controls to isolate documentation quality as the independent variable:</p>
   <ul style="margin:10px 0 0 20px;line-height:1.9;font-size:14px;color:#34495e">
     <li><strong>Neutral filenames:</strong> All documentation tiers are delivered as <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px">api_docs.txt</code> to prevent tier/format leakage into the agent context</li>
-    <li><strong>Business-language tasks:</strong> All 100 task descriptions are phrased in domain language without endpoint-revealing technical terms</li>
+    <li><strong>Business-language tasks:</strong> All 100 task descriptions are phrased in domain language without endpoint-revealing technical terms (see <a href="#appendix-tasks">Appendix B</a>)</li>
     <li><strong>No-doc baseline (none tier):</strong> Establishes agent prior knowledge without documentation</li>
     <li><strong>Python-only mandate:</strong> Prompt enforces Python code output, eliminating language choice as a variable</li>
     <li><strong>No library hints:</strong> Prompt specifies "appropriate libraries" without naming specific SDKs</li>
@@ -714,7 +710,7 @@ footer a{color:var(--teal);text-decoration:none}
 
 
   <div class="callout" style="background:#e8f5e9;color:#1b5e20;border-left:4px solid #2e7d32">
-  <strong>Compression efficiency:</strong> LAP-Lean achieves ~88% documentation token savings vs the pretty baseline, while LAP-Standard achieves ~82% savings. Minification alone saves only ~13% - far less than LAP format compression. Both LAP tiers maintain task scores within 5 percentage points of the pretty baseline, delivering far superior score-per-token efficiency.
+  <strong>Compression efficiency:</strong> LAP-Lean achieves ~88% documentation token savings vs the pretty baseline, while LAP-Standard achieves ~82% savings. Minification alone saves only ~13% -- far less than LAP format compression. Both LAP tiers achieve scores equal to or above the pretty baseline (no statistically significant difference was detected), delivering far superior score-per-token efficiency.
 </div>
 </div>
 <div class="section" id="cost">
@@ -833,9 +829,158 @@ footer a{color:var(--teal);text-decoration:none}
   <strong>ROI analysis:</strong> Switching from the pretty tier to LAP-Lean saves approximately 35% per run. At scale across thousands of agent invocations, this translates to substantial infrastructure savings with minimal impact on task quality. The none tier costs least but scores worst - documentation cost is an excellent investment.
 </div>
 </div>
+<div class="section" id="wall-time">
+  <h2 id="wall-time" class="section-title">
+  <span class="sec-num">6</span> Results - Wall Time Analysis
+</h2>
+  <p class="prose">Execution wall time per run by tier and format. Lower times indicate faster agent completion.
+  Wall time includes the full agent execution cycle (prompt processing, inference, code generation).</p>
+
+  <div class="cards-grid">
+    <div class="metric-card">
+  <div class="card-label">Total Wall Time</div>
+  <div class="card-value" style="color:#00b894">11.3h</div>
+  <div class="card-sub">40572s across 500 runs</div>
+</div><div class="metric-card">
+  <div class="card-label">Avg per Run</div>
+  <div class="card-value" style="color:#00b894">81.1s</div>
+  <div class="card-sub">Across all tiers</div>
+</div><div class="metric-card">
+  <div class="card-label">LAP-Lean vs Pretty</div>
+  <div class="card-value" style="color:#00b894">29%</div>
+  <div class="card-sub">29.4s faster per run</div>
+</div><div class="metric-card">
+  <div class="card-label">Fastest Tier</div>
+  <div class="card-value" style="color:#00b894">None</div>
+  <div class="card-sub">52.5s avg</div>
+</div>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th>Tier</th><th>n</th><th>Avg</th><th>Median</th><th>Min</th><th>Max</th>
+      <th>Std Dev</th><th>Total</th><th>% vs Pretty</th>
+    </tr></thead>
+    <tbody><tr>
+          <td><span class="tier-pill" style="background:#e1705522;color:#e17055">None</span></td>
+          <td class="td-center">100</td>
+          <td class="td-right" style="font-weight:700">52.5s</td>
+          <td class="td-right">51.8s</td>
+          <td class="td-right">28.3s</td>
+          <td class="td-right">87.8s</td>
+          <td class="td-right">10.2s</td>
+          <td class="td-right">5254s</td>
+          <td class="td-center" style="color:#27ae60;font-weight:700">+47.9%</td>
+        </tr><tr>
+          <td><span class="tier-pill" style="background:#74b9ff22;color:#74b9ff">Pretty</span></td>
+          <td class="td-center">100</td>
+          <td class="td-right" style="font-weight:700">100.9s</td>
+          <td class="td-right">97.3s</td>
+          <td class="td-right">36.6s</td>
+          <td class="td-right">214.3s</td>
+          <td class="td-right">37.9s</td>
+          <td class="td-right">10091s</td>
+          <td class="td-center" style="">-</td>
+        </tr><tr>
+          <td><span class="tier-pill" style="background:#a29bfe22;color:#a29bfe">Minified</span></td>
+          <td class="td-center">100</td>
+          <td class="td-right" style="font-weight:700">105.6s</td>
+          <td class="td-right">83.1s</td>
+          <td class="td-right">37.3s</td>
+          <td class="td-right">348.5s</td>
+          <td class="td-right">66.7s</td>
+          <td class="td-right">10560s</td>
+          <td class="td-center" style="">-4.6%</td>
+        </tr><tr>
+          <td><span class="tier-pill" style="background:#00cec922;color:#00cec9">LAP-Std</span></td>
+          <td class="td-center">100</td>
+          <td class="td-right" style="font-weight:700">75.2s</td>
+          <td class="td-right">64.6s</td>
+          <td class="td-right">32.2s</td>
+          <td class="td-right">176.4s</td>
+          <td class="td-right">30.7s</td>
+          <td class="td-right">7518s</td>
+          <td class="td-center" style="color:#27ae60;font-weight:700">+25.5%</td>
+        </tr><tr>
+          <td><span class="tier-pill" style="background:#00b89422;color:#00b894">LAP-Lean</span></td>
+          <td class="td-center">100</td>
+          <td class="td-right" style="font-weight:700">71.5s</td>
+          <td class="td-right">61.8s</td>
+          <td class="td-right">31.1s</td>
+          <td class="td-right">196.1s</td>
+          <td class="td-right">28.6s</td>
+          <td class="td-right">7149s</td>
+          <td class="td-center" style="color:#27ae60;font-weight:700">+29.2%</td>
+        </tr></tbody>
+  </table>
+  </div>
+
+  <h3 style="margin:28px 0 8px;font-size:15px;color:var(--navy)">Average Wall Time per Run by Tier</h3>
+  <div class="bar-chart">
+  <div class="bc-row">
+    <div class="bc-label" style="width:130px">None</div>
+    <div class="bc-track">
+      <div class="bc-fill" style="width:49.8%;background:#e17055;height:32px">
+        <span class="bc-val">52.5s</span>
+      </div>
+    </div>
+  </div>
+  <div class="bc-row">
+    <div class="bc-label" style="width:130px">Pretty</div>
+    <div class="bc-track">
+      <div class="bc-fill" style="width:95.6%;background:#74b9ff;height:32px">
+        <span class="bc-val">100.9s</span>
+      </div>
+    </div>
+  </div>
+  <div class="bc-row">
+    <div class="bc-label" style="width:130px">Minified</div>
+    <div class="bc-track">
+      <div class="bc-fill" style="width:100.0%;background:#a29bfe;height:32px">
+        <span class="bc-val">105.6s</span>
+      </div>
+    </div>
+  </div>
+  <div class="bc-row">
+    <div class="bc-label" style="width:130px">LAP-Std</div>
+    <div class="bc-track">
+      <div class="bc-fill" style="width:71.2%;background:#00cec9;height:32px">
+        <span class="bc-val">75.2s</span>
+      </div>
+    </div>
+  </div>
+  <div class="bc-row">
+    <div class="bc-label" style="width:130px">LAP-Lean</div>
+    <div class="bc-track">
+      <div class="bc-fill" style="width:67.7%;background:#00b894;height:32px">
+        <span class="bc-val">71.5s</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <h3 style="margin:28px 0 8px;font-size:15px;color:var(--navy)">Average Wall Time by Format and Tier</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Format</th><th style='text-align:center'>None</th><th style='text-align:center'>Pretty</th><th style='text-align:center'>Minified</th><th style='text-align:center'>LAP-Std</th><th style='text-align:center'>LAP-Lean</th></tr></thead>
+    <tbody><tr><td><strong style='color:#0984e3'>OPENAPI</strong></td><td class="td-center">49.4s</td><td class="td-center">109.5s</td><td class="td-center">111.8s</td><td class="td-center">91.9s</td><td class="td-center">74.3s</td></tr>
+<tr><td><strong style='color:#6c5ce7'>ASYNCAPI</strong></td><td class="td-center">54.1s</td><td class="td-center">61.3s</td><td class="td-center">58.9s</td><td class="td-center">55.2s</td><td class="td-center">54.7s</td></tr>
+<tr><td><strong style='color:#e84393'>GRAPHQL</strong></td><td class="td-center">47.5s</td><td class="td-center">120.8s</td><td class="td-center">110.4s</td><td class="td-center">99.6s</td><td class="td-center">102.7s</td></tr>
+<tr><td><strong style='color:#fd7272'>POSTMAN</strong></td><td class="td-center">62.4s</td><td class="td-center">100.1s</td><td class="td-center">183.0s</td><td class="td-center">70.8s</td><td class="td-center">66.1s</td></tr>
+<tr><td><strong style='color:#f9ca24'>PROTOBUF</strong></td><td class="td-center">49.4s</td><td class="td-center">112.8s</td><td class="td-center">63.9s</td><td class="td-center">58.5s</td><td class="td-center">59.7s</td></tr>
+</tbody>
+  </table>
+  </div>
+
+  <div class="callout" style="background:#e8f4fd;color:#1565c0;border-left:4px solid #1976d2">
+  <strong>Wall time insights:</strong> The none tier averages 52.5s (fastest, no doc to process), while LAP-Lean averages 71.5s - only 19.0s more despite providing full endpoint schema information. LAP-Lean runs 29% faster than Pretty (71.5s vs 100.9s), saving 29.4s per run on average.
+</div>
+</div>
 <div class="section" id="heatmap">
   <h2 id="heatmap" class="section-title">
-  <span class="sec-num">6</span> Results - Spec-Level Score Heatmap (50 Specs)
+  <span class="sec-num">7</span> Results - Spec-Level Score Heatmap (50 Specs)
 </h2>
   <p class="prose">Average score per (spec, tier) pair, averaged across t1 and t2 tasks.
   Color coding indicates performance level. Missing cells ("-") indicate no completed runs for that combination (timed out).</p>
@@ -904,7 +1049,7 @@ footer a{color:var(--teal);text-decoration:none}
 </div>
 <div class="section" id="format">
   <h2 id="format" class="section-title">
-  <span class="sec-num">7</span> Results - Format Comparison (5 Formats)
+  <span class="sec-num">8</span> Results - Format Comparison (5 Formats)
 </h2>
   <p class="prose">Performance comparison across all five API specification formats.
   Each format contains 10 specs. The benchmark covers OpenAPI (REST), AsyncAPI (event-driven),
@@ -1140,7 +1285,7 @@ footer a{color:var(--teal);text-decoration:none}
 </div>
 <div class="section" id="task-difficulty">
   <h2 id="task-difficulty" class="section-title">
-  <span class="sec-num">8</span> Results - Task Difficulty Comparison (t1 vs t2)
+  <span class="sec-num">9</span> Results - Task Difficulty Comparison (t1 vs t2)
 </h2>
   <p class="prose">Each spec has two tasks (t1 and t2), both phrased in business language to avoid
   endpoint-revealing technical terms. This section examines whether task difficulty varies systematically
@@ -1161,7 +1306,7 @@ footer a{color:var(--teal);text-decoration:none}
 </div>
 <div class="section" id="code-quality">
   <h2 id="code-quality" class="section-title">
-  <span class="sec-num">9</span> Results - Code Quality Analysis
+  <span class="sec-num">10</span> Results - Code Quality Analysis
 </h2>
   <p class="prose">Code quality (10% of total score) measures whether the agent produced
   executable Python code containing the correct endpoints and parameters.
@@ -1257,7 +1402,7 @@ footer a{color:var(--teal);text-decoration:none}
 </div>
 <div class="section" id="distribution">
   <h2 id="distribution" class="section-title">
-  <span class="sec-num">10</span> Results - Score Distribution
+  <span class="sec-num">11</span> Results - Score Distribution
 </h2>
   <p class="prose">Score range, central tendency, and variability per tier across all 500 completed runs.
   "% Perfect" = runs scoring exactly 1.0. "% Good" = runs scoring 0.7 or above.
@@ -1334,17 +1479,17 @@ footer a{color:var(--teal);text-decoration:none}
   </div>
 
   <div class="callout" style="background:#fff3e0;color:#e65100;border-left:4px solid #ef6c00">
-  <strong>Distribution highlight:</strong> The no-doc baseline has a mean score of 0.404 while LAP-Lean achieves 0.851. The gap of +0.448 is driven primarily by endpoint identification: without documentation, agents default to guessing endpoints from their training knowledge, which is unreliable for non-famous or domain-specific APIs. With n=500 runs, this pattern is statistically robust.
+  <strong>Distribution highlight:</strong> The no-doc baseline has a mean score of 0.404 while LAP-Lean achieves 0.851. The gap of +0.448 is driven primarily by endpoint identification: without documentation, agents default to guessing endpoints from their training knowledge, which is unreliable for non-famous or domain-specific APIs. The documentation gap (none vs documented tiers) is statistically significant (p &lt;&lt; 0.001); differences between documented tiers are directional only (see Section 12).
 </div>
 </div>
 <div class="section" id="stats">
   <h2 id="stats" class="section-title">
-  <span class="sec-num">11</span> Statistical Notes
+  <span class="sec-num">12</span> Statistical Analysis
 </h2>
-  <p class="prose">With approximately 100 runs per tier (50 specs x 2 tasks, minus timeouts),
-  this benchmark provides strong statistical power for the observed effects. Standard error and
-  95% confidence intervals are provided for transparency. The n=500 total sample size is sufficient
-  for confident directional conclusions about tier ordering.</p>
+
+  <h3 style="font-size:16px;margin:0 0 10px;color:var(--navy)">12.1 Descriptive Statistics</h3>
+  <p class="prose">With approximately 100 runs per tier (50 specs x 2 tasks),
+  standard error and 95% confidence intervals are provided for transparency.</p>
 
   <div class="table-wrap">
   <table>
@@ -1391,21 +1536,386 @@ footer a{color:var(--teal);text-decoration:none}
   </div>
 
   <div class="callout" style="background:#fff3e0;color:#e65100;border-left:4px solid #ef6c00">
-  <strong>Statistical context:</strong> With n=100 per tier (50 specs x 2 tasks), confidence intervals are narrow and tier ordering is reliable. The large standard deviations reflect genuine variance across API complexity (simple 3-endpoint email APIs vs complex 200+ endpoint cloud provider APIs), not measurement noise. Limitations: (1) Single model tested - other models may respond differently to compression. (2) Tier order not randomized within spec - consistent order may introduce minor recency bias. These limitations do not affect the core finding that LAP-format tiers achieve near-parity scores with dramatically fewer tokens.
+  <strong>Important:</strong> 95% confidence intervals for all four documented tiers overlap completely. This means no pairwise tier comparison among documented tiers reaches conventional statistical significance (p &lt; 0.05). The large standard deviations (~0.23) reflect genuine variance across API complexity, not measurement noise. Each condition was tested once (n=1 per spec-tier-task); per-spec differences should be interpreted with caution.
 </div>
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.2 Paired t-Tests: Task Score</h3>
+  <p class="prose">Paired t-tests (df=49, two-tailed) comparing mean score per spec across tiers.
+  Each spec contributes one data point (mean of t1 and t2). Cohen's d measures effect size.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Cohen's d</th><th>Sig</th></tr></thead>
+    <tbody><tr>
+          <td>Pretty vs None</td>
+          <td class="td-center">+0.4209</td>
+          <td class="td-center">10.302</td>
+          <td class="td-center">50</td>
+          <td class="td-center">1.457</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs None</td>
+          <td class="td-center">+0.4477</td>
+          <td class="td-center">9.892</td>
+          <td class="td-center">50</td>
+          <td class="td-center">1.399</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>Minified vs Pretty</td>
+          <td class="td-center">+0.0099</td>
+          <td class="td-center">0.591</td>
+          <td class="td-center">50</td>
+          <td class="td-center">0.084</td>
+          <td class="td-center" style="color:#e74c3c">ns</td>
+        </tr><tr>
+          <td>LAP-Std vs Pretty</td>
+          <td class="td-center">+0.0152</td>
+          <td class="td-center">0.998</td>
+          <td class="td-center">50</td>
+          <td class="td-center">0.141</td>
+          <td class="td-center" style="color:#e74c3c">ns</td>
+        </tr><tr>
+          <td>LAP-Lean vs Pretty</td>
+          <td class="td-center">+0.0268</td>
+          <td class="td-center">1.278</td>
+          <td class="td-center">50</td>
+          <td class="td-center">0.181</td>
+          <td class="td-center" style="color:#e74c3c">ns</td>
+        </tr><tr>
+          <td>LAP-Lean vs LAP-Std</td>
+          <td class="td-center">+0.0116</td>
+          <td class="td-center">0.948</td>
+          <td class="td-center">50</td>
+          <td class="td-center">0.134</td>
+          <td class="td-center" style="color:#e74c3c">ns</td>
+        </tr></tbody>
+  </table>
+  </div>
+
+  <div class="callout" style="background:#ede7f6;color:#311b92;border-left:4px solid #512da8">
+  <strong>Key finding:</strong> The ONLY statistically significant score comparisons are none vs documented tiers (p &lt;&lt; 0.001). All comparisons between documented tiers (pretty vs minified, pretty vs LAP-Std, pretty vs LAP-Lean, LAP-Std vs LAP-Lean) fail to reach significance. The real story is: any documentation >> no documentation.
+</div>
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.3 Paired t-Tests: Wall Time</h3>
+  <p class="prose">Paired t-tests for wall time (seconds). Positive values mean the second tier is slower.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Sig</th></tr></thead>
+    <tbody><tr>
+          <td>Pretty vs None</td>
+          <td class="td-center">+48.4s</td>
+          <td class="td-center">9.180</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs None</td>
+          <td class="td-center">+19.0s</td>
+          <td class="td-center">4.739</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>Minified vs Pretty</td>
+          <td class="td-center">+4.7s</td>
+          <td class="td-center">0.557</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="color:#e74c3c">ns</td>
+        </tr><tr>
+          <td>LAP-Std vs Pretty</td>
+          <td class="td-center">-25.7s</td>
+          <td class="td-center">-5.860</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs Pretty</td>
+          <td class="td-center">-29.4s</td>
+          <td class="td-center">-6.712</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs LAP-Std</td>
+          <td class="td-center">-3.7s</td>
+          <td class="td-center">-1.985</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="color:#e74c3c">ns</td>
+        </tr></tbody>
+  </table>
+  </div>
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.4 Paired t-Tests: Cost (USD)</h3>
+  <p class="prose">Paired t-tests for per-run cost. Negative values mean the second tier is cheaper.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Sig</th></tr></thead>
+    <tbody><tr>
+          <td>Pretty vs None</td>
+          <td class="td-center">+0.2337</td>
+          <td class="td-center">9.714</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs None</td>
+          <td class="td-center">+0.1068</td>
+          <td class="td-center">5.388</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>Minified vs Pretty</td>
+          <td class="td-center">-0.0458</td>
+          <td class="td-center">-1.991</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="color:#e74c3c">ns</td>
+        </tr><tr>
+          <td>LAP-Std vs Pretty</td>
+          <td class="td-center">-0.1088</td>
+          <td class="td-center">-4.538</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs Pretty</td>
+          <td class="td-center">-0.1269</td>
+          <td class="td-center">-5.688</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs LAP-Std</td>
+          <td class="td-center">-0.0181</td>
+          <td class="td-center">-2.154</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">*</td>
+        </tr></tbody>
+  </table>
+  </div>
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.5 Paired t-Tests: Total Tokens</h3>
+  <p class="prose">Paired t-tests for total tokens consumed per run. Negative values mean the second tier uses fewer tokens.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Sig</th></tr></thead>
+    <tbody><tr>
+          <td>Pretty vs None</td>
+          <td class="td-center">216.4K</td>
+          <td class="td-center">7.780</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs None</td>
+          <td class="td-center">90.6K</td>
+          <td class="td-center">5.039</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>Minified vs Pretty</td>
+          <td class="td-center">-72734</td>
+          <td class="td-center">-2.877</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">**</td>
+        </tr><tr>
+          <td>LAP-Std vs Pretty</td>
+          <td class="td-center">-103444</td>
+          <td class="td-center">-3.524</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs Pretty</td>
+          <td class="td-center">-125765</td>
+          <td class="td-center">-4.683</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs LAP-Std</td>
+          <td class="td-center">-22320</td>
+          <td class="td-center">-2.008</td>
+          <td class="td-center">50</td>
+          <td class="td-center" style="color:#e74c3c">ns</td>
+        </tr></tbody>
+  </table>
+  </div>
+
+  <div class="callout" style="background:#e8f5e9;color:#1b5e20;border-left:4px solid #2e7d32">
+  <strong>Efficiency finding:</strong> While score differences between documented tiers are NOT significant, wall time and token differences ARE. LAP-Lean vs Pretty shows highly significant reductions in wall time (p &lt; 0.001), cost (p &lt; 0.001), and total tokens (p &lt; 0.001). This is the report's strongest defensible claim: equivalent quality at significantly lower cost.
+</div>
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.6 Documentation Lift (Tier Score - None Score)</h3>
+  <p class="prose">How much does each tier improve over the no-documentation baseline, per spec?
+  This isolates documentation's contribution from prior knowledge.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Tier</th><th>Mean Lift</th><th>Median Lift</th><th>Min</th><th>Max</th><th>Std Dev</th></tr></thead>
+    <tbody><tr>
+              <td>Pretty</td>
+              <td class="td-center">+0.421</td>
+              <td class="td-center">+0.444</td>
+              <td class="td-center">-0.048</td>
+              <td class="td-center">+0.980</td>
+              <td class="td-center">0.289</td>
+            </tr><tr>
+              <td>Minified</td>
+              <td class="td-center">+0.431</td>
+              <td class="td-center">+0.452</td>
+              <td class="td-center">-0.151</td>
+              <td class="td-center">+0.980</td>
+              <td class="td-center">0.300</td>
+            </tr><tr>
+              <td>LAP-Std</td>
+              <td class="td-center">+0.436</td>
+              <td class="td-center">+0.464</td>
+              <td class="td-center">-0.101</td>
+              <td class="td-center">+0.980</td>
+              <td class="td-center">0.313</td>
+            </tr><tr>
+              <td>LAP-Lean</td>
+              <td class="td-center">+0.448</td>
+              <td class="td-center">+0.458</td>
+              <td class="td-center">-0.095</td>
+              <td class="td-center">+0.980</td>
+              <td class="td-center">0.320</td>
+            </tr></tbody>
+  </table>
+  </div>
+</div>
+<div class="section" id="doc-sensitive">
+  <h2 id="doc-sensitive" class="section-title">
+  <span class="sec-num">13</span> Results - Documentation-Sensitive Subset Analysis
+</h2>
+  <p class="prose">Some APIs score &ge; 0.9 across all tiers including the no-documentation baseline,
+  indicating the model has strong prior knowledge. These "ceiling-effect" specs contribute 1.0
+  to every tier's average, compressing observed differences and measuring API familiarity
+  rather than documentation quality. This section excludes 5 such specs to isolate
+  the documentation signal.</p>
+
+  <p class="prose" style="font-size:13px;color:var(--muted)"><strong>Excluded specs (none-tier &ge; 0.9):</strong> github-rest, plaid, slack, spotify, twilio</p>
+
+  <h3 style="font-size:16px;margin:20px 0 10px;color:var(--navy)">Full Set vs Documentation-Sensitive Subset (45 specs)</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th>Tier</th><th>Full Set (50 specs)</th><th>Sensitive Subset (45 specs)</th><th>Delta</th>
+    </tr></thead>
+    <tbody><tr>
+          <td>None</td>
+          <td class="td-center" style="font-weight:700">0.404</td>
+          <td class="td-center" style="font-weight:700">0.338</td>
+          <td class="td-center">-0.066</td>
+        </tr><tr>
+          <td>Pretty</td>
+          <td class="td-center" style="font-weight:700">0.825</td>
+          <td class="td-center" style="font-weight:700">0.806</td>
+          <td class="td-center">-0.019</td>
+        </tr><tr>
+          <td>Minified</td>
+          <td class="td-center" style="font-weight:700">0.835</td>
+          <td class="td-center" style="font-weight:700">0.816</td>
+          <td class="td-center">-0.018</td>
+        </tr><tr>
+          <td>LAP-Std</td>
+          <td class="td-center" style="font-weight:700">0.840</td>
+          <td class="td-center" style="font-weight:700">0.823</td>
+          <td class="td-center">-0.017</td>
+        </tr><tr>
+          <td>LAP-Lean</td>
+          <td class="td-center" style="font-weight:700">0.851</td>
+          <td class="td-center" style="font-weight:700">0.835</td>
+          <td class="td-center">-0.016</td>
+        </tr></tbody>
+  </table>
+  </div>
+
+  <h3 style="font-size:16px;margin:20px 0 10px;color:var(--navy)">Paired t-Tests on Sensitive Subset</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Sig</th></tr></thead>
+    <tbody><tr>
+          <td>Pretty vs None</td>
+          <td class="td-center">+0.4677</td>
+          <td class="td-center">11.816</td>
+          <td class="td-center">45</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs None</td>
+          <td class="td-center">+0.4976</td>
+          <td class="td-center">11.208</td>
+          <td class="td-center">45</td>
+          <td class="td-center" style="font-weight:700;color:#27ae60">***</td>
+        </tr><tr>
+          <td>LAP-Lean vs Pretty</td>
+          <td class="td-center">+0.0298</td>
+          <td class="td-center">1.279</td>
+          <td class="td-center">45</td>
+          <td class="td-center" style="color:#e74c3c">ns</td>
+        </tr></tbody>
+  </table>
+  </div>
+
+  <div class="callout" style="background:#e8f4fd;color:#1565c0;border-left:4px solid #1976d2">
+  <strong>Subset insight:</strong> When ceiling-effect specs are excluded, the none-tier score drops further (revealing the true documentation gap), while documented-tier ordering remains similar. The documentation-sensitive subset shows the real signal: documentation matters most for APIs the model does not already know well.
+</div>
+</div>
+<div class="section" id="limitations">
+  <h2 id="limitations" class="section-title">
+  <span class="sec-num">14</span> Limitations
+</h2>
+
+  <p class="prose">This benchmark has several methodological limitations that should be considered
+  when interpreting results:</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Limitation</th><th>Impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>N=1 per condition</strong></td>
+        <td>Each (spec, tier, task) ran exactly once. LLM outputs are stochastic; observed per-spec differences may be sampling noise.</td>
+        <td>Aggregate tier comparisons (n=100 per tier) are more reliable. Future: n&ge;3 per condition.</td>
+      </tr>
+      <tr>
+        <td><strong>Fixed tier order</strong></td>
+        <td>Tiers executed in fixed order (none, pretty, minified, lap-standard, lap-lean). Later tiers could benefit from model-level caching.</td>
+        <td>Double-UUID isolation prevents filesystem contamination. Future: randomize tier order.</td>
+      </tr>
+      <tr>
+        <td><strong>Single model</strong></td>
+        <td>Only Claude Sonnet 4.5 was tested. Other models may respond differently to compression.</td>
+        <td>Future: cross-model validation with GPT-4o, Gemini, Claude Opus.</td>
+      </tr>
+      <tr>
+        <td><strong>Recall-only endpoint scoring</strong></td>
+        <td>Endpoint score is recall-based (correct_hits / expected_count). No penalty for false positives. Verbose agents may be overly rewarded.</td>
+        <td>Future: add F1-based metric with precision penalty.</td>
+      </tr>
+      <tr>
+        <td><strong>WebFetch available in none-tier</strong></td>
+        <td>Agents could theoretically fetch API docs from the web during none-tier runs, breaking the prior-knowledge assumption.</td>
+        <td>Future: restrict WebFetch tool for none-tier runs. Verify via session recordings.</td>
+      </tr>
+      <tr>
+        <td><strong>Concurrency=3</strong></td>
+        <td>Benchmark ran with ThreadPoolExecutor(max_workers=3). Non-deterministic execution order means results are not perfectly reproducible.</td>
+        <td>Future: use concurrency=1 for scientific runs.</td>
+      </tr>
+      <tr>
+        <td><strong>Ceiling-effect specs</strong></td>
+        <td>~8 specs score &ge;0.9 across ALL tiers including none, compressing observed tier differences.</td>
+        <td>Section 13 provides a documentation-sensitive subset analysis excluding these specs.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
 </div>
 <div class="section" id="discussion">
   <h2 id="discussion" class="section-title">
-  <span class="sec-num">12</span> Discussion
+  <span class="sec-num">15</span> Discussion
 </h2>
 
   <h3 style="font-size:16px;margin-bottom:8px;color:var(--navy)">LAP-Lean: Best Efficiency Tier</h3>
   <p class="prose">
-    LAP-Lean achieves an average score of 0.851 - within 0.027 points
-    of the pretty baseline (0.825) - while delivering approximately 88%
-    documentation token reduction. This translates to roughly 35% inference cost savings
-    per run. For production AI coding workflows where agents are invoked at scale, LAP-Lean
-    offers the best score-per-token efficiency. This result holds across all 5 formats and 50 APIs.
+    LAP-Lean achieves the numerically highest average score of 0.851 compared to the
+    pretty baseline (0.825), though this difference (+0.027)
+    does not reach statistical significance (paired t-test, p &gt; 0.05).
+    The significant finding is efficiency: LAP-Lean delivers approximately 88%
+    documentation token reduction and ~35% inference cost savings per run
+    (p &lt; 0.001 for both wall time and token reduction).
+    For production AI coding workflows where agents are invoked at scale, LAP-Lean
+    offers equivalent quality at significantly lower cost and latency. This result holds across
+    all 5 formats and 50 APIs.
   </p>
 
   <h3 style="font-size:16px;margin:20px 0 8px;color:var(--navy)">No-Doc Baseline: Documentation Is Essential</h3>
@@ -1420,12 +1930,11 @@ footer a{color:var(--teal);text-decoration:none}
 
   <h3 style="font-size:16px;margin:20px 0 8px;color:var(--navy)">Minification Provides Limited Benefit Over Pretty</h3>
   <p class="prose">
-    The minified tier achieves 0.835 vs 0.825 for pretty.
+    The minified tier achieves 0.835 vs 0.825 for pretty -- a negligible
+    difference that does not reach statistical significance.
     Despite removing whitespace, minification of YAML/JSON/GraphQL does not meaningfully reduce semantic
-    token count because structural keywords, field names, and values remain unchanged. For some
-    large specs (Stripe, DigitalOcean, large GraphQL schemas), minification can even trigger timeouts
-    by removing the whitespace that aids tokenization efficiency. LAP-format representations
-    are fundamentally different: they reorganize information into a denser,
+    token count because structural keywords, field names, and values remain unchanged.
+    LAP-format representations are fundamentally different: they reorganize information into a denser,
     agent-optimized structure rather than simply removing whitespace.
   </p>
 
@@ -1451,50 +1960,54 @@ footer a{color:var(--teal);text-decoration:none}
 </div>
 <div class="section" id="conclusion">
   <h2 id="conclusion" class="section-title">
-  <span class="sec-num">13</span> Conclusion
+  <span class="sec-num">16</span> Conclusion
 </h2>
 
   <p class="prose">
-    This full benchmark (500 runs across 50 APIs, 5 formats, 5 tiers, 2 tasks) demonstrates
-    that LAP format compression achieves approximately
-    <strong>88%+ token reduction</strong> in API documentation size while maintaining
-    agent task performance scores within <strong>5 percentage points</strong> of the full-format baseline.
-    The LAP-Lean tier achieves an average score of <strong>0.851</strong> with roughly
-    <strong>35% cost savings</strong> per inference run - making it the recommended
-    format for production AI coding workflows.
+    This full benchmark (500 runs across 50 APIs, 5 formats, 5 tiers, 2 tasks) yields
+    two clear findings:
   </p>
 
   <p class="prose">
-    Documentation is a critical prerequisite for AI agent accuracy: the no-documentation baseline
-    confirms that agents cannot reliably identify API endpoints from training knowledge alone,
-    particularly for domain-specific or less-prominent APIs. Simple whitespace minification
-    provides minimal benefit; structured compression (LAP format) is required to achieve
-    meaningful token reduction without quality loss. This finding is robust across 5 API
-    specification formats and 50 diverse real-world production APIs.
+    <strong>1. Documentation is essential.</strong> Providing any form of API documentation dramatically
+    improves agent performance (mean documented score ~0.84 vs
+    none-tier 0.40, p &lt;&lt; 0.001). This holds across all 5 specification formats.
+    Agents cannot reliably identify API endpoints from training knowledge alone,
+    particularly for domain-specific or less-prominent APIs.
+  </p>
+
+  <p class="prose">
+    <strong>2. Compression preserves quality while significantly reducing cost.</strong>
+    No statistically significant quality difference was detected between any documented tier
+    (paired t-tests, all p &gt; 0.05). LAP-Lean achieved the numerically highest score
+    (0.851 vs pretty 0.825), but this difference is directional only.
+    The statistically significant advantages of LAP-Lean are efficiency:
+    <strong>88% documentation token reduction</strong>,
+    <strong>35% cost savings</strong> (p &lt; 0.001),
+    and <strong>29s faster per run</strong> (p &lt; 0.001).
   </p>
 
   <h3 style="font-size:16px;margin:20px 0 8px;color:var(--navy)">Recommended Production Configuration</h3>
   <ul style="margin:0 0 16px 20px;line-height:2;font-size:14px">
-    <li>Use <strong>LAP-Lean</strong> for high-volume, cost-sensitive AI coding agent deployments</li>
-    <li>Use <strong>LAP-Standard</strong> when working with complex or ambiguous APIs where descriptions improve disambiguation</li>
-    <li>Avoid <strong>minified</strong> format - provides minimal benefit over pretty and can increase context pressure on large specs</li>
-    <li>Always provide <strong>some</strong> documentation - the no-doc baseline demonstrates significant quality degradation across all formats</li>
+    <li>Use <strong>LAP-Lean</strong> for high-volume, cost-sensitive AI coding agent deployments -- equivalent quality at significantly lower cost and latency</li>
+    <li>Use <strong>LAP-Standard</strong> when working with complex or ambiguous APIs where descriptions provide additional disambiguation context</li>
+    <li>Avoid relying on <strong>minification alone</strong> -- it provides minimal token savings compared to LAP format restructuring</li>
+    <li>Always provide <strong>some</strong> documentation -- the no-doc baseline demonstrates a significant quality gap across all formats</li>
   </ul>
 
   <h3 style="font-size:16px;margin:20px 0 8px;color:var(--navy)">Future Work</h3>
   <ul style="margin:0 0 0 20px;line-height:2;font-size:14px">
+    <li><strong>Repetition trials:</strong> n &gt;= 3 per condition to enable per-spec statistical significance testing</li>
     <li><strong>Multiple models:</strong> Compare results across GPT-4o, Gemini Pro, Claude Opus, and local LLMs</li>
-    <li><strong>Repetition trials:</strong> n >= 3 per condition for per-spec statistical significance</li>
     <li><strong>Randomized tier order:</strong> Eliminate potential ordering bias within spec runs</li>
+    <li><strong>Precision scoring:</strong> Add F1-based endpoint metric (penalize false positives, not just recall)</li>
     <li><strong>Complex task types:</strong> Multi-step workflows, error handling, pagination, authentication</li>
-    <li><strong>Larger AsyncAPI coverage:</strong> More complex event-driven task specifications</li>
     <li><strong>Context window scaling:</strong> Test performance degradation curves as doc size approaches context limits</li>
-    <li><strong>Chunking strategies:</strong> Evaluate selective endpoint retrieval vs full doc delivery</li>
   </ul>
 </div>
 <div class="section" id="appendix">
   <h2 id="appendix" class="section-title">
-  <span class="sec-num">A</span> Appendix: Individual Runs
+  <span class="sec-num">A</span> Appendix A: Individual Runs
 </h2>
   <p class="prose">All 500 individual runs, sorted by format, spec, tier, task.
   All runs completed successfully.</p>
@@ -9008,6 +9521,625 @@ footer a{color:var(--teal);text-decoration:none}
           <td class="td-right td-mono">60.6K</td>
           <td class="td-right td-mono">1.0K</td>
           <td class="td-center">2</td>
+        </tr></tbody>
+    </table>
+    </div>
+  </details>
+</div>
+<div class="section" id="appendix-tasks">
+  <h2 id="appendix-tasks" class="section-title">
+  <span class="sec-num">B</span> Appendix B: Task Definitions
+</h2>
+  <p class="prose">All 100 task definitions used in the benchmark (2 tasks per spec, 50 specs).
+  Each task is phrased in business language to avoid endpoint-revealing technical terms.</p>
+
+  <details>
+    <summary>Show all 100 task definitions (click to expand)</summary>
+    <div class="table-wrap" style="margin-top:14px">
+    <table>
+      <thead><tr>
+        <th>Spec</th><th>Format</th><th>Task</th><th>Description</th><th>Target Endpoints</th>
+      </tr></thead>
+      <tbody><tr>
+          <td class="td-mono" style="font-size:12px">box</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would look up the metadata and properties of a stored document, then see who has been granted shared access to that document along with their permission levels</td>
+          <td class="td-mono" style="font-size:11px">GET /files/{file_id}<br>GET /files/{file_id}/collaborations</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">box</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would retrieve the properties of a specific storage container, then browse through the files and sub-containers inside it with sorting and pagination controls</td>
+          <td class="td-mono" style="font-size:11px">GET /folders/{folder_id}<br>GET /folders/{folder_id}/items</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">digitalocean</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would provision a new cloud virtual machine in a specific region with a chosen size and OS image, including SSH access keys and tags, then check the current status and specs of that running instance</td>
+          <td class="td-mono" style="font-size:11px">POST /v2/droplets<br>GET /v2/droplets/{droplet_id}</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">digitalocean</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would register a new DNS entry for a hosted zone with a specific record type, hostname, value, and TTL, then enumerate all existing DNS entries configured under that zone</td>
+          <td class="td-mono" style="font-size:11px">POST /v2/domains/{domain_name}/records<br>GET /v2/domains/{domain_name}/records</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">figma</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would generate scaled raster renderings of selected design components from a project file in a chosen image format, then leave a review note anchored to a specific location on the canvas referencing those components</td>
+          <td class="td-mono" style="font-size:11px">GET /v1/images/{file_key}<br>POST /v1/files/{file_key}/comments</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">figma</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would set up an automated listener that notifies your server whenever design files change within a team workspace, then review the organization's audit trail of recent actions over a specified time window</td>
+          <td class="td-mono" style="font-size:11px">POST /v2/webhooks<br>GET /v1/activity_logs</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">github-rest</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would review all open bug reports and feature requests for a project sorted by recent activity, then file a new work item with a title, description, tags, and assigned team members</td>
+          <td class="td-mono" style="font-size:11px">GET /repos/{owner}/{repo}/issues<br>POST /repos/{owner}/{repo}/issues</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">github-rest</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would look up the metadata and configuration of a specific code project, then browse all the pending code change proposals for that project sorted and paginated</td>
+          <td class="td-mono" style="font-size:11px">GET /repos/{owner}/{repo}<br>GET /repos/{owner}/{repo}/pulls</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">plaid</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would obtain all the bank accounts connected through a user's financial link, then pull their spending and deposit history over a specified date range</td>
+          <td class="td-mono" style="font-size:11px">POST /accounts/get<br>POST /transactions/get</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">plaid</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would generate a temporary session credential for the bank connection onboarding flow specifying the user's locale and desired financial products, then browse the catalog of supported banks and credit unions by country</td>
+          <td class="td-mono" style="font-size:11px">POST /link/token/create<br>POST /institutions/get</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">resend</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would dispatch a notification to a recipient with a subject line, HTML body, and reply-to address, then look up the delivery status and metadata of that specific message</td>
+          <td class="td-mono" style="font-size:11px">POST /emails<br>GET /emails/{email_id}</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">resend</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would register a new custom sender identity for outbound communications in a preferred geographic region, then trigger a DNS validation check to confirm that identity is properly configured</td>
+          <td class="td-mono" style="font-size:11px">POST /domains<br>POST /domains/{domain_id}/verify</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">slack</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would send a rich-text announcement to a team discussion space, optionally as a threaded reply, then pull up the recent message timeline for that same space within a specific date window</td>
+          <td class="td-mono" style="font-size:11px">POST /chat.postMessage<br>GET /conversations.history</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">slack</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would set up a new dedicated discussion space for the team with a chosen visibility level, then browse all the existing discussion spaces filtering out any that have been archived</td>
+          <td class="td-mono" style="font-size:11px">POST /conversations.create<br>GET /conversations.list</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">spotify</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would look up the full metadata of a music release including artwork and label info for a given market, then browse through the individual songs on that release with pagination</td>
+          <td class="td-mono" style="font-size:11px">GET /albums/{id}<br>GET /albums/{id}/tracks</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">spotify</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would pull up the biography and popularity metrics for a specific musician, then find out which of their songs are currently the most streamed in a given country</td>
+          <td class="td-mono" style="font-size:11px">GET /artists/{id}<br>GET /artists/{id}/top-tracks</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">stripe</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would onboard a new entity into the billing system with their contact details and address, then pull up all the payment transactions associated with that entity within a specific time window</td>
+          <td class="td-mono" style="font-size:11px">POST /v1/customers<br>GET /v1/charges</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">stripe</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would add a new item to the merchandise catalog with a name, description, and availability status, then find catalog items that match specific search terms</td>
+          <td class="td-mono" style="font-size:11px">POST /v1/products<br>GET /v1/products/search</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">twilio</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would dispatch a text notification to a phone number from a specific sender with a callback for delivery status, then look up the delivery details and status of that specific notification</td>
+          <td class="td-mono" style="font-size:11px">POST /2010-04-01/Accounts/{AccountSid}/Messages.json<br>GET /2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">twilio</td>
+          <td style="font-size:11px;color:#0984e3;font-weight:600">openapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would initiate an outbound voice connection to a recipient from a designated number with a handler URL, then access all the audio recordings captured during that voice session</td>
+          <td class="td-mono" style="font-size:11px">POST /2010-04-01/Accounts/{AccountSid}/Calls.json<br>GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}/Recordings.json</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">adeo-kafka</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would submit a pricing calculation request with the necessary requester credentials and routing metadata, then listen for the computed pricing result to come back asynchronously</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH adeo-{env}-case-study-COSTING-REQUEST-{version}<br>SUBSCRIBE costingResponseChannel</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">adeo-kafka</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would act as the pricing engine: pick up an incoming calculation request, process it, and return the result along with processing timestamps back to the original requester</td>
+          <td class="td-mono" style="font-size:11px">SUBSCRIBE adeo-{env}-case-study-COSTING-REQUEST-{version}<br>PUBLISH costingResponseChannel</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">correlation-id</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would listen for real-time brightness sensor data from a specific outdoor lighting device, then issue a remote command to adjust that device's output level, ensuring the request and response can be matched together</td>
+          <td class="td-mono" style="font-size:11px">SUBSCRIBE smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured<br>PUBLISH smartylighting/streetlights/1/0/action/{streetlightId}/dim</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">correlation-id</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would determine how the messaging broker connection is configured including its variable port and security settings, and explain the mechanism used to pair outgoing commands with their corresponding incoming sensor reports for a given device</td>
+          <td class="td-mono" style="font-size:11px">SUBSCRIBE smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured<br>PUBLISH smartylighting/streetlights/1/0/action/{streetlightId}/dim</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">gitter-streaming</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would open a persistent streaming connection to a chat room and extract the author details and message body from each incoming real-time update, while also handling connection keep-alive signals</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH /rooms/{roomId}/{resource} chatMessage<br>PUBLISH /rooms/{roomId}/{resource} heartbeat</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">gitter-streaming</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would from the same chat room stream, extract read receipts, tagged user references, and linked issue references from each conversation item, while monitoring the periodic keep-alive signals</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH /rooms/{roomId}/{resource} chatMessage<br>PUBLISH /rooms/{roomId}/{resource} heartbeat</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">kraken-websocket</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would verify the exchange connection is alive using a health check, then register to receive live market data for one or more specific currency pairs</td>
+          <td class="td-mono" style="font-size:11px">SUBSCRIBE / ping<br>SUBSCRIBE / subscribe</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">kraken-websocket</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would handle incoming platform-level health status broadcasts and process confirmation responses that indicate whether your data feed registrations were accepted, including the assigned feed identifiers</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH / systemStatus<br>PUBLISH / subscriptionStatus</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">operation-security</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would deliver a notification that a user's access permissions have been revoked, using the appropriate authenticated delivery mechanism, and include the required event metadata and signature for secure delivery</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH AUTHORIZATION_REVOCATION message<br>SECURITY oauth2 sendAuthRevoke</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">operation-security</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would parse an incoming access revocation event to extract the affected user's identity, the reason for revocation, the date it occurred, and the delivery tracking metadata such as attempt counts and timestamps</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH AUTHORIZATION_REVOCATION message<br>SCHEMA Notification</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">rpc-server</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would act as the server side of a remote computation service: accept an incoming request containing a list of numbers to add up, perform the calculation, and return the result to whichever client sent the request</td>
+          <td class="td-mono" style="font-size:11px">SUBSCRIBE rpc_queue sum<br>PUBLISH {queue} sendSumResult</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">rpc-server</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would act as the client: send a list of numbers to a remote computation service for summation, then wait for and consume the calculated result that arrives on a dynamically assigned response destination</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH rpc_queue sum<br>SUBSCRIBE {queue} sendSumResult</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">slack-rtm</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would post a text message to a team conversation and set up a real-time listener to capture new messages as they arrive from other users</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH / outgoingMessage<br>SUBSCRIBE / message</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">slack-rtm</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would monitor for when a teammate is added to a conversation and detect when a brand-new conversation space is set up in the workspace</td>
+          <td class="td-mono" style="font-size:11px">SUBSCRIBE / memberJoinedChannel<br>SUBSCRIBE / channelCreated</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">social-media</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would capture a user's reaction on a piece of content from the client-side connection, then broadcast an engagement notification to all backend services so they can update their records</td>
+          <td class="td-mono" style="font-size:11px">SUBSCRIBE like/comment<br>PUBLISH comment/liked</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">social-media</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would listen for backend notifications that a content item's engagement data has been modified, then push the refreshed engagement count to the user's browser in real time</td>
+          <td class="td-mono" style="font-size:11px">SUBSCRIBE comment/{commentId}/changed<br>PUBLISH update/comment/likes</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">streetlights</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would set up a listener to receive real-time brightness sensor readings from a specific outdoor lighting unit, then send a remote command to switch that unit on</td>
+          <td class="td-mono" style="font-size:11px">SUBSCRIBE smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured<br>PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.turn.on</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">streetlights</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would remotely shut down one outdoor lighting unit, and then adjust another unit to a partial brightness percentage</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.turn.off<br>PUBLISH smartylighting.streetlights.1.0.action.{streetlightId}.dim</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">websocket-gemini</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would connect to a live feed for a specific cryptocurrency trading pair and parse each incoming update to extract trade executions and order book depth changes</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH /v1/marketdata/{symbol} marketData<br>SUBSCRIBE /v1/marketdata/{symbol} marketData</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">websocket-gemini</td>
+          <td style="font-size:11px;color:#6c5ce7;font-weight:600">asyncapi</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would configure the live data feed to only deliver specific event categories such as top-of-book snapshots, bid/offer levels, trade fills, and auction data, while also toggling the connection health check</td>
+          <td class="td-mono" style="font-size:11px">PUBLISH /v1/marketdata/{symbol} marketData<br>SUBSCRIBE /v1/marketdata/{symbol} marketData</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">artsy-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would pull up a particular creator's profile from the art platform, then browse their past sales history at auction houses with pagination</td>
+          <td class="td-mono" style="font-size:11px">QUERY artist<br>QUERY auctionResultsByArtistsConnection</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">artsy-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would browse available pieces in the gallery using filters like price range, availability, and creator, then place a purchase order for a chosen piece</td>
+          <td class="td-mono" style="font-size:11px">QUERY artworksConnection<br>MUTATION commerceCreateOrderWithArtwork</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">coral-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would browse reader discussions across published articles with status and keyword filters, and see available published articles on the platform with pagination</td>
+          <td class="td-mono" style="font-size:11px">QUERY comments<br>QUERY stories</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">coral-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would post a new reader response on a published article, and report an inappropriate reader response so moderators can review it</td>
+          <td class="td-mono" style="font-size:11px">MUTATION createComment<br>MUTATION createCommentFlag</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">elastic-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would establish connections to both a current-generation and a previous-generation search cluster to run queries across two different platform versions simultaneously</td>
+          <td class="td-mono" style="font-size:11px">QUERY elastic77<br>QUERY elastic68</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">elastic-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would access a legacy search cluster for historical data migration alongside a modern cluster for current production data, both requiring host configuration</td>
+          <td class="td-mono" style="font-size:11px">QUERY elastic56<br>QUERY elastic77</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">github-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would find a specific open-source project by its maintainer and project name, then file a bug report against it with a title and description</td>
+          <td class="td-mono" style="font-size:11px">QUERY repository<br>MUTATION createIssue</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">github-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would find developers or projects matching a keyword across the platform, and pull up a particular developer's public profile using their username</td>
+          <td class="td-mono" style="font-size:11px">QUERY search<br>QUERY user</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">linear-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would look up the details of a particular work item in the tracker, then modify its properties such as status, assignee, or priority</td>
+          <td class="td-mono" style="font-size:11px">QUERY issue<br>MUTATION issueUpdate</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">linear-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would view the details of an existing initiative in the tracker, then spin up a brand new initiative with an optional linked team chat channel for notifications</td>
+          <td class="td-mono" style="font-size:11px">QUERY project<br>MUTATION projectCreate</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">saleor-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would look up the details of a specific item in the store catalog using its identifier or URL-friendly name, and pull up a customer's past purchase by its reference number</td>
+          <td class="td-mono" style="font-size:11px">QUERY product<br>QUERY order</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">saleor-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would add a brand new item to the store catalog with its details, and modify an existing fulfillment center's configuration such as address or capacity</td>
+          <td class="td-mono" style="font-size:11px">MUTATION productCreate<br>MUTATION updateWarehouse</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">shopify-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would register a new shopper account on the storefront and then sign them in to obtain a session credential for authenticated operations</td>
+          <td class="td-mono" style="font-size:11px">MUTATION customerCreate<br>MUTATION customerAccessTokenCreate</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">shopify-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would retrieve the currently signed-in shopper's profile details using their session credential, and start a new shopping cart with selected products ready for purchase</td>
+          <td class="td-mono" style="font-size:11px">QUERY customer<br>MUTATION checkoutCreate</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">swapi-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would get a paginated catalog of all movies in the franchise, and retrieve the biographical details of a specific character</td>
+          <td class="td-mono" style="font-size:11px">QUERY allFilms<br>QUERY person</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">swapi-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would browse the full directory of worlds in the franchise with pagination support, and pull up the technical specs of a particular spacecraft</td>
+          <td class="td-mono" style="font-size:11px">QUERY allPlanets<br>QUERY starship</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">unraid-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would pull up the details of a particular access credential on the server, and read a section of the system diagnostic output from a given file location</td>
+          <td class="td-mono" style="font-size:11px">QUERY apiKey<br>QUERY logFile</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">unraid-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would send a new system alert to the server's notification feed, and change the display name of an existing container group on the server</td>
+          <td class="td-mono" style="font-size:11px">MUTATION createNotification<br>MUTATION renameDockerFolder</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">yelp-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would discover nearby restaurants or shops by area and keyword with sorting and filtering options, then read what customers are saying about a particular venue</td>
+          <td class="td-mono" style="font-size:11px">QUERY search<br>QUERY reviews</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">yelp-gql</td>
+          <td style="font-size:11px;color:#e84393;font-weight:600">graphql</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would pull up the full profile of a specific venue using its platform identifier, and find upcoming happenings in a given area with date and category filters</td>
+          <td class="td-mono" style="font-size:11px">QUERY business<br>QUERY event_search</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">adobe-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would start a new data ingestion job on the experience platform, then attach a file payload to a specific dataset within that job so the data can be processed</td>
+          <td class="td-mono" style="font-size:11px">POST /data/foundation/import/batches<br>PUT /data/foundation/import/batches/:batchId/datasets/:datasetId/files/:filePath</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">adobe-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would push real-time event messages through an established streaming pipeline into the platform, then sample a portion of the ingested records to verify the data landed correctly and inspect its format</td>
+          <td class="td-mono" style="font-size:11px">POST /data/foundation/import/collection/:CONNECTION_ID<br>GET /data/foundation/import/batches/:batchId/datasets/:datasetId/preview</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">akeneo-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would define a new product classification group in the PIM with its required attributes, label translations, and image settings, then add a product to that group with category assignments, attribute values, and cross-sell associations</td>
+          <td class="td-mono" style="font-size:11px">POST /api/rest/v1/families<br>POST /api/rest/v1/products</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">akeneo-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would provision a new product data feed for a connected application, then browse all existing data feeds to confirm the new one appears in the list</td>
+          <td class="td-mono" style="font-size:11px">POST /api/rest/v1/catalogs<br>GET /api/rest/v1/catalogs</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">auth0-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would set up a new identity provider link in the tenant specifying the authentication strategy and provider options, then add a custom login pipeline hook with executable logic to run during authentication</td>
+          <td class="td-mono" style="font-size:11px">POST /api/v2/connections<br>POST /api/v2/rules</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">auth0-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would onboard a new user account with their credentials, contact info, and profile metadata through a specific identity provider, then authorize an application to access a protected resource by defining its allowed permission scopes</td>
+          <td class="td-mono" style="font-size:11px">POST /api/v2/users<br>POST /api/v2/client-grants</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">azure-devops-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would set up a new private package repository with upstream source access and badge visibility settings, then browse the CI/CD pipeline runs for a project to review recent build activity</td>
+          <td class="td-mono" style="font-size:11px">POST /{organization}/_apis/packaging/feeds<br>GET /{organization}/{project}/_apis/build/builds</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">azure-devops-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would trigger a new CI pipeline run for a project from a specific source branch with a given reason, then look up the full configuration of a particular pipeline definition to inspect its settings</td>
+          <td class="td-mono" style="font-size:11px">POST /{organization}/{project}/_apis/build/builds<br>GET /{organization}/{project}/_apis/build/definitions/{definitionId}</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">braintree-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would register a new buyer profile in the payment gateway, then process a payment against a saved payment method including shipping address and fraud risk assessment details</td>
+          <td class="td-mono" style="font-size:11px">POST /graphql [CreateCustomer]<br>POST /graphql [ChargePaymentMethod]</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">braintree-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would place a hold on funds from a buyer's payment method to reserve the transaction amount, then finalize the settlement to move the held funds and complete the purchase</td>
+          <td class="td-mono" style="font-size:11px">POST /graphql [AuthorizePaymentMethod]<br>POST /graphql [CaptureTransaction]</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">influxdb-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would ingest sensor or metric measurements into a time series storage container with a specified precision, then run an analytical query against the stored data to validate correctness and inspect the query plan</td>
+          <td class="td-mono" style="font-size:11px">POST /api/v2/write<br>POST /api/v2/query/analyze</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">influxdb-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would bootstrap a fresh time series database instance by provisioning the first administrator account, organization, storage container, and access credentials, then enumerate all available storage containers to confirm the setup</td>
+          <td class="td-mono" style="font-size:11px">POST /api/v2/setup<br>GET /api/v2/buckets</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">postman-echo</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would submit form data to the diagnostic mirror service and confirm the response echoes it back correctly, then verify the service is healthy by checking for a successful status</td>
+          <td class="td-mono" style="font-size:11px">POST /post<br>GET /status/200</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">postman-echo</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would update a resource through the diagnostic service to confirm write-and-reflect behavior, then retrieve a nested document path to verify routing and header forwarding</td>
+          <td class="td-mono" style="font-size:11px">PUT /status/201<br>GET /path/to/document</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">sap-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would register a new prospective business opportunity in the CRM with qualification level, classification, source info, and responsible parties, then look it up with full stakeholder details to confirm it was saved correctly</td>
+          <td class="td-mono" style="font-size:11px">POST /sap/byd/odata/cust/v1/khlead/LeadCollection<br>GET /sap/byd/odata/cust/v1/khlead/LeadCollection</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">sap-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would place a new commercial order for a buyer including service line items and pricing terms, then pull up the order back with full item breakdown and price calculations to verify accuracy</td>
+          <td class="td-mono" style="font-size:11px">POST /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection<br>GET /sap/byd/odata/cust/v1/khsalesorder/SalesOrderCollection</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">stripe-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would process a one-time payment for a given amount and currency using a payment source, then register a new customer profile in the billing system with their contact information and default payment method</td>
+          <td class="td-mono" style="font-size:11px">POST /v1/charges<br>POST /v1/customers</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">stripe-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would initiate a new payment flow specifying how and when funds should be captured and confirmed from a customer's payment method, then issue a refund against a previously completed transaction</td>
+          <td class="td-mono" style="font-size:11px">POST /v1/payment_intents<br>POST /v1/refunds</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">twilio-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would dispatch an over-the-air instruction to a connected IoT device in binary mode, then look up the delivery receipt for that instruction to confirm it was received</td>
+          <td class="td-mono" style="font-size:11px">POST /v1/Commands<br>GET /v1/Commands/{Command_Sid}</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">twilio-postman</td>
+          <td style="font-size:11px;color:#fd7272;font-weight:600">postman</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would pull the data consumption history for a particular wireless device, then check the pricing and allowance details of the billing plan it is enrolled in</td>
+          <td class="td-mono" style="font-size:11px">GET /v1/Sims/{SimSid}/UsageRecords<br>GET /v1/RatePlans/{RatePlanSid}</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-billing</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would set up a new child payment account under an existing billing arrangement, then retrieve the full list of payment accounts accessible to the current user with filtering and pagination</td>
+          <td class="td-mono" style="font-size:11px">RPC CreateBillingAccount<br>RPC ListBillingAccounts</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-billing</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would look up which payment account a specific cloud project is currently charged to, then change the payment account association so the project bills to a different account</td>
+          <td class="td-mono" style="font-size:11px">RPC GetProjectBillingInfo<br>RPC UpdateProjectBillingInfo</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-datacatalog</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would find data assets across the organization by searching with keywords and scope filters, then set up a new logical grouping to organize the discovered data resources</td>
+          <td class="td-mono" style="font-size:11px">RPC SearchCatalog<br>RPC CreateEntryGroup</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-datacatalog</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would define a reusable metadata schema with custom fields for annotating data assets, then apply an instance of that schema as a metadata annotation on a specific cataloged resource</td>
+          <td class="td-mono" style="font-size:11px">RPC CreateTagTemplate<br>RPC CreateTag</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-firestore</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would search a document database using filter criteria and ordering rules, then obtain several documents at once by their paths in a single bulk retrieval operation</td>
+          <td class="td-mono" style="font-size:11px">RPC RunQuery<br>RPC BatchGetDocuments</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-firestore</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would add a new record to a specific collection in the document database with a given identifier, then persist a set of write operations atomically as part of a transaction</td>
+          <td class="td-mono" style="font-size:11px">RPC CreateDocument<br>RPC Commit</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-language</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would determine the overall emotional tone and opinion expressed in a block of text, then identify and extract the people, places, organizations, and other proper nouns mentioned in it</td>
+          <td class="td-mono" style="font-size:11px">RPC AnalyzeSentiment<br>RPC AnalyzeEntities</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-language</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would automatically sort a piece of content into predefined topic categories, then run a comprehensive linguistic analysis that combines multiple insights like syntax, entities, and sentiment in a single pass</td>
+          <td class="td-mono" style="font-size:11px">RPC ClassifyText<br>RPC AnnotateText</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-pubsub</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would send a batch of messages to a messaging channel, then retrieve a paginated list of all messaging channels available in the project</td>
+          <td class="td-mono" style="font-size:11px">RPC Publish<br>RPC ListTopics</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-pubsub</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would consume pending messages from a message queue and then confirm that each message has been successfully processed so it is not redelivered</td>
+          <td class="td-mono" style="font-size:11px">RPC Pull<br>RPC Acknowledge</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-spanner</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would run a database query using standard SQL within an active database connection, then finalize and persist the resulting changes as a completed transaction</td>
+          <td class="td-mono" style="font-size:11px">RPC ExecuteSql<br>RPC Commit</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-spanner</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would establish a new connection to a cloud database instance, then retrieve specific rows from a table by looking up primary keys with optional column and index selection</td>
+          <td class="td-mono" style="font-size:11px">RPC CreateSession<br>RPC Read</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-storage</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would provision a new container for cloud file storage within a given project, then browse the files already stored in that container with pagination support</td>
+          <td class="td-mono" style="font-size:11px">RPC CreateBucket<br>RPC ListObjects</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-storage</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would access the details and content of a particular file stored in cloud storage, then modify its metadata properties such as access controls and custom attributes</td>
+          <td class="td-mono" style="font-size:11px">RPC GetObject<br>RPC UpdateObject</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-talent</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would publish a new job listing for a company within the recruitment platform, then browse all available job listings with optional filtering criteria and pagination</td>
+          <td class="td-mono" style="font-size:11px">RPC CreateJob<br>RPC ListJobs</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-talent</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would find open positions that match a candidate's skills, location, and preferences using relevance-based ranking, then look up the full details of a specific position by its unique identifier</td>
+          <td class="td-mono" style="font-size:11px">RPC SearchJobs<br>RPC GetJob</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-translate</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would convert a piece of text from one language to another specifying the desired output language, then identify what language an unknown text passage is written in</td>
+          <td class="td-mono" style="font-size:11px">RPC TranslateText<br>RPC DetectLanguage</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-translate</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would set up a custom terminology dictionary to ensure domain-specific terms are translated consistently, then retrieve all such custom dictionaries configured in the project</td>
+          <td class="td-mono" style="font-size:11px">RPC CreateGlossary<br>RPC ListGlossaries</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-vision</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t1</td>
+          <td style="font-size:13px">Write Python code that would run image recognition on a set of photos to detect labels, text, and objects, then perform the same analysis on document files like PDFs in a single synchronous request</td>
+          <td class="td-mono" style="font-size:11px">RPC BatchAnnotateImages<br>RPC BatchAnnotateFiles</td>
+        </tr><tr>
+          <td class="td-mono" style="font-size:12px">google-vision</td>
+          <td style="font-size:11px;color:#f9ca24;font-weight:600">protobuf</td>
+          <td class="td-center">t2</td>
+          <td style="font-size:13px">Write Python code that would kick off a long-running image analysis job that writes results to a cloud storage destination, and separately start an asynchronous document analysis job for large-scale processing of multi-page files</td>
+          <td class="td-mono" style="font-size:11px">RPC AsyncBatchAnnotateImages<br>RPC AsyncBatchAnnotateFiles</td>
         </tr></tbody>
     </table>
     </div>

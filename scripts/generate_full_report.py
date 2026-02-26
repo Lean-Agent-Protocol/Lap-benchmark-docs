@@ -11,6 +11,7 @@ Usage:
 import json
 import math
 import statistics
+import yaml
 from collections import defaultdict
 from pathlib import Path
 
@@ -115,6 +116,29 @@ def extract_format_specs(data):
     for r in data:
         result[r["format"]].add(r["spec"])
     return {fmt: sorted(specs) for fmt, specs in sorted(result.items())}
+
+
+def load_task_manifests():
+    """Load all task definitions from registry/manifests/{format}/{spec}.yaml."""
+    manifests_dir = PROJECT_ROOT / "registry" / "manifests"
+    tasks = []
+    for fmt in FORMAT_ORDER:
+        fmt_dir = manifests_dir / fmt
+        if not fmt_dir.is_dir():
+            continue
+        for yaml_file in sorted(fmt_dir.glob("*.yaml")):
+            with open(yaml_file, encoding="utf-8") as f:
+                manifest = yaml.safe_load(f)
+            spec_id = manifest.get("spec_id", yaml_file.stem)
+            for task in manifest.get("tasks", []):
+                tasks.append({
+                    "spec": spec_id,
+                    "format": fmt,
+                    "task_id": task.get("id", ""),
+                    "description": task.get("description", ""),
+                    "target_endpoints": task.get("target_endpoints", []),
+                })
+    return tasks
 
 
 # ---------------------------------------------------------------------------
@@ -324,6 +348,122 @@ def compute_task_comparison(data):
     return result
 
 
+def compute_wall_time_stats(data):
+    """Per-tier and per-format x per-tier wall time statistics (completed runs only)."""
+    tier_buckets = defaultdict(list)
+    fmt_tier_buckets = defaultdict(lambda: defaultdict(list))
+    for run in data:
+        if run["status"] == "completed":
+            tier_buckets[run["tier"]].append(run["time"])
+            fmt_tier_buckets[run["format"]][run["tier"]].append(run["time"])
+
+    tier_time = {}
+    for tier in TIER_ORDER:
+        times = tier_buckets.get(tier, [])
+        if not times:
+            continue
+        tier_time[tier] = {
+            "n": len(times),
+            "avg": safe_mean(times),
+            "median": safe_median(times),
+            "min": min(times),
+            "max": max(times),
+            "stdev": safe_stdev(times),
+            "total": sum(times),
+        }
+
+    fmt_tier_time = {}
+    for fmt in FORMAT_ORDER:
+        if fmt not in fmt_tier_buckets:
+            continue
+        fmt_tier_time[fmt] = {}
+        for tier in TIER_ORDER:
+            times = fmt_tier_buckets[fmt].get(tier, [])
+            if times:
+                fmt_tier_time[fmt][tier] = safe_mean(times)
+
+    return {"tier": tier_time, "format_tier": fmt_tier_time}
+
+
+def paired_ttest(data, tier_a, tier_b, metric_key="score"):
+    """Paired t-test: mean(tier_b - tier_a) per spec, across both tasks.
+
+    Returns (mean_diff, t_stat, sig_label, n, cohens_d).
+    Uses df = n-1 with standard two-tailed critical values.
+    """
+    specs = sorted(set(r["spec"] for r in data))
+    diffs = []
+    for spec in specs:
+        a_vals = [r[metric_key] for r in data if r["spec"] == spec and r["tier"] == tier_a and r["status"] == "completed"]
+        b_vals = [r[metric_key] for r in data if r["spec"] == spec and r["tier"] == tier_b and r["status"] == "completed"]
+        if a_vals and b_vals:
+            diffs.append(safe_mean(b_vals) - safe_mean(a_vals))
+    n = len(diffs)
+    if n < 2:
+        return 0, 0, "n/a", n, 0
+    m = safe_mean(diffs)
+    s = safe_stdev(diffs)
+    se = s / math.sqrt(n) if n > 0 else 0
+    t = m / se if se > 0 else 0
+    d = m / s if s > 0 else 0  # Cohen's d
+
+    # Two-tailed critical values for df ~ 49
+    if abs(t) > 3.500:
+        sig = "***"
+    elif abs(t) > 2.680:
+        sig = "**"
+    elif abs(t) > 2.010:
+        sig = "*"
+    else:
+        sig = "ns"
+    return m, t, sig, n, d
+
+
+def compute_doc_lift(data):
+    """Compute documentation lift: tier_score - none_score per spec.
+
+    Returns {tier: {spec: lift_value}} for all documented tiers.
+    """
+    specs = sorted(set(r["spec"] for r in data))
+    # Get none-tier score per spec (avg of t1, t2)
+    none_scores = {}
+    for spec in specs:
+        vals = [r["score"] for r in data if r["spec"] == spec and r["tier"] == "none" and r["status"] == "completed"]
+        if vals:
+            none_scores[spec] = safe_mean(vals)
+
+    lift = {}
+    for tier in ["pretty", "minified", "lap-standard", "lap-lean"]:
+        lift[tier] = {}
+        for spec in specs:
+            if spec not in none_scores:
+                continue
+            vals = [r["score"] for r in data if r["spec"] == spec and r["tier"] == tier and r["status"] == "completed"]
+            if vals:
+                lift[tier][spec] = safe_mean(vals) - none_scores[spec]
+    return lift
+
+
+def compute_ceiling_specs(data, threshold=0.9):
+    """Find specs where none-tier scores >= threshold on both tasks.
+
+    These specs have high prior-knowledge scores and compress tier differences.
+    """
+    specs = sorted(set(r["spec"] for r in data))
+    ceiling = []
+    for spec in specs:
+        none_vals = [r["score"] for r in data if r["spec"] == spec and r["tier"] == "none" and r["status"] == "completed"]
+        if none_vals and all(v >= threshold for v in none_vals):
+            ceiling.append(spec)
+    return ceiling
+
+
+def compute_doc_sensitive_stats(data, ceiling_specs):
+    """Compute tier stats excluding ceiling-effect specs."""
+    filtered = [r for r in data if r["spec"] not in ceiling_specs]
+    return compute_tier_stats(filtered), filtered
+
+
 def score_color(score):
     if score >= 0.9:
         return "#27ae60"
@@ -447,7 +587,7 @@ body{
 
 /* ---- Cover ---- */
 .cover{
-  background:linear-gradient(135deg,var(--navy) 0%,#16213e 50%,#0f3460 100%);
+  background:linear-gradient(135deg,#0a0a0a 0%,#111111 50%,#1a1a1a 100%);
   color:var(--white);
   padding:80px 40px 60px;
   text-align:center;
@@ -458,21 +598,8 @@ body{
   content:'';
   position:absolute;
   top:-50%;left:-50%;width:200%;height:200%;
-  background:radial-gradient(ellipse at center,rgba(0,184,148,0.08) 0%,transparent 60%);
+  background:radial-gradient(ellipse at center,rgba(0,184,148,0.06) 0%,transparent 60%);
   pointer-events:none;
-}
-.cover-badge{
-  display:inline-block;
-  background:rgba(0,184,148,0.2);
-  border:1px solid rgba(0,184,148,0.4);
-  color:var(--teal);
-  padding:4px 14px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:600;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  margin-bottom:20px;
 }
 .cover h1{
   font-size:clamp(22px,4vw,42px);
@@ -734,7 +861,7 @@ footer a{color:var(--teal);text-decoration:none}
 /* ---- Print ---- */
 @media print{
   .toc-wrap,.cover::before{display:none}
-  .cover{padding:30px;background:#1a1a2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cover{padding:30px;background:#0a0a0a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .section{box-shadow:none;border:1px solid #ddd;page-break-inside:avoid}
   body{font-size:12px}
   .page{padding:10px}
@@ -761,7 +888,6 @@ def section_cover(data):
     n_specs = len(set(r["spec"] for r in data))
     n_formats = len(set(r["format"] for r in data))
     return f"""<div class="cover">
-  <div class="cover-badge">Full Benchmark Report - February 2026</div>
   <h1>LAP Benchmark v2: Measuring<br><span>API Documentation Compression</span><br>Efficacy for AI Coding Agents</h1>
   <div class="cover-subtitle">How much can you compress API docs before AI agents lose effectiveness?</div>
   <div class="cover-meta">
@@ -782,15 +908,19 @@ def section_toc():
         ("#tier-comparison", "Tier Comparison"),
         ("#compression", "Compression Analysis"),
         ("#cost", "Cost & Efficiency"),
+        ("#wall-time", "Wall Time"),
         ("#heatmap", "Spec Heatmap"),
         ("#format", "Format Comparison"),
         ("#task-difficulty", "Task Difficulty"),
         ("#code-quality", "Code Quality"),
         ("#distribution", "Score Distribution"),
-        ("#stats", "Statistical Notes"),
+        ("#stats", "Statistical Analysis"),
+        ("#doc-sensitive", "Doc-Sensitive Subset"),
+        ("#limitations", "Limitations"),
         ("#discussion", "Discussion"),
         ("#conclusion", "Conclusion"),
-        ("#appendix", "Appendix: All Runs"),
+        ("#appendix", "Appendix A: All Runs"),
+        ("#appendix-tasks", "Appendix B: Tasks"),
     ]
     links = "".join(f'<a href="{href}">{label}</a>' for href, label in items)
     return f"""<div class="toc-wrap">
@@ -810,25 +940,43 @@ def section_abstract(data, tier_stats, compression_stats):
     std_savings = compression_stats.get("lap-standard", {}).get("doc_savings_pct", 0) or 0
     lean_score = tier_stats.get("lap-lean", {}).get("avg_score", 0)
     pretty_score = tier_stats.get("pretty", {}).get("avg_score", 0)
-    score_delta = abs(lean_score - pretty_score)
+    none_score = tier_stats.get("none", {}).get("avg_score", 0)
+    lean_time = tier_stats.get("lap-lean", {}).get("avg_time", 0)
+    pretty_time = tier_stats.get("pretty", {}).get("avg_time", 0)
+    time_savings_pct = (1 - lean_time / pretty_time) * 100 if pretty_time > 0 else 0
+    time_savings_s = pretty_time - lean_time
+
+    # Compute mean documented-tier score
+    doc_tiers = ["pretty", "minified", "lap-standard", "lap-lean"]
+    doc_tier_mean = safe_mean([tier_stats[t]["avg_score"] for t in doc_tiers if t in tier_stats])
 
     return f"""<div class="section" id="abstract">
   <h2 class="section-title"><span class="sec-num">0</span> Abstract</h2>
   <div class="abstract-box">
-    This report presents the full results of LAP Benchmark v2, a controlled evaluation measuring
-    how API documentation compression affects the task performance of AI coding agents.
-    We tested five documentation tiers - no documentation, original pretty-printed format,
-    whitespace-minified, LAP-Standard (structured with descriptions), and LAP-Lean
-    (types only) - across {n_specs} real-world production APIs spanning {n_formats} specification formats
-    (OpenAPI, AsyncAPI, GraphQL, Postman, and Protobuf). Agents were evaluated on {n_total} runs
-    ({n_completed} completed successfully) using a weighted scoring rubric
-    (60% endpoint identification, 30% parameter accuracy, 10% code quality).
-    Results show that LAP-format tiers achieve {std_savings:.0f}-{lean_savings:.0f}% token reduction in documentation
-    size while maintaining task completion scores within {score_delta:.2f} points of the
-    full-format baseline. The no-documentation baseline confirms that API documentation
-    is critical for accurate endpoint identification across all tested formats.
-    LAP-Lean achieves the best score-per-token efficiency, making it the recommended tier
-    for production AI coding workflows where inference cost and context window utilization matter.
+    <p>This report presents the full results of LAP Benchmark v2, a controlled evaluation measuring
+    how API documentation compression affects AI coding agent performance. We tested five documentation
+    tiers across {n_specs} real-world production APIs spanning {n_formats} specification formats
+    (OpenAPI, AsyncAPI, GraphQL, Postman, and Protobuf), completing {n_total} runs
+    ({n_completed} successfully) using Claude Sonnet 4.5.</p>
+
+    <p style="margin-top:12px"><strong>Primary finding:</strong> Providing any form of API documentation dramatically
+    improves agent performance over no documentation (mean documented-tier score {doc_tier_mean:.2f} vs
+    none-tier {none_score:.2f}, paired t-test p &lt;&lt; 0.001). This effect is consistent across all {n_formats} formats.</p>
+
+    <p style="margin-top:12px"><strong>Compression finding:</strong> No statistically significant quality difference
+    was detected between documented tiers (pretty, minified, LAP-Standard, LAP-Lean) at the current sample
+    size (n=100 per tier, paired t-tests, all p &gt; 0.05). LAP-Lean achieved the numerically highest score
+    ({lean_score:.3f}) compared to the pretty baseline ({pretty_score:.3f}), but this difference is
+    directional only. However, LAP-format tiers achieve highly significant reductions in inference cost
+    ({compression_stats.get("lap-lean", {}).get("cost_savings_pct", 0):.0f}%, p &lt; 0.001),
+    wall time (-{time_savings_s:.0f}s/run, p &lt; 0.001), and total token consumption
+    (p &lt; 0.001) compared to pretty-printed originals. LAP-Lean achieves {lean_savings:.0f}%
+    documentation token reduction while maintaining task performance parity.</p>
+
+    <p style="margin-top:12px"><strong>Practical recommendation:</strong> For production AI coding workflows,
+    LAP-Lean offers the best efficiency: equivalent quality at significantly lower cost and latency.
+    Future work with repeated trials and additional models is needed to determine whether the directional
+    quality advantage of LAP formats is a real effect or sampling noise.</p>
   </div>
 </div>"""
 
@@ -884,10 +1032,14 @@ def section_key_findings(data, tier_stats, compression_stats):
     {"".join(cards)}
   </div>
   {callout(
-    "<strong>Core result:</strong> LAP format tiers maintain near-identical task performance "
-    "while reducing documentation token counts by 50-90%+, translating directly to lower inference "
-    "costs and faster agent response times. This result holds consistently across all 5 API specification "
-    "formats tested, providing strong cross-format evidence for LAP's effectiveness.",
+    "<strong>Core result:</strong> Any documentation dramatically outperforms no documentation "
+    "(p &lt;&lt; 0.001). Among documented tiers, LAP-Lean achieves the numerically highest score "
+    f"({best_avg:.3f}) while using ~90% fewer documentation tokens than pretty-printed originals. "
+    "Differences between documented tiers are directionally consistent but do not reach statistical "
+    "significance at the current sample size (n=100 per tier). "
+    "However, LAP-Lean's cost savings, wall time reduction, and token efficiency gains "
+    "are all statistically significant (p &lt; 0.001). This result holds consistently across all "
+    "5 API specification formats tested.",
     "success"
   )}
 </div>"""
@@ -965,7 +1117,7 @@ def section_methodology(format_specs):
   <p class="prose">The benchmark applies several controls to isolate documentation quality as the independent variable:</p>
   <ul style="margin:10px 0 0 20px;line-height:1.9;font-size:14px;color:#34495e">
     <li><strong>Neutral filenames:</strong> All documentation tiers are delivered as <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px">api_docs.txt</code> to prevent tier/format leakage into the agent context</li>
-    <li><strong>Business-language tasks:</strong> All 100 task descriptions are phrased in domain language without endpoint-revealing technical terms</li>
+    <li><strong>Business-language tasks:</strong> All 100 task descriptions are phrased in domain language without endpoint-revealing technical terms (see <a href="#appendix-tasks">Appendix B</a>)</li>
     <li><strong>No-doc baseline (none tier):</strong> Establishes agent prior knowledge without documentation</li>
     <li><strong>Python-only mandate:</strong> Prompt enforces Python code output, eliminating language choice as a variable</li>
     <li><strong>No library hints:</strong> Prompt specifies "appropriate libraries" without naming specific SDKs</li>
@@ -1132,8 +1284,9 @@ def section_compression(tier_stats, compression_stats):
   {callout(
     f"<strong>Compression efficiency:</strong> LAP-Lean achieves ~{lean_savings:.0f}% documentation "
     f"token savings vs the pretty baseline, while LAP-Standard achieves ~{std_savings:.0f}% savings. "
-    f"Minification alone saves only ~{mini_savings:.0f}% - far less than LAP format compression. "
-    "Both LAP tiers maintain task scores within 5 percentage points of the pretty baseline, "
+    f"Minification alone saves only ~{mini_savings:.0f}% -- far less than LAP format compression. "
+    "Both LAP tiers achieve scores equal to or above the pretty baseline "
+    "(no statistically significant difference was detected), "
     "delivering far superior score-per-token efficiency.",
     "success"
   )}
@@ -1211,6 +1364,150 @@ def section_cost_efficiency(tier_stats, compression_stats):
 </div>"""
 
 
+def section_wall_time(wall_time_data, tier_stats):
+    tier_time = wall_time_data["tier"]
+    fmt_tier_time = wall_time_data["format_tier"]
+
+    # Summary cards
+    total_wall = sum(t["total"] for t in tier_time.values())
+    total_runs = sum(t["n"] for t in tier_time.values())
+    avg_per_run = total_wall / total_runs if total_runs > 0 else 0
+
+    pretty_avg = tier_time.get("pretty", {}).get("avg", 0)
+    lean_avg = tier_time.get("lap-lean", {}).get("avg", 0)
+    time_savings_pct = (1 - lean_avg / pretty_avg) * 100 if pretty_avg > 0 else 0
+    time_savings_s = pretty_avg - lean_avg
+
+    fastest_tier = min(
+        ((t, d["avg"]) for t, d in tier_time.items()),
+        key=lambda x: x[1],
+        default=("none", 0)
+    )
+
+    total_h = total_wall / 3600
+    cards = [
+        metric_card("Total Wall Time", f"{total_h:.1f}h", f"{total_wall:.0f}s across {total_runs} runs"),
+        metric_card("Avg per Run", f"{avg_per_run:.1f}s", f"Across all tiers"),
+        metric_card("LAP-Lean vs Pretty", f"{time_savings_pct:.0f}%", f"{time_savings_s:.1f}s faster per run"),
+        metric_card("Fastest Tier", TIER_SHORT[fastest_tier[0]], f"{fastest_tier[1]:.1f}s avg"),
+    ]
+
+    # Per-tier table
+    rows = ""
+    for tier in TIER_ORDER:
+        d = tier_time.get(tier)
+        if not d:
+            continue
+        pct_vs_pretty = (1 - d["avg"] / pretty_avg) * 100 if pretty_avg > 0 else 0
+        pct_str = f"{pct_vs_pretty:+.1f}%" if tier != "pretty" else "-"
+        pct_style = "color:#27ae60;font-weight:700" if pct_vs_pretty > 0 else ("color:#e74c3c;font-weight:600" if pct_vs_pretty < -5 else "")
+        color = BAR_COLORS.get(tier, "#999")
+        rows += f"""<tr>
+          <td><span class="tier-pill" style="background:{color}22;color:{color}">{TIER_SHORT[tier]}</span></td>
+          <td class="td-center">{d['n']}</td>
+          <td class="td-right" style="font-weight:700">{d['avg']:.1f}s</td>
+          <td class="td-right">{d['median']:.1f}s</td>
+          <td class="td-right">{d['min']:.1f}s</td>
+          <td class="td-right">{d['max']:.1f}s</td>
+          <td class="td-right">{d['stdev']:.1f}s</td>
+          <td class="td-right">{d['total']:.0f}s</td>
+          <td class="td-center" style="{pct_style}">{pct_str}</td>
+        </tr>"""
+
+    # Bar chart of avg wall time by tier
+    time_data = {t: tier_time[t]["avg"] for t in TIER_ORDER if t in tier_time}
+    max_time = max(time_data.values()) if time_data else 1
+    time_chart = '<div class="bar-chart">\n'
+    for tier in TIER_ORDER:
+        if tier not in tier_time:
+            continue
+        avg = tier_time[tier]["avg"]
+        fill = (avg / max_time) * 100 if max_time > 0 else 0
+        color = BAR_COLORS.get(tier, "#999")
+        time_chart += f"""  <div class="bc-row">
+    <div class="bc-label" style="width:130px">{TIER_SHORT[tier]}</div>
+    <div class="bc-track">
+      <div class="bc-fill" style="width:{fill:.1f}%;background:{color};height:32px">
+        <span class="bc-val">{avg:.1f}s</span>
+      </div>
+    </div>
+  </div>\n"""
+    time_chart += "</div>\n"
+
+    # Per-format x per-tier table
+    formats = [f for f in FORMAT_ORDER if f in fmt_tier_time]
+    tiers_present = [t for t in TIER_ORDER if any(t in fmt_tier_time[f] for f in formats)]
+
+    fmt_header = "<thead><tr><th>Format</th>"
+    for tier in tiers_present:
+        fmt_header += f"<th style='text-align:center'>{TIER_SHORT[tier]}</th>"
+    fmt_header += "</tr></thead>"
+
+    fmt_rows = ""
+    for fmt in formats:
+        fmt_color = FORMAT_COLORS.get(fmt, COLOR_MUTED)
+        fmt_rows += f"<tr><td><strong style='color:{fmt_color}'>{fmt.upper()}</strong></td>"
+        for tier in tiers_present:
+            val = fmt_tier_time[fmt].get(tier)
+            if val is not None:
+                fmt_rows += f'<td class="td-center">{val:.1f}s</td>'
+            else:
+                fmt_rows += '<td class="hm-missing">-</td>'
+        fmt_rows += "</tr>\n"
+
+    # Insight
+    none_avg = tier_time.get("none", {}).get("avg", 0)
+    insight_parts = []
+    if none_avg > 0 and lean_avg > 0:
+        insight_parts.append(
+            f"The none tier averages {none_avg:.1f}s (fastest, no doc to process), "
+            f"while LAP-Lean averages {lean_avg:.1f}s - only {lean_avg - none_avg:.1f}s more despite "
+            f"providing full endpoint schema information"
+        )
+    if pretty_avg > 0 and lean_avg > 0:
+        insight_parts.append(
+            f"LAP-Lean runs {time_savings_pct:.0f}% faster than Pretty ({lean_avg:.1f}s vs {pretty_avg:.1f}s), "
+            f"saving {time_savings_s:.1f}s per run on average"
+        )
+
+    return f"""<div class="section" id="wall-time">
+  {section_header("6", "Results - Wall Time Analysis", "wall-time")}
+  <p class="prose">Execution wall time per run by tier and format. Lower times indicate faster agent completion.
+  Wall time includes the full agent execution cycle (prompt processing, inference, code generation).</p>
+
+  <div class="cards-grid">
+    {"".join(cards)}
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th>Tier</th><th>n</th><th>Avg</th><th>Median</th><th>Min</th><th>Max</th>
+      <th>Std Dev</th><th>Total</th><th>% vs Pretty</th>
+    </tr></thead>
+    <tbody>{rows}</tbody>
+  </table>
+  </div>
+
+  <h3 style="margin:28px 0 8px;font-size:15px;color:var(--navy)">Average Wall Time per Run by Tier</h3>
+  {time_chart}
+
+  <h3 style="margin:28px 0 8px;font-size:15px;color:var(--navy)">Average Wall Time by Format and Tier</h3>
+  <div class="table-wrap">
+  <table>
+    {fmt_header}
+    <tbody>{fmt_rows}</tbody>
+  </table>
+  </div>
+
+  {callout(
+    "<strong>Wall time insights:</strong> " + ". ".join(insight_parts) + "." if insight_parts else
+    "<strong>Wall time insights:</strong> Tier choice affects execution time in proportion to documentation size.",
+    "info"
+  )}
+</div>"""
+
+
 def section_heatmap(spec_matrix, data, format_specs):
     # Determine format for each spec
     spec_format = {}
@@ -1254,7 +1551,7 @@ def section_heatmap(spec_matrix, data, format_specs):
     </div>"""
 
     return f"""<div class="section" id="heatmap">
-  {section_header("6", "Results - Spec-Level Score Heatmap (50 Specs)", "heatmap")}
+  {section_header("7", "Results - Spec-Level Score Heatmap (50 Specs)", "heatmap")}
   <p class="prose">Average score per (spec, tier) pair, averaged across t1 and t2 tasks.
   Color coding indicates performance level. Missing cells ("-") indicate no completed runs for that combination (timed out).</p>
   {legend_html}
@@ -1315,7 +1612,7 @@ def section_format_comparison(format_stats):
     insight_text = "; ".join(insight_parts)
 
     return f"""<div class="section" id="format">
-  {section_header("7", "Results - Format Comparison (5 Formats)", "format")}
+  {section_header("8", "Results - Format Comparison (5 Formats)", "format")}
   <p class="prose">Performance comparison across all five API specification formats.
   Each format contains 10 specs. The benchmark covers OpenAPI (REST), AsyncAPI (event-driven),
   GraphQL (query language), Postman (collection format), and Protobuf (binary protocol).</p>
@@ -1385,7 +1682,7 @@ def section_task_difficulty(task_stats):
     diff = abs(t1_avg - t2_avg)
 
     return f"""<div class="section" id="task-difficulty">
-  {section_header("8", "Results - Task Difficulty Comparison (t1 vs t2)", "task-difficulty")}
+  {section_header("9", "Results - Task Difficulty Comparison (t1 vs t2)", "task-difficulty")}
   <p class="prose">Each spec has two tasks (t1 and t2), both phrased in business language to avoid
   endpoint-revealing technical terms. This section examines whether task difficulty varies systematically
   between the two task slots across all 50 specs and 5 tiers.</p>
@@ -1430,7 +1727,7 @@ def section_code_quality(tier_stats):
     best_code_tier = max(((t, tier_stats[t]["avg_code"]) for t in tier_stats if t != "none"), key=lambda x: x[1], default=("lap-lean", 0))
 
     return f"""<div class="section" id="code-quality">
-  {section_header("9", "Results - Code Quality Analysis", "code-quality")}
+  {section_header("10", "Results - Code Quality Analysis", "code-quality")}
   <p class="prose">Code quality (10% of total score) measures whether the agent produced
   executable Python code containing the correct endpoints and parameters.
   Agents with documentation consistently produce better-structured code across all 50 specs.</p>
@@ -1500,7 +1797,7 @@ def section_score_distribution(dist_stats):
     lap_lean_mean = dist_stats.get("lap-lean", {}).get("mean", 0)
 
     return f"""<div class="section" id="distribution">
-  {section_header("10", "Results - Score Distribution", "distribution")}
+  {section_header("11", "Results - Score Distribution", "distribution")}
   <p class="prose">Score range, central tendency, and variability per tier across all 500 completed runs.
   "% Perfect" = runs scoring exactly 1.0. "% Good" = runs scoring 0.7 or above.
   The sparkline shows a sample of individual run scores sorted ascending.</p>
@@ -1520,62 +1817,328 @@ def section_score_distribution(dist_stats):
     f"while LAP-Lean achieves {lap_lean_mean:.3f}. The gap of +{lap_lean_mean - none_mean:.3f} is "
     "driven primarily by endpoint identification: without documentation, agents default to "
     "guessing endpoints from their training knowledge, which is unreliable for non-famous or "
-    "domain-specific APIs. With n=500 runs, this pattern is statistically robust.",
+    "domain-specific APIs. The documentation gap (none vs documented tiers) is statistically significant "
+    "(p &lt;&lt; 0.001); differences between documented tiers are directional only (see Section 12).",
     "warning"
   )}
 </div>"""
 
 
-def section_statistical_notes(tier_stats, dist_stats):
+def section_statistical_notes(tier_stats, dist_stats, data):
     n_per_tier_avg = safe_mean([s["n_completed"] for s in tier_stats.values()])
 
-    rows = ""
+    # Descriptive stats table
+    desc_rows = ""
     for tier in TIER_ORDER:
         d = dist_stats.get(tier)
         s = tier_stats.get(tier)
         if not d or not s:
             continue
         n = s["n_completed"]
-        mean = d["mean"]
-        stdev = d["stdev"]
-        se = stdev / math.sqrt(n) if n > 1 else 0
+        mean_val = d["mean"]
+        stdev_val = d["stdev"]
+        se = stdev_val / math.sqrt(n) if n > 1 else 0
         ci_95 = 1.96 * se
-        rows += f"""<tr>
+        desc_rows += f"""<tr>
           <td>{TIER_SHORT[tier]}</td>
           <td class="td-center">{n}</td>
-          <td class="td-center">{mean:.3f}</td>
-          <td class="td-center">{stdev:.3f}</td>
+          <td class="td-center">{mean_val:.3f}</td>
+          <td class="td-center">{stdev_val:.3f}</td>
           <td class="td-center">{se:.3f}</td>
           <td class="td-center">&plusmn;{ci_95:.3f}</td>
         </tr>"""
 
+    # Paired t-tests for scores
+    score_comparisons = [
+        ("none", "pretty"), ("none", "lap-lean"),
+        ("pretty", "minified"), ("pretty", "lap-standard"),
+        ("pretty", "lap-lean"), ("lap-standard", "lap-lean"),
+    ]
+    score_ttest_rows = ""
+    for a, b in score_comparisons:
+        m, t, sig, n, d_cohen = paired_ttest(data, a, b, "score")
+        sig_style = "font-weight:700;color:#27ae60" if sig != "ns" else "color:#e74c3c"
+        score_ttest_rows += f"""<tr>
+          <td>{TIER_SHORT.get(b, b)} vs {TIER_SHORT.get(a, a)}</td>
+          <td class="td-center">{m:+.4f}</td>
+          <td class="td-center">{t:.3f}</td>
+          <td class="td-center">{n}</td>
+          <td class="td-center">{d_cohen:.3f}</td>
+          <td class="td-center" style="{sig_style}">{sig}</td>
+        </tr>"""
+
+    # Paired t-tests for wall time
+    time_ttest_rows = ""
+    for a, b in score_comparisons:
+        m, t, sig, n, d_cohen = paired_ttest(data, a, b, "time")
+        sig_style = "font-weight:700;color:#27ae60" if sig != "ns" else "color:#e74c3c"
+        time_ttest_rows += f"""<tr>
+          <td>{TIER_SHORT.get(b, b)} vs {TIER_SHORT.get(a, a)}</td>
+          <td class="td-center">{m:+.1f}s</td>
+          <td class="td-center">{t:.3f}</td>
+          <td class="td-center">{n}</td>
+          <td class="td-center" style="{sig_style}">{sig}</td>
+        </tr>"""
+
+    # Paired t-tests for cost
+    cost_ttest_rows = ""
+    for a, b in score_comparisons:
+        m, t, sig, n, d_cohen = paired_ttest(data, a, b, "cost")
+        sig_style = "font-weight:700;color:#27ae60" if sig != "ns" else "color:#e74c3c"
+        cost_ttest_rows += f"""<tr>
+          <td>{TIER_SHORT.get(b, b)} vs {TIER_SHORT.get(a, a)}</td>
+          <td class="td-center">{m:+.4f}</td>
+          <td class="td-center">{t:.3f}</td>
+          <td class="td-center">{n}</td>
+          <td class="td-center" style="{sig_style}">{sig}</td>
+        </tr>"""
+
+    # Paired t-tests for total tokens
+    token_ttest_rows = ""
+    for a, b in score_comparisons:
+        m, t, sig, n, d_cohen = paired_ttest(data, a, b, "total_tokens")
+        sig_style = "font-weight:700;color:#27ae60" if sig != "ns" else "color:#e74c3c"
+        token_ttest_rows += f"""<tr>
+          <td>{TIER_SHORT.get(b, b)} vs {TIER_SHORT.get(a, a)}</td>
+          <td class="td-center">{fmt_tokens(m)}</td>
+          <td class="td-center">{t:.3f}</td>
+          <td class="td-center">{n}</td>
+          <td class="td-center" style="{sig_style}">{sig}</td>
+        </tr>"""
+
+    # Doc lift summary
+    doc_lift = compute_doc_lift(data)
+    lift_rows = ""
+    for tier in ["pretty", "minified", "lap-standard", "lap-lean"]:
+        lifts = list(doc_lift.get(tier, {}).values())
+        if lifts:
+            lift_rows += f"""<tr>
+              <td>{TIER_SHORT[tier]}</td>
+              <td class="td-center">{safe_mean(lifts):+.3f}</td>
+              <td class="td-center">{safe_median(lifts):+.3f}</td>
+              <td class="td-center">{min(lifts):+.3f}</td>
+              <td class="td-center">{max(lifts):+.3f}</td>
+              <td class="td-center">{safe_stdev(lifts):.3f}</td>
+            </tr>"""
+
     return f"""<div class="section" id="stats">
-  {section_header("11", "Statistical Notes", "stats")}
-  <p class="prose">With approximately {n_per_tier_avg:.0f} runs per tier (50 specs x 2 tasks, minus timeouts),
-  this benchmark provides strong statistical power for the observed effects. Standard error and
-  95% confidence intervals are provided for transparency. The n=500 total sample size is sufficient
-  for confident directional conclusions about tier ordering.</p>
+  {section_header("12", "Statistical Analysis", "stats")}
+
+  <h3 style="font-size:16px;margin:0 0 10px;color:var(--navy)">12.1 Descriptive Statistics</h3>
+  <p class="prose">With approximately {n_per_tier_avg:.0f} runs per tier (50 specs x 2 tasks),
+  standard error and 95% confidence intervals are provided for transparency.</p>
 
   <div class="table-wrap">
   <table>
     <thead><tr>
       <th>Tier</th><th>n</th><th>Mean Score</th><th>Std Dev</th><th>Std Error</th><th>95% CI</th>
     </tr></thead>
-    <tbody>{rows}</tbody>
+    <tbody>{desc_rows}</tbody>
   </table>
   </div>
 
   {callout(
-    "<strong>Statistical context:</strong> "
-    "With n=100 per tier (50 specs x 2 tasks), confidence intervals are narrow and "
-    "tier ordering is reliable. The large standard deviations reflect genuine variance across API complexity "
-    "(simple 3-endpoint email APIs vs complex 200+ endpoint cloud provider APIs), not measurement noise. "
-    "Limitations: (1) Single model tested - other models may respond differently to compression. "
-    "(2) Tier order not randomized within spec - consistent order may introduce minor recency bias. "
-    "These limitations do not affect the core finding that LAP-format tiers achieve near-parity "
-    "scores with dramatically fewer tokens.",
+    "<strong>Important:</strong> 95% confidence intervals for all four documented tiers overlap completely. "
+    "This means no pairwise tier comparison among documented tiers reaches conventional statistical "
+    "significance (p &lt; 0.05). The large standard deviations (~0.23) reflect genuine variance across "
+    "API complexity, not measurement noise. Each condition was tested once (n=1 per spec-tier-task); "
+    "per-spec differences should be interpreted with caution.",
     "warning"
   )}
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.2 Paired t-Tests: Task Score</h3>
+  <p class="prose">Paired t-tests (df=49, two-tailed) comparing mean score per spec across tiers.
+  Each spec contributes one data point (mean of t1 and t2). Cohen's d measures effect size.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Cohen's d</th><th>Sig</th></tr></thead>
+    <tbody>{score_ttest_rows}</tbody>
+  </table>
+  </div>
+
+  {callout(
+    "<strong>Key finding:</strong> The ONLY statistically significant score comparisons are "
+    "none vs documented tiers (p &lt;&lt; 0.001). All comparisons between documented tiers "
+    "(pretty vs minified, pretty vs LAP-Std, pretty vs LAP-Lean, LAP-Std vs LAP-Lean) "
+    "fail to reach significance. The real story is: any documentation >> no documentation.",
+    "key"
+  )}
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.3 Paired t-Tests: Wall Time</h3>
+  <p class="prose">Paired t-tests for wall time (seconds). Positive values mean the second tier is slower.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Sig</th></tr></thead>
+    <tbody>{time_ttest_rows}</tbody>
+  </table>
+  </div>
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.4 Paired t-Tests: Cost (USD)</h3>
+  <p class="prose">Paired t-tests for per-run cost. Negative values mean the second tier is cheaper.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Sig</th></tr></thead>
+    <tbody>{cost_ttest_rows}</tbody>
+  </table>
+  </div>
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.5 Paired t-Tests: Total Tokens</h3>
+  <p class="prose">Paired t-tests for total tokens consumed per run. Negative values mean the second tier uses fewer tokens.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Sig</th></tr></thead>
+    <tbody>{token_ttest_rows}</tbody>
+  </table>
+  </div>
+
+  {callout(
+    "<strong>Efficiency finding:</strong> While score differences between documented tiers are NOT significant, "
+    "wall time and token differences ARE. LAP-Lean vs Pretty shows highly significant reductions in "
+    "wall time (p &lt; 0.001), cost (p &lt; 0.001), and total tokens (p &lt; 0.001). "
+    "This is the report's strongest defensible claim: equivalent quality at significantly lower cost.",
+    "success"
+  )}
+
+  <h3 style="font-size:16px;margin:24px 0 10px;color:var(--navy)">12.6 Documentation Lift (Tier Score - None Score)</h3>
+  <p class="prose">How much does each tier improve over the no-documentation baseline, per spec?
+  This isolates documentation's contribution from prior knowledge.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Tier</th><th>Mean Lift</th><th>Median Lift</th><th>Min</th><th>Max</th><th>Std Dev</th></tr></thead>
+    <tbody>{lift_rows}</tbody>
+  </table>
+  </div>
+</div>"""
+
+
+def section_doc_sensitive(data, tier_stats, ceiling_specs):
+    """Section showing analysis with ceiling-effect specs excluded."""
+    n_ceiling = len(ceiling_specs)
+    sensitive_stats, filtered_data = compute_doc_sensitive_stats(data, ceiling_specs)
+
+    n_sensitive = len(set(r["spec"] for r in filtered_data))
+
+    # Build comparison table: full vs sensitive subset
+    rows = ""
+    for tier in TIER_ORDER:
+        full_s = tier_stats.get(tier, {})
+        sens_s = sensitive_stats.get(tier, {})
+        if not full_s:
+            continue
+        full_score = full_s.get("avg_score", 0)
+        sens_score = sens_s.get("avg_score", 0) if sens_s else 0
+        delta = sens_score - full_score
+        rows += f"""<tr>
+          <td>{TIER_SHORT[tier]}</td>
+          <td class="td-center" style="font-weight:700">{full_score:.3f}</td>
+          <td class="td-center" style="font-weight:700">{sens_score:.3f}</td>
+          <td class="td-center">{delta:+.3f}</td>
+        </tr>"""
+
+    # Paired t-test on sensitive subset
+    sens_score_rows = ""
+    comparisons = [("none", "pretty"), ("none", "lap-lean"), ("pretty", "lap-lean")]
+    for a, b in comparisons:
+        m, t, sig, n, d_cohen = paired_ttest(filtered_data, a, b, "score")
+        sig_style = "font-weight:700;color:#27ae60" if sig != "ns" else "color:#e74c3c"
+        sens_score_rows += f"""<tr>
+          <td>{TIER_SHORT.get(b, b)} vs {TIER_SHORT.get(a, a)}</td>
+          <td class="td-center">{m:+.4f}</td>
+          <td class="td-center">{t:.3f}</td>
+          <td class="td-center">{n}</td>
+          <td class="td-center" style="{sig_style}">{sig}</td>
+        </tr>"""
+
+    ceiling_list = ", ".join(ceiling_specs) if ceiling_specs else "(none)"
+
+    return f"""<div class="section" id="doc-sensitive">
+  {section_header("13", "Results - Documentation-Sensitive Subset Analysis", "doc-sensitive")}
+  <p class="prose">Some APIs score &ge; 0.9 across all tiers including the no-documentation baseline,
+  indicating the model has strong prior knowledge. These "ceiling-effect" specs contribute 1.0
+  to every tier's average, compressing observed differences and measuring API familiarity
+  rather than documentation quality. This section excludes {n_ceiling} such specs to isolate
+  the documentation signal.</p>
+
+  <p class="prose" style="font-size:13px;color:var(--muted)"><strong>Excluded specs (none-tier &ge; 0.9):</strong> {ceiling_list}</p>
+
+  <h3 style="font-size:16px;margin:20px 0 10px;color:var(--navy)">Full Set vs Documentation-Sensitive Subset ({n_sensitive} specs)</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th>Tier</th><th>Full Set (50 specs)</th><th>Sensitive Subset ({n_sensitive} specs)</th><th>Delta</th>
+    </tr></thead>
+    <tbody>{rows}</tbody>
+  </table>
+  </div>
+
+  <h3 style="font-size:16px;margin:20px 0 10px;color:var(--navy)">Paired t-Tests on Sensitive Subset</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Comparison</th><th>Mean Diff</th><th>t-stat</th><th>n</th><th>Sig</th></tr></thead>
+    <tbody>{sens_score_rows}</tbody>
+  </table>
+  </div>
+
+  {callout(
+    "<strong>Subset insight:</strong> When ceiling-effect specs are excluded, the none-tier score drops "
+    "further (revealing the true documentation gap), while documented-tier ordering remains similar. "
+    "The documentation-sensitive subset shows the real signal: documentation matters most for APIs "
+    "the model does not already know well.",
+    "info"
+  )}
+</div>"""
+
+
+def section_limitations():
+    """Prominent limitations section."""
+    return f"""<div class="section" id="limitations">
+  {section_header("14", "Limitations", "limitations")}
+
+  <p class="prose">This benchmark has several methodological limitations that should be considered
+  when interpreting results:</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Limitation</th><th>Impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>N=1 per condition</strong></td>
+        <td>Each (spec, tier, task) ran exactly once. LLM outputs are stochastic; observed per-spec differences may be sampling noise.</td>
+        <td>Aggregate tier comparisons (n=100 per tier) are more reliable. Future: n&ge;3 per condition.</td>
+      </tr>
+      <tr>
+        <td><strong>Fixed tier order</strong></td>
+        <td>Tiers executed in fixed order (none, pretty, minified, lap-standard, lap-lean). Later tiers could benefit from model-level caching.</td>
+        <td>Double-UUID isolation prevents filesystem contamination. Future: randomize tier order.</td>
+      </tr>
+      <tr>
+        <td><strong>Single model</strong></td>
+        <td>Only Claude Sonnet 4.5 was tested. Other models may respond differently to compression.</td>
+        <td>Future: cross-model validation with GPT-4o, Gemini, Claude Opus.</td>
+      </tr>
+      <tr>
+        <td><strong>Recall-only endpoint scoring</strong></td>
+        <td>Endpoint score is recall-based (correct_hits / expected_count). No penalty for false positives. Verbose agents may be overly rewarded.</td>
+        <td>Future: add F1-based metric with precision penalty.</td>
+      </tr>
+      <tr>
+        <td><strong>WebFetch available in none-tier</strong></td>
+        <td>Agents could theoretically fetch API docs from the web during none-tier runs, breaking the prior-knowledge assumption.</td>
+        <td>Future: restrict WebFetch tool for none-tier runs. Verify via session recordings.</td>
+      </tr>
+      <tr>
+        <td><strong>Concurrency=3</strong></td>
+        <td>Benchmark ran with ThreadPoolExecutor(max_workers=3). Non-deterministic execution order means results are not perfectly reproducible.</td>
+        <td>Future: use concurrency=1 for scientific runs.</td>
+      </tr>
+      <tr>
+        <td><strong>Ceiling-effect specs</strong></td>
+        <td>~8 specs score &ge;0.9 across ALL tiers including none, compressing observed tier differences.</td>
+        <td>Section 13 provides a documentation-sensitive subset analysis excluding these specs.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
 </div>"""
 
 
@@ -1598,15 +2161,19 @@ def section_discussion(tier_stats, compression_stats):
     lean_cost_savings = lean_c.get("cost_savings_pct", 0) or 0
 
     return f"""<div class="section" id="discussion">
-  {section_header("12", "Discussion", "discussion")}
+  {section_header("15", "Discussion", "discussion")}
 
   <h3 style="font-size:16px;margin-bottom:8px;color:var(--navy)">LAP-Lean: Best Efficiency Tier</h3>
   <p class="prose">
-    LAP-Lean achieves an average score of {lean_score:.3f} - within {abs(lean_score - pretty_score):.3f} points
-    of the pretty baseline ({pretty_score:.3f}) - while delivering approximately {lean_doc_savings:.0f}%
-    documentation token reduction. This translates to roughly {lean_cost_savings:.0f}% inference cost savings
-    per run. For production AI coding workflows where agents are invoked at scale, LAP-Lean
-    offers the best score-per-token efficiency. This result holds across all 5 formats and 50 APIs.
+    LAP-Lean achieves the numerically highest average score of {lean_score:.3f} compared to the
+    pretty baseline ({pretty_score:.3f}), though this difference (+{lean_score - pretty_score:.3f})
+    does not reach statistical significance (paired t-test, p &gt; 0.05).
+    The significant finding is efficiency: LAP-Lean delivers approximately {lean_doc_savings:.0f}%
+    documentation token reduction and ~{lean_cost_savings:.0f}% inference cost savings per run
+    (p &lt; 0.001 for both wall time and token reduction).
+    For production AI coding workflows where agents are invoked at scale, LAP-Lean
+    offers equivalent quality at significantly lower cost and latency. This result holds across
+    all 5 formats and 50 APIs.
   </p>
 
   <h3 style="font-size:16px;margin:20px 0 8px;color:var(--navy)">No-Doc Baseline: Documentation Is Essential</h3>
@@ -1621,12 +2188,11 @@ def section_discussion(tier_stats, compression_stats):
 
   <h3 style="font-size:16px;margin:20px 0 8px;color:var(--navy)">Minification Provides Limited Benefit Over Pretty</h3>
   <p class="prose">
-    The minified tier achieves {mini_score:.3f} vs {pretty_score:.3f} for pretty.
+    The minified tier achieves {mini_score:.3f} vs {pretty_score:.3f} for pretty -- a negligible
+    difference that does not reach statistical significance.
     Despite removing whitespace, minification of YAML/JSON/GraphQL does not meaningfully reduce semantic
-    token count because structural keywords, field names, and values remain unchanged. For some
-    large specs (Stripe, DigitalOcean, large GraphQL schemas), minification can even trigger timeouts
-    by removing the whitespace that aids tokenization efficiency. LAP-format representations
-    are fundamentally different: they reorganize information into a denser,
+    token count because structural keywords, field names, and values remain unchanged.
+    LAP-format representations are fundamentally different: they reorganize information into a denser,
     agent-optimized structure rather than simply removing whitespace.
   </p>
 
@@ -1652,52 +2218,64 @@ def section_discussion(tier_stats, compression_stats):
 </div>"""
 
 
-def section_conclusion(tier_stats, compression_stats):
+def section_conclusion(tier_stats, compression_stats, data):
     lean = tier_stats.get("lap-lean", {})
+    pretty = tier_stats.get("pretty", {})
     lean_score = lean.get("avg_score", 0)
+    pretty_score = pretty.get("avg_score", 0)
+    none_score = tier_stats.get("none", {}).get("avg_score", 0)
     lean_savings = compression_stats.get("lap-lean", {}).get("doc_savings_pct", 0) or 0
+    std_savings = compression_stats.get("lap-standard", {}).get("doc_savings_pct", 0) or 0
     lean_cost_sav = compression_stats.get("lap-lean", {}).get("cost_savings_pct", 0) or 0
     n_completed = sum(s["n_completed"] for s in tier_stats.values())
 
+    lean_time = lean.get("avg_time", 0)
+    pretty_time = pretty.get("avg_time", 0)
+    time_savings_s = pretty_time - lean_time
+
     return f"""<div class="section" id="conclusion">
-  {section_header("13", "Conclusion", "conclusion")}
+  {section_header("16", "Conclusion", "conclusion")}
 
   <p class="prose">
-    This full benchmark ({n_completed} runs across 50 APIs, 5 formats, 5 tiers, 2 tasks) demonstrates
-    that LAP format compression achieves approximately
-    <strong>{lean_savings:.0f}%+ token reduction</strong> in API documentation size while maintaining
-    agent task performance scores within <strong>5 percentage points</strong> of the full-format baseline.
-    The LAP-Lean tier achieves an average score of <strong>{lean_score:.3f}</strong> with roughly
-    <strong>{lean_cost_sav:.0f}% cost savings</strong> per inference run - making it the recommended
-    format for production AI coding workflows.
+    This full benchmark ({n_completed} runs across 50 APIs, 5 formats, 5 tiers, 2 tasks) yields
+    two clear findings:
   </p>
 
   <p class="prose">
-    Documentation is a critical prerequisite for AI agent accuracy: the no-documentation baseline
-    confirms that agents cannot reliably identify API endpoints from training knowledge alone,
-    particularly for domain-specific or less-prominent APIs. Simple whitespace minification
-    provides minimal benefit; structured compression (LAP format) is required to achieve
-    meaningful token reduction without quality loss. This finding is robust across 5 API
-    specification formats and 50 diverse real-world production APIs.
+    <strong>1. Documentation is essential.</strong> Providing any form of API documentation dramatically
+    improves agent performance (mean documented score ~{safe_mean([lean_score, pretty_score]):.2f} vs
+    none-tier {none_score:.2f}, p &lt;&lt; 0.001). This holds across all 5 specification formats.
+    Agents cannot reliably identify API endpoints from training knowledge alone,
+    particularly for domain-specific or less-prominent APIs.
+  </p>
+
+  <p class="prose">
+    <strong>2. Compression preserves quality while significantly reducing cost.</strong>
+    No statistically significant quality difference was detected between any documented tier
+    (paired t-tests, all p &gt; 0.05). LAP-Lean achieved the numerically highest score
+    ({lean_score:.3f} vs pretty {pretty_score:.3f}), but this difference is directional only.
+    The statistically significant advantages of LAP-Lean are efficiency:
+    <strong>{lean_savings:.0f}% documentation token reduction</strong>,
+    <strong>{lean_cost_sav:.0f}% cost savings</strong> (p &lt; 0.001),
+    and <strong>{time_savings_s:.0f}s faster per run</strong> (p &lt; 0.001).
   </p>
 
   <h3 style="font-size:16px;margin:20px 0 8px;color:var(--navy)">Recommended Production Configuration</h3>
   <ul style="margin:0 0 16px 20px;line-height:2;font-size:14px">
-    <li>Use <strong>LAP-Lean</strong> for high-volume, cost-sensitive AI coding agent deployments</li>
-    <li>Use <strong>LAP-Standard</strong> when working with complex or ambiguous APIs where descriptions improve disambiguation</li>
-    <li>Avoid <strong>minified</strong> format - provides minimal benefit over pretty and can increase context pressure on large specs</li>
-    <li>Always provide <strong>some</strong> documentation - the no-doc baseline demonstrates significant quality degradation across all formats</li>
+    <li>Use <strong>LAP-Lean</strong> for high-volume, cost-sensitive AI coding agent deployments -- equivalent quality at significantly lower cost and latency</li>
+    <li>Use <strong>LAP-Standard</strong> when working with complex or ambiguous APIs where descriptions provide additional disambiguation context</li>
+    <li>Avoid relying on <strong>minification alone</strong> -- it provides minimal token savings compared to LAP format restructuring</li>
+    <li>Always provide <strong>some</strong> documentation -- the no-doc baseline demonstrates a significant quality gap across all formats</li>
   </ul>
 
   <h3 style="font-size:16px;margin:20px 0 8px;color:var(--navy)">Future Work</h3>
   <ul style="margin:0 0 0 20px;line-height:2;font-size:14px">
+    <li><strong>Repetition trials:</strong> n &gt;= 3 per condition to enable per-spec statistical significance testing</li>
     <li><strong>Multiple models:</strong> Compare results across GPT-4o, Gemini Pro, Claude Opus, and local LLMs</li>
-    <li><strong>Repetition trials:</strong> n >= 3 per condition for per-spec statistical significance</li>
     <li><strong>Randomized tier order:</strong> Eliminate potential ordering bias within spec runs</li>
+    <li><strong>Precision scoring:</strong> Add F1-based endpoint metric (penalize false positives, not just recall)</li>
     <li><strong>Complex task types:</strong> Multi-step workflows, error handling, pagination, authentication</li>
-    <li><strong>Larger AsyncAPI coverage:</strong> More complex event-driven task specifications</li>
     <li><strong>Context window scaling:</strong> Test performance degradation curves as doc size approaches context limits</li>
-    <li><strong>Chunking strategies:</strong> Evaluate selective endpoint retrieval vs full doc delivery</li>
   </ul>
 </div>"""
 
@@ -1746,7 +2324,7 @@ def section_appendix(data):
     n_errors = sum(1 for r in data if r["status"] != "completed")
 
     return f"""<div class="section" id="appendix">
-  {section_header("A", "Appendix: Individual Runs", "appendix")}
+  {section_header("A", "Appendix A: Individual Runs", "appendix")}
   <p class="prose">All {len(data)} individual runs, sorted by format, spec, tier, task.
   All runs completed successfully.</p>
 
@@ -1758,6 +2336,38 @@ def section_appendix(data):
         <th>Spec</th><th>Format</th><th>Tier</th><th>Task</th><th>Status</th>
         <th>Score</th><th>EP</th><th>Par</th><th>Code</th>
         <th>Time</th><th>Cost</th><th>Total Tokens</th><th>Doc Tokens</th><th>Turns</th>
+      </tr></thead>
+      <tbody>{rows}</tbody>
+    </table>
+    </div>
+  </details>
+</div>"""
+
+
+def section_appendix_tasks(task_manifests):
+    rows = ""
+    for t in task_manifests:
+        endpoints_str = "<br>".join(t["target_endpoints"]) if t["target_endpoints"] else "-"
+        fmt_color = FORMAT_COLORS.get(t["format"], COLOR_MUTED)
+        rows += f"""<tr>
+          <td class="td-mono" style="font-size:12px">{t['spec']}</td>
+          <td style="font-size:11px;color:{fmt_color};font-weight:600">{t['format']}</td>
+          <td class="td-center">{t['task_id']}</td>
+          <td style="font-size:13px">{t['description']}</td>
+          <td class="td-mono" style="font-size:11px">{endpoints_str}</td>
+        </tr>"""
+
+    return f"""<div class="section" id="appendix-tasks">
+  {section_header("B", "Appendix B: Task Definitions", "appendix-tasks")}
+  <p class="prose">All {len(task_manifests)} task definitions used in the benchmark (2 tasks per spec, 50 specs).
+  Each task is phrased in business language to avoid endpoint-revealing technical terms.</p>
+
+  <details>
+    <summary>Show all {len(task_manifests)} task definitions (click to expand)</summary>
+    <div class="table-wrap" style="margin-top:14px">
+    <table>
+      <thead><tr>
+        <th>Spec</th><th>Format</th><th>Task</th><th>Description</th><th>Target Endpoints</th>
       </tr></thead>
       <tbody>{rows}</tbody>
     </table>
@@ -1779,6 +2389,9 @@ def build_html(data):
     format_stats = compute_format_stats(data)
     dist_stats = compute_score_distribution(data)
     task_stats = compute_task_comparison(data)
+    wall_time_data = compute_wall_time_stats(data)
+    task_manifests = load_task_manifests()
+    ceiling_specs = compute_ceiling_specs(data, threshold=0.9)
 
     body_sections = "\n".join([
         section_abstract(data, tier_stats, compression_stats),
@@ -1787,15 +2400,19 @@ def build_html(data):
         section_tier_comparison(tier_stats),
         section_compression(tier_stats, compression_stats),
         section_cost_efficiency(tier_stats, compression_stats),
+        section_wall_time(wall_time_data, tier_stats),
         section_heatmap(spec_matrix, data, format_specs),
         section_format_comparison(format_stats),
         section_task_difficulty(task_stats),
         section_code_quality(tier_stats),
         section_score_distribution(dist_stats),
-        section_statistical_notes(tier_stats, dist_stats),
+        section_statistical_notes(tier_stats, dist_stats, data),
+        section_doc_sensitive(data, tier_stats, ceiling_specs),
+        section_limitations(),
         section_discussion(tier_stats, compression_stats),
-        section_conclusion(tier_stats, compression_stats),
+        section_conclusion(tier_stats, compression_stats, data),
         section_appendix(data),
+        section_appendix_tasks(task_manifests),
     ])
 
     n_completed = sum(1 for r in data if r["status"] == "completed")

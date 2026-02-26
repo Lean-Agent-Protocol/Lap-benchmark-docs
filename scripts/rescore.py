@@ -99,9 +99,10 @@ def rescore_batch(batch_id, verbose=True):
                 print(f"  {run_file.name}: skipped (no output)")
             continue
 
-        # Re-score using the updated scorer
+        # Re-score using the updated scorer with explicit weights matching config.yaml
         old_score = run_data["score"]
-        new_score = score_run(output_text, target_endpoints, expected_params)
+        weights = {"endpoint": 0.6, "param": 0.3, "code": 0.1}
+        new_score = score_run(output_text, target_endpoints, expected_params, weights=weights)
 
         # Update the score in the run data
         run_data["score"] = new_score
