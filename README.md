@@ -1,6 +1,6 @@
 # LAP Benchmark
 
-Measures how well [LAP-compressed](https://github.com/lean-agent-protocol/lap) API documentation performs compared to original formats when given to AI coding agents.
+Measures how well [LAP-compressed](https://github.com/Lap-Platform/lap) API documentation performs compared to original formats when given to AI coding agents.
 
 ## Benchmark Matrix
 

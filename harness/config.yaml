@@ -36,6 +36,6 @@ scoring:
   success_threshold: 0.7
 
 github:
-  repo: "anthropics/Lap-benchmark-docs"
+  repo: "Lap-Platform/Lap-benchmark-docs"
   branch: "master"
   base_url: "https://raw.githubusercontent.com"
