@@ -1,5 +1,7 @@
 # LAP Benchmark
 
+> **[View Full Benchmark Report](https://lap-platform.github.io/Lap-benchmark-docs/results/LAP_Benchmark_v2_Full_Report.html)** -- 500 runs, 50 specs, 5 formats
+
 Measures how well [LAP-compressed](https://github.com/Lap-Platform/lap) API documentation performs compared to original formats when given to AI coding agents.
 
 ## Benchmark Matrix
